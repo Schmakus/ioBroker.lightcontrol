@@ -1,0 +1,79 @@
+{
+	"common": {
+		"name": "lightcontrol",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "LightControl",
+		"titleLang": {
+			"en": "LightControl",
+			"de": "Lichtsteuerung",
+			"ru": "Управление освещением",
+			"pt": "Controle de luz",
+			"nl": "Lichtbesturing",
+			"fr": "Contrôle de la lumière",
+			"it": "Controllo della luce",
+			"es": "Control de luz",
+			"pl": "Sterowanie oświetleniem",
+			"zh-cn": "LightControl"
+		},
+		"desc": {
+			"en": "control lights from different manufactures",
+			"de": "Kontrollleuchten verschiedener Hersteller",
+			"ru": "контрольные лампы разных производителей",
+			"pt": "luzes de controle de diferentes fabricantes",
+			"nl": "controlelampen van verschillende fabrikanten",
+			"fr": "contrôler les lumières de différents fabricants",
+			"it": "luci di controllo di diversi produttori",
+			"es": "luces de control de diferentes fabricantes",
+			"pl": "lampki kontrolne różnych producentów,",
+			"zh-cn": "来自不同制造商的控制灯"
+		},
+		"authors": [
+			"Markus Hartmann <schmakus@gmail.com>"
+		],
+		"keywords": [
+			"light",
+			"lightcontrol",
+			"motion",
+			"motiondetection"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "lightcontrol.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
+		"readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "lighting",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"materialize": true,
+		"dependencies": [
+			{
+				"js-controller": ">=2.0.0"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
+}
