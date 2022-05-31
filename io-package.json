@@ -1,211 +1,211 @@
 {
-	"common": {
-		"name": "lightcontrol",
-		"version": "0.0.1",
-		"news": {
-			"0.0.1": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"ru": "Начальная версия",
-				"pt": "lançamento inicial",
-				"nl": "Eerste uitgave",
-				"fr": "Première version",
-				"it": "Versione iniziale",
-				"es": "Versión inicial",
-				"pl": "Pierwsze wydanie",
-				"zh-cn": "首次出版"
-			}
-		},
-		"title": "LightControl",
-		"titleLang": {
-			"en": "LightControl",
-			"de": "Lichtsteuerung",
-			"ru": "Управление освещением",
-			"pt": "Controle de luz",
-			"nl": "Lichtbesturing",
-			"fr": "Contrôle de la lumière",
-			"it": "Controllo della luce",
-			"es": "Control de luz",
-			"pl": "Sterowanie oświetleniem",
-			"zh-cn": "LightControl"
-		},
-		"desc": {
-			"en": "control lights from different manufactures",
-			"de": "Kontrollleuchten verschiedener Hersteller",
-			"ru": "контрольные лампы разных производителей",
-			"pt": "luzes de controle de diferentes fabricantes",
-			"nl": "controlelampen van verschillende fabrikanten",
-			"fr": "contrôler les lumières de différents fabricants",
-			"it": "luci di controllo di diversi produttori",
-			"es": "luces de control de diferentes fabricantes",
-			"pl": "lampki kontrolne różnych producentów,",
-			"zh-cn": "来自不同制造商的控制灯"
-		},
-		"authors": [
-			"Markus Hartmann <schmakus@gmail.com>"
-		],
-		"keywords": [
-			"light",
-			"lightcontrol",
-			"motion",
-			"motiondetection"
-		],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "lightcontrol.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
-		"readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "lighting",
-		"compact": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"materialize": true,
-		"dependencies": [
-			{
-				"js-controller": ">=2.0.0"
-			}
-		]
-	},
-	"native": {
-		"debug": true,
-		"GlobalSettings": {
-			"GlobalLuxSensor": "0_userdata.0.lightcontrol_DEV.LuxSensors.GlobalLuxSensor",
-			"IsPresenceDp": "0_userdata.0.lightcontrol_DEV.Presence.IsPresenceDp",
-			"PresenceCountDp": "0_userdata.0.lightcontrol_DEV.Presence.PresenceCountDp",
-			"RampSteps": "10",
-			"minCt": "2700",
-			"maxCt": "6500",
-			"minBri": "10"
-		},
-		"LightGroups": {
-			"FlurEG": {
-				"LuxSensor": "0_userdata.0.lightcontrol_DEV.LuxSensors.LuxSensor1",
-				"lights": {
-					"Strahler1": {
-						"power": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.power",
-							"onVal": true,
-							"offVal": false
-						},
-						"bri": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.bri",
-							"minVal": 0,
-							"maxVal": 100,
-							"defaultVal": 100
-						},
-						"ct": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.ct",
-							"minVal": 454,
-							"maxVal": 250
-						},
-						"sat": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.sat",
-							"minVal": 0,
-							"maxVal": 100
-						},
-						"modeswitch": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.colorModeSwitch",
-							"whiteModeVal": false,
-							"colorModeVal": true
-						},
-						"color": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.colorHEX",
-							"type": "hex",
-							"default": ""
-						}
-					},
-					"Strahler2": {
-						"power": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.power",
-							"onVal": true,
-							"offVal": false
-						},
-						"bri": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.bri",
-							"minVal": 0,
-							"maxVal": 100,
-							"defaultVal": 100
-						},
-						"ct": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.ct",
-							"minVal": 454,
-							"maxVal": 250
-						},
-						"sat": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.sat",
-							"minVal": 0,
-							"maxVal": 100
-						},
-						"modeswitch": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.colorModeSwitch",
-							"whiteModeVal": false,
-							"colorModeVal": true
-						},
-						"color": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.colorRGB",
-							"type": "RGB",
-							"default": ""
-						}
-					}
-				},
-				"sensors": {
-					"BWMFlur1": {
-						"oid": "0_userdata.0.lightcontrol_DEV.MotionSensors.MotionSensor1",
-						"motionVal": true,
-						"noMotionVal": false
-					},
-					"BWMFlur2": {
-						"oid": "0_userdata.0.lightcontrol_DEV.MotionSensors.MotionSensor2",
-						"motionVal": true,
-						"noMotionVal": false
-					}
-				}
-			},
-			"Wohnzimmer": {
-				"LuxSensor": "",
-				"lights": {
-					"LampePc": {
-						"power": {
-							"oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp3.power",
-							"onVal": true,
-							"offVal": false
-						},
-						"bri": {
-							"oid": "",
-							"minVal": null,
-							"maxVal": null,
-							"defaultVal": null
-						},
-						"ct": {
-							"oid": "",
-							"minVal": null,
-							"maxVal": null
-						},
-						"sat": {
-							"oid": "",
-							"minVal": null,
-							"maxVal": null
-						},
-						"modeswitch": {
-							"oid": "",
-							"whiteModeVal": false,
-							"colorModeVal": true
-						},
-						"color": {
-							"oid": "",
-							"type": "",
-							"default": ""
-						}
-					}
-				},
-				"sensors": {}
-			}
-		}
-	},
-	"objects": [],
-	"instanceObjects": []
+    "common": {
+        "name": "lightcontrol",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "LightControl",
+        "titleLang": {
+            "en": "LightControl",
+            "de": "Lichtsteuerung",
+            "ru": "Управление освещением",
+            "pt": "Controle de luz",
+            "nl": "Lichtbesturing",
+            "fr": "Contrôle de la lumière",
+            "it": "Controllo della luce",
+            "es": "Control de luz",
+            "pl": "Sterowanie oświetleniem",
+            "zh-cn": "LightControl"
+        },
+        "desc": {
+            "en": "control lights from different manufactures",
+            "de": "Kontrollleuchten verschiedener Hersteller",
+            "ru": "контрольные лампы разных производителей",
+            "pt": "luzes de controle de diferentes fabricantes",
+            "nl": "controlelampen van verschillende fabrikanten",
+            "fr": "contrôler les lumières de différents fabricants",
+            "it": "luci di controllo di diversi produttori",
+            "es": "luces de control de diferentes fabricantes",
+            "pl": "lampki kontrolne różnych producentów,",
+            "zh-cn": "来自不同制造商的控制灯"
+        },
+        "authors": [
+            "Markus Hartmann <schmakus@gmail.com>"
+        ],
+        "keywords": [
+            "light",
+            "lightcontrol",
+            "motion",
+            "motiondetection"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "lightcontrol.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
+        "readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "lighting",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
+            }
+        ]
+    },
+    "native": {
+        "debug": true,
+        "GlobalSettings": {
+            "GlobalLuxSensor": "0_userdata.0.lightcontrol_DEV.LuxSensors.GlobalLuxSensor",
+            "IsPresenceDp": "0_userdata.0.lightcontrol_DEV.Presence.IsPresenceDp",
+            "PresenceCountDp": "0_userdata.0.lightcontrol_DEV.Presence.PresenceCountDp",
+            "RampSteps": "10",
+            "minCt": "2700",
+            "maxCt": "6500",
+            "minBri": "10"
+        },
+        "LightGroups": {
+            "FlurEG": {
+                "LuxSensor": "0_userdata.0.lightcontrol_DEV.LuxSensors.LuxSensor1",
+                "lights": {
+                    "Strahler1": {
+                        "power": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.power",
+                            "onVal": true,
+                            "offVal": false
+                        },
+                        "bri": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.bri",
+                            "minVal": 0,
+                            "maxVal": 100,
+                            "defaultVal": 100
+                        },
+                        "ct": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.ct",
+                            "minVal": 454,
+                            "maxVal": 250
+                        },
+                        "sat": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.sat",
+                            "minVal": 0,
+                            "maxVal": 100
+                        },
+                        "modeswitch": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.colorModeSwitch",
+                            "whiteModeVal": false,
+                            "colorModeVal": true
+                        },
+                        "color": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp1.colorHEX",
+                            "type": "hex",
+                            "default": ""
+                        }
+                    },
+                    "Strahler2": {
+                        "power": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.power",
+                            "onVal": true,
+                            "offVal": false
+                        },
+                        "bri": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.bri",
+                            "minVal": 0,
+                            "maxVal": 100,
+                            "defaultVal": 100
+                        },
+                        "ct": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.ct",
+                            "minVal": 454,
+                            "maxVal": 250
+                        },
+                        "sat": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.sat",
+                            "minVal": 0,
+                            "maxVal": 100
+                        },
+                        "modeswitch": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.colorModeSwitch",
+                            "whiteModeVal": false,
+                            "colorModeVal": true
+                        },
+                        "color": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp2.colorRGB",
+                            "type": "RGB",
+                            "default": ""
+                        }
+                    }
+                },
+                "sensors": {
+                    "BWMFlur1": {
+                        "oid": "0_userdata.0.lightcontrol_DEV.MotionSensors.MotionSensor1",
+                        "motionVal": true,
+                        "noMotionVal": false
+                    },
+                    "BWMFlur2": {
+                        "oid": "0_userdata.0.lightcontrol_DEV.MotionSensors.MotionSensor2",
+                        "motionVal": true,
+                        "noMotionVal": false
+                    }
+                }
+            },
+            "Wohnzimmer": {
+                "LuxSensor": "",
+                "lights": {
+                    "LampePc": {
+                        "power": {
+                            "oid": "0_userdata.0.lightcontrol_DEV.Lamps.Lamp3.power",
+                            "onVal": true,
+                            "offVal": false
+                        },
+                        "bri": {
+                            "oid": "",
+                            "minVal": null,
+                            "maxVal": null,
+                            "defaultVal": null
+                        },
+                        "ct": {
+                            "oid": "",
+                            "minVal": null,
+                            "maxVal": null
+                        },
+                        "sat": {
+                            "oid": "",
+                            "minVal": null,
+                            "maxVal": null
+                        },
+                        "modeswitch": {
+                            "oid": "",
+                            "whiteModeVal": false,
+                            "colorModeVal": true
+                        },
+                        "color": {
+                            "oid": "",
+                            "type": "",
+                            "default": ""
+                        }
+                    }
+                },
+                "sensors": {}
+            }
+        }
+    },
+    "objects": [],
+    "instanceObjects": []
 }

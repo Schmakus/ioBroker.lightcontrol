@@ -3,6 +3,7 @@
 <head>
 
 	<!-- Load ioBroker scripts and styles-->
+	<link rel="stylesheet" type="text/css" href="../../lib/css/fancytree/ui.fancytree.min.css"/>
 	<link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
 	<link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
 
@@ -10,54 +11,384 @@
 	<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
 
 	<script type="text/javascript" src="../../js/translate.js"></script>
+	<script type="text/javascript" src="../../lib/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../../lib/js/jquery.fancytree-all.min.js"></script>
+	<script type="text/javascript" src="../../lib/js/selectID.js"></script>
 	<script type="text/javascript" src="../../lib/js/materialize.js"></script>
 	<script type="text/javascript" src="../../js/adapter-settings.js"></script>
 
 	<!-- Load our own files -->
 	<link rel="stylesheet" type="text/css" href="style.css" />
 	<script type="text/javascript" src="words.js"></script>
-
-	<script type="text/javascript">
+	<!-- <script type="text/javascript" src="index_m.js"></script> -->
+	<script>
 		// This will be called by the admin adapter when the settings page loads
 		function load(settings, onChange) {
 			// example: select elements with id=key and class=value and insert value
 			if (!settings) return;
-			$('.value').each(function () {
-				var $key = $(this);
-				var id = $key.attr('id');
-				if ($key.attr('type') === 'checkbox') {
+			const debug = settings.debug;
+			const GlobalSettings = settings.GlobalSettings;
+			const LightGroups = settings.LightGroups;
+
+			//Set Values of Global Settings
+			if (debug) console.log(settings.GlobalSettings);
+			$(".global").each(function () {
+				const $key = $(this);
+				const id = $key.attr("id");
+				if ($key.attr("type") === "checkbox") {
 					// do not call onChange direct, because onChange could expect some arguments
-					$key.prop('checked', settings[id])
-						.on('change', () => onChange())
-						;
+					$key.prop("checked", GlobalSettings[id])
+						.on("change", () => onChange())
+					;
 				} else {
 					// do not call onChange direct, because onChange could expect some arguments
-					$key.val(settings[id])
-						.on('change', () => onChange())
-						.on('keyup', () => onChange())
-						;
+					$key.val(GlobalSettings[id])
+						.on("change", () => onChange())
+						.on("keyup", () => onChange())
+					;
 				}
 			});
+
+			//Create Groups and set values
+			if(LightGroups) {
+				Object.keys(LightGroups).forEach((Group) => {
+					const newGroup = NewGroup(Group, LightGroups[Group]);
+					console.log(newGroup);
+					$( "#LightGroups" ).append( newGroup );
+										
+				});
+				translateAll("#LightGroups");
+				loadOptions(); 
+			}
+
 			onChange(false);
+
 			// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
 			if (M) M.updateTextFields();
+
+			//++++++++++ TABS ++++++++++
+			//Enhance Tabs with onShow-Function
+			//$("ul.tabs li a").on("click", function () { onTabShow($(this).attr("href")); });
+			$("ul.tabs li a").on("click", function () { 
+				loadOptions(); 
+			});
+			
+			function onTabShow(tabId) {
+				switch (tabId) {
+					case "#tab-settings":
+						loadOptions();
+						break;
+					case "#tab-general":
+						loadOptions();
+						break;
+				}
+			}
+			//++++++++++ OPTIONS ++++++++++
+			//Load Options
+			function loadOptions() {
+				$(".collapsible").collapsible();
+				$(".modal").modal();
+
+			}
+
+			//+++++++++ BUTTONS +++++++++++
+			//Remove Group
+			$(".removeGroup").on("click", function () {
+				const Group = getGroupNameFromId($(this).attr("id"));
+				console.log(Group);
+				//$("#Group_"+ Group +"").remove();
+				
+				$("#confirmRemove").modal("open"); 
+				$("#confirmRemove_YesBtn").click(function(){ 
+					$("#Group_"+ Group +"").remove();
+					$("#confirmRemove").modal("close");
+				}); 
+				
+
+			});
+			
+			//+++++++++ SELECTS +++++++++++
+			// Global Lux Sensor
+			$("#GlobalLuxSensorPopUp").on("click", function () {
+				const $label = $("label[for='GlobalLuxSensor']").text();
+				initSelectId($label, function (sid) {
+					sid.selectId("show", $("#GlobalLuxSensor").val(), function (newId) {
+						if (newId) {
+							$("#GlobalLuxSensor").val(newId).trigger("change");
+						}
+					});
+				});
+			});
+
+			$("#GlobalLuxSensor").on("click", function() {
+				const $inputField = $(this);
+				const $label = $("label[for='"+$inputField.attr("id")+"']").text();
+				if ($inputField.val() === "") {
+					initSelectId($label, function (sid) {
+						sid.selectId("show", $inputField.val(), function (newId) {
+							if (newId) {
+								inputField.val(newId).trigger("change");
+							}
+						});
+					});
+				}
+			});
+
+			// IsPresenceDp
+			$("#IsPresenceDpPopUp").on("click", function () {				
+				const $label = $("label[for='IsPresenceDp']").text();
+				initSelectId($label, function (sid) {
+					sid.selectId("show", $("#IsPresenceDp").val(), function (newId) {
+						if (newId) {
+							$("#IsPresenceDp").val(newId).trigger("change");
+						}
+					});
+				});
+			});
+
+			$("#IsPresenceDp").on("click", function() {
+				const $inputField = $(this);
+				const $label = $("label[for='"+$inputField.attr("id")+"']").text();
+				if ($inputField.val() === "") {
+					initSelectId($label, function (sid) {
+						sid.selectId("show", $inputField.val(), function (newId) {
+							if (newId) {
+								inputField.val(newId).trigger("change");
+							}
+						});
+					});
+				}
+			});
+
+			// PresenceCountDp
+			$("#PresenceCountDpPopUp").on("click", function () {
+				const $label = $("label[for='PresenceCountDp']").text();
+				initSelectId($label, function (sid) {
+					sid.selectId("show", $("#PresenceCountDp").val(), function (newId) {
+						if (newId) {
+							$("#PresenceCountDp").val(newId).trigger("change");
+						}
+					});
+				});
+			});
+
+			$("#PresenceCountDp").on("click", function() {
+				const $inputField = $(this);
+				const $label = $("label[for='"+$inputField.attr("id")+"']").text();
+				if ($inputField.val() === "") {
+					initSelectId($label, function (sid) {
+						sid.selectId("show", $inputField.val(), function (newId) {
+							if (newId) {
+								inputField.val(newId).trigger("change");
+							}
+						});
+					});
+				}
+			});
+
+			// LuxSensor of Group
+			$(".LuxSensorPopUpGroup").on("click", function () {
+				const Group = getGroupNameFromId($(this).attr("id"));
+				const $label = `Object-ID for Lux-Sensor`;				
+				initSelectId($label, function (sid) {
+					sid.selectId("show", $("#LuxSensor_"+ Group + "").val(), function (newId) {
+						if (newId) {
+							$("#LuxSensor_"+ Group + "").val(newId).trigger("change");
+						}
+					});
+				});
+				
+			});
+
+			$(".LuxSensorGroup").on("click", function() {
+				const Group = getGroupNameFromId($(this).attr("id"));
+				const $label = $("label[for='"+$(this).attr("id")+"']").text();
+				if ($(this).val() === "") {
+					initSelectId($label, function (sid) {
+						sid.selectId("show", $("#LuxSensor_"+ Group + "").val(), function (newId) {
+							if (newId) {
+								$("#LuxSensor_"+ Group + "").val(newId)
+									.trigger("change")
+									.on("change", () => onChange())
+									.on("keyup", () => onChange());
+							}
+						});
+					});
+				}
+			});
+
+			// Change GroupName
+			$(".editGroupName").on("input", function () {
+				const Group = getGroupNameFromId($(this).attr("id"));
+				const Input = $(this).val();
+				console.log(Input);
+				$("#GroupName_" + Group + "").text(Input);						
+			});
+			
 		}
 
 		// This will be called by the admin adapter when the user presses the save button
 		function save(callback) {
 			// example: select elements with class=value and build settings object
-			var obj = {};
-			$('.value').each(function () {
-				var $this = $(this);
-				if ($this.attr('type') === 'checkbox') {
-					obj[$this.attr('id')] = $this.prop('checked');
-				} else if ($this.attr('type') === 'number') {
-					obj[$this.attr('id')] = parseFloat($this.val());
+			const obj = {};
+			$(".value").each(function () {
+				const $this = $(this);
+				if ($this.attr("type") === "checkbox") {
+					obj[$this.attr("id")] = $this.prop("checked");
+				} else if ($this.attr("type") === "number") {
+					obj[$this.attr("id")] = parseFloat($this.val());
 				} else {
-					obj[$this.attr('id')] = $this.val();
+					obj[$this.attr("id")] = $this.val();
 				}
 			});
 			callback(obj);
+		}
+
+		//******* GROUP TEMPLATE *******/
+		function NewGroup(Group, LightGroup) {
+			console.log(Group);
+			return `
+				<li id="Group_${Group}">
+					<div class="collapsible-header">
+						<i class="flip material-icons">expand_more</i><h6 id="GroupName_${Group}">${Group}</h6>
+					</div>
+					<div class="collapsible-body">
+						<div class="row">
+							<div class="col s8 l6 input-field">
+								<input type="text" class="validate form-control editGroupName" id="editGroupName_${Group}" value="${Group}"/>
+								<label for="editGroupName" class="translate">Groupname</label>
+							</div>
+						</div>
+						<div class="col s12" id="tab-area-group">
+							<ul class="tabs blue lighten-4" width="4%">
+								<li class="tab col s6 l4"><a href="#tab-lights_${Group}" class="translate active tab-lights-Group">Lights</a></li>
+								<li class="tab col s6 l4 tab-extra"><a href="#tab-sensors_${Group}" class="translate tab-sensors-Group">Sensors</a></li>
+								<li class="tab col s6 l4 tab-extra"><a href="#tab-general_${Group}" class="translate tab-general-Group">General</a></li>
+							</ul>
+						</div>
+						<div class="row" id="SingleGroupSettings">
+
+							<!-- TAB Lights -->
+							<div id="tab-lights_${Group}" class="col s12 page">
+								<div class="row">
+									<div class="col s12">
+										<!-- <h6 class="translate title" style="background-color:#174475;">Lights</h6> -->
+									</div>
+								</div>
+								<div class="row">
+									<div class="col s12" id="events">
+										<div class="row">
+											<div class="col s2 m1 l1 left">
+												<a id="addNewLight_${Group}" class="btn-floating waves-effect waves-light blue addNewLight"><i class="material-icons">add</i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col s12">
+										<span>Hier ist der Eintrag</span>
+									</div>
+								</div>
+							</div>
+							<!-- TAB Lights END -->
+
+							<!-- TAB Sensors -->
+							<div id="tab-sensors_${Group}" class="col s12 page">
+								<div class="row">
+									<div class="col s12">
+										<!-- <h6 class="translate title" style="background-color:#174475;">Sensors</h6> -->
+									</div>
+								</div>
+								<div class="row">
+									<div class="col s12" id="events">
+										<div class="row">
+											<div class="col s2 m1 l1 left">
+												<a id="addNewSensor_${Group}" class="btn-floating waves-effect waves-light blue addNewLight"><i class="material-icons">add</i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col s12">
+										<span>Hier ist der Eintrag</span>
+									</div>
+								</div>
+							</div>
+							<!-- TAB Sensors END -->
+
+							<!-- TAB General -->
+							<div id="tab-general_${Group}" class="col s12 page">
+								<div class="row">
+									<div class="col s12">
+										<!-- <h6 class="translate title" style="background-color:#174475;">General</h6> -->
+									</div>
+								</div>
+								<div class="row">
+                                    <div class="col s8 l6 input-field">
+                                        <input type="text" class="validate form-control LuxSensorGroup" id="LuxSensor_${Group}" value="${LightGroup.LuxSensor}" />
+                                        <label for="LuxSensor_${Group}" class="translate">Object ID for Lux-Sensor</label>
+                                    </div>
+                                    <div class="col s1 m2 l1">
+                                        <a id="LuxSensorPopUp_${Group}" class="btn-floating waves-effect waves-light blue table-button-add trigger-add LuxSensorPopUpGroup"><i class="material-icons">add</i></a>
+                                    </div>
+								</div>
+							</div>
+							<!-- TAB General END -->
+
+						</div>
+						<div class="row">
+							<div class="col s12 right-align">
+								<a id="removeGroup_${Group}" class="waves-effect waves-light btn-small red translate removeGroup"><i class="material-icons left">delete</i>Remove Group</a>
+							</div>
+						</div>
+					</div>
+				</li>
+			`;
+
+		}
+
+		//SELECT ID FUNCTION
+		let selectId;
+		function initSelectId($label, callback) {
+			if (selectId) {
+				return callback(selectId);
+			}
+			socket.emit("getObjects", function (err, objs) {
+				selectId = $("#dialog-select-member").selectId("init", {
+					noMultiselect: true,
+					objects: objs,
+					imgPath: "../../lib/css/fancytree/",
+					filter: { type: "state" },
+					name: "scenes-select-state",
+					texts: {
+						select: _("Select"),
+						cancel: _("Cancel"),
+						all: _("All"),
+						id: _("ID"),
+						name: _("Name"),
+						role: _("Role"),
+						room: _("Room"),
+						value: _("Value"),
+						selectid: _("Select ID") + " >> " + $label,
+						from: _("From"),
+						lc: _("Last changed"),
+						ts: _("Time stamp"),
+						wait: _("Processing..."),
+						ack: _("Acknowledged"),
+						selectAll: _("Select all"),
+						unselectAll: _("Deselect all"),
+						invertSelection: _("Invert selection")
+					},
+					columns: ["image", "name", "role", "room"]
+				});
+				callback(selectId);
+			});
+		}
+
+		//+++++++++ HELPER ++++++++
+		function getGroupNameFromId(Group) {
+			Group = Group.split("_");
+			return Group[1];
 		}
 	</script>
 
@@ -67,27 +398,171 @@
 
 	<div class="m adapter-container">
 
-		<div class="row">
-			<div class="col s12 m4 l2">
-				<img src="lightcontrol.png" class="logo">
-			</div>
-		</div>
+		<div id="header-area" class="row" >
+            <div id="header-logo-title" class="col s6" >
+                <img class="logo" src="lightcontrol.png" >
+                <p>
+                    <span class="translate h-title">LightControl</span><br />
+                    <span class="translate h-sub-title">Controlling your Lights…</span>
+                </p>
+            </div>
+        </div>
 
 		<!-- Put your content here -->
-
-		<!-- For example columns with settings: -->
 		<div class="row">
-			<div class="col s6 input-field">
-				<input type="checkbox" class="value" id="option1" />
-				<label for="option1" class="translate">option1</label>
-			</div>
+            <div class="col s12" id="tab-area">
+                <ul class="tabs blue lighten-4" width="4%">
+                    <li class="tab col s6 l4"><a href="#tab-settings" class="translate active">Group Settings</a></li>
+                    <li class="tab col s6 l4 tab-extra"><a href="#tab-general" class="translate">General Settings</a></li>
+                </ul>
+            </div>
 
-			<div class="col s6 input-field">
-				<input type="text" class="value" id="option2" />
-				<label for="option2" class="translate">option2</label>
+			<div class="row" id="GroupSettings">
+                <!-- group settings -->
+                <div id="tab-settings" class="col s12 page">
+                    <div class="row">
+                        <div class="col s12">
+                            <h6 class="translate title" style="background-color:#174475;">Groups</h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12" id="events">
+                            <div class="row">
+                                <div class="col s2 m1 l1 left">
+                                    <a id="addNewGroup" class="btn-floating waves-effect waves-light blue table-button-add"><i class="material-icons">add</i></a>
+                                </div>
+                            </div>
+						</div>
+					</div>
+					<ul class="collapsible popout" id="LightGroups"></ul>
+				</div>
+				<!-- general settings -->
+				<div id="tab-general" class="col s12 page">
+                    <div class="row">
+                        <div class="col s12">
+                            <h6 class="translate title" style="background-color:#174475;">General Settings</h6>
+                        </div>
+                    </div>
+					<ul class="collapsible">
+						<!-- Settings for Global Lux Sensor-->
+						<li>
+							<div class="collapsible-header">
+								<i class="material-icons">expand_more</i><h6 class="translate">Settings for global Lux-Sensor</h6>
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+                                    <div class="col s8 l6 input-field">
+                                        <input type="text" class="validate form-control global" id="GlobalLuxSensor" />
+                                        <label for="GlobalLuxSensor" class="translate">Object ID for global Lux-Sensor</label>
+                                        <!-- <span class="translate">Object ID for global Lux-Sensor</span> -->
+                                    </div>
+                                    <div class="col s1 m2 l1">
+                                        <a id="GlobalLuxSensorPopUp" class="btn-floating waves-effect waves-light blue table-button-add trigger-add"><i class="material-icons">add</i></a>
+                                    </div>
+								</div>
+							</div>
+						</li>
+						<!-- Settings for Color Temperature -->
+						<li>
+							<div class="collapsible-header">
+								<i class="material-icons">expand_more</i><h6 class="translate">Settings for Color-Temperature</h6>
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+                                    <div class="col s6 l3 input-field">
+                                        <input type="number" class="validate form-control global" id="minCt" value="2700" min="2700" max="6500"/>
+                                        <label for="minCt" class="translate">Minimum Value for Color-Temperature (Kelvin)</label>
+                                        <!-- <span class="translate">Minimum Value for Color-Temperature (Kelvin)</span> -->
+                                    </div>
+									<div class="col s6 l3 input-field">
+                                        <input type="number" class="validate form-control global" id="maxCt" value="6500" min="2700" max="6500"/>
+                                        <label for="maxCt" class="translate">Maximum Value for Color-Temperature (Kelvin)</label>
+                                        <!-- <span class="translate">Maximum Value for Color-Temperature (Kelvin)</span> -->
+                                    </div>
+								</div>
+							</div>
+						</li>
+						<!-- Settings for Brightness and Dimming -->
+						<li>
+							<div class="collapsible-header">
+								<i class="material-icons">expand_more</i><h6 class="translate">Settings for Dimming</h6>
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<div class="col s6 l2 input-field">
+										<input type="number" class="validate form-control global" id="RampSteps" value="10" min="5" max="30"/>
+										<label for="General_Settings_RampSteps" class="translate">Ramp Steps for Dimming</label>
+										<!-- <span class="translate">Ramp Steps for Dimming</span> -->
+									</div>
+									<div class="col s6 l2 input-field">
+										<input type="number" class="valid form-control global" id="minBri" value="10" min="2" max="50" />
+										<label for="General_Settings_minBri" class="translate">Minimum Brightness for Dimming</label>
+										<!-- <span class="translate">Minimum Brightness for Dimming</span> -->
+									</div>
+								</div>
+							</div>
+						</li>
+						<!-- Settings for Presence -->
+						<li>
+							<div class="collapsible-header">
+								<i class="material-icons">expand_more</i><h6 class="translate">Settings for Presence</h6>
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+                                    <div class="col s8 l6 input-field">
+                                        <input type="text" class="validate form-control global" id="IsPresenceDp" />
+                                        <label for="IsPresenceDp" class="translate">Object ID for Presence</label>
+                                        <!-- <span class="translate">Object ID for Presence</span> -->
+                                    </div>
+                                    <div class="col s1 m2 l1">
+                                        <a id="IsPresenceDpPopUp" class="btn-floating waves-effect waves-light blue table-button-add trigger-add"><i class="material-icons">add</i></a>
+                                    </div>
+								</div>
+								<div class="row">
+                                    <div class="col s8 l6 input-field">
+                                        <input type="text" class="validate form-control global" id="PresenceCountDp" />
+                                        <label for="PresenceCountDp" class="translate">Object ID for Presence Counter</label>
+                                        <!-- <span class="translate">Object ID for Presence Counter</span> -->
+                                    </div>
+                                    <div class="col s1 m2 l1">
+                                        <a id="PresenceCountDpPopUp" class="btn-floating waves-effect waves-light blue table-button-add trigger-add"><i class="material-icons">add</i></a>
+                                    </div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
-
+		<!-- DIALOGS -->
+		<div class="m material-dialogs">
+			<!-- ID Select -->
+            <div id="dialog-select-member" class="modal modal-fixed-footer">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col s12 title"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 dialog-content">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="modal-action modal-close waves-effect waves-green btn btn-set"><i class="large material-icons left">check</i><span class="translate">Select</span></a>
+                    <a class="modal-action modal-close waves-effect waves-green btn btn-close"><i class="large material-icons left ">close</i><span class="translate">Cancel</span></a>
+                </div>
+            </div>
+			<!-- Confirm Dialog-->
+			<div id="confirmRemove" class="modal">
+				<div class="modal-content">
+					<p class="translate">Are you sure to remove this Group?</p>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="waves-effect waves-green green btn translate" onclick="$('#confirmRemove').modal('close'); return false;">No</a>
+					<a href="#" class="waves-effect waves-red btn red translate" id="confirmRemove_YesBtn"><i class="material-icons left translate">delete</i>Yes</a>
+			   </div>
+			</div>
+		</div>
 	</div>
 
 </body>
