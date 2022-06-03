@@ -29,6 +29,7 @@
 			const debug = settings.debug;
 			const GlobalSettings = settings.GlobalSettings;
 			const LightGroups = settings.LightGroups;
+			let createdGroups = [];
 
 			//Set Values of Global Settings
 			if (debug) console.log(settings.GlobalSettings);
@@ -49,16 +50,22 @@
 				}
 			});
 
+
 			//Create Groups and set values
 			if(LightGroups) {
 				Object.keys(LightGroups).forEach((Group) => {
-					const newGroup = NewGroup(Group, LightGroups[Group]);
-					console.log(newGroup);
+					createdGroups.push(Group);
+					const newGroup = NewGroup(Group, LightGroups[Group], GlobalSettings);
 					$( "#LightGroups" ).append( newGroup );
 										
 				});
+				
+				afterCare();
+			}
+
+			function afterCare() {
 				translateAll("#LightGroups");
-				loadOptions(); 
+				loadOptions();
 			}
 
 			onChange(false);
@@ -86,144 +93,168 @@
 			//++++++++++ OPTIONS ++++++++++
 			//Load Options
 			function loadOptions() {
-				$(".collapsible").collapsible();
-				$(".modal").modal();
 
-			}
-
-			//+++++++++ BUTTONS +++++++++++
-			//Remove Group
-			$(".removeGroup").on("click", function () {
-				const Group = getGroupNameFromId($(this).attr("id"));
-				console.log(Group);
-				//$("#Group_"+ Group +"").remove();
-				
-				$("#confirmRemove").modal("open"); 
-				$("#confirmRemove_YesBtn").click(function(){ 
-					$("#Group_"+ Group +"").remove();
-					$("#confirmRemove").modal("close");
+				$(':checkbox').each(function() {
+					setHideOrNot($(this), this);
 				}); 
 				
-
-			});
-			
-			//+++++++++ SELECTS +++++++++++
-			// Global Lux Sensor
-			$("#GlobalLuxSensorPopUp").on("click", function () {
-				const $label = $("label[for='GlobalLuxSensor']").text();
-				initSelectId($label, function (sid) {
-					sid.selectId("show", $("#GlobalLuxSensor").val(), function (newId) {
-						if (newId) {
-							$("#GlobalLuxSensor").val(newId).trigger("change");
-						}
+				$(".collapsible").collapsible();
+				$(".modal").modal();
+				document.addEventListener('DOMContentLoaded', function() {
+					var elems = document.querySelectorAll('select');
+					var instances = M.FormSelect.init(elems, {
+					// specify options here
 					});
 				});
-			});
 
-			$("#GlobalLuxSensor").on("click", function() {
-				const $inputField = $(this);
-				const $label = $("label[for='"+$inputField.attr("id")+"']").text();
-				if ($inputField.val() === "") {
-					initSelectId($label, function (sid) {
-						sid.selectId("show", $inputField.val(), function (newId) {
-							if (newId) {
-								inputField.val(newId).trigger("change");
-							}
-						});
-					});
-				}
-			});
+				//+++++++++ BUTTONS +++++++++++
+				//Remove Group
+				$(".removeGroup").on("click", function () {
+					const Group = getGroupNameFromId($(this).attr("id"));
+					
+					$("#confirmRemove").modal("open"); 
+					$("#confirmRemove_YesBtn").click(function(){ 
+						$("#Group_"+ Group +"").remove();
+						$("#confirmRemove").modal("close");
+					}); 
+					
 
-			// IsPresenceDp
-			$("#IsPresenceDpPopUp").on("click", function () {				
-				const $label = $("label[for='IsPresenceDp']").text();
-				initSelectId($label, function (sid) {
-					sid.selectId("show", $("#IsPresenceDp").val(), function (newId) {
-						if (newId) {
-							$("#IsPresenceDp").val(newId).trigger("change");
-						}
-					});
-				});
-			});
-
-			$("#IsPresenceDp").on("click", function() {
-				const $inputField = $(this);
-				const $label = $("label[for='"+$inputField.attr("id")+"']").text();
-				if ($inputField.val() === "") {
-					initSelectId($label, function (sid) {
-						sid.selectId("show", $inputField.val(), function (newId) {
-							if (newId) {
-								inputField.val(newId).trigger("change");
-							}
-						});
-					});
-				}
-			});
-
-			// PresenceCountDp
-			$("#PresenceCountDpPopUp").on("click", function () {
-				const $label = $("label[for='PresenceCountDp']").text();
-				initSelectId($label, function (sid) {
-					sid.selectId("show", $("#PresenceCountDp").val(), function (newId) {
-						if (newId) {
-							$("#PresenceCountDp").val(newId).trigger("change");
-						}
-					});
-				});
-			});
-
-			$("#PresenceCountDp").on("click", function() {
-				const $inputField = $(this);
-				const $label = $("label[for='"+$inputField.attr("id")+"']").text();
-				if ($inputField.val() === "") {
-					initSelectId($label, function (sid) {
-						sid.selectId("show", $inputField.val(), function (newId) {
-							if (newId) {
-								inputField.val(newId).trigger("change");
-							}
-						});
-					});
-				}
-			});
-
-			// LuxSensor of Group
-			$(".LuxSensorPopUpGroup").on("click", function () {
-				const Group = getGroupNameFromId($(this).attr("id"));
-				const $label = `Object-ID for Lux-Sensor`;				
-				initSelectId($label, function (sid) {
-					sid.selectId("show", $("#LuxSensor_"+ Group + "").val(), function (newId) {
-						if (newId) {
-							$("#LuxSensor_"+ Group + "").val(newId).trigger("change");
-						}
-					});
 				});
 				
-			});
-
-			$(".LuxSensorGroup").on("click", function() {
-				const Group = getGroupNameFromId($(this).attr("id"));
-				const $label = $("label[for='"+$(this).attr("id")+"']").text();
-				if ($(this).val() === "") {
+				//+++++++++ SELECTS +++++++++++
+				// Global Lux Sensor
+				$("#GlobalLuxSensorPopUp").on("click", function () {
+					const $label = $("label[for='GlobalLuxSensor']").text();
 					initSelectId($label, function (sid) {
-						sid.selectId("show", $("#LuxSensor_"+ Group + "").val(), function (newId) {
+						sid.selectId("show", $("#GlobalLuxSensor").val(), function (newId) {
 							if (newId) {
-								$("#LuxSensor_"+ Group + "").val(newId)
-									.trigger("change")
-									.on("change", () => onChange())
-									.on("keyup", () => onChange());
+								$("#GlobalLuxSensor").val(newId).trigger("change");
 							}
 						});
 					});
-				}
-			});
+				});
 
-			// Change GroupName
-			$(".editGroupName").on("input", function () {
-				const Group = getGroupNameFromId($(this).attr("id"));
-				const Input = $(this).val();
-				console.log(Input);
-				$("#GroupName_" + Group + "").text(Input);						
-			});
+				$("#GlobalLuxSensor").on("click", function() {
+					const $inputField = $(this);
+					const $label = $("label[for='"+$inputField.attr("id")+"']").text();
+					if ($inputField.val() === "") {
+						initSelectId($label, function (sid) {
+							sid.selectId("show", $inputField.val(), function (newId) {
+								if (newId) {
+									inputField.val(newId).trigger("change");
+								}
+							});
+						});
+					}
+				});
+
+				// IsPresenceDp
+				$("#IsPresenceDpPopUp").on("click", function () {				
+					const $label = $("label[for='IsPresenceDp']").text();
+					initSelectId($label, function (sid) {
+						sid.selectId("show", $("#IsPresenceDp").val(), function (newId) {
+							if (newId) {
+								$("#IsPresenceDp").val(newId).trigger("change");
+							}
+						});
+					});
+				});
+
+				$("#IsPresenceDp").on("click", function() {
+					const $inputField = $(this);
+					const $label = $("label[for='"+$inputField.attr("id")+"']").text();
+					if ($inputField.val() === "") {
+						initSelectId($label, function (sid) {
+							sid.selectId("show", $inputField.val(), function (newId) {
+								if (newId) {
+									inputField.val(newId).trigger("change");
+								}
+							});
+						});
+					}
+				});
+
+				// PresenceCountDp
+				$("#PresenceCountDpPopUp").on("click", function () {
+					const $label = $("label[for='PresenceCountDp']").text();
+					initSelectId($label, function (sid) {
+						sid.selectId("show", $("#PresenceCountDp").val(), function (newId) {
+							if (newId) {
+								$("#PresenceCountDp").val(newId).trigger("change");
+							}
+						});
+					});
+				});
+
+				$("#PresenceCountDp").on("click", function() {
+					const $inputField = $(this);
+					const $label = $("label[for='"+$inputField.attr("id")+"']").text();
+					if ($inputField.val() === "") {
+						initSelectId($label, function (sid) {
+							sid.selectId("show", $inputField.val(), function (newId) {
+								if (newId) {
+									inputField.val(newId).trigger("change");
+								}
+							});
+						});
+					}
+				});
+
+				$(".SelectID").on("click", function () {
+					const Group = splittId($(this).attr("id")).group;
+					const Type = splittId($(this).attr("id")).type;
+					const $input = $(this)[0].tagName !== "INPUT" ? $(this).closest("div.row").find("input") : $(this);
+										
+					const $label = `${Type}`;				
+					initSelectId($label, function (sid) {
+						sid.selectId("show", $input.val(), function (newId) {
+							if (newId) {
+								$input.val(newId).trigger("change");
+							}
+						});
+					});				
+				});
+
+				// Change GroupName
+				$(".editGroupName").on("input", function () {
+					const Group = getGroupNameFromId($(this).attr("id"));
+					const Input = $(this).val();
+					const index = createdGroups.findIndex((el) => el === Input);
+					console.log(index);
+					createdGroups[index] = Input;
+					console.log(createdGroups);	
+					$("#GroupName_" + Group + "").text(Input);		
+				});
+
+				// Change LightName
+				$(".editLightName").on("input", function () {
+					const Group = splittId($(this).attr("id")).group;
+					const Type = splittId($(this).attr("id")).type;
+					const Input = $(this).val();
+					$("#LightName_" + Type + "_" + Group + "").text(Input);						
+				});
+
+				//addNewGroup
+				$("#addNewGroup").on("click", function () {
+					if (!createdGroups.includes("newGroup")) {
+						const Group = {"LuxSensor": "", "lights": {}, "sensors": {}};
+						const newGroup = NewGroup("newGroup", Group, GlobalSettings);
+						createdGroups.push("newGroup");
+						$( "#LightGroups" ).append( newGroup );
+						afterCare();
+					} else {
+						console.log(createdGroups);
+						console.log("Group is still there! Please change the Name of the newGroup");
+					}
+				})
+
+				//+++++++ SWITCHES +++++++//
+				$(".switchOnOff").change(function() {
+					setHideOrNot($(this), this);
+			
+				});
+
+			}
 			
 		}
 
@@ -245,8 +276,7 @@
 		}
 
 		//******* GROUP TEMPLATE *******/
-		function NewGroup(Group, LightGroup) {
-			console.log(Group);
+		function NewGroup(Group, LightGroup, GlobalSettings) {
 			return `
 				<li id="Group_${Group}">
 					<div class="collapsible-header">
@@ -256,7 +286,7 @@
 						<div class="row">
 							<div class="col s8 l6 input-field">
 								<input type="text" class="validate form-control editGroupName" id="editGroupName_${Group}" value="${Group}"/>
-								<label for="editGroupName" class="translate">Groupname</label>
+								<label for="editGroupName_${Group}" class="translate">Groupname</label>
 							</div>
 						</div>
 						<div class="col s12" id="tab-area-group">
@@ -284,10 +314,8 @@
 										</div>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col s12">
-										<span>Hier ist der Eintrag</span>
-									</div>
+								<div id="lights_${Group}">
+									${newLight(LightGroup.lights, Group)}
 								</div>
 							</div>
 							<!-- TAB Lights END -->
@@ -309,9 +337,9 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col s12">
-										<span>Hier ist der Eintrag</span>
-									</div>
+									<div id="sensors_${Group}">
+									${newSensor(LightGroup.sensors)}
+								</div>
 								</div>
 							</div>
 							<!-- TAB Sensors END -->
@@ -324,13 +352,7 @@
 									</div>
 								</div>
 								<div class="row">
-                                    <div class="col s8 l6 input-field">
-                                        <input type="text" class="validate form-control LuxSensorGroup" id="LuxSensor_${Group}" value="${LightGroup.LuxSensor}" />
-                                        <label for="LuxSensor_${Group}" class="translate">Object ID for Lux-Sensor</label>
-                                    </div>
-                                    <div class="col s1 m2 l1">
-                                        <a id="LuxSensorPopUp_${Group}" class="btn-floating waves-effect waves-light blue table-button-add trigger-add LuxSensorPopUpGroup"><i class="material-icons">add</i></a>
-                                    </div>
+                                    ${addSelectIdInput(LightGroup.LuxSensor !== "" ? LightGroup.LuxSensor : GlobalSettings.GlobalLuxSensor , `LuxSensor_${Group}`, "Object ID for Lux-Sensor", "LuxSensorGroup", "s6")}
 								</div>
 							</div>
 							<!-- TAB General END -->
@@ -344,7 +366,190 @@
 					</div>
 				</li>
 			`;
+		}
 
+		function newLight(Lights, Group) {
+			console.log(Lights);
+			let result = "";
+			
+			if (Object.keys(Lights).length !== 0) {
+
+				result = `<ul class="collapsible">`;
+
+				Object.keys(Lights).forEach((Name) => {
+					const Light = Lights[Name];
+
+					result += `
+						<li>
+							<div class="collapsible-header">
+								<i class="material-icons">expand_more</i><h6 id="LightName_${Name}_${Group}">${Name}</h6>
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<div class="col s2 input-field">
+										<input type="text" class="validate form-control editLightName" id="editLightName_${Name}_${Group}" value="${Name}"/>
+										<label for="editGroupName" class="translate">Lightname</label>
+									</div>
+								</div>
+								<div class="LightProperties" id="Light_${Name}_${Group}">
+									<div class="row power">
+										<div class="col s6 oid">${addSelectIdInput(Light.power.oid, `Light_${Name}_power.oid_${Group}`, "Object ID for Power On/Off", "LightPowerOid", "s10")}</div>
+										<div class="col s2 onVal">${addInput(Light.power.onVal, `Light_${Name}_power.onVal_${Group}`, "Value for Power On", "LightPowerOnVal", "text")}</div>
+										<div class="col s2 offVal">${addInput(Light.power.offVal, `Light_${Name}_power.offVal_${Group}`, "Value for Power Off", "LightPowerOffVal", "text")}</div>
+									</div>
+									<div class="row switch">
+										<div class="col s6 input-field">
+											<input type="checkbox" id="Light_${Name}_bri_onOff_${Group}" class="value switchOnOff" ${Light.bri.oid !== "" ? 'checked="checked"' : ''}/>
+                                            <label for="Light_${Name}_bri_onOff_${Group}" class="translate">Brightness Controll</label>
+										</div>
+									</div>
+									<div class="row bri">
+										<div class="col s5 oid">${addSelectIdInput(Light.bri.oid, `Light_${Name}_bri.oid_${Group}`, "Object ID for Brightness", "LightBriOid", "s10")}</div>
+										<div class="col s2 minVal">${addInput(Light.bri.minVal, `Light_${Name}_bri.minVal_${Group}`, "Value for minimum Brightness", "LightBriMinVal", "number")}</div>
+										<div class="col s2 maxVal">${addInput(Light.bri.maxVal, `Light_${Name}_bri.maxVal_${Group}`, "Value for maximum Brightness", "LightBriMaxVal", "number")}</div>
+										<div class="col s2 defaultVal">${addInput(Light.bri.defaultVal !== "" ? Light.bri.defaultVal : 100, `Light_${Name}_bri.defaultVal_${Group}`, "Value/Offset for Brightness", "LightBriDefault", "number")}</div>
+									</div>
+									<div class="row switch">
+										<div class="col s6 input-field">
+											<input type="checkbox" id="Light_${Name}_ct_onOff_${Group}" class="value switchOnOff" ${Light.ct.oid !== "" ? 'checked="checked"' : ''}/>
+                                            <label for="Light_${Name}_ct_onOff_${Group}" class="translate">Color-Temperature Control</label>
+										</div>
+									</div>
+									<div class="row ct">
+										<div class="col s6 oid">${addSelectIdInput(Light.ct.oid, `Light_${Name}_ct.oid_${Group}`, "Object ID for Color-Temperature", "LightCtOid", "s10")}</div>
+										<div class="col s2 minVal">${addInput(Light.ct.minVal, `Light_${Name}_ct.minVal_${Group}`, "Value for minimum Color-Temperature", "LightCtMinVal", "number")}</div>
+										<div class="col s2 maxVal">${addInput(Light.ct.maxVal, `Light_${Name}_ct.maxVal_${Group}`, "Value for maximum Color-Temperature", "LightCtMaxVal", "number")}</div>
+									</div>
+									<div class="row switch">
+										<div class="col s6 input-field">
+											<input type="checkbox" id="Light_${Name}_sat_onOff_${Group}" class="value switchOnOff" ${Light.sat.oid !== "" ? 'checked="checked"' : ''}/>
+                                            <label for="Light_${Name}_sat_onOff_${Group}" class="translate">Saturation Control</label>
+										</div>
+									</div>
+									<div class="row sat">
+										<div class="col s6 oid">${addSelectIdInput(Light.sat.oid, `Light_${Name}_sat.oid_${Group}`, "Object ID for Saturation", "LightSatOid", "s10")}</div>
+										<div class="col s2 minVal">${addInput(Light.sat.minVal, `Light_${Name}_sat.minVal_${Group}`, "Value for minimum Saturation", "LightSatMinVal", "number")}</div>
+										<div class="col s2 maxVal">${addInput(Light.sat.maxVal, `Light_${Name}_sat.maxVal_${Group}`, "Value for maximum Saturation", "LightSatMaxVal", "number")}</div>
+									</div>
+									<div class="row switch">
+										<div class="col s6 input-field">
+											<input type="checkbox" id="Light_${Name}_modeswitch_onOff_${Group}" class="value switchOnOff" ${Light.modeswitch.oid !== "" ? 'checked="checked"' : ''}/>
+                                            <label for="Light_${Name}_modeswitch_onOff_${Group}" class="translate">ModeSwitch Control</label>
+										</div>
+									</div>
+									<div class="row modeswitch">
+										<div class="col s6 oid">${addSelectIdInput(Light.modeswitch.oid, `Light_${Name}_modeswitch.oid_${Group}`, "Object ID for Mode Switch", "LightModeswitchOid", "s10")}</div>
+										<div class="col s2 whiteModeVal">${addInput(Light.modeswitch.whiteModeVal, `Light_${Name}_modeswitch.whiteModeVal_${Group}`, "Value for White Mode", "LightModeswitchWhiteModeVal", "text")}</div>
+										<div class="col s2 colorModeVal">${addInput(Light.modeswitch.colorModeVal, `Light_${Name}_modeswitch.colorModeVal_${Group}`, "Value for Color Mode", "LightModeswitchColorModeVal", "text")}</div>
+									</div>
+									<div class="row switch">
+										<div class="col s6 input-field">
+											<input type="checkbox" id="Light_${Name}_color_onOff_${Group}" class="value switchOnOff" ${Light.color.oid !== "" ? 'checked="checked"' : ''}/>
+                                            <label for="Light_${Name}_color_onOff_${Group}" class="translate">Color Control</label>
+										</div>
+									</div>
+									<div class="row color">
+										<div class="col s6 oid">${addSelectIdInput(Light.color.oid, `Light_${Name}_color.oid_${Group}`, "Object ID for Color", "LightColorOid", "s10")}</div>
+										<div class="col s2 type">
+											<div class="input-field col s12 select">
+												<select id="Light_${Name}_color.type_${Group}" class="LightColorType">
+													<option value="" ${(Light.color.type).toLowerCase() === "" ? "selected disabled" : ""}></option>
+													<option value="1" ${(Light.color.type).toLowerCase() === "hex" ? "selected" : ""}>HEX</option>
+													<option value="2" ${(Light.color.type).toLowerCase() === "rgb" ? "selected" : ""}>RGB</option>
+													<option value="3" ${(Light.color.type).toLowerCase() === "xy" ? "selected" : ""}>XY</option>
+												</select>
+												<label>Color-Type</label>
+											</div>
+										</div>
+										<div class="col s2 default">${addInput(Light.color.default !== "" ? Light.color.default: "#FFFFFF", `Light_${Name}_color.default_${Group}`, "Default Value for Color", "LightColorDefault", "text")}</div>
+									</div>
+								</div>
+							</div>
+						</li>
+					`;
+				});
+
+				result += `</ul>`;
+			}
+			
+			return result;
+		}
+
+		function newSensor(Sensors) {
+			const isEmpty = Object.keys(Sensors).length === 0;
+			let result = "";
+			if (!isEmpty) {
+				result = ``;
+			}
+
+			return result;
+		}
+
+		/**
+		 * Create a Input Field to select an Object-ID
+		 * @param {string} value
+		 * @param {string} id
+		 * @param {string} label Label-Text
+		 * @param {string} addClass Add more Classes with space limiter
+		 * @param {string} size Size of the Input Field
+		 */
+		function addSelectIdInput(value, id, label, addClass, size) {
+			return `
+				<div class="col ${size} input-field">
+                    <input type="text" class="validate form-control SelectID ${addClass}" id="Input_${id}" value="${value}" />
+                     <label for="Input_${id}" class="translate">${label}</label>
+                </div>
+				<div class="col s1 m2 l1">
+                    <a id="PopUp_${id}" class="btn-floating waves-effect waves-light blue table-button-add trigger-add SelectID"><i class="material-icons">add</i></a>
+                </div>
+			`;
+		}
+
+		/**
+		 * Create a Input Field to select an Object-ID
+		 * @param {string} value
+		 * @param {string} id
+		 * @param {string} label Label-Text
+		 * @param {string} addClass Add more Classes with space limiter
+		 * @param {string} size Size of the Input Field
+		 */
+		 function addSelectIdInputTable(value, id, label, addClass, size) {
+			return `
+				<div class="input-field">
+                    <input type="text" class="validate form-control SelectID ${addClass}" id="Input_${id}" value="${value}" />
+                     <label for="Input_${id}" class="translate">${label}</label>
+                </div>
+				<div class="col s1 m2 l1">
+                    <a id="PopUp_${id}" class="btn-floating waves-effect waves-light blue table-button-add trigger-add SelectID"><i class="material-icons">add</i></a>
+                </div>
+			`;
+		}
+
+		/**
+		 * Create a Input Field for Values
+		 * @param {string} value
+		 * @param {string} id
+		 * @param {string} label Label-Text
+		 * @param {string} addClass Add more Classes with space limiter
+		 * @param {string | number} 
+		 */
+		function addInput(value, id, label, addClass, type) {
+			return `
+				<div class="input-field">
+                    <input type="${type}" class="validate form-control ${addClass}" id="${id}" value="${value}" />
+                     <label for="${id}" class="translate">${label}</label>
+                </div>
+			`;
+		}
+
+		//Set Hide or not if checkboxes are set
+		function setHideOrNot($this, element) {
+			const klasse = (element.id).split("_")[2];
+			if(element.checked) {
+				$this.closest(".LightProperties").find("."+ klasse +"").removeClass("hide");
+			} else {
+				$this.closest(".LightProperties").find("."+ klasse +"").addClass("hide");
+			}	
 		}
 
 		//SELECT ID FUNCTION
@@ -369,7 +574,7 @@
 						role: _("Role"),
 						room: _("Room"),
 						value: _("Value"),
-						selectid: _("Select ID") + " >> " + $label,
+						selectid: _("Select ID") + " >> " + $label + " >> ",
 						from: _("From"),
 						lc: _("Last changed"),
 						ts: _("Time stamp"),
@@ -388,7 +593,12 @@
 		//+++++++++ HELPER ++++++++
 		function getGroupNameFromId(Group) {
 			Group = Group.split("_");
-			return Group[1];
+			return Group[Group.length - 1]
+		}
+
+		function splittId(id) {
+			id = id.split("_");
+			return {element: id[0], type: id[1], group: id[2]}
 		}
 	</script>
 
@@ -447,7 +657,7 @@
 						<!-- Settings for Global Lux Sensor-->
 						<li>
 							<div class="collapsible-header">
-								<i class="material-icons">expand_more</i><h6 class="translate">Settings for global Lux-Sensor</h6>
+								<i class="flip material-icons">expand_more</i><h6 class="translate">Settings for global Lux-Sensor</h6>
 							</div>
 							<div class="collapsible-body">
 								<div class="row">
@@ -465,7 +675,7 @@
 						<!-- Settings for Color Temperature -->
 						<li>
 							<div class="collapsible-header">
-								<i class="material-icons">expand_more</i><h6 class="translate">Settings for Color-Temperature</h6>
+								<i class="flip material-icons">expand_more</i><h6 class="translate">Settings for Color-Temperature</h6>
 							</div>
 							<div class="collapsible-body">
 								<div class="row">
@@ -485,7 +695,7 @@
 						<!-- Settings for Brightness and Dimming -->
 						<li>
 							<div class="collapsible-header">
-								<i class="material-icons">expand_more</i><h6 class="translate">Settings for Dimming</h6>
+								<i class="flip material-icons">expand_more</i><h6 class="translate">Settings for Dimming</h6>
 							</div>
 							<div class="collapsible-body">
 								<div class="row">
@@ -505,7 +715,7 @@
 						<!-- Settings for Presence -->
 						<li>
 							<div class="collapsible-header">
-								<i class="material-icons">expand_more</i><h6 class="translate">Settings for Presence</h6>
+								<i class="flip material-icons">expand_more</i><h6 class="translate">Settings for Presence</h6>
 							</div>
 							<div class="collapsible-body">
 								<div class="row">
@@ -561,6 +771,23 @@
 					<a href="#" class="waves-effect waves-green green btn translate" onclick="$('#confirmRemove').modal('close'); return false;">No</a>
 					<a href="#" class="waves-effect waves-red btn red translate" id="confirmRemove_YesBtn"><i class="material-icons left translate">delete</i>Yes</a>
 			   </div>
+			</div>
+			<!-- New Group Dialog-->
+			<div id="newGroupDialog" class="modal">
+				<div class="modal-content">
+					<p class="translate">Please give a name for the new LightGroup:</p>
+					<div class="row">
+						<div class="col s8 l6 input-field">
+							<input type="text" class="validate form-control" id="newGroupName" />
+							<label for="newGroupName" class="translate">Name</label>
+							<!-- <span class="translate">Object ID for Presence</span> -->
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="waves-effect waves-green red btn translate" onclick="$('#newGroupDialog').modal('close'); return false;">Cancel</a>
+					<a href="#" class="waves-effect waves-red btn green translate" id="newGroupDialog_CreateBtn"><i class="material-icons left translate">add_circle</i>Create</a>
+				</div>
 			</div>
 		</div>
 	</div>
