@@ -29,7 +29,9 @@
 			const debug = settings.debug;
 			const GlobalSettings = settings.GlobalSettings;
 			const LightGroups = settings.LightGroups;
-			let createdGroups = [];
+			let createdGroups = {};
+			globalThis.createdLights = {};
+			let indexGroups = 0;
 
 			//Set Values of Global Settings
 			if (debug) console.log(settings.GlobalSettings);
@@ -53,13 +55,15 @@
 
 			//Create Groups and set values
 			if(LightGroups) {
-				Object.keys(LightGroups).forEach((Group) => {
-					createdGroups.push(Group);
-					const newGroup = NewGroup(Group, LightGroups[Group], GlobalSettings);
+
+				Object.keys(LightGroups).forEach((Group, index) => {
+					createdGroups[index] = Group;
+					const newGroup = NewGroup(Group, LightGroups[Group], GlobalSettings, index);
 					$( "#LightGroups" ).append( newGroup );
-										
-				});
 				
+				});
+				console.log(createdGroups);
+				console.log(createdLights);
 				afterCare();
 			}
 
@@ -97,6 +101,8 @@
 				$(':checkbox').each(function() {
 					setHideOrNot($(this), this);
 				}); 
+
+				if (M) M.updateTextFields();
 				
 				$(".collapsible").collapsible();
 				$(".modal").modal();
@@ -108,105 +114,242 @@
 				});
 
 				//+++++++++ BUTTONS +++++++++++
-				//Remove Group
-				$(".removeGroup").on("click", function () {
-					const Group = getGroupNameFromId($(this).attr("id"));
+
+				//Add New Group
+				$("#addNewGroup").on("click", function () {
+
+					//Set new groupIndex
+					const groupIndex = Object.keys(createdGroups).length;
 					
-					$("#confirmRemove").modal("open"); 
-					$("#confirmRemove_YesBtn").click(function(){ 
-						$("#Group_"+ Group +"").remove();
-						$("#confirmRemove").modal("close");
-					}); 
+					//Set InputField
+					const $input = $("#newGroupName");
 					
+					//Open Modal
+					$("#newGroupDialog").modal("open");
+					$input.val("").focus();
+
+					//Click Button in Modal
+					$("#newGroupDialog_Btn").click(function(){ 
+
+						//Get Value of Inputfield
+						const newGroupName = $input.val();						
+
+						//Check if Value contains no special characters or is duplicated
+						if(containsSpecialChars(newGroupName) || Object.values(createdGroups).includes(newGroupName)){
+							
+							$input.addClass('invalid');
+
+						} else {
+							
+							$input.addClass('valid');							
+							
+							//Create new Group
+							const Group = {"LuxSensor": "", "lights": {}, "sensors": {}};
+							const newGroup = NewGroup(newGroupName, Group, GlobalSettings, groupIndex);
+							
+							//Add Group to createdGroups
+							createdGroups[groupIndex] = newGroupName;
+							
+							$( "#LightGroups" ).append( newGroup );
+							$("#editGroupNameDialog").modal("close");
+							afterCare();						
+
+						}	
+						
+					}); 			
 
 				});
 				
-				//+++++++++ SELECTS +++++++++++
-				// Global Lux Sensor
-				$("#GlobalLuxSensorPopUp").on("click", function () {
-					const $label = $("label[for='GlobalLuxSensor']").text();
-					initSelectId($label, function (sid) {
-						sid.selectId("show", $("#GlobalLuxSensor").val(), function (newId) {
-							if (newId) {
-								$("#GlobalLuxSensor").val(newId).trigger("change");
-							}
-						});
-					});
+				//Remove Group
+				$(".removeGroup").on("click", function () {
+					const groupIndex = $(this).closest( "li" ).data("groupindex")
+					const $element = $(this).closest( "li" );
+															
+					$("#confirmRemove").modal("open"); 
+					$("#confirmRemove_YesBtn").click(function(){ 
+						$element.remove();
+						$("#confirmRemove").modal("close");
+						createdGroups[groupIndex] = null;
+					}); 			
+
 				});
 
-				$("#GlobalLuxSensor").on("click", function() {
-					const $inputField = $(this);
-					const $label = $("label[for='"+$inputField.attr("id")+"']").text();
-					if ($inputField.val() === "") {
-						initSelectId($label, function (sid) {
-							sid.selectId("show", $inputField.val(), function (newId) {
-								if (newId) {
-									inputField.val(newId).trigger("change");
-								}
-							});
-						});
-					}
-				});
-
-				// IsPresenceDp
-				$("#IsPresenceDpPopUp").on("click", function () {				
-					const $label = $("label[for='IsPresenceDp']").text();
-					initSelectId($label, function (sid) {
-						sid.selectId("show", $("#IsPresenceDp").val(), function (newId) {
-							if (newId) {
-								$("#IsPresenceDp").val(newId).trigger("change");
-							}
-						});
-					});
-				});
-
-				$("#IsPresenceDp").on("click", function() {
-					const $inputField = $(this);
-					const $label = $("label[for='"+$inputField.attr("id")+"']").text();
-					if ($inputField.val() === "") {
-						initSelectId($label, function (sid) {
-							sid.selectId("show", $inputField.val(), function (newId) {
-								if (newId) {
-									inputField.val(newId).trigger("change");
-								}
-							});
-						});
-					}
-				});
-
-				// PresenceCountDp
-				$("#PresenceCountDpPopUp").on("click", function () {
-					const $label = $("label[for='PresenceCountDp']").text();
-					initSelectId($label, function (sid) {
-						sid.selectId("show", $("#PresenceCountDp").val(), function (newId) {
-							if (newId) {
-								$("#PresenceCountDp").val(newId).trigger("change");
-							}
-						});
-					});
-				});
-
-				$("#PresenceCountDp").on("click", function() {
-					const $inputField = $(this);
-					const $label = $("label[for='"+$inputField.attr("id")+"']").text();
-					if ($inputField.val() === "") {
-						initSelectId($label, function (sid) {
-							sid.selectId("show", $inputField.val(), function (newId) {
-								if (newId) {
-									inputField.val(newId).trigger("change");
-								}
-							});
-						});
-					}
-				});
-
-				$(".SelectID").on("click", function () {
-					const Group = splittId($(this).attr("id")).group;
-					const Type = splittId($(this).attr("id")).type;
-					const $input = $(this)[0].tagName !== "INPUT" ? $(this).closest("div.row").find("input") : $(this);
+				//Remove Light
+				$(".removeLight").on("click", function () {
+					const groupIndex = $(this).closest( "li" ).data("groupindex");
+					const lightIndex = $(this).closest( "li" ).data("lightindex");
+					const $element = $(this).closest( "li" );
 										
-					const $label = `${Type}`;				
-					initSelectId($label, function (sid) {
+					$("#confirmRemove").modal("open"); 
+					$("#confirmRemove_YesBtn").click(function(){ 
+						$element.remove();
+						$("#confirmRemove").modal("close");
+						createdLights[groupIndex][lightIndex] = null;
+					}); 			
+
+				});
+
+				//Edit GroupName
+				$(".editGroupName").on("click", function () {
+					const $input = $("#editGroupName");
+					const groupIndex = $(this).closest( "li" ).data("groupindex");
+										
+					$("#editGroupNameDialog").modal("open");
+					$input.data("groupindex", groupIndex).focus();
+				});
+
+				$("#editGroupNameDialog_Btn").click(function(){ 
+
+					const $input = $("#editGroupName");
+					const newGroupName = $input.val();
+					const groupIndex = $input.data("groupindex");
+
+					if(containsSpecialChars(newGroupName) || Object.values(createdGroups).indexOf(newGroupName) > -1){
+						
+						$input.addClass('invalid');
+
+					} else {
+						
+						console.log(groupIndex)
+						$input.addClass('valid');
+						createdGroups[groupIndex] = newGroupName;
+
+						$("li[data-groupindex='" + groupIndex + "'] [data-type='GroupName']").text(newGroupName);
+						$("#editGroupNameDialog").modal("close");
+						$input.removeClass('valid').val("");
+
+					}
+				});
+
+				//Add New Light
+				$(".addNewLight").on("click", function () {
+
+					//Get groupIndex
+					const groupIndex = $(this).closest( "li" ).data("groupindex");
+					console.log(groupIndex);					
+
+					//Set new lightIndex
+					const lightIndex = Object.keys(createdLights[groupIndex]).length;
+					console.log(lightIndex);
+
+					//Set InputField
+					const $input = $("#newLightName");
+
+					//Open Modal
+					$("#newLightDialog").modal("open");
+					$input.val("").data("groupIndex", groupIndex).focus();
+
+					//Click Button in Modal
+					$("#newLightDialog_Btn").click(function(){ 
+
+						//Get Value of Inputfield
+						const newLightName = $input.val();
+						console.log(groupIndex);
+						console.log(lightIndex);
+						console.log(newLightName);					
+
+						//Check if Value contains no special characters or is duplicated
+						if(containsSpecialChars(newLightName) || Object.values(createdLights[groupIndex]).includes(newLightName)){
+							
+							$input.addClass('invalid');
+
+						} else {
+							
+							$input.addClass('valid');							
+							
+							//Create new Group
+							const Light = {
+								"power": {
+									"oid": "",
+									"onVal": "",
+									"offVal": ""
+								},
+								"bri": {
+									"oid": "",
+									"minVal": "",
+									"maxVal": "",
+									"defaultVal": ""
+								},
+								"ct": {
+									"oid": "",
+									"minVal": "",
+									"maxVal": ""
+								},
+								"sat": {
+									"oid": "",
+									"minVal": "",
+									"maxVal": ""
+								},
+								"modeswitch": {
+									"oid": "",
+									"whiteModeVal": false,
+									"colorModeVal": true
+								},
+								"color": {
+									"oid": "",
+									"type": "",
+									"default": ""
+								}
+							};
+
+							console.log(Light);
+
+							const newLight = NewLight(Light, newLightName, lightIndex, groupIndex);
+							
+							//Add Group to createdGroups
+							createdLights[groupIndex][lightIndex] = newLightName;
+							console.log(createdLights);
+							
+							$( "ul[data-groupindex='" + groupIndex + "'][data-type='lights']" ).append( newLight );
+							$("#editLightNameDialog").modal("close");
+							afterCare();						
+
+						}	
+						
+					}); 			
+
+					});
+
+				//Edit LightName
+				$(".editLightName").on("click", function () {
+					const $input = $("#editLightName");
+					const groupIndex = $(this).closest( "li" ).data("groupindex");
+					const lightIndex = $(this).closest( "li" ).data("lightindex");
+										
+					$("#editLightNameDialog").modal("open");
+					$input.data("groupindex", groupIndex).data("lightindex", lightIndex).focus();
+				});
+
+				$("#editLightNameDialog_Btn").click(function(){ 
+
+					const $input = $("#editLightName");
+					const newLightName = $input.val();
+					const groupIndex = $input.data("groupindex");
+					const lightIndex = $input.data("lightindex");
+
+					if(containsSpecialChars(newLightName) || Object.values(createdLights[groupIndex]).indexOf(newLightName) > -1){
+						
+						$input.addClass('invalid');
+
+					} else {
+
+						$input.addClass('valid');
+						
+						createdLights[groupIndex][lightIndex] = newLightName
+
+						$("li[data-groupindex='" + groupIndex + "'][data-lightindex='" + lightIndex + "'] [data-type='LightName']").text(newLightName);
+						
+						$("#editLightNameDialog").modal("close");
+						$input.removeClass('valid').val("");
+
+					}
+				});				
+
+				//+++++++++ SELECTS +++++++++++
+				$(".SelectID").on("click", function () {
+					const $input = $(this)[0].tagName !== "INPUT" ? $(this).closest("div.row").find("input") : $(this);
+													
+					initSelectId(function (sid) {
 						sid.selectId("show", $input.val(), function (newId) {
 							if (newId) {
 								$input.val(newId).trigger("change");
@@ -214,39 +357,6 @@
 						});
 					});				
 				});
-
-				// Change GroupName
-				$(".editGroupName").on("input", function () {
-					const Group = getGroupNameFromId($(this).attr("id"));
-					const Input = $(this).val();
-					const index = createdGroups.findIndex((el) => el === Input);
-					console.log(index);
-					createdGroups[index] = Input;
-					console.log(createdGroups);	
-					$("#GroupName_" + Group + "").text(Input);		
-				});
-
-				// Change LightName
-				$(".editLightName").on("input", function () {
-					const Group = splittId($(this).attr("id")).group;
-					const Type = splittId($(this).attr("id")).type;
-					const Input = $(this).val();
-					$("#LightName_" + Type + "_" + Group + "").text(Input);						
-				});
-
-				//addNewGroup
-				$("#addNewGroup").on("click", function () {
-					if (!createdGroups.includes("newGroup")) {
-						const Group = {"LuxSensor": "", "lights": {}, "sensors": {}};
-						const newGroup = NewGroup("newGroup", Group, GlobalSettings);
-						createdGroups.push("newGroup");
-						$( "#LightGroups" ).append( newGroup );
-						afterCare();
-					} else {
-						console.log(createdGroups);
-						console.log("Group is still there! Please change the Name of the newGroup");
-					}
-				})
 
 				//+++++++ SWITCHES +++++++//
 				$(".switchOnOff").change(function() {
@@ -276,30 +386,32 @@
 		}
 
 		//******* GROUP TEMPLATE *******/
-		function NewGroup(Group, LightGroup, GlobalSettings) {
+		function NewGroup(Group, LightGroup, GlobalSettings, index) {
 			return `
-				<li id="Group_${Group}">
+				<li data-groupindex="${index}">
 					<div class="collapsible-header">
-						<i class="flip material-icons">expand_more</i><h6 id="GroupName_${Group}">${Group}</h6>
+						<i class="flip material-icons">expand_more</i><h6 data-type="GroupName" >${Group}</h6>
 					</div>
 					<div class="collapsible-body">
 						<div class="row">
-							<div class="col s8 l6 input-field">
-								<input type="text" class="validate form-control editGroupName" id="editGroupName_${Group}" value="${Group}"/>
-								<label for="editGroupName_${Group}" class="translate">Groupname</label>
+							<div class="col s6">
+								<a href="#" class="waves-effect waves-light btn blue translate editGroupName" ><i class="material-icons left translate">edit</i>Edit Groupname</a>
+							</div>
+							<div class="col s6 right-align">
+								<a class="waves-effect waves-light btn red translate removeGroup"><i class="material-icons left">delete</i>Remove Group</a>
 							</div>
 						</div>
 						<div class="col s12" id="tab-area-group">
 							<ul class="tabs blue lighten-4" width="4%">
-								<li class="tab col s6 l4"><a href="#tab-lights_${Group}" class="translate active tab-lights-Group">Lights</a></li>
-								<li class="tab col s6 l4 tab-extra"><a href="#tab-sensors_${Group}" class="translate tab-sensors-Group">Sensors</a></li>
-								<li class="tab col s6 l4 tab-extra"><a href="#tab-general_${Group}" class="translate tab-general-Group">General</a></li>
+								<li class="tab col s6 l4"><a href="#tab-lights_${index}" class="translate active tab-lights-Group">Lights</a></li>
+								<li class="tab col s6 l4 tab-extra"><a href="#tab-sensors_${index}" class="translate tab-sensors-Group">Sensors</a></li>
+								<li class="tab col s6 l4 tab-extra"><a href="#tab-general_${index}" class="translate tab-general-Group">General</a></li>
 							</ul>
 						</div>
 						<div class="row" id="SingleGroupSettings">
 
 							<!-- TAB Lights -->
-							<div id="tab-lights_${Group}" class="col s12 page">
+							<div id="tab-lights_${index}" class="col s12 page">
 								<div class="row">
 									<div class="col s12">
 										<!-- <h6 class="translate title" style="background-color:#174475;">Lights</h6> -->
@@ -309,19 +421,21 @@
 									<div class="col s12" id="events">
 										<div class="row">
 											<div class="col s2 m1 l1 left">
-												<a id="addNewLight_${Group}" class="btn-floating waves-effect waves-light blue addNewLight"><i class="material-icons">add</i></a>
+												<a class="btn-floating waves-effect waves-light blue addNewLight"><i class="material-icons">add</i></a>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div id="lights_${Group}">
-									${newLight(LightGroup.lights, Group)}
+								<div>
+									<ul class="collapsible" data-type="lights" data-groupindex="${index}">
+										${addLights(LightGroup.lights, index)}
+									</ul>
 								</div>
 							</div>
 							<!-- TAB Lights END -->
 
 							<!-- TAB Sensors -->
-							<div id="tab-sensors_${Group}" class="col s12 page">
+							<div id="tab-sensors_${index}" class="col s12 page">
 								<div class="row">
 									<div class="col s12">
 										<!-- <h6 class="translate title" style="background-color:#174475;">Sensors</h6> -->
@@ -331,13 +445,13 @@
 									<div class="col s12" id="events">
 										<div class="row">
 											<div class="col s2 m1 l1 left">
-												<a id="addNewSensor_${Group}" class="btn-floating waves-effect waves-light blue addNewLight"><i class="material-icons">add</i></a>
+												<a id="addNewSensor_${index}" class="btn-floating waves-effect waves-light blue addNewLight"><i class="material-icons">add</i></a>
 											</div>
 										</div>
 									</div>
 								</div>
 								<div class="row">
-									<div id="sensors_${Group}">
+									<div id="sensors_${index}">
 									${newSensor(LightGroup.sensors)}
 								</div>
 								</div>
@@ -345,134 +459,142 @@
 							<!-- TAB Sensors END -->
 
 							<!-- TAB General -->
-							<div id="tab-general_${Group}" class="col s12 page">
+							<div id="tab-general_${index}" class="col s12 page">
 								<div class="row">
 									<div class="col s12">
 										<!-- <h6 class="translate title" style="background-color:#174475;">General</h6> -->
 									</div>
 								</div>
 								<div class="row">
-                                    ${addSelectIdInput(LightGroup.LuxSensor !== "" ? LightGroup.LuxSensor : GlobalSettings.GlobalLuxSensor , `LuxSensor_${Group}`, "Object ID for Lux-Sensor", "LuxSensorGroup", "s6")}
+                                    ${addSelectIdInput(LightGroup.LuxSensor !== "" ? LightGroup.LuxSensor : GlobalSettings.GlobalLuxSensor , `LuxSensor_${index}`, "Object ID for Lux-Sensor", "LuxSensorGroup", "s6")}
 								</div>
 							</div>
 							<!-- TAB General END -->
 
-						</div>
-						<div class="row">
-							<div class="col s12 right-align">
-								<a id="removeGroup_${Group}" class="waves-effect waves-light btn-small red translate removeGroup"><i class="material-icons left">delete</i>Remove Group</a>
-							</div>
 						</div>
 					</div>
 				</li>
 			`;
 		}
 
-		function newLight(Lights, Group) {
-			console.log(Lights);
+		function addLights(Lights, groupIndex) {
+			
 			let result = "";
+			createdLights[groupIndex] = {};
 			
 			if (Object.keys(Lights).length !== 0) {
 
-				result = `<ul class="collapsible">`;
-
-				Object.keys(Lights).forEach((Name) => {
-					const Light = Lights[Name];
-
-					result += `
-						<li>
-							<div class="collapsible-header">
-								<i class="material-icons">expand_more</i><h6 id="LightName_${Name}_${Group}">${Name}</h6>
-							</div>
-							<div class="collapsible-body">
-								<div class="row">
-									<div class="col s2 input-field">
-										<input type="text" class="validate form-control editLightName" id="editLightName_${Name}_${Group}" value="${Name}"/>
-										<label for="editGroupName" class="translate">Lightname</label>
-									</div>
-								</div>
-								<div class="LightProperties" id="Light_${Name}_${Group}">
-									<div class="row power">
-										<div class="col s6 oid">${addSelectIdInput(Light.power.oid, `Light_${Name}_power.oid_${Group}`, "Object ID for Power On/Off", "LightPowerOid", "s10")}</div>
-										<div class="col s2 onVal">${addInput(Light.power.onVal, `Light_${Name}_power.onVal_${Group}`, "Value for Power On", "LightPowerOnVal", "text")}</div>
-										<div class="col s2 offVal">${addInput(Light.power.offVal, `Light_${Name}_power.offVal_${Group}`, "Value for Power Off", "LightPowerOffVal", "text")}</div>
-									</div>
-									<div class="row switch">
-										<div class="col s6 input-field">
-											<input type="checkbox" id="Light_${Name}_bri_onOff_${Group}" class="value switchOnOff" ${Light.bri.oid !== "" ? 'checked="checked"' : ''}/>
-                                            <label for="Light_${Name}_bri_onOff_${Group}" class="translate">Brightness Controll</label>
-										</div>
-									</div>
-									<div class="row bri">
-										<div class="col s5 oid">${addSelectIdInput(Light.bri.oid, `Light_${Name}_bri.oid_${Group}`, "Object ID for Brightness", "LightBriOid", "s10")}</div>
-										<div class="col s2 minVal">${addInput(Light.bri.minVal, `Light_${Name}_bri.minVal_${Group}`, "Value for minimum Brightness", "LightBriMinVal", "number")}</div>
-										<div class="col s2 maxVal">${addInput(Light.bri.maxVal, `Light_${Name}_bri.maxVal_${Group}`, "Value for maximum Brightness", "LightBriMaxVal", "number")}</div>
-										<div class="col s2 defaultVal">${addInput(Light.bri.defaultVal !== "" ? Light.bri.defaultVal : 100, `Light_${Name}_bri.defaultVal_${Group}`, "Value/Offset for Brightness", "LightBriDefault", "number")}</div>
-									</div>
-									<div class="row switch">
-										<div class="col s6 input-field">
-											<input type="checkbox" id="Light_${Name}_ct_onOff_${Group}" class="value switchOnOff" ${Light.ct.oid !== "" ? 'checked="checked"' : ''}/>
-                                            <label for="Light_${Name}_ct_onOff_${Group}" class="translate">Color-Temperature Control</label>
-										</div>
-									</div>
-									<div class="row ct">
-										<div class="col s6 oid">${addSelectIdInput(Light.ct.oid, `Light_${Name}_ct.oid_${Group}`, "Object ID for Color-Temperature", "LightCtOid", "s10")}</div>
-										<div class="col s2 minVal">${addInput(Light.ct.minVal, `Light_${Name}_ct.minVal_${Group}`, "Value for minimum Color-Temperature", "LightCtMinVal", "number")}</div>
-										<div class="col s2 maxVal">${addInput(Light.ct.maxVal, `Light_${Name}_ct.maxVal_${Group}`, "Value for maximum Color-Temperature", "LightCtMaxVal", "number")}</div>
-									</div>
-									<div class="row switch">
-										<div class="col s6 input-field">
-											<input type="checkbox" id="Light_${Name}_sat_onOff_${Group}" class="value switchOnOff" ${Light.sat.oid !== "" ? 'checked="checked"' : ''}/>
-                                            <label for="Light_${Name}_sat_onOff_${Group}" class="translate">Saturation Control</label>
-										</div>
-									</div>
-									<div class="row sat">
-										<div class="col s6 oid">${addSelectIdInput(Light.sat.oid, `Light_${Name}_sat.oid_${Group}`, "Object ID for Saturation", "LightSatOid", "s10")}</div>
-										<div class="col s2 minVal">${addInput(Light.sat.minVal, `Light_${Name}_sat.minVal_${Group}`, "Value for minimum Saturation", "LightSatMinVal", "number")}</div>
-										<div class="col s2 maxVal">${addInput(Light.sat.maxVal, `Light_${Name}_sat.maxVal_${Group}`, "Value for maximum Saturation", "LightSatMaxVal", "number")}</div>
-									</div>
-									<div class="row switch">
-										<div class="col s6 input-field">
-											<input type="checkbox" id="Light_${Name}_modeswitch_onOff_${Group}" class="value switchOnOff" ${Light.modeswitch.oid !== "" ? 'checked="checked"' : ''}/>
-                                            <label for="Light_${Name}_modeswitch_onOff_${Group}" class="translate">ModeSwitch Control</label>
-										</div>
-									</div>
-									<div class="row modeswitch">
-										<div class="col s6 oid">${addSelectIdInput(Light.modeswitch.oid, `Light_${Name}_modeswitch.oid_${Group}`, "Object ID for Mode Switch", "LightModeswitchOid", "s10")}</div>
-										<div class="col s2 whiteModeVal">${addInput(Light.modeswitch.whiteModeVal, `Light_${Name}_modeswitch.whiteModeVal_${Group}`, "Value for White Mode", "LightModeswitchWhiteModeVal", "text")}</div>
-										<div class="col s2 colorModeVal">${addInput(Light.modeswitch.colorModeVal, `Light_${Name}_modeswitch.colorModeVal_${Group}`, "Value for Color Mode", "LightModeswitchColorModeVal", "text")}</div>
-									</div>
-									<div class="row switch">
-										<div class="col s6 input-field">
-											<input type="checkbox" id="Light_${Name}_color_onOff_${Group}" class="value switchOnOff" ${Light.color.oid !== "" ? 'checked="checked"' : ''}/>
-                                            <label for="Light_${Name}_color_onOff_${Group}" class="translate">Color Control</label>
-										</div>
-									</div>
-									<div class="row color">
-										<div class="col s6 oid">${addSelectIdInput(Light.color.oid, `Light_${Name}_color.oid_${Group}`, "Object ID for Color", "LightColorOid", "s10")}</div>
-										<div class="col s2 type">
-											<div class="input-field col s12 select">
-												<select id="Light_${Name}_color.type_${Group}" class="LightColorType">
-													<option value="" ${(Light.color.type).toLowerCase() === "" ? "selected disabled" : ""}></option>
-													<option value="1" ${(Light.color.type).toLowerCase() === "hex" ? "selected" : ""}>HEX</option>
-													<option value="2" ${(Light.color.type).toLowerCase() === "rgb" ? "selected" : ""}>RGB</option>
-													<option value="3" ${(Light.color.type).toLowerCase() === "xy" ? "selected" : ""}>XY</option>
-												</select>
-												<label>Color-Type</label>
-											</div>
-										</div>
-										<div class="col s2 default">${addInput(Light.color.default !== "" ? Light.color.default: "#FFFFFF", `Light_${Name}_color.default_${Group}`, "Default Value for Color", "LightColorDefault", "text")}</div>
-									</div>
-								</div>
-							</div>
-						</li>
-					`;
+				Object.keys(Lights).forEach((name, index) => {
+					const Light = Lights[name];
+					console.log(Light);
+					
+					result += NewLight(Light, name, index, groupIndex);
+					
+					createdLights[groupIndex][index] = name;
+					
 				});
 
-				result += `</ul>`;
+				return result;
 			}
-			
-			return result;
+		}
+
+		function NewLight(Light, name, lightIndex, groupIndex) {
+			return `
+				<li data-lightindex="${lightIndex}" data-groupindex="${groupIndex}" ">
+					<div class="collapsible-header">
+						<i class="material-icons">expand_more</i><h6 data-type="LightName" >${name}</h6>
+					</div>
+					<div class="collapsible-body">
+						<div class="row">
+							<div class="col s6">
+								<a href="#" class="waves-effect waves-light btn blue translate editLightName"><i class="material-icons left translate">edit</i>Edit Lightname</a>
+							</div>
+							<div class="col s6 right-align">
+								<a href="#" class="waves-effect waves-light btn red translate removeLight"><i class="material-icons left translate">delete</i>Remove Light</a>
+							</div>
+						</div>
+						<div class="LightProperties">
+							<div class="row power">
+								<div class="col s6 oid">${addSelectIdInput(Light.power.oid, `Light_${lightIndex}_power.oid_${groupIndex}`, "Object ID for Power On/Off", "LightPowerOid", "s10")}</div>
+								<div class="col s3 onVal">${addInput(Light.power.onVal, `Light_${lightIndex}_power.onVal_${groupIndex}`, "Value for Power On", "LightPowerOnVal", "text")}</div>
+								<div class="col s3 offVal">${addInput(Light.power.offVal, `Light_${lightIndex}_power.offVal_${groupIndex}`, "Value for Power Off", "LightPowerOffVal", "text")}</div>
+							</div>
+							<div class="row switch">
+								<!--
+								<div class="col s6 input-field">
+									<input type="checkbox" id="Light_${lightIndex}_bri_onOff_${groupIndex}" class="value switchOnOff" ${Light.bri.oid !== "" ? 'checked="checked"' : ''}/>
+									<label for="Light_${lightIndex}_bri_onOff_${groupIndex}" class="translate">Brightness Controll</label>
+								</div>
+								-->
+								<label>
+									<input type="checkbox" id="Light_${lightIndex}_bri_onOff_${groupIndex}" class="filled-in value switchOnOff" ${Light.bri.oid !== "" ? 'checked="checked"' : ''}  />
+									<span class="translate">Brightness Controll</span>
+								</label>
+							</div>
+							<div class="row bri">
+								<div class="col s5 oid">${addSelectIdInput(Light.bri.oid, `Light_${lightIndex}_bri.oid_${groupIndex}`, "Object ID for Brightness", "LightBriOid", "s10")}</div>
+								<div class="col s2 minVal">${addInput(Light.bri.minVal, `Light_${lightIndex}_bri.minVal_${groupIndex}`, "Value for minimum Brightness", "LightBriMinVal", "number")}</div>
+								<div class="col s2 maxVal">${addInput(Light.bri.maxVal, `Light_${lightIndex}_bri.maxVal_${groupIndex}`, "Value for maximum Brightness", "LightBriMaxVal", "number")}</div>
+								<div class="col s2 defaultVal">${addInput(Light.bri.defaultVal !== "" ? Light.bri.defaultVal : 100, `Light_${lightIndex}_bri.defaultVal_${groupIndex}`, "Value/Offset for Brightness", "LightBriDefault", "number")}</div>
+							</div>
+							<div class="row switch">
+								<div class="col s6 input-field">
+									<input type="checkbox" id="Light_${lightIndex}_ct_onOff_${groupIndex}" class="value switchOnOff" ${Light.ct.oid !== "" ? 'checked="checked"' : ''}/>
+									<label for="Light_${lightIndex}_ct_onOff_${groupIndex}" class="translate">Color-Temperature Control</label>
+								</div>
+							</div>
+							<div class="row ct">
+								<div class="col s6 oid">${addSelectIdInput(Light.ct.oid, `Light_${lightIndex}_ct.oid_${groupIndex}`, "Object ID for Color-Temperature", "LightCtOid", "s10")}</div>
+								<div class="col s3 minVal">${addInput(Light.ct.minVal, `Light_${lightIndex}_ct.minVal_${groupIndex}`, "Value for minimum Color-Temperature", "LightCtMinVal", "number")}</div>
+								<div class="col s3 maxVal">${addInput(Light.ct.maxVal, `Light_${lightIndex}_ct.maxVal_${groupIndex}`, "Value for maximum Color-Temperature", "LightCtMaxVal", "number")}</div>
+							</div>
+							<div class="row switch">
+								<div class="col s6 input-field">
+									<input type="checkbox" id="Light_${lightIndex}_sat_onOff_${groupIndex}" class="value switchOnOff" ${Light.sat.oid !== "" ? 'checked="checked"' : ''}/>
+									<label for="Light_${lightIndex}_sat_onOff_${groupIndex}" class="translate">Saturation Control</label>
+								</div>
+							</div>
+							<div class="row sat">
+								<div class="col s6 oid">${addSelectIdInput(Light.sat.oid, `Light_${lightIndex}_sat.oid_${groupIndex}`, "Object ID for Saturation", "LightSatOid", "s10")}</div>
+								<div class="col s3 minVal">${addInput(Light.sat.minVal, `Light_${lightIndex}_sat.minVal_${groupIndex}`, "Value for minimum Saturation", "LightSatMinVal", "number")}</div>
+								<div class="col s3 maxVal">${addInput(Light.sat.maxVal, `Light_${lightIndex}_sat.maxVal_${groupIndex}`, "Value for maximum Saturation", "LightSatMaxVal", "number")}</div>
+							</div>
+							<div class="row switch">
+								<div class="col s6 input-field">
+									<input type="checkbox" id="Light_${lightIndex}_modeswitch_onOff_${groupIndex}" class="value switchOnOff" ${Light.modeswitch.oid !== "" ? 'checked="checked"' : ''}/>
+									<label for="Light_${lightIndex}_modeswitch_onOff_${groupIndex}" class="translate">ModeSwitch Control</label>
+								</div>
+							</div>
+							<div class="row modeswitch">
+								<div class="col s6 oid">${addSelectIdInput(Light.modeswitch.oid, `Light_${lightIndex}_modeswitch.oid_${groupIndex}`, "Object ID for Mode Switch", "LightModeswitchOid", "s10")}</div>
+								<div class="col s3 whiteModeVal">${addInput(Light.modeswitch.whiteModeVal, `Light_${lightIndex}_modeswitch.whiteModeVal_${groupIndex}`, "Value for White Mode", "LightModeswitchWhiteModeVal", "text")}</div>
+								<div class="col s3 colorModeVal">${addInput(Light.modeswitch.colorModeVal, `Light_${lightIndex}_modeswitch.colorModeVal_${groupIndex}`, "Value for Color Mode", "LightModeswitchColorModeVal", "text")}</div>
+							</div>
+							<div class="row switch">
+								<div class="col s6 input-field">
+									<input type="checkbox" id="Light_${lightIndex}_color_onOff_${groupIndex}" class="value switchOnOff" ${Light.color.oid !== "" ? 'checked="checked"' : ''}/>
+									<label for="Light_${lightIndex}_color_onOff_${groupIndex}" class="translate">Color Control</label>
+								</div>
+							</div>
+							<div class="row color">
+								<div class="col s6 oid">${addSelectIdInput(Light.color.oid, `Light_${lightIndex}_color.oid_${groupIndex}`, "Object ID for Color", "LightColorOid", "s10")}</div>
+								<div class="col s3 type">
+									<div class="input-field col s12 select">
+										<select id="Light_${lightIndex}_color.type_${groupIndex}" class="LightColorType">
+											<option value="" ${(Light.color.type).toLowerCase() === "" ? "selected disabled" : ""}></option>
+											<option value="1" ${(Light.color.type).toLowerCase() === "hex" ? "selected" : ""}>HEX</option>
+											<option value="2" ${(Light.color.type).toLowerCase() === "rgb" ? "selected" : ""}>RGB</option>
+											<option value="3" ${(Light.color.type).toLowerCase() === "xy" ? "selected" : ""}>XY</option>
+										</select>
+										<label>Color-Type</label>
+									</div>
+								</div>
+								<div class="col s3 default">${addInput(Light.color.default !== "" ? Light.color.default: "#FFFFFF", `Light_${lightIndex}_color.default_${groupIndex}`, "Default Value for Color", "LightColorDefault", "text")}</div>
+							</div>
+						</div>
+					</div>
+				</li>
+			`;
 		}
 
 		function newSensor(Sensors) {
@@ -554,7 +676,7 @@
 
 		//SELECT ID FUNCTION
 		let selectId;
-		function initSelectId($label, callback) {
+		function initSelectId(callback) {
 			if (selectId) {
 				return callback(selectId);
 			}
@@ -574,7 +696,7 @@
 						role: _("Role"),
 						room: _("Room"),
 						value: _("Value"),
-						selectid: _("Select ID") + " >> " + $label + " >> ",
+						selectid: _("Select ID"),
 						from: _("From"),
 						lc: _("Last changed"),
 						ts: _("Time stamp"),
@@ -591,14 +713,24 @@
 		}
 
 		//+++++++++ HELPER ++++++++
-		function getGroupNameFromId(Group) {
-			Group = Group.split("_");
-			return Group[Group.length - 1]
+		function getGroupIndexNameFromId(id) {
+			id = id.split("_");
+			return id[id.length - 1]
 		}
 
-		function splittId(id) {
+		function splittGroupId(id) {
 			id = id.split("_");
-			return {element: id[0], type: id[1], group: id[2]}
+			return {element: id[0], type: id[1], groupIndex: id[2]};
+		}
+
+		function splittLightId(id) {
+			id = id.split("_");
+			return {element: id[0], lightIndex:[1], type: id[2], groupIndex: id[3]};
+		}
+
+		function containsSpecialChars(str) {
+			const specialChars = /[`!@#§$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+			return specialChars.test(str);
 		}
 	</script>
 
@@ -662,12 +794,12 @@
 							<div class="collapsible-body">
 								<div class="row">
                                     <div class="col s8 l6 input-field">
-                                        <input type="text" class="validate form-control global" id="GlobalLuxSensor" />
+                                        <input type="text" class="validate form-control global SelectID" id="GlobalLuxSensor" />
                                         <label for="GlobalLuxSensor" class="translate">Object ID for global Lux-Sensor</label>
                                         <!-- <span class="translate">Object ID for global Lux-Sensor</span> -->
                                     </div>
                                     <div class="col s1 m2 l1">
-                                        <a id="GlobalLuxSensorPopUp" class="btn-floating waves-effect waves-light blue table-button-add trigger-add"><i class="material-icons">add</i></a>
+                                        <a id="GlobalLuxSensorPopUp" class="btn-floating waves-effect waves-light blue table-button-add trigger-add SelectID"><i class="material-icons">add</i></a>
                                     </div>
 								</div>
 							</div>
@@ -720,22 +852,22 @@
 							<div class="collapsible-body">
 								<div class="row">
                                     <div class="col s8 l6 input-field">
-                                        <input type="text" class="validate form-control global" id="IsPresenceDp" />
+                                        <input type="text" class="validate form-control global SelectID" id="IsPresenceDp" />
                                         <label for="IsPresenceDp" class="translate">Object ID for Presence</label>
                                         <!-- <span class="translate">Object ID for Presence</span> -->
                                     </div>
                                     <div class="col s1 m2 l1">
-                                        <a id="IsPresenceDpPopUp" class="btn-floating waves-effect waves-light blue table-button-add trigger-add"><i class="material-icons">add</i></a>
+                                        <a id="IsPresenceDpPopUp" class="btn-floating waves-effect waves-light blue table-button-add trigger-add SelectID"><i class="material-icons">add</i></a>
                                     </div>
 								</div>
 								<div class="row">
                                     <div class="col s8 l6 input-field">
-                                        <input type="text" class="validate form-control global" id="PresenceCountDp" />
+                                        <input type="text" class="validate form-control global SelectID" id="PresenceCountDp" />
                                         <label for="PresenceCountDp" class="translate">Object ID for Presence Counter</label>
                                         <!-- <span class="translate">Object ID for Presence Counter</span> -->
                                     </div>
                                     <div class="col s1 m2 l1">
-                                        <a id="PresenceCountDpPopUp" class="btn-floating waves-effect waves-light blue table-button-add trigger-add"><i class="material-icons">add</i></a>
+                                        <a id="PresenceCountDpPopUp" class="btn-floating waves-effect waves-light blue table-button-add trigger-add SelectID"><i class="material-icons">add</i></a>
                                     </div>
 								</div>
 							</div>
@@ -765,7 +897,7 @@
 			<!-- Confirm Dialog-->
 			<div id="confirmRemove" class="modal">
 				<div class="modal-content">
-					<p class="translate">Are you sure to remove this Group?</p>
+					<p class="translate">Are you sure to remove this?</p>
 				</div>
 				<div class="modal-footer">
 					<a href="#" class="waves-effect waves-green green btn translate" onclick="$('#confirmRemove').modal('close'); return false;">No</a>
@@ -775,18 +907,69 @@
 			<!-- New Group Dialog-->
 			<div id="newGroupDialog" class="modal">
 				<div class="modal-content">
-					<p class="translate">Please give a name for the new LightGroup:</p>
+					<p class="translate">Please set a name for the new LightGroup:</p>
 					<div class="row">
-						<div class="col s8 l6 input-field">
+						<div class="col s12 input-field">
 							<input type="text" class="validate form-control" id="newGroupName" />
 							<label for="newGroupName" class="translate">Name</label>
-							<!-- <span class="translate">Object ID for Presence</span> -->
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<a href="#" class="waves-effect waves-green red btn translate" onclick="$('#newGroupDialog').modal('close'); return false;">Cancel</a>
-					<a href="#" class="waves-effect waves-red btn green translate" id="newGroupDialog_CreateBtn"><i class="material-icons left translate">add_circle</i>Create</a>
+					<a href="#" class="waves-effect waves-red btn green translate" id="newGroupDialog_Btn"><i class="material-icons left translate">add_circle</i>Create</a>
+				</div>
+			</div>
+			<!-- Change GroupName Dialog-->
+			<div id="editGroupNameDialog" class="modal">
+				<div class="modal-content">
+					<p class="translate">Please set a new name for the LightGroup:</p>
+					<div class="row">
+						<div class="col s12 input-field">
+							<input type="text" class="form-control" id="editGroupName" />
+							<label for="editGroupName" class="translate">Name</label>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="waves-effect waves-green red btn translate" onclick="$('#editGroupNameDialog').modal('close'); $('#editGroupName').removeClass('invalid'); return false;">Cancel</a>
+					<a href="#" class="waves-effect waves-red btn green translate" id="editGroupNameDialog_Btn"><i class="material-icons left translate">edit</i>Edit</a>
+				</div>
+			</div>
+			<!-- New Light Dialog-->
+			<div id="newLightDialog" class="modal">
+				<div class="modal-content">
+					<p class="translate">Please set a name for the new Light:</p>
+					<div class="row">
+						<div class="col s12 input-field">
+							<input type="text" class="validate form-control" id="newLightName" />
+							<label for="newLightName" class="translate">Name</label>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="waves-effect waves-green red btn translate" onclick="$('#newLightDialog').modal('close'); return false;">Cancel</a>
+					<a href="#" class="waves-effect waves-red btn green translate" id="newLightDialog_Btn"><i class="material-icons left translate">add_circle</i>Create</a>
+				</div>
+			</div>
+			<!-- Change LightName Dialog-->
+			<div id="editLightNameDialog" class="modal">
+				<div class="modal-content">
+					<p class="translate">Please set a new name for the Light:</p>
+					<div class="row">
+						<div class="col s12 input-field">
+							<input type="text" class="validate form-control" id="editLightName" />
+							<label for="editLightName" class="translate">Name</label>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="waves-effect waves-green red btn translate" onclick="$('#editLightNameDialog').modal('close'); $('#editLightName').removeClass('invalid'); return false;">Cancel</a>
+					<a href="#" class="waves-effect waves-red btn green translate" id="editLightNameDialog_Btn"><i class="material-icons left translate">edit</i>Edit</a>
 				</div>
 			</div>
 		</div>

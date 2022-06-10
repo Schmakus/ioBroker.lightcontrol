@@ -206,3 +206,12 @@ label > i[title] {
 .group {
 	padding: 10px;
 }
+
+.editbtn {
+	padding: 0.3rem;
+}
+
+.collapsible-body {
+    margin-left: 2rem !important;
+    padding-top: 1rem !important;
+}
