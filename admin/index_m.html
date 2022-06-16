@@ -102,6 +102,10 @@
 					setHideOrNot($(this), this);
 				}); 
 
+				$(".switchOnOff").change(function() {
+					setHideOrNot($(this), this);
+				});
+
 				if (M) M.updateTextFields();
 				
 				$(".collapsible").collapsible();
@@ -359,10 +363,12 @@
 				});
 
 				//+++++++ SWITCHES +++++++//
-				$(".switchOnOff").change(function() {
-					setHideOrNot($(this), this);
-			
-				});
+				function checkSwitch() {
+					$(".switchOnOff").change(function() {
+						setHideOrNot($(this), this);
+				
+					});
+				}
 
 			}
 			
@@ -519,17 +525,16 @@
 								<div class="col s3 onVal">${addInput(Light.power.onVal, `Light_${lightIndex}_power.onVal_${groupIndex}`, "Value for Power On", "LightPowerOnVal", "text")}</div>
 								<div class="col s3 offVal">${addInput(Light.power.offVal, `Light_${lightIndex}_power.offVal_${groupIndex}`, "Value for Power Off", "LightPowerOffVal", "text")}</div>
 							</div>
-							<div class="row switch">
-								<!--
-								<div class="col s6 input-field">
-									<input type="checkbox" id="Light_${lightIndex}_bri_onOff_${groupIndex}" class="value switchOnOff" ${Light.bri.oid !== "" ? 'checked="checked"' : ''}/>
-									<label for="Light_${lightIndex}_bri_onOff_${groupIndex}" class="translate">Brightness Controll</label>
+							<div class="row">
+								<div class="col s12">
+									<div class="switch">
+										<span class="translate">Brightness Control</span>
+										<label for="Light_${lightIndex}_bri_onOff_${groupIndex}">
+											<input type="checkbox" id="Light_${lightIndex}_bri_onOff_${groupIndex}" class="switchOnOff" ${Light.bri.oid !== "" ? 'checked="checked"' : ''}  />
+											<span class="lever"></span>
+										</label>
+									</div>
 								</div>
-								-->
-								<label>
-									<input type="checkbox" id="Light_${lightIndex}_bri_onOff_${groupIndex}" class="filled-in value switchOnOff" ${Light.bri.oid !== "" ? 'checked="checked"' : ''}  />
-									<span class="translate">Brightness Controll</span>
-								</label>
 							</div>
 							<div class="row bri">
 								<div class="col s5 oid">${addSelectIdInput(Light.bri.oid, `Light_${lightIndex}_bri.oid_${groupIndex}`, "Object ID for Brightness", "LightBriOid", "s10")}</div>
@@ -537,10 +542,15 @@
 								<div class="col s2 maxVal">${addInput(Light.bri.maxVal, `Light_${lightIndex}_bri.maxVal_${groupIndex}`, "Value for maximum Brightness", "LightBriMaxVal", "number")}</div>
 								<div class="col s2 defaultVal">${addInput(Light.bri.defaultVal !== "" ? Light.bri.defaultVal : 100, `Light_${lightIndex}_bri.defaultVal_${groupIndex}`, "Value/Offset for Brightness", "LightBriDefault", "number")}</div>
 							</div>
-							<div class="row switch">
-								<div class="col s6 input-field">
-									<input type="checkbox" id="Light_${lightIndex}_ct_onOff_${groupIndex}" class="value switchOnOff" ${Light.ct.oid !== "" ? 'checked="checked"' : ''}/>
-									<label for="Light_${lightIndex}_ct_onOff_${groupIndex}" class="translate">Color-Temperature Control</label>
+							<div class="row">
+								<div class="col s12">
+									<div class="switch">
+										<span class="translate">Color-Temperature Control</label>
+										<label for="Light_${lightIndex}_ct_onOff_${groupIndex}">
+											<input type="checkbox" id="Light_${lightIndex}_ct_onOff_${groupIndex}" class="switchOnOff" ${Light.ct.oid !== "" ? 'checked="checked"' : ''}/>
+											<span class="lever"></span>
+										</label>
+									</div>
 								</div>
 							</div>
 							<div class="row ct">
@@ -548,10 +558,15 @@
 								<div class="col s3 minVal">${addInput(Light.ct.minVal, `Light_${lightIndex}_ct.minVal_${groupIndex}`, "Value for minimum Color-Temperature", "LightCtMinVal", "number")}</div>
 								<div class="col s3 maxVal">${addInput(Light.ct.maxVal, `Light_${lightIndex}_ct.maxVal_${groupIndex}`, "Value for maximum Color-Temperature", "LightCtMaxVal", "number")}</div>
 							</div>
-							<div class="row switch">
-								<div class="col s6 input-field">
-									<input type="checkbox" id="Light_${lightIndex}_sat_onOff_${groupIndex}" class="value switchOnOff" ${Light.sat.oid !== "" ? 'checked="checked"' : ''}/>
-									<label for="Light_${lightIndex}_sat_onOff_${groupIndex}" class="translate">Saturation Control</label>
+							<div class="row">
+								<div class="col s12">
+									<div class="switch">
+										<span class="translate">Saturation Control</label>
+										<label for="Light_${lightIndex}_sat_onOff_${groupIndex}">
+											<input type="checkbox" id="Light_${lightIndex}_sat_onOff_${groupIndex}" class="switchOnOff" ${Light.sat.oid !== "" ? 'checked="checked"' : ''}/>
+											<span class="lever"></span>
+										</label>
+									</div>
 								</div>
 							</div>
 							<div class="row sat">
@@ -559,10 +574,15 @@
 								<div class="col s3 minVal">${addInput(Light.sat.minVal, `Light_${lightIndex}_sat.minVal_${groupIndex}`, "Value for minimum Saturation", "LightSatMinVal", "number")}</div>
 								<div class="col s3 maxVal">${addInput(Light.sat.maxVal, `Light_${lightIndex}_sat.maxVal_${groupIndex}`, "Value for maximum Saturation", "LightSatMaxVal", "number")}</div>
 							</div>
-							<div class="row switch">
-								<div class="col s6 input-field">
-									<input type="checkbox" id="Light_${lightIndex}_modeswitch_onOff_${groupIndex}" class="value switchOnOff" ${Light.modeswitch.oid !== "" ? 'checked="checked"' : ''}/>
-									<label for="Light_${lightIndex}_modeswitch_onOff_${groupIndex}" class="translate">ModeSwitch Control</label>
+							<div class="row">
+								<div class="col s12">
+									<div class="switch">
+										<span class="translate">ModeSwitch Control</label>
+										<label for="Light_${lightIndex}_modeswitch_onOff_${groupIndex}">
+											<input type="checkbox" id="Light_${lightIndex}_modeswitch_onOff_${groupIndex}" class="switchOnOff" ${Light.modeswitch.oid !== "" ? 'checked="checked"' : ''}/>
+											<span class="lever"></span>
+										</label>
+									</div>
 								</div>
 							</div>
 							<div class="row modeswitch">
@@ -570,10 +590,15 @@
 								<div class="col s3 whiteModeVal">${addInput(Light.modeswitch.whiteModeVal, `Light_${lightIndex}_modeswitch.whiteModeVal_${groupIndex}`, "Value for White Mode", "LightModeswitchWhiteModeVal", "text")}</div>
 								<div class="col s3 colorModeVal">${addInput(Light.modeswitch.colorModeVal, `Light_${lightIndex}_modeswitch.colorModeVal_${groupIndex}`, "Value for Color Mode", "LightModeswitchColorModeVal", "text")}</div>
 							</div>
-							<div class="row switch">
-								<div class="col s6 input-field">
-									<input type="checkbox" id="Light_${lightIndex}_color_onOff_${groupIndex}" class="value switchOnOff" ${Light.color.oid !== "" ? 'checked="checked"' : ''}/>
-									<label for="Light_${lightIndex}_color_onOff_${groupIndex}" class="translate">Color Control</label>
+							<div class="row">
+								<div class="col s12">
+									<div class="switch">
+										<span class="translate">Color Control</label>
+										<label for="Light_${lightIndex}_color_onOff_${groupIndex}">
+											<input type="checkbox" id="Light_${lightIndex}_color_onOff_${groupIndex}" class="switchOnOff" ${Light.color.oid !== "" ? 'checked="checked"' : ''}/>
+											<span class="lever"></span>
+										</label>
+									</div>
 								</div>
 							</div>
 							<div class="row color">
