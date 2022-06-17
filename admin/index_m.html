@@ -31,6 +31,7 @@
 			const LightGroups = settings.LightGroups;
 			let createdGroups = {};
 			globalThis.createdLights = {};
+			globalThis.createdSensors = {};
 			let indexGroups = 0;
 
 			//Set Values of Global Settings
@@ -451,15 +452,15 @@
 									<div class="col s12" id="events">
 										<div class="row">
 											<div class="col s2 m1 l1 left">
-												<a id="addNewSensor_${index}" class="btn-floating waves-effect waves-light blue addNewLight"><i class="material-icons">add</i></a>
+												<a class="btn-floating waves-effect waves-light blue addNewSensor"><i class="material-icons">add</i></a>
 											</div>
 										</div>
 									</div>
 								</div>
 								<div class="row">
-									<div id="sensors_${index}">
-									${newSensor(LightGroup.sensors)}
-								</div>
+									<div class="col s12" id="sensors_${index}">
+										${addSensors(LightGroup.sensors)}
+									</div>
 								</div>
 							</div>
 							<!-- TAB Sensors END -->
@@ -498,10 +499,10 @@
 					
 					createdLights[groupIndex][index] = name;
 					
-				});
-
-				return result;
+				});	
 			}
+
+			return result;
 		}
 
 		function NewLight(Light, name, lightIndex, groupIndex) {
@@ -607,11 +608,11 @@
 									<div class="input-field col s12 select">
 										<select id="Light_${lightIndex}_color.type_${groupIndex}" class="LightColorType">
 											<option value="" ${(Light.color.type).toLowerCase() === "" ? "selected disabled" : ""}></option>
-											<option value="1" ${(Light.color.type).toLowerCase() === "hex" ? "selected" : ""}>HEX</option>
-											<option value="2" ${(Light.color.type).toLowerCase() === "rgb" ? "selected" : ""}>RGB</option>
-											<option value="3" ${(Light.color.type).toLowerCase() === "xy" ? "selected" : ""}>XY</option>
+											<option value="HEX" ${(Light.color.type).toLowerCase() === "hex" ? "selected" : ""}>HEX</option>
+											<option value="RGB" ${(Light.color.type).toLowerCase() === "rgb" ? "selected" : ""}>RGB</option>
+											<option value="XY" ${(Light.color.type).toLowerCase() === "xy" ? "selected" : ""}>XY</option>
 										</select>
-										<label>Color-Type</label>
+										<label class="translate">Color-Type</label>
 									</div>
 								</div>
 								<div class="col s3 default">${addInput(Light.color.default !== "" ? Light.color.default: "#FFFFFF", `Light_${lightIndex}_color.default_${groupIndex}`, "Default Value for Color", "LightColorDefault", "text")}</div>
@@ -622,14 +623,36 @@
 			`;
 		}
 
-		function newSensor(Sensors) {
-			const isEmpty = Object.keys(Sensors).length === 0;
+		function addSensors(Sensors, groupIndex) {
+
 			let result = "";
-			if (!isEmpty) {
-				result = ``;
+			createdSensors[groupIndex] = {};
+			
+			if (Object.keys(Sensors).length !== 0) {
+
+				Object.keys(Sensors).forEach((name, index) => {
+					const Sensor = Sensors[name];
+					console.log(Sensor);
+					
+					result += NewSensor(Sensor, name, index, groupIndex);
+					
+					createdSensors[groupIndex][index] = name;
+					
+				});
 			}
 
 			return result;
+		}
+
+		function NewSensor(Sensor, name, sensorIndex, groupIndex) {
+			return `
+				<div class="row" data-type="sensor" data-sensorindex="${sensorIndex}" data-groupindex="${groupIndex}" ">
+					<div class="col s2" data-type="desc">${addInput(name, `Sensor_${sensorIndex}_desc_${groupIndex}`, "Description", "", "text")}</div>
+					<div class="col s4" data-type="oid">${addSelectIdInput(Sensor.oid, `Sensor_${sensorIndex}_oid_${groupIndex}`, "Object ID of Sensor", "", "s10")}</div>
+					<div class="col s3" data-type="motionVal">${addInput(Sensor.motionVal, `Sensor_${sensorIndex}_motionVal_${groupIndex}`, "Value for Motion", "", "text")}</div>
+					<div class="col s3" data-type="noMotionVal">${addInput(Sensor.noMotionVal, `Sensor_${sensorIndex}_noMotionVal_${groupIndex}`, "Value for no Motion", "", "text")}</div>					
+				</div>
+			`;
 		}
 
 		/**
