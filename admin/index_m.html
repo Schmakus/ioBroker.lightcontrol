@@ -311,9 +311,8 @@
 
 						}	
 						
-					}); 			
-
-					});
+					}); 	
+				});
 
 				//Edit LightName
 				$(".editLightName").on("click", function () {
@@ -348,7 +347,80 @@
 						$input.removeClass('valid').val("");
 
 					}
-				});				
+				});
+				
+				//Add New Sensor
+				$(".addNewSensor").on("click", function () {
+
+					//Get groupIndex
+					const groupIndex = $(this).closest( "li" ).data("groupindex");
+					console.log(groupIndex);					
+
+					//Set new sensorIndex
+					const sensorIndex = Object.keys(createdSensors[groupIndex]).length;
+					console.log(sensorIndex);
+
+					//Set InputField
+					const $input = $("#newSensorName");
+
+					//Open Modal
+					$("#newSensorDialog").modal("open");
+					$input.val("").data("groupIndex", groupIndex).focus();
+
+					//Click Button in Modal
+					$("#newSensorDialog_Btn").click(function(){ 
+
+						//Get Value of Inputfield
+						const newSensorName = $input.val();
+						console.log(groupIndex);
+						console.log(sensorIndex);
+						console.log(newSensorName);					
+
+						//Check if Value contains no special characters or is duplicated
+						if(containsSpecialChars(newSensorName) || Object.values(createdSensors[groupIndex]).includes(newSensorName)){
+							
+							$input.addClass('invalid');
+
+						} else {
+							
+							$input.addClass('valid');							
+							
+							//Create new Group
+							const Sensor = {
+								"oid": "",
+								"motionVal": "",
+								"noMotionVal": ""
+							};
+
+							const newSensor = NewSensor(Sensor, newSensorName, sensorIndex, groupIndex);
+							
+							//Add Group to createdGroups
+							createdSensors[groupIndex][sensorIndex] = newSensorName;
+							console.log(createdSensors);
+							
+							$( "div[data-groupindex='" + groupIndex + "'][data-type='sensors']" ).append( newSensor );
+							$("#editSensorNameDialog").modal("close");
+							afterCare();						
+
+						}	
+						
+					}); 	
+				});
+
+				//Remove Sensor
+				$(".removeSensor").on("click", function () {
+					const groupIndex = $(this).closest( "div" ).data("groupindex");
+					const sensorIndex = $(this).closest( "div" ).data("sensorindex");
+					const $element = $(this).closest( "div[data-type='sensor']");
+										
+					$("#confirmRemove").modal("open"); 
+					$("#confirmRemove_YesBtn").click(function(){ 
+						$element.remove();
+						$("#confirmRemove").modal("close");
+						createdSensors[groupIndex][sensorIndex] = null;
+					}); 			
+
+				});
 
 				//+++++++++ SELECTS +++++++++++
 				$(".SelectID").on("click", function () {
@@ -458,7 +530,7 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col s12" id="sensors_${index}">
+									<div class="col s12" id="sensors_${index}" data-type="sensors">
 										${addSensors(LightGroup.sensors)}
 									</div>
 								</div>
@@ -647,10 +719,13 @@
 		function NewSensor(Sensor, name, sensorIndex, groupIndex) {
 			return `
 				<div class="row" data-type="sensor" data-sensorindex="${sensorIndex}" data-groupindex="${groupIndex}" ">
-					<div class="col s2" data-type="desc">${addInput(name, `Sensor_${sensorIndex}_desc_${groupIndex}`, "Description", "", "text")}</div>
-					<div class="col s4" data-type="oid">${addSelectIdInput(Sensor.oid, `Sensor_${sensorIndex}_oid_${groupIndex}`, "Object ID of Sensor", "", "s10")}</div>
-					<div class="col s3" data-type="motionVal">${addInput(Sensor.motionVal, `Sensor_${sensorIndex}_motionVal_${groupIndex}`, "Value for Motion", "", "text")}</div>
-					<div class="col s3" data-type="noMotionVal">${addInput(Sensor.noMotionVal, `Sensor_${sensorIndex}_noMotionVal_${groupIndex}`, "Value for no Motion", "", "text")}</div>					
+					<div class="col s1">
+                    	<a class="btn-floating waves-effect waves-light red removeSensor"><i class="material-icons">remove</i></a>
+                	</div>
+					<div class="col s2" data-type="sensorName">${addInput(name, `Sensor_${sensorIndex}_desc_${groupIndex}`, "Description", "", "text")}</div>
+					<div class="col s5" data-type="oid">${addSelectIdInput(Sensor.oid, `Sensor_${sensorIndex}_oid_${groupIndex}`, "Object ID of Sensor", "", "s10")}</div>
+					<div class="col s2" data-type="motionVal">${addInput(Sensor.motionVal, `Sensor_${sensorIndex}_motionVal_${groupIndex}`, "Value for Motion", "", "text")}</div>
+					<div class="col s2" data-type="noMotionVal">${addInput(Sensor.noMotionVal, `Sensor_${sensorIndex}_noMotionVal_${groupIndex}`, "Value for no Motion", "", "text")}</div>					
 				</div>
 			`;
 		}
@@ -1018,6 +1093,40 @@
 				<div class="modal-footer">
 					<a href="#" class="waves-effect waves-green red btn translate" onclick="$('#editLightNameDialog').modal('close'); $('#editLightName').removeClass('invalid'); return false;">Cancel</a>
 					<a href="#" class="waves-effect waves-red btn green translate" id="editLightNameDialog_Btn"><i class="material-icons left translate">edit</i>Edit</a>
+				</div>
+			</div>
+			<!-- New Sensor Dialog-->
+			<div id="newSensorDialog" class="modal">
+				<div class="modal-content">
+					<p class="translate">Please set a name for the new Sensor:</p>
+					<div class="row">
+						<div class="col s12 input-field">
+							<input type="text" class="validate form-control" id="newSensorName" />
+							<label for="newSensorName" class="translate">Name</label>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="waves-effect waves-green red btn translate" onclick="$('#newSensorDialog').modal('close'); return false;">Cancel</a>
+					<a href="#" class="waves-effect waves-red btn green translate" id="newSensorDialog_Btn"><i class="material-icons left translate">add_circle</i>Create</a>
+				</div>
+			</div>
+			<!-- Change SensorName Dialog-->
+			<div id="editSensorNameDialog" class="modal">
+				<div class="modal-content">
+					<p class="translate">Please set a new name for the Sensor:</p>
+					<div class="row">
+						<div class="col s12 input-field">
+							<input type="text" class="validate form-control" id="editSensorName" />
+							<label for="editSensorName" class="translate">Name</label>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="waves-effect waves-green red btn translate" onclick="$('#editSensorNameDialog').modal('close'); $('#editSensorName').removeClass('invalid'); return false;">Cancel</a>
+					<a href="#" class="waves-effect waves-red btn green translate" id="editSensorNameDialog_Btn"><i class="material-icons left translate">edit</i>Edit</a>
 				</div>
 			</div>
 		</div>
