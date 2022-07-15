@@ -63,7 +63,10 @@
     "check": "tsc --noEmit -p tsconfig.check.json",
     "lint": "eslint",
     "translate": "translate-adapter",
-    "release": "release-script"
+    "release": "release-script patch --yes",
+    "release-minor": "release-script minor --yes",
+    "release-major": "release-script majnor --yes"
+
   },
   "bugs": {
     "url": "https://github.com/Schmakus/ioBroker.lightcontrol/issues"
