@@ -15,7 +15,7 @@
 
 Light control of lamps from various manufacturers
 
-#DO NOT INSTAL! IT'S STILL IN DEV MODE!!!
+!!! Alpha Version !!! Only for testing!
 
 ## Changelog
 <!--
