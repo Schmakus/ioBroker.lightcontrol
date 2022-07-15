@@ -29,6 +29,7 @@
 			const debug = settings.debug;
 			const GlobalSettings = settings.GlobalSettings;
 			const LightGroups = settings.LightGroups;
+			console.log(LightGroups);
 			let createdGroups = {};
 			globalThis.createdLights = {};
 			globalThis.createdSensors = {};
@@ -63,9 +64,6 @@
 					$( "#LightGroups" ).append( newGroup );
 				
 				});
-				console.log(createdGroups);
-				console.log(createdLights);
-				console.log(createdSensors);
 				afterCare();
 			}
 
@@ -228,7 +226,6 @@
 
 					} else {
 						
-						console.log(groupIndex)
 						$input.addClass('valid');
 						createdGroups[groupIndex] = newGroupName;
 
@@ -244,12 +241,10 @@
 				$(".addNewLight").on("click", function () {
 
 					//Get groupIndex
-					const groupIndex = $(this).closest( "li" ).data("groupindex");
-					console.log(groupIndex);					
+					const groupIndex = $(this).closest( "li" ).data("groupindex");	
 
 					//Set new lightIndex
 					const lightIndex = Object.keys(createdLights[groupIndex]).length;
-					console.log(lightIndex);
 
 					//Set InputField
 					const $input = $("#newLightName");
@@ -262,10 +257,7 @@
 					$("#newLightDialog_Btn").click(function(){ 
 
 						//Get Value of Inputfield
-						const newLightName = $input.val();
-						console.log(groupIndex);
-						console.log(lightIndex);
-						console.log(newLightName);					
+						const newLightName = $input.val();		
 
 						//Check if Value contains no special characters or is duplicated
 						if(containsSpecialChars(newLightName) || Object.values(createdLights[groupIndex]).includes(newLightName)){
@@ -311,13 +303,10 @@
 								}
 							};
 
-							console.log(Light);
-
 							const newLight = NewLight(Light, newLightName, lightIndex, groupIndex);
 							
 							//Add Group to createdGroups
 							createdLights[groupIndex][lightIndex] = newLightName;
-							console.log(createdLights);
 							
 							$( "ul[data-groupindex='" + groupIndex + "'][data-type='lights']" ).append( newLight );
 							$("#editLightNameDialog").modal("close");
@@ -369,13 +358,10 @@
 				$(".addNewSensor").on("click", function () {
 
 					//Get groupIndex
-					const groupIndex = $(this).closest( "li" ).data("groupindex");
-					console.log(groupIndex);					
+					const groupIndex = $(this).closest( "li" ).data("groupindex");				
 
 					//Set new sensorIndex
-					console.log(createdSensors);
 					const sensorIndex = Object.keys(createdSensors[groupIndex]).length;
-					console.log(sensorIndex);
 
 					//Set InputField
 					const $input = $("#newSensorName");
@@ -388,10 +374,7 @@
 					$("#newSensorDialog_Btn").click(function(){ 
 
 						//Get Value of Inputfield
-						const newSensorName = $input.val();
-						console.log(groupIndex);
-						console.log(sensorIndex);
-						console.log(newSensorName);					
+						const newSensorName = $input.val();			
 
 						//Check if Value contains no special characters or is duplicated
 						if(containsSpecialChars(newSensorName) || Object.values(createdSensors[groupIndex]).includes(newSensorName)){
@@ -413,7 +396,6 @@
 							
 							//Add Group to createdGroups
 							createdSensors[groupIndex][sensorIndex] = newSensorName;
-							console.log(createdSensors);
 							
 							$( "#sensors_" +  groupIndex + "" ).append( newSensor );
 							$("#editSensorNameDialog").modal("close");
@@ -707,7 +689,6 @@
 
 				Object.keys(Lights).forEach((name, index) => {
 					const Light = Lights[name];
-					console.log(Light);
 					
 					result += NewLight(Light, name, index, groupIndex);
 					
@@ -840,14 +821,12 @@
 		function addSensors(Sensors, groupIndex) {
 
 			let result = "";
-			console.log(groupIndex);
 			createdSensors[groupIndex] = {};
 			
 			if (Object.keys(Sensors).length !== 0) {
 
 				Object.keys(Sensors).forEach((name, index) => {
 					const Sensor = Sensors[name];
-					console.log(Sensor);
 					
 					result += NewSensor(Sensor, name, index, groupIndex);
 					
