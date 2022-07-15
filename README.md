@@ -24,7 +24,7 @@ Light control of lamps from various manufacturers
 -->
 
 ### **WORK IN PROGRESS**
-* (Schmakus) Automation release and UI finished. First Alpha Version.
+* (Schmakus) Development of automation and UI. First Alpha Version.
 
 ### 0.0.1 (2022-05-01)
 * (Schmakus) initial release
