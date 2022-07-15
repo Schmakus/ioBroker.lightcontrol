@@ -3,6 +3,18 @@
         "name": "lightcontrol",
         "version": "0.0.1",
         "news": {
+            "0.0.2": {
+                "en": "Development of automation and UI. First Alpha Version.",
+                "de": "Entwicklung von Automatisierung und UI. Erste Alpha Version.",
+                "ru": "Разработка автоматизации и UI. Первая версия Alpha.",
+                "pt": "Desenvolvimento de automação e interface do usuário. Primeira versão Alpha.",
+                "nl": "Ontwikkeling van automatische en UI. Eerste Alpha Version.",
+                "fr": "Développement de l'automatisation et de l'interface utilisateur. Première version Alpha.",
+                "it": "Sviluppo dell'automazione e dell'interfaccia utente. Prima versione Alfa.",
+                "es": "Desarrollo de la automatización y la interfaz de usuario. Primera versión alfa.",
+                "pl": "Rozwój automatyzacji i UI. Pierwsza wersja Alpha.",
+                "zh-cn": "发展自动化和UI。 第一Alpha Version。."
+            },
             "0.0.1": {
                 "en": "initial release",
                 "de": "Erstveröffentlichung",
