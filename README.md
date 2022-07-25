@@ -17,6 +17,10 @@ Light control of lamps from various manufacturers
 
 !!! Alpha Version !!! Only for testing!
 
+[Deutsche Beschreibung hier](docs/de/lightcontrol.md)
+
+[English Description here](docs/en/lightcontrol.md)
+
 ## Changelog
 <!--
 	Placeholder for the next version (at the beginning of the line):
@@ -24,6 +28,7 @@ Light control of lamps from various manufacturers
 -->
 ### **WORK IN PROGRESS**
 * (Schmakus) Bugfixing of first release
+* (Schmakus) initial documentation
 
 ### 0.0.2 (2022-07-15)
 * (Schmakus) Development of automation and UI. First Alpha Version.
