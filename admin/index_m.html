@@ -26,31 +26,45 @@
 		function load(settings, onChange) {
 			// example: select elements with id=key and class=value and insert value
 			if (!settings) return;
-			const debug = settings.debug;
-			const GlobalSettings = settings.GlobalSettings;
-			const LightGroups = settings.LightGroups;
-			console.log(LightGroups);
+
+			let debug = settings.debug;
+			let GlobalSettings = settings.GlobalSettings;
+			let LightGroups = settings.LightGroups;
+
 			let createdGroups = {};
 			globalThis.createdLights = {};
 			globalThis.createdSensors = {};
 			let indexGroups = 0;
 
 			//Set Values of Global Settings
-			if (debug) console.log(settings.GlobalSettings);
+	
 			$(".global").each(function () {
+
 				const $key = $(this);
 				const id = $key.attr("id");
+
+				if(GlobalSettings) {
+					if(!GlobalSettings.hasOwnProperty(id)) {
+						GlobalSettings[id] = "";
+					}
+				} else {
+					GlobalSettings = {};
+					GlobalSettings[id] = "";
+				}
+
 				if ($key.attr("type") === "checkbox") {
 					// do not call onChange direct, because onChange could expect some arguments
-					$key.prop("checked", GlobalSettings[id])
+					$key.prop("checked", GlobalSettings[id] ? GlobalSettings[id] : false )
 						.on("change", () => onChange())
 					;
 				} else {
-					// do not call onChange direct, because onChange could expect some arguments
-					$key.val(GlobalSettings[id])
-						.on("change", () => onChange())
-						.on("keyup", () => onChange())
-					;
+					if(GlobalSettings[id]) {
+						// do not call onChange direct, because onChange could expect some arguments
+						$key.val(GlobalSettings[id] ? GlobalSettings[id] : "")
+							.on("change", () => onChange())
+							.on("keyup", () => onChange())
+						;
+					}
 				}
 			});
 
@@ -70,7 +84,7 @@
 			function afterCare() {
 				translateAll("#LightGroups");
 				loadOptions();
-				$(".value")
+				$(".value, .global ")
 					.on("change", () => onChange())
 					.on("keyup", () => onChange())
 				;
@@ -701,6 +715,7 @@
 		}
 
 		function NewLight(Light, name, lightIndex, groupIndex) {
+
 			return `
 				<li data-lightindex="${lightIndex}" data-groupindex="${groupIndex}" data-type="light">
 					<div class="collapsible-header">
@@ -986,6 +1001,11 @@
 			
 			return true;
 		}
+
+		function isEmpty(obj) {
+			return Object.keys(obj).length === 0;
+		}
+
 	</script>
 
 </head>
