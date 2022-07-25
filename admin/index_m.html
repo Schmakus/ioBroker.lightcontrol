@@ -132,12 +132,15 @@
 				
 				$(".collapsible").collapsible();
 				$(".modal").modal();
+
 				document.addEventListener('DOMContentLoaded', function() {
 					var elems = document.querySelectorAll('select');
 					var instances = M.FormSelect.init(elems, {
 					// specify options here
 					});
 				});
+
+				$("select").select();
 
 				//+++++++++ BUTTONS +++++++++++
 
@@ -816,7 +819,7 @@
 								<div class="col s6 oid">${addSelectIdInput(Light.color.oid, `Light_${lightIndex}_color.oid_${groupIndex}`, "Object ID for Color", "LightColorOid", "s10", "oid")}</div>
 								<div class="col s3 type">
 									<div class="input-field col s12 select">
-										<select id="Light_${lightIndex}_color.type_${groupIndex}" data-name="colorType" class="LightColorType">
+										<select id="Light_${lightIndex}_color.type_${groupIndex}" data-name="colorType" class="LightColorType value">
 											<option value="" ${(Light.color.type).toLowerCase() === "" ? "selected disabled" : ""}></option>
 											<option value="HEX" ${(Light.color.type).toLowerCase() === "hex" ? "selected" : ""}>HEX</option>
 											<option value="RGB" ${(Light.color.type).toLowerCase() === "rgb" ? "selected" : ""}>RGB</option>
@@ -918,7 +921,7 @@
 		function addInput(value, id, label, addClass, type, dataName) {
 			return `
 				<div class="input-field">
-                    <input type="${type}" class="validate form-control ${addClass}" id="${id}" data-name="${dataName}" value="${value}" />
+                    <input type="${type}" class="validate form-control value ${addClass}" id="${id}" data-name="${dataName}" value="${value}" />
                      <label for="${id}" class="translate">${label}</label>
                 </div>
 			`;
@@ -927,10 +930,11 @@
 		//Set Hide or not if checkboxes are set
 		function setHideOrNot($this, element) {
 			const klasse = (element.id).split("_")[2];
+			console.log(klasse);
 			if(element.checked) {
-				$this.closest(".LightProperties").find("."+ klasse +"").removeClass("hide");
+				$this.closest(".LightProperties").find("[data-type="+ klasse +"]").removeClass("hide");
 			} else {
-				$this.closest(".LightProperties").find("."+ klasse +"").addClass("hide");
+				$this.closest(".LightProperties").find("[data-type="+ klasse +"]").addClass("hide");
 			}	
 		}
 
