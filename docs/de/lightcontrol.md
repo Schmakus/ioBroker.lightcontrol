@@ -94,11 +94,8 @@ Nach dem Download kann man durch anklicken des (+) eine Instanz angelgen.
 Sollte in dem Installationsfenster die Checkbox "***schließen, wenn fertig***" nicht angehakt sein muss man dieses natürlich noch schließen.
 
 Das Konfigurationsfenster besteht aus den Reitern:
-* [4. Haupteinstellungen](#4-haupteinstellungen)
-* [5. Pumpeneinstellungen](#5-pumpen-einstellungen)
-* [6. Zeit-Einstellungen](#6-zeit-einstellungen)
-* [7. Zusätzliche-Einstellungen](#7-zustzliche-einstellungen)
-* [8. Benachrichtigungen ](#8-benachrichtigungen) (nur sichtbar, wenn Benachrichtigungen unter Zusätzliche-Einstellungen aktiviert ist)
+* [4. Gruppeneinstellungen](#4-gruppen-einstellungen)
+* [5. Allgemeine Einstellungen](#5-allgemeine-einstellungen)
 
 ---
 * [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
@@ -106,32 +103,57 @@ Das Konfigurationsfenster besteht aus den Reitern:
 ---
 
 
-<a id="4-haupteinstellungen"></a>
-# 4. Haupteinstellungen
+<a id="4-gruppen-einstellungen"></a>
+# 4. Gruppeneinstellungen
 
-Das Konfigurationsfenster öffnet sich automatisch mit den Haupteinstellungen
+Das Konfigurationsfenster öffnet sich automatisch mit den Gruppeneinstellungen. Hier werden die einzelnen Lichtgruppen erstellt.
 
-![main.png](img/main.jpg)
+![main.png](img/mainwindow.jpg)
 
-Auf dieser Seite ist eine Beispiel-ID abgelegt.
-Diese bitte löschen und anschließend die eigenen IDs durch anklicken des (+) links oben über der Tabelle die eigenen Sprinkleraktoren hinzufügen.
+Mit Klick auf das + wird eine neue Gruppe erstellt. Erlaubtes Sonderzeichnen ist ausschließlich "_". 
 
-Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als solches.
+![newGroup.jpg](img/newGroup.jpg)
 
+Um eine Gruppe zu bearbeiten, klickt man auf den Gruppennamen. Es öffnet sich ein weiteres Menü.
+Hier lassen sich die jeweiligen Lampen und Sensoren konfigurieren.
 
-![Select_ID.jpg](img/Select_ID.jpg)
+Mit "EDIT GROUPNAME" lässt sicher Gruppenname ändern.
+Mit "REMOVE GROUP" kann die Gruppe gelöscht werden
 
-Nach Abschluss der ID-Auswahl ist der Adapter bereits betriebsbereit, aber noch nicht an die eigenen Wünsche angepasst.
+![03_group_lights.jpg](img/03_group_lights.jpg)
+
+* [4.1 Beleuchtung](#41-beleuchtung)
+* [4.2 Sensoren](#42-sensoren)
+* [4.3 Allgemeines](#43-allgemeines)
+
 
 ---
 
 
-<a id="41-aufbau-der-tabelle"></a>
-## 4.1. Aufbau der Tabelle
+<a id="41-beleuchtung"></a>
+## 4.1 Beleuchtung
 
-![main_tab.jpg](img/main_tab.jpg)
+Info: Eine Objekt-ID lässt sich durch Klick auf das + neben dem Eingabefeld auswählen oder kann direkt eingegeben werden.
 
-**Nr** – fortlaufende Nummer der gelisteten Bewässerungskreise
+Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als solches.
+
+![SelectID.jpg](img/SelectID.jpg)
+
+**Power On/Off => Plichtfeld**
+
+***Object-ID for Power On/Off*** – Die Objekt ID des Ein/Aus states der Lampe
+***Value for On*** - Wert für Ein. z.B. true
+***Value for Off*** - Wert für Aus. z.B. false
+
+**Brightness Control** => Aktivieren über den Switch
+
+***Object-ID for Brighness*** – Die Objekt ID für die Helligkeit der Lampe
+***Value for minimum Brightness*** - Wert die geringste Helligkeit. z.B. 0
+***Value for maximum Brightnes*** - Wert für die maximalste Helligkeit. z.B. 100
+***Value/Offset for Brightness*** - Wert für die Anpassung der Helligkeit gegenüber den anderen Lampen innerhalb der Gruppe. 100 = keine Anpassung // 50 = Halb so hell
+
+![06_lights_bri.jpg](img/06_lights_bri.jpg)
+
 
 **aktiv** – Checkbox zur Aktivierung der Steuerung des entsprechenden Bewässerungskreises
 
