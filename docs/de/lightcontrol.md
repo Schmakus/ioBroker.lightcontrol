@@ -13,32 +13,7 @@
 * [4 Haupteinstellungen - Startseite](#4-haupteinstellungen) 
   * [4.1 Aufbau der Tabelle](#41-aufbau-der-tabelle) 
   * [4.2 individuelle Konfiguration eines Bewässerungskreises](#42-individuelle-konfiguration-eines-bewsserungskreises) 
-    * [4.2.1 Haupteinstellungen des Ventils](#421-haupteinstellungen-des-ventils)
-      * [4.2.1.1 Bewässerungseinstellungen](#4211-bewasserungseinstellungen)
-      * [4.2.1.2 Einschaltpunkt zum Gießen](#4212-einschaltpunkt)
-        * [Berechnung der Verdunstung](#einschaltpunkt-berechnung)
-        * [Bodenfeuchte-Sensor bistabil](#einschaltpunkt-bistabil)
-        * [Bodenfeuchte-Sensor analog](#einschaltpunkt-analog)  
-        * [Start an festen Wochentagen (ohne Sensoren)](#einschaltpunkt-feste-tage)
-    * [4.2.2 Pumpeneinstellungen des Ventils](#422-pumpeneinstellungen-des-ventils) 
-* [5 Pumpen-Einstellungen](#5-pumpen-einstellungen) 
-* [6 Zeit-Einstellungen](#6-zeit-einstellungen) 
-* [7 Zusätzliche-Einstellungen](#7-zustzliche-einstellungen) 
-  * [7.1 Astro-Einstellungen](#71-astro-einstellungen) 
-  * [7.2 Debug-Einstellungen](#72-debug-einstellungen) 
-  * [7.3 Zusätzliche Benachrichtigungseinstellung](#73-zustzliche-benachrichtigungseinstellungen) 
-  * [7.4 Sensoren zur Berechnung der Verdunstung](#74-sensoren-zur-berechnung-der-verdunstung) 
-  * [7.5 Wettervorhersage](#75-wettervorhersage) 
-* [8 Benachrichtigungen](#8-benachrichtigungen) 
-  * [8.1 Telegram](#81-telegram) 
-  * [8.2 Pushover](#82-pushover) 
-  * [8.3 E-Mail](#83-e-mail) 
-  * [8.4 WhatsApp](#84-whatsapp) 
-* [9 Objekte](#9-objekte) 
-  * [9.1 control](#91-control) 
-  * [9.2 evaporation](#92-evaporation) 
-  * [9.3 info](#93-info) 
-  * [9.4 sprinkle](#94-sprinkle) 
+
 * [10 Was ist für die Zukunft geplant](#10-was-ist-fr-die-zukunft-geplant) 
 
 
@@ -108,7 +83,7 @@ Das Konfigurationsfenster besteht aus den Reitern:
 
 Das Konfigurationsfenster öffnet sich automatisch mit den Gruppeneinstellungen. Hier werden die einzelnen Lichtgruppen erstellt.
 
-![main.png](img/mainwindow.jpg)
+![main.png](img/01_mainwindow.jpg)
 
 Mit Klick auf das + wird eine neue Gruppe erstellt. Erlaubtes Sonderzeichnen ist ausschließlich "_". 
 
@@ -120,7 +95,7 @@ Hier lassen sich die jeweiligen Lampen und Sensoren konfigurieren.
 Mit "EDIT GROUPNAME" lässt sicher Gruppenname ändern.
 Mit "REMOVE GROUP" kann die Gruppe gelöscht werden
 
-![03_group_lights.jpg](img/03_group_lights.jpg)
+![03_groups_lights.jpg](img/03_groups_lights.jpg)
 
 * [4.1 Beleuchtung](#41-beleuchtung)
 * [4.2 Sensoren](#42-sensoren)
@@ -139,35 +114,19 @@ Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als 
 
 ![SelectID.jpg](img/SelectID.jpg)
 
-**Power On/Off => Plichtfeld**
+* **Power On/Off => Plichtfeld**
+    * Object-ID for Power On/Off – Die Objekt ID des Ein/Aus states der Lampe
+    * Value for On - Wert für Ein. z.B. true
+    * Value for Off - Wert für Aus. z.B. false
 
-***Object-ID for Power On/Off*** – Die Objekt ID des Ein/Aus states der Lampe
-***Value for On*** - Wert für Ein. z.B. true
-***Value for Off*** - Wert für Aus. z.B. false
+* **Brightness Control** => Aktivieren über den Switch
+    * Object-ID for Brighness*** – Die Objekt ID für die Helligkeit der Lampe
+    * Value for minimum Brightness - Wert die geringste Helligkeit. z.B. 0
+    * Value for maximum Brightnes - Wert für die maximalste Helligkeit. z.B. 100
+    * Value/Offset for Brightness - Wert für die Anpassung der Helligkeit gegenüber den anderen Lampen innerhalb der Gruppe. 100 = keine Anpassung // 50 = Halb so hell
 
-**Brightness Control** => Aktivieren über den Switch
+![07_lights_bri.jpg](img/07_lights_bri.jpg)
 
-***Object-ID for Brighness*** – Die Objekt ID für die Helligkeit der Lampe
-***Value for minimum Brightness*** - Wert die geringste Helligkeit. z.B. 0
-***Value for maximum Brightnes*** - Wert für die maximalste Helligkeit. z.B. 100
-***Value/Offset for Brightness*** - Wert für die Anpassung der Helligkeit gegenüber den anderen Lampen innerhalb der Gruppe. 100 = keine Anpassung // 50 = Halb so hell
-
-![06_lights_bri.jpg](img/06_lights_bri.jpg)
-
-
-**aktiv** – Checkbox zur Aktivierung der Steuerung des entsprechenden Bewässerungskreises
-
-**Name** – Name des Ventilkreises; (Dieser wird bei der Auswahl der ID automatisch aus den Objekten eingelesen. Dieser Name kann individuell angepasst werden. Es dürfen aber keine Duplikate vorkommen.)
-
-**Objekt-ID-Sprinkler** – eindeutige ID des zu steuernden Datenpunkts in den Objekten
-
-**(+)** – Hinzufügen/Ändern der ID
-
-**Bleistift** – spezifische Konfiguration des jeweiligen Bewässerungskreises
-
-**Pfeile** – verändern der Reihenfolge der verschiedenen Bewässerungskreise in der Tabelle
-
-**Mülleimer** – Löschen der ID mit allen konfigurierten Daten!
 
 ---
 
