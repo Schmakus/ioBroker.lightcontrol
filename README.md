@@ -26,6 +26,10 @@ Light control of lamps from various manufacturers
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Schmakus) documentation englisch version
+* (Schmakus) Bugfix Admin UI
+
 ### 0.0.3 (2022-07-26)
 * (Schmakus) Bugfixing of first release
 * (Schmakus) initial documentation
