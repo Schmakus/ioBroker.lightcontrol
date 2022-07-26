@@ -225,7 +225,7 @@ Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als 
 
 # 5 Allgemeine Einstellungen
 
-![02_general_settings.jpg](02_general_settings.jpg)
+![02_general_settings.jpg](img/02_general_settings.jpg)
 
 > Zum Öffnen der jeweiligen Einstellung muss auf diese geklickt werden.
 
