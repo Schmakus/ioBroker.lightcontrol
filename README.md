@@ -19,7 +19,7 @@ Light control of lamps from various manufacturers
 
 [Deutsche Beschreibung hier](docs/de/lightcontrol.md)
 
-[English Description here](docs/en/lightcontrol.md)
+[English Description here](docs/en/lightcontrol.md) --> in Dev
 
 ## Changelog
 <!--
