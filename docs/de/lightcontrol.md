@@ -112,7 +112,8 @@ Info: Eine Objekt-ID lässt sich durch Klick auf das + neben dem Eingabefeld aus
 
 Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als solches.
 
-![SelectID.jpg](img/SelectID.jpg)
+![SelectID.jpg](img/SelectID.jpg | width=200)
+<img src="img/SelectID.jpg" width="200">
 
 * **Power On/Off => Plichtfeld**
     * Object-ID for Power On/Off – Die Objekt ID des Ein/Aus states der Lampe
