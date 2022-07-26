@@ -87,7 +87,7 @@ Das Konfigurationsfenster öffnet sich automatisch mit den Gruppeneinstellungen.
 
 Mit Klick auf das + wird eine neue Gruppe erstellt. Erlaubtes Sonderzeichnen ist ausschließlich "_". 
 
-<img src="iimg/newGroup.jpg" width="300px">
+<img src="img/newGroup.jpg" width="500px">
 
 Um eine Gruppe zu bearbeiten, klickt man auf den Gruppennamen. Es öffnet sich ein weiteres Menü.
 Hier lassen sich die jeweiligen Lampen und Sensoren konfigurieren.
@@ -112,20 +112,29 @@ Info: Eine Objekt-ID lässt sich durch Klick auf das + neben dem Eingabefeld aus
 
 Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als solches.
 
-<img src="img/SelectID.jpg" width="300px">
+<img src="img/SelectID.jpg" width="500px">
 
-* **Power On/Off => Plichtfeld**
-    * Object-ID for Power On/Off – Die Objekt ID des Ein/Aus states der Lampe
-    * Value for On - Wert für Ein. z.B. true
-    * Value for Off - Wert für Aus. z.B. false
+* ######Power On/Off => Plichtfeld
+    * Object-ID for Power On/Off – *Die Objekt ID des Ein/Aus states der Lampe*
+    * Value for On - *Wert für Ein. z.B. true*
+    * Value for Off - *Wert für Aus. z.B. false*
+
+    ![06_lights_power.jpg](img/06_lights_power.jpg)
 
 * **Brightness Control** => Aktivieren über den Switch
-    * Object-ID for Brighness*** – Die Objekt ID für die Helligkeit der Lampe
-    * Value for minimum Brightness - Wert die geringste Helligkeit. z.B. 0
-    * Value for maximum Brightnes - Wert für die maximalste Helligkeit. z.B. 100
-    * Value/Offset for Brightness - Wert für die Anpassung der Helligkeit gegenüber den anderen Lampen innerhalb der Gruppe. 100 = keine Anpassung // 50 = Halb so hell
+    * Object-ID for Brighness – *Die Objekt ID für die Helligkeit der Lampe*
+    * Value for minimum Brightness - *Wert die geringste Helligkeit. z.B. 0*
+    * Value for maximum Brightnes - *Wert für die maximalste Helligkeit. z.B. 100*
+    * Value/Offset for Brightness - *Wert für die Anpassung der Helligkeit gegenüber den anderen Lampen innerhalb der Gruppe. 100 = keine Anpassung // 50 = Halb so hell*
 
-![07_lights_bri.jpg](img/07_lights_bri.jpg)
+    ![07_lights_bri.jpg](img/07_lights_bri.jpg)
+
+* #####Color-Temperature Control** => Aktivieren über den Switch
+    * Object-ID for Color-Temperature – *Die Objekt ID für die Farbtemperatur der Lampe*
+    * Value for minimum Color-Temperature - *Wert Warmweiß. z.B. 250*
+    * Value for Color-Temperature - *Wert für Kaltweiß. z.B. 452*
+
+
 
 
 ---
