@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "lightcontrol",
-        "version": "0.0.2",
+        "version": "0.0.3",
         "news": {
+            "0.0.3": {
+                "en": "Bugfixing and creation of documentation",
+                "de": "Fehlerbehebung und Erstellung von Dokumentationen",
+                "ru": "Исправление и создание документации",
+                "pt": "Bugfixing e criação de documentação",
+                "nl": "Bugfix en creatie van documenten",
+                "fr": "Bugfixing and creation of documentation",
+                "it": "Bugfixing e creazione di documentazione",
+                "es": "Bugfixing y creación de documentación",
+                "pl": "Rozwiązanie i tworzenie dokumentacji",
+                "zh-cn": "文件的编制和编制"
+            },
             "0.0.2": {
                 "en": "Development of automation and UI. First Alpha Version.",
                 "de": "Entwicklung von Automatisierung und UI. Erste Alpha Version.",
