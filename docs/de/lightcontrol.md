@@ -5,7 +5,6 @@
 
 ---
 
-<a id="inhaltsverzeichnis"></a>
 # Inhaltsverzeichnis 
 * [1 Features](#1-features)
 * [2 Installation](#2-installation)
@@ -13,20 +12,23 @@
 * [4 Gruppeneinstellungen - Startseite](#4-gruppeneinstellungen) 
   * [4.1 Beleuchtung](#41-beleuchtung)
     * [4.1.1 Allgemeines](#411-allgemeines)
-    * [4.1.2 Objekt IDs und Werte](#412-objektidundwerte)
+    * [4.1.2 Lampe hinzufügen und entfernen](#412-lampe-hinzufügen-und-entfernen)
+    * [4.1.3 Objekt IDs und Werte](#413-objekt-ids-und-werte)
   * [4.2 Sensoren](#42-sensoren)
     * [4.2.1 Allgemeines](#421-allgemeines)
-    * [4.2.2 Objekt IDs und Werte](#422-objektidundwerte)
-  * [4.3 Allgemeines](#43-allgemeines)
+    * [4.2.2 Sensor hinzufügen und entfernen](#422-sensor-hinzufügen-und-entfernen)
+    * [4.2.3 Objekt IDs und Werte](#423-objekt-ids-und-werte)
+  * [4.3 Allgemeines](#)
 * [5 Allgemeine Einstellungen](#5-allgemeine-einstellungen)
-* [7 Datenpunkte](#7-datenpunkte)
-* [6 Was ist für die Zukunft geplant](#6-was-ist-fr-die-zukunft-geplant) 
+* [6 Datenpunkte](#7-datenpunkte)
+  * [6.1 Datenpunkte für alle Gruppen](#61-datenpunkte-für-alle-gruppen)
+  * [6.2 Datenpunkte der einzelnen Gruppe](#62-datenpunkte-der-einzelnen-gruppe)
+* [7 Was ist für die Zukunft geplant](#6-was-ist-fr-die-zukunft-geplant) 
+* [8 Was ist nicht geplant](#8-was-ist-nicht-geplant)
 
 
 ---
 
-
-<a id="1-features"></a>
 # 1. Features
 
 * Gruppierung beliebig vieler Lampen/Leuchtmittel
@@ -49,10 +51,8 @@
 
 ---
 * [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
-
 ---
 
-<a id="2-installation"></a>
 # 2. Installation
 
 Der Adapter befindet sich in der Testphase und ist noch nicht bei ioBroker released. 
@@ -63,11 +63,9 @@ Nach dem Download kann man durch anklicken des (+) eine Instanz angelgen.
 
 ---
 * [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
-
 ---
 
 
-<a id="3-konfiguration"></a>
 # 3. Konfiguration
 
 Sollte in dem Installationsfenster die Checkbox "***schließen, wenn fertig***" nicht angehakt sein muss man dieses natürlich noch schließen.
@@ -78,11 +76,9 @@ Das Konfigurationsfenster besteht aus den Reitern:
 
 ---
 * [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
-
 ---
 
 
-<a id="4-gruppen-einstellungen"></a>
 # 4. Gruppeneinstellungen
 
 Das Konfigurationsfenster öffnet sich automatisch mit den Gruppeneinstellungen. Hier werden die einzelnen Lichtgruppen erstellt.
@@ -107,15 +103,11 @@ Hier lassen sich die jeweiligen Lampen und Sensoren konfigurieren.
 
 
 ---
-
 * [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
-
 ---
 
 
-<a id="41-beleuchtung"></a>
 ## 4.1 Beleuchtung
-<a id="411-allgemeines"></a>
 ### 4.1.1 Allgemeines
 
 Info: Eine Objekt-ID lässt sich durch Klick auf das + neben dem Eingabefeld auswählen oder kann direkt eingegeben werden.
@@ -123,8 +115,14 @@ Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als 
 
 <img src="img/SelectID.jpg">
 
-<a id="412-objektidundwerte"></a>
-### 4.1.2 Objekt-IDs und Werte
+### 4.1.2 Lampe hinzufügen und entfernen
+
+Um eine neue Lamoe hinzuzufügen, muss man auf das + klicken. Es öffnet sich ein Fenster um den Namen der Lampe festzulegen.
+Um eine Lampe zu entfernen, öffnet man die Konfiguration der Lampe und klickt auf den rechten roten Button "Remove Light".
+
+<img src="img/newLight.jpg" width="500px">
+
+### 4.1.3 Objekt-IDs und Werte
 
 * **Power On/Off => Plichtfeld**
     * Object-ID for Power On/Off – *Die Objekt ID des Ein/Aus states der Lampe*
@@ -170,14 +168,10 @@ Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als 
     ![11_lights_color.jpg](img/11_lights_color.jpg)
 
 ---
-
 * [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
-
 ---
 
-<a id="42-Sensoren"></a>
 ## 4.2 Sensoren
-<a id="421-Allgemeines"></a>
 ### 4.2.1 Allgemeines
 
 Hier werden i.d.R. Bewegungsmelder, Präsenzmelder, Lichtschranken oder Ähnlich angegeben.
@@ -188,42 +182,157 @@ Es gilt:
 
 > Hinweis: Theoretisch können hier auch Schalter angegeben werden. Hauptsache es gibt für Ein/Aus unterschiedliche Werte. edoch verhält sich der Auschaltprozess je nach Einstellung. z.B. Licht geht aus nach 60 Sekunden
 
+Info: Eine Objekt-ID lässt sich durch Klick auf das + neben dem Eingabefeld auswählen oder kann direkt eingegeben werden.
+Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als solches.
+
+<img src="img/SelectID.jpg">
+
+### 4.2.2 Sensor hinzufügen und entfernen
+
 Um einen neuen Sensor hinzuzufügen, muss man auf das + klicken. Es öffnet sich ein Fenster um den Namen des Sensors festzulegen.
+Um einen Sensor zu entfernen klickt man auf den roten Button mit dem -.
 
 <img src="img/newSensor.jpg" width="500px">
 
+### 4.2.3 Objekt-IDs und Werte
+
+![04_groups_sensors.jpg](img/04_groups_sensors.jpg)
+
+* Description – *Bezeichnung des Sensors*
+* Object-ID of Sensor - *Objekt-ID des Sensors, welche für die Bewegung/Auslösung zuständig ist* 
+* Value for Motion - *Wert für Bewegung erkannt. z.B. true*
+* Value for noMotion - *Wert für keine Bewegung. z.B. false*
+
 ---
-
-<a id="422-objektidundwerte"></a>
-### 4.2.2 Objekt-IDs und Werte
-
----
-
 * [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
-
 ---
 
+## 4.3 Allgemeines
 
-<a id="72-debug-einstellungen"></a>
-## 7.2 Debug-Einstellungen
+![05_groups_extras.jpg](img/05_groups_extras.jpg)
 
-* **debuggen**
-  Durch Aktivierung werden im Log zusätzliche Informationen angezeigt, wodurch Fehler schneller ermittelt werden können.
+Hier kann ein individueller Lichtsensor definiert werden.
+Im Standard wird der globale Lichtsensor verwendet
+
+Info: Eine Objekt-ID lässt sich durch Klick auf das + neben dem Eingabefeld auswählen oder kann direkt eingegeben werden.
+Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als solches.
+
+<img src="img/SelectID.jpg">
 
 ---
-
 * [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
-
 ---
 
+# 5 Allgemeine Einstellungen
 
-<a id="10-was-ist-fr-die-zukunft-geplant"></a>
-# 10 Was ist für die Zukunft geplant
-+ Das wichtigste haben wir jetzt erst einmal. Mal sehen, was mir noch so einfällt.
-+ Die Visualisierung, die ich früher noch plante, werde ich nicht weiter verfolgen. 
+![02_general_settings.jpg](02_general_settings.jpg)
+
+> Zum Öffnen der jeweiligen Einstellung muss auf diese geklickt werden.
+
+* **Einstellungen für globalen Lux-Sensor**
+  * Dieser Sensor wird global verwendet, sofern nicht innerhalb einer Gruppe ein individueller Sensor gewählt wurde
+  * Object-ID of Sensor - *Objekt-ID des Sensors, welche für die Helligkeit zuständig ist* 
+* **Einstellungen für die Farbtemperatur**
+  * Minimalwert für die Farbtemperatur in Kelvin => Standard: 2700
+  * Maximalwert für die Farbtemperatur in Kelvin => Standard: 6500
+* **Einstellungen zum Dimmen**
+  * Rampenschritte zum Dimmen => Standard: 10
+  * Mindeshelligkeit beim Dimmen über den Datenpunkt *DimmDown* => Standard: 10
+* **Einstellungen für Anwesenheit**
+  * Objekt-ID der Anwesenheit => Muss *true* oder *false* sein
+  * Objekt-ID des Anwesenheitszählers => Muss eine Nummer sein.
 
 ---
-
 * [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+---
+
+# 6 Datenpunkte
+## 6.1 Datenpunkte für alle Gruppen
+
+## 6.2 Datenpunkte der einzelnen Gruppe
+
+* All -->
+  * power: Alle Gruppen ein-/ausschalten / Indikator, wenn alle Gruppen an sind
+  * anyOn: *true* wenn mindestens eine Gruppe an ist
+
+* Gruppe -->
+  * power : Ein-/Ausschalten
+  * dimmUp: Button Hochdimmen
+  * dimmDown: Button Runterdimmen
+  * dimmAmount: Schritte zum Dimmen in %
+  * bri: Helligkeit setzen (0-100%)
+  * ct: Farbtemeratur setzen in Kelvin
+  *	color: Farbe setzen als Hex-Wert (#FFFFFF)
+  *	adaptiveBri: Adaptive Helligkeit ein-/ausschalten
+  *	adaptiveCt: Adaptive Farbtemperatur ein-/ausschalten
+  * adaptiveCtMode: Modus der adaptiven Farbtemperatur
+    * Linear (Sonnenaufgang --> Mittag --> Sonnenuntergang)
+    * Solar  (entsprechend der Sonnenhöhe errechneter Sinus, maxCt ist Jahreszeitenabhängig)
+    * SolarInterpoliert (wie Solar, jedoch ohne Jahreszeitenabhängigkeit)
+    * StartYourDay (linear Absteigend von Start-Uhrzeit - Sonnenuntergang)
+  * adaptiveCtTime: Startzeit Adaptive Farbtemperature bei Modus: StartYourDay
+  * powerCleaningLight: Putzlicht (setzt Helligkeit auf 100% und Farbtemperatur auf Kaltweiß)
+  * isMotion: Aktivieren/Deaktivieren der Sensoren
+  * autoOffTimed: AutoOff nach fest eingestellter Zeit (Nur in Verbindung mit den Sensoren)
+	* enabled: AutoOff aktivieren/deaktivieren
+	* autoOffTime: Zeit bis AutoOff in Sekunden
+	* noAutoOffWhenMotion: AutoOff resetten bei erneuter Bewegung
+	* noticeEnabled: Hinweis für AutoOff aktivieren/deaktivieren (Aktuell noch ohne Funktion)
+	* noticeBri: Helligkeit in Prozent bevor AutoOff
+	* noticeTime: Zeit in Sekunden wann der Hinweis aktiviert wird bevor AutoOff
+  * autoOffLux: AutoOff des Lichts bei erreichen einer Helligkeitsschwelle
+	* enabled: AutoOff bei Helligkeit aktivieren/deaktivieren
+	* minLux: minimaler Lichtwert
+	* dailyLock: Bei false wird AutoOffTimed nicht ausgeführt
+	* operator: Vergleich ob Licht über oder unter *minLux* ausgehen soll (z.B. > / < / >= / <=)
+  * autoOnMotion: Automatisch Licht ein bei Bewegung
+	* enabled: Aktivieren/Deaktivieren
+	* minLux: Lux-Schwellwert für das Schalten
+	* bri: Helligkeit, mit der das Licht an geht
+	* color: Farbe, mit das Licht an geht
+  * autoOnLux: Automatisch Licht ein bei Lux
+	* enabled: Aktivieren/Deaktivieren
+	* minLux: Lux-Schwellwert für das Schalten
+	* bri: Helligkeit, mit der das Licht an geht
+	* color: Farbe, mit das Licht an geht
+	* switchOnlyWhenPresence: Nur Schalten, wenn jemand zuhause ist
+	* switchOnlyWhenNoPresence: Nur schalten, wenn niemand zu hause ist
+	* dailyLock: Bei false wird AutoOnLux nicht ausgeführt
+	* operator: Vergleich ob Licht über oder unter *minLux* ausgehen soll (z.B. > / < / >= / <=)
+  * autoOnPresenceIncrease: Automatisch Licht ein, wenn sich der Wert des Anwesenheitszähler größe als der letztere war
+	* enabled: Aktivieren/Deaktivieren
+	* minLux: Lux-Schwellwert für das Schalten
+	* bri: Helligkeit, mit der das Licht an geht
+	* color: Farbe, mit das Licht an geht
+  * rampOn: Hochdimmen beim Einschalten
+	* enabled: Aktivieren/Deaktivieren
+	* time: Zeit für das Hochdimmen (sollte nicht kleiner als 10 Sekunden sein)
+	* switchOutletsLast: Lampen welche nur ein-/ausgeschaltet werden zuletzt aktivieren?
+  * rampOff: Runterdimmen beim Ausschalten
+	* enabled: Aktivieren/Deaktivieren
+	* time: Zeit für das Runterdimmen (sollte nicht kleiner als 10 Sekunden sein)
+	* switchOutletsLast: Lampen welche nur ein-/ausgeschaltet werden zuletzt aktivieren?
+  * blink: Blinken lassen
+	* enabled: 
+	* frequency: Blinkfrequenz in Sekunden
+	* blinks: Anzahl der Blinker
+	* bri: Helligkeit der Lampen beim Blinken
+	* color: Farbe der Lampen beim Blinken
 
 ---
+* [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+---
+
+# 7 Was ist für die Zukunft geplant
+
+- [ ] CodeCleaning.... :stuck_out_tonque_winking_eye: 
+- [ ] Hinweisfunktion bei AutoOff mit reduzierter Helligkeit
+- [ ] Intergration von einfachen Button-Events (Ein/Aus/Dimmen) für jede Gruppe
+- [ ] Vereinfachung der Konfiguration der Objekt-IDs
+
+---
+* [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+---
+
+# 8 Was ist nicht geplant
+- [x] Zeitpläne für das Aktivieren oder Deaktivieren von Funktionen oder zum setzten von verschiedenen Helligkeiten, etc.
