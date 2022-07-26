@@ -344,4 +344,4 @@ Dabei bitte die Datenpunkte mit STATE (o. ä.) auswählen. NICHT das Gerät als 
 ---
 
 # 8 Was ist nicht geplant
-- [x] Zeitpläne für das Aktivieren oder Deaktivieren von Funktionen oder zum setzten von verschiedenen Helligkeiten, etc.
+- [x] Zeitpläne für das Aktivieren oder Deaktivieren von Funktionen oder zum setzten von verschiedenen Helligkeiten, etc. sind definitiv nicht geplant!!
