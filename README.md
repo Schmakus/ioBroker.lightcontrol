@@ -28,7 +28,7 @@ Light control of lamps from various manufacturers
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.0.4 (2022-07-27)
 * (Schmakus) Bugfix [#17](https://github.com/Schmakus/ioBroker.lightcontrol/issues/17)
 
 ### 0.0.3 (2022-07-26)
