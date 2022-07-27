@@ -1,8 +1,11 @@
 {
     "common": {
         "name": "lightcontrol",
-        "version": "0.0.3",
+        "version": "0.0.4",
         "news": {
+            "0.0.4": {
+                "en": "Bugfix #17"
+            },
             "0.0.3": {
                 "en": "release of german docs\\nSome bugfixes\\known issue: After first installation, please close the config and re-open it.",
                 "de": "veröffentlichung von deutschen docs\\n Einige Bugfixes\\bekanntes Problem: Nach der ersten Installation, schließen Sie bitte die config und wieder öffnen.",
