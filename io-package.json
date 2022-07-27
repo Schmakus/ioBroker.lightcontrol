@@ -3,6 +3,18 @@
         "name": "lightcontrol",
         "version": "0.0.3",
         "news": {
+            "0.0.3": {
+                "en": "release of german docs\\nSome bugfixes\\known issue: After first installation, please close the config and re-open it.",
+                "de": "veröffentlichung von deutschen docs\\n Einige Bugfixes\\bekanntes Problem: Nach der ersten Installation, schließen Sie bitte die config und wieder öffnen.",
+                "ru": "релиз немецких docs\\n Некоторые багфиксы\\известная проблема: После первой установки, пожалуйста, закройте конфиг и откройте его.",
+                "pt": "lançamento de german docs\\n Alguns bugfixes\\ problema conhecido: Após a primeira instalação, feche a configuração e reabri-la.",
+                "nl": "verlossing van Duitse docs Een of ander insectenbekend probleem: Na de eerste installatie, sluit de politie en open het.",
+                "fr": "libération des docs allemands\\n Quelques bugfixes\\known issue: Après la première installation, veuillez fermer la configuration et la réouvrir.",
+                "it": "rilascio di documenti tedeschi\\n Alcuni bugfixs\\problema noto: Dopo la prima installazione, si prega di chiudere la configurazione e riaprirla.",
+                "es": "liberación de gérmenes docs\\n Algunos bugfixes\\known issue: Después de la primera instalación, por favor cierre el config y vuelva a abrirlo.",
+                "pl": "wydanie german docs\\n Some bugfixs\\known problem (ang.). Po pierwszej instalacji, przyjemnie zamknięto konfigu i ponownie go otwiera.",
+                "zh-cn": "释放克曼·曼努埃尔 有些布格菲克斯岛问题: 在首次安装之后,请关闭该楼并重新开放。."
+            },
             "0.0.2": {
                 "en": "Development of automation and UI. First Alpha Version.",
                 "de": "Entwicklung von Automatisierung und UI. Erste Alpha Version.",
