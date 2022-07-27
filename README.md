@@ -29,8 +29,7 @@ Light control of lamps from various manufacturers
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (Schmakus) documentation englisch version
-* (Schmakus) Bugfix Admin UI
+* (Schmakus) Bugfix [#17](https://github.com/Schmakus/ioBroker.lightcontrol/issues/17)
 
 ### 0.0.3 (2022-07-26)
 * (Schmakus) Bugfixing of first release
