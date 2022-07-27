@@ -89,7 +89,7 @@
         "dataSource": "poll",
         "materialize": true,
         "adminUI": {
-            "config":"materialize"
+            "config": "materialize"
         },
         "dependencies": [
             {

@@ -189,6 +189,8 @@
 					}); 			
 
 				});
+
+				
 				
 				//Remove Group
 				$(".removeGroup").on("click", function () {
@@ -479,6 +481,8 @@
 				}
 
 			}
+
+			loadOptions();
 			
 		}
 
@@ -756,7 +760,7 @@
 								<div class="col s5 oid">${addSelectIdInput(Light.bri.oid, `Light_${lightIndex}_bri.oid_${groupIndex}`, "Object ID for Brightness", "LightBriOid", "s10", "oid")}</div>
 								<div class="col s2 minVal">${addInput(Light.bri.minVal, `Light_${lightIndex}_bri.minVal_${groupIndex}`, "Value for minimum Brightness", "LightBriMinVal", "number", "minVal")}</div>
 								<div class="col s2 maxVal">${addInput(Light.bri.maxVal, `Light_${lightIndex}_bri.maxVal_${groupIndex}`, "Value for maximum Brightness", "LightBriMaxVal", "number", "maxVal")}</div>
-								<div class="col s2 defaultVal">${addInput(Light.bri.defaultVal !== "" ? Light.bri.defaultVal : 100, `Light_${lightIndex}_bri.defaultVal_${groupIndex}`, "Value/Offset for Brightness", "LightBriDefault", "number", "defaultVal")}</div>
+								<div class="col s2 defaultVal">${addInput(Light.bri.defaultVal !== "" ? Light.bri.defaultVal : 100, `Light_${lightIndex}_bri.defaultVal_${groupIndex}`, "Value for Brightness Correction", "LightBriDefault", "number", "defaultVal")}</div>
 							</div>
 							<div class="row">
 								<div class="col s12">
@@ -1203,7 +1207,7 @@
 						<div class="col s12 input-field">
 							<input type="text" class="validate form-control" id="newGroupName" />
 							<label for="newGroupName" class="translate">Name</label>
-							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only '_' (underline)</span>
 						</div>
 					</div>
 				</div>
@@ -1220,7 +1224,7 @@
 						<div class="col s12 input-field">
 							<input type="text" class="form-control" id="editGroupName" />
 							<label for="editGroupName" class="translate">Name</label>
-							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only '_' (underline)</span>
 						</div>
 					</div>
 				</div>
@@ -1237,7 +1241,7 @@
 						<div class="col s12 input-field">
 							<input type="text" class="validate form-control" id="newLightName" />
 							<label for="newLightName" class="translate">Name</label>
-							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only '_' (underline)</span>
 						</div>
 					</div>
 				</div>
@@ -1254,7 +1258,7 @@
 						<div class="col s12 input-field">
 							<input type="text" class="validate form-control" id="editLightName" />
 							<label for="editLightName" class="translate">Name</label>
-							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only '_' (underline)</span>
 						</div>
 					</div>
 				</div>
@@ -1271,7 +1275,7 @@
 						<div class="col s12 input-field">
 							<input type="text" class="validate form-control" id="newSensorName" />
 							<label for="newSensorName" class="translate">Name</label>
-							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only '_' (underline)</span>
 						</div>
 					</div>
 				</div>
@@ -1288,7 +1292,7 @@
 						<div class="col s12 input-field">
 							<input type="text" class="validate form-control" id="editSensorName" />
 							<label for="editSensorName" class="translate">Name</label>
-							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only "_" (underline)</span>
+							<span class="helper-text" data-error="Name already exists or not allowed" data-success="ok">No special characters allowed. Only '_' (underline)</span>
 						</div>
 					</div>
 				</div>
