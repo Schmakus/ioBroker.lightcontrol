@@ -28,10 +28,10 @@ Light control of lamps from various manufacturers
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.0.5 (2022-07-28)
 * (Schmakus) fix [#18](https://github.com/Schmakus/ioBroker.lightcontrol/issues/18): 2. Lampe nur Power möglich und umbenennen
 * (Schmakus) fix [#19](https://github.com/Schmakus/ioBroker.lightcontrol/issues/19): Lampe lässt sich nicht ausschalten
-* (Schmakus) add error message, if fields are empty in the adminUI 
+* (Schmakus) add error message, if fields are empty in the adminUI
 
 ### 0.0.4 (2022-07-27)
 * (Schmakus) Bugfix [#17](https://github.com/Schmakus/ioBroker.lightcontrol/issues/17)
