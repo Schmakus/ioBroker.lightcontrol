@@ -78,8 +78,7 @@
 				});
 
 				afterCare();
-				registerGroupButtons();
-				
+				registerGroupButtons();			
 
 			}
 
@@ -147,6 +146,7 @@
 				registerLightButtons();
 				registerSelectButtons();
 				registerRemoveSensorButtons();
+				registerNewLightAndNewSensorButtons();
 				
 				
 			}
@@ -266,7 +266,7 @@
 
 				//Register NewLightButton
 			function registerNewLightAndNewSensorButtons() {
-				$(".addNewLight").on("click", function () {
+				$(".addNewLight").unbind("click").on("click", function () {
 
 					//Get groupIndex
 					const groupIndex = $(this).closest( "li" ).data("groupindex");
@@ -350,8 +350,8 @@
 					}); 	
 				});
 
-					//Add New Sensor
-					$(".addNewSensor").on("click", function () {
+				//Add New Sensor
+				$(".addNewSensor").unbind("click").on("click", function () {
 
 					//Get groupIndex
 					const groupIndex = $(this).closest( "li" ).data("groupindex");				
