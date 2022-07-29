@@ -196,149 +196,12 @@
 						onChange();
 						afterCare();
 						registerGroupButtons();	
-						registerRemoveSensorButtons();			
+						registerRemoveSensorButtons();	
+						registerNewLightAndNewSensorButtons();		
 
 					}	
 					
 				}); 			
-			});
-
-			//Add New Light
-			$(".addNewLight").on("click", function () {
-
-				//Get groupIndex
-				const groupIndex = $(this).closest( "li" ).data("groupindex");
-
-				//Set new lightIndex
-				const lightIndex = Object.keys(createdLights[groupIndex]).length;
-
-				console.log(`New Light with Index: ${lightIndex} in Group with Index: ${groupIndex}`);
-
-				//Set InputField
-				const $input = $("#newLightName");
-
-				//Open Modal
-				$("#newLightDialog").modal("open");
-				$input.val("").data("groupIndex", groupIndex).focus();
-
-				//Click Button in Modal
-				$("#newLightDialog_Btn").click(function(){ 
-
-					//Get Value of Inputfield
-					const newLightName = $input.val();
-					console.log(`New Light with Index: ${lightIndex} and LightName: ${newLightName} in Group with Index: ${groupIndex}`);		
-
-					//Check if Value contains no special characters or is duplicated
-					if(containsSpecialChars(newLightName) || Object.values(createdLights[groupIndex]).includes(newLightName)){
-						
-						$input.addClass('invalid');
-
-					} else {
-						
-						$input.addClass('valid');							
-						
-						//Create new Group
-						const Light = {
-							"power": {
-								"oid": "",
-								"onVal": "",
-								"offVal": ""
-							},
-							"bri": {
-								"oid": "",
-								"minVal": "",
-								"maxVal": "",
-								"defaultVal": ""
-							},
-							"ct": {
-								"oid": "",
-								"minVal": "",
-								"maxVal": ""
-							},
-							"sat": {
-								"oid": "",
-								"minVal": "",
-								"maxVal": ""
-							},
-							"modeswitch": {
-								"oid": "",
-								"whiteModeVal": false,
-								"colorModeVal": true
-							},
-							"color": {
-								"oid": "",
-								"type": "",
-								"default": ""
-							}
-						};
-
-						const newLight = NewLight(Light, newLightName, lightIndex, groupIndex);
-						
-						//Add Group to createdGroups
-						createdLights[groupIndex][lightIndex] = newLightName;
-						
-						$( "ul[data-groupindex='" + groupIndex + "'][data-type='lights']" ).append( newLight );
-						$("#editLightNameDialog").modal("close");
-						
-						onChange();
-						afterCare();
-						registerLightButtons();
-
-					}		
-				}); 	
-			});
-
-			//Add New Sensor
-			$(".addNewSensor").on("click", function () {
-
-				//Get groupIndex
-				const groupIndex = $(this).closest( "li" ).data("groupindex");				
-
-				//Set new sensorIndex
-				const sensorIndex = Object.keys(createdSensors[groupIndex]).length;
-
-				//Set InputField
-				const $input = $("#newSensorName");
-
-				//Open Modal
-				$("#newSensorDialog").modal("open");
-				$input.val("").data("groupIndex", groupIndex).focus();
-
-				//Click Button in Modal
-				$("#newSensorDialog_Btn").click(function(){ 
-
-					//Get Value of Inputfield
-					const newSensorName = $input.val();			
-
-					//Check if Value contains no special characters or is duplicated
-					if(containsSpecialChars(newSensorName) || Object.values(createdSensors[groupIndex]).includes(newSensorName)){
-						
-						$input.addClass('invalid');
-
-					} else {
-						
-						$input.addClass('valid');							
-						
-						//Create new Sensor
-						const Sensor = {
-							"oid": "",
-							"motionVal": "",
-							"noMotionVal": ""
-						};
-
-						const newSensor = NewSensor(Sensor, newSensorName, sensorIndex, groupIndex);
-						
-						//Add Group to createdGroups
-						createdSensors[groupIndex][sensorIndex] = newSensorName;
-						
-						$( "#sensors_" +  groupIndex + "" ).append( newSensor );
-						$("#editSensorNameDialog").modal("close");
-
-						afterCare();						
-						onChange();
-
-					}						
-				}); 
 			});
 
 			//+++++++ SWITCHES +++++++//
@@ -401,8 +264,149 @@
 				});
 			}
 
+				//Register NewLightButton
+			function registerNewLightAndNewSensorButtons() {
+				$(".addNewLight").on("click", function () {
+
+					//Get groupIndex
+					const groupIndex = $(this).closest( "li" ).data("groupindex");
+
+					//Set new lightIndex
+					const lightIndex = Object.keys(createdLights[groupIndex]).length;
+
+					console.log(`New Light with Index: ${lightIndex} in Group with Index: ${groupIndex}`);
+
+					//Set InputField
+					const $input = $("#newLightName");
+
+					//Open Modal
+					$("#newLightDialog").modal("open");
+					$input.val("").data("groupIndex", groupIndex).focus();
+
+					//Click Button in Modal
+					$("#newLightDialog_Btn").click(function(){ 
+
+						//Get Value of Inputfield
+						const newLightName = $input.val();
+						console.log(`New Light with Index: ${lightIndex} and LightName: ${newLightName} in Group with Index: ${groupIndex}`);		
+
+						//Check if Value contains no special characters or is duplicated
+						if(containsSpecialChars(newLightName) || Object.values(createdLights[groupIndex]).includes(newLightName)){
+							
+							$input.addClass('invalid');
+
+						} else {
+							
+							$input.addClass('valid');							
+							
+							//Create new Group
+							const Light = {
+								"power": {
+									"oid": "",
+									"onVal": "",
+									"offVal": ""
+								},
+								"bri": {
+									"oid": "",
+									"minVal": "",
+									"maxVal": "",
+									"defaultVal": ""
+								},
+								"ct": {
+									"oid": "",
+									"minVal": "",
+									"maxVal": ""
+								},
+								"sat": {
+									"oid": "",
+									"minVal": "",
+									"maxVal": ""
+								},
+								"modeswitch": {
+									"oid": "",
+									"whiteModeVal": false,
+									"colorModeVal": true
+								},
+								"color": {
+									"oid": "",
+									"type": "",
+									"default": ""
+								}
+							};
+
+							const newLight = NewLight(Light, newLightName, lightIndex, groupIndex);
+							
+							//Add Group to createdGroups
+							createdLights[groupIndex][lightIndex] = newLightName;
+							
+							$( "ul[data-groupindex='" + groupIndex + "'][data-type='lights']" ).append( newLight );
+							$("#editLightNameDialog").modal("close");
+							
+							onChange();
+							afterCare();
+							registerLightButtons();
+
+						}		
+					}); 	
+				});
+
+					//Add New Sensor
+					$(".addNewSensor").on("click", function () {
+
+					//Get groupIndex
+					const groupIndex = $(this).closest( "li" ).data("groupindex");				
+
+					//Set new sensorIndex
+					const sensorIndex = Object.keys(createdSensors[groupIndex]).length;
+
+					//Set InputField
+					const $input = $("#newSensorName");
+
+					//Open Modal
+					$("#newSensorDialog").modal("open");
+					$input.val("").data("groupIndex", groupIndex).focus();
+
+					//Click Button in Modal
+					$("#newSensorDialog_Btn").click(function(){ 
+
+						//Get Value of Inputfield
+						const newSensorName = $input.val();			
+
+						//Check if Value contains no special characters or is duplicated
+						if(containsSpecialChars(newSensorName) || Object.values(createdSensors[groupIndex]).includes(newSensorName)){
+							
+							$input.addClass('invalid');
+
+						} else {
+							
+							$input.addClass('valid');							
+							
+							//Create new Sensor
+							const Sensor = {
+								"oid": "",
+								"motionVal": "",
+								"noMotionVal": ""
+							};
+
+							const newSensor = NewSensor(Sensor, newSensorName, sensorIndex, groupIndex);
+							
+							//Add Group to createdGroups
+							createdSensors[groupIndex][sensorIndex] = newSensorName;
+							
+							$( "#sensors_" +  groupIndex + "" ).append( newSensor );
+							$("#editSensorNameDialog").modal("close");
+
+							afterCare();						
+							onChange();
+
+						}						
+					}); 
+				});
+			}
+
 			//Register Edit LightName Button
 			function registerLightButtons() {
+
 					
 				$(".editLightNameBtn").unbind( "click" ).on("click", function () {
 					const groupIndex = $(this).closest( "li" ).data("groupindex");
