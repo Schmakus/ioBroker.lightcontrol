@@ -159,6 +159,8 @@
 				//Set new groupIndex
 				const groupIndex = Object.keys(createdGroups).length;
 
+				console.log(`New Group with Index: ${groupIndex}`);
+
 				//Set InputField
 				const $input = $("#newGroupName");
 
@@ -187,6 +189,7 @@
 						
 						//Add Group to createdGroups
 						createdGroups[groupIndex] = newGroupName;
+						console.log(`New Group with Index: ${groupIndex} and GroupName: ${newGroupName}`);
 						
 						$( "#LightGroups" ).append( newGroup );
 						$("#editGroupNameDialog").modal("close");
@@ -204,10 +207,12 @@
 			$(".addNewLight").on("click", function () {
 
 				//Get groupIndex
-				const groupIndex = $(this).closest( "li" ).data("groupindex");	
+				const groupIndex = $(this).closest( "li" ).data("groupindex");
 
 				//Set new lightIndex
 				const lightIndex = Object.keys(createdLights[groupIndex]).length;
+
+				console.log(`New Light with Index: ${lightIndex} in Group with Index: ${groupIndex}`);
 
 				//Set InputField
 				const $input = $("#newLightName");
@@ -220,7 +225,8 @@
 				$("#newLightDialog_Btn").click(function(){ 
 
 					//Get Value of Inputfield
-					const newLightName = $input.val();		
+					const newLightName = $input.val();
+					console.log(`New Light with Index: ${lightIndex} and LightName: ${newLightName} in Group with Index: ${groupIndex}`);		
 
 					//Check if Value contains no special characters or is duplicated
 					if(containsSpecialChars(newLightName) || Object.values(createdLights[groupIndex]).includes(newLightName)){
@@ -402,8 +408,7 @@
 					const groupIndex = $(this).closest( "li" ).data("groupindex");
 					const lightIndex = $(this).closest( "li" ).data("lightindex");
 
-					console.debug(`editLightNameBtn -> GroupIndex: ${groupIndex}`);
-					console.log(`editLightNameBtn -> LightIndex: ${lightIndex}`);
+					console.debug(`Edit LightName of LightIndex: ${lightIndex} of GroupIndex: ${groupIndex}`);
 										
 					$("#editLightNameDialog").modal("open");
 					$("#editLightName").data("groupindex", groupIndex).data("lightindex", lightIndex).focus();
@@ -416,9 +421,7 @@
 					const groupIndex = $input.data("groupindex");
 					const lightIndex = $input.data("lightindex");
 
-					console.log(`editLightNameDialog_Btn -> newLightName: ${newLightName}`);
-					console.log(`editLightNameDialog_Btn -> GroupIndex: ${groupIndex}`);
-					console.log(`editLightNameDialog_Btn -> LightIndex: ${lightIndex}`);
+					console.debug(`Edit LightName of LightIndex: ${lightIndex} of GroupIndex: ${groupIndex} => NewName: ${newLightName}`);
 
 					if(containsSpecialChars(newLightName) || Object.values(createdLights[groupIndex]).indexOf(newLightName) > -1){
 						
