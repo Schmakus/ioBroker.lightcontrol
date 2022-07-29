@@ -1,2 +1,6 @@
 **/.eslintrc.js
+<<<<<<< HEAD
 admin/words.js
+=======
+/admin/words.js
+>>>>>>> refs/remotes/origin/main
