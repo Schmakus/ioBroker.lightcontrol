@@ -19,7 +19,7 @@
     "url": "https://github.com/Schmakus/ioBroker.lightcontrol"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^2.6.0",
+    "@iobroker/adapter-core": "^2.6.6",
     "materialize-css": "^1.0.0",
     "suncalc": "^1.9.0"
   },
