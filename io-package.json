@@ -1,115 +1,80 @@
 {
-    "common": {
-        "name": "lightcontrol",
-        "version": "0.0.5",
-        "news": {
-            "0.0.4": {
-                "en": "Bugfix #17",
-                "de": "Fehlerbehebung Nr. 17",
-                "ru": "Исправление № 17",
-                "pt": "Correção de bug nº 17",
-                "nl": "Bugfix #17",
-                "fr": "Correction de bogue #17",
-                "it": "Correzione del bug n. 17",
-                "es": "Corrección de error #17",
-                "pl": "Poprawka #17",
-                "zh-cn": "错误修复 #17"
-            },
-            "0.0.3": {
-                "en": "release of german docs\\nSome bugfixes\\known issue: After first installation, please close the config and re-open it.",
-                "de": "veröffentlichung von deutschen docs\\n Einige Bugfixes\\bekanntes Problem: Nach der ersten Installation, schließen Sie bitte die config und wieder öffnen.",
-                "ru": "релиз немецких docs\\n Некоторые багфиксы\\известная проблема: После первой установки, пожалуйста, закройте конфиг и откройте его.",
-                "pt": "lançamento de german docs\\n Alguns bugfixes\\ problema conhecido: Após a primeira instalação, feche a configuração e reabri-la.",
-                "nl": "verlossing van Duitse docs Een of ander insectenbekend probleem: Na de eerste installatie, sluit de politie en open het.",
-                "fr": "libération des docs allemands\\n Quelques bugfixes\\known issue: Après la première installation, veuillez fermer la configuration et la réouvrir.",
-                "it": "rilascio di documenti tedeschi\\n Alcuni bugfixs\\problema noto: Dopo la prima installazione, si prega di chiudere la configurazione e riaprirla.",
-                "es": "liberación de gérmenes docs\\n Algunos bugfixes\\known issue: Después de la primera instalación, por favor cierre el config y vuelva a abrirlo.",
-                "pl": "wydanie german docs\\n Some bugfixs\\known problem (ang.). Po pierwszej instalacji, przyjemnie zamknięto konfigu i ponownie go otwiera.",
-                "zh-cn": "释放克曼·曼努埃尔 有些布格菲克斯岛问题: 在首次安装之后,请关闭该楼并重新开放。."
-            },
-            "0.0.2": {
-                "en": "Development of automation and UI. First Alpha Version.",
-                "de": "Entwicklung von Automatisierung und UI. Erste Alpha Version.",
-                "ru": "Разработка автоматизации и UI. Первая версия Alpha.",
-                "pt": "Desenvolvimento de automação e interface do usuário. Primeira versão Alpha.",
-                "nl": "Ontwikkeling van automatische en UI. Eerste Alpha Version.",
-                "fr": "Développement de l'automatisation et de l'interface utilisateur. Première version Alpha.",
-                "it": "Sviluppo dell'automazione e dell'interfaccia utente. Prima versione Alfa.",
-                "es": "Desarrollo de la automatización y la interfaz de usuario. Primera versión alfa.",
-                "pl": "Rozwój automatyzacji i UI. Pierwsza wersja Alpha.",
-                "zh-cn": "发展自动化和UI。 第一Alpha Version。."
-            },
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版"
-            }
-        },
-        "title": "LightControl",
-        "titleLang": {
-            "en": "LightControl",
-            "de": "Lichtsteuerung",
-            "ru": "Управление освещением",
-            "pt": "Controle de luz",
-            "nl": "Lichtbesturing",
-            "fr": "Contrôle de la lumière",
-            "it": "Controllo della luce",
-            "es": "Control de luz",
-            "pl": "Sterowanie oświetleniem",
-            "zh-cn": "LightControl"
-        },
-        "desc": {
-            "en": "control lights from different manufactures",
-            "de": "Kontrollleuchten verschiedener Hersteller",
-            "ru": "контрольные лампы разных производителей",
-            "pt": "luzes de controle de diferentes fabricantes",
-            "nl": "controlelampen van verschillende fabrikanten",
-            "fr": "contrôler les lumières de différents fabricants",
-            "it": "luci di controllo di diversi produttori",
-            "es": "luces de control de diferentes fabricantes",
-            "pl": "lampki kontrolne różnych producentów,",
-            "zh-cn": "来自不同制造商的控制灯"
-        },
-        "authors": [
-            "Markus Hartmann <schmakus@gmail.com>"
-        ],
-        "keywords": [
-            "light",
-            "lightcontrol",
-            "motion",
-            "motiondetection"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "lightcontrol.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
-        "readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "lighting",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "materialize": true,
-        "adminUI": {
-            "config": "materialize"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=3.0.0"
-            }
-        ]
-    },
-    "native": {},
-    "objects": [],
-    "instanceObjects": []
+	"common": {
+		"name": "lightcontrol",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "LightControl",
+		"titleLang": {
+			"en": "LightControl",
+			"de": "Lichtsteuerung",
+			"ru": "Управление освещением",
+			"pt": "Controle de luz",
+			"nl": "Lichtbesturing",
+			"fr": "Contrôle de la lumière",
+			"it": "Controllo della luce",
+			"es": "Control de luz",
+			"pl": "Sterowanie oświetleniem",
+			"zh-cn": "光控"
+		},
+		"desc": {
+			"en": "Light control of lamps from various manufacturers",
+			"de": "Lichtsteuerung von Lampen verschiedener Hersteller",
+			"ru": "Управление светом светильников различных производителей",
+			"pt": "Controle de luz de lâmpadas de vários fabricantes",
+			"nl": "Lichtregeling van lampen van diverse fabrikanten",
+			"fr": "Contrôle de la lumière des lampes de différents fabricants",
+			"it": "Controllo della luce di lampade di vari produttori",
+			"es": "Control de luz de lámparas de varios fabricantes.",
+			"pl": "Sterowanie oświetleniem lamp różnych producentów",
+			"zh-cn": "各厂家灯具的光控"
+		},
+		"authors": ["Schmakus <schmakus@gmail.com>"],
+		"keywords": ["light", "motion", "control", "motiondetection", "motionsensor", "smarthome", "iobroker"],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "lightcontrol.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
+		"readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "lighting",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"adminUI": {
+			"config": "json"
+		},
+		"supportCustoms": true,
+		"dependencies": [
+			{
+				"js-controller": ">=3.3.22"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=5.1.13"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
 }

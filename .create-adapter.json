@@ -3,37 +3,27 @@
 	"target": "directory",
 	"adapterName": "lightcontrol",
 	"title": "LightControl",
-	"description": "control lights from different manufactures",
-	"keywords": [
-		"light",
-		"lightcontrol",
-		"motion",
-		"motiondetection"
-	],
+	"description": "Light control of lamps from various manufacturers",
+	"keywords": ["light", "motion", "control", "motiondetection", "motionsensor", "smarthome", "iobroker"],
 	"expert": "yes",
-	"features": [
-		"adapter"
-	],
-	"adminFeatures": [],
+	"features": ["adapter"],
+	"adminFeatures": ["custom"],
 	"type": "lighting",
 	"startMode": "daemon",
 	"connectionType": "local",
 	"dataSource": "poll",
 	"connectionIndicator": "no",
 	"language": "JavaScript",
-	"adminReact": "no",
-	"tools": [
-		"ESLint",
-		"type checking"
-	],
-	"i18n": "words.js",
+	"nodeVersion": "14",
+	"adminUi": "json",
+	"tools": ["ESLint", "type checking", "Prettier"],
 	"releaseScript": "yes",
 	"devServer": "yes",
 	"devServerPort": 8081,
 	"indentation": "Tab",
-	"quotes": "double",
+	"quotes": "single",
 	"es6class": "yes",
-	"authorName": "Markus Hartmann",
+	"authorName": "Schmakus",
 	"authorGithub": "Schmakus",
 	"authorEmail": "schmakus@gmail.com",
 	"gitRemoteProtocol": "HTTPS",
@@ -41,5 +31,5 @@
 	"defaultBranch": "main",
 	"license": "MIT License",
 	"dependabot": "yes",
-	"creatorVersion": "2.1.1"
+	"creatorVersion": "2.3.0"
 }
