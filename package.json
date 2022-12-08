@@ -10,10 +10,11 @@
   "license": "MIT",
   "keywords": [
     "light",
-    "motion",
+    "lightcontrol",
     "control",
-    "motiondetection",
+    "motion",
     "motionsensor",
+    "motiondetection",
     "smarthome",
     "iobroker"
   ],

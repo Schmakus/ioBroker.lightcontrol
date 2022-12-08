@@ -42,7 +42,16 @@
 			"zh-cn": "各厂家灯具的光控"
 		},
 		"authors": ["Schmakus <schmakus@gmail.com>"],
-		"keywords": ["light", "motion", "control", "motiondetection", "motionsensor", "smarthome", "iobroker"],
+		"keywords": [
+			"light",
+			"lightcontrol",
+			"control",
+			"motion",
+			"motionsensor",
+			"motiondetection",
+			"smarthome",
+			"iobroker"
+		],
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
 		"main": "main.js",
