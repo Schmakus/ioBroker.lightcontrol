@@ -1,15 +1,15 @@
 {
 	"i18n": true,
 	"type": "tabs",
-    "items": {
-        "mainTab": {
-            "type": "panel",
-            "label": "General Settings",
-            "items": {
-				"headerGlobalLux":{
+	"items": {
+		"mainTab": {
+			"type": "panel",
+			"label": "General Settings",
+			"items": {
+				"headerGlobalLux": {
 					"type": "header",
 					"size": 3,
-					"text": "Settings for Global Lux Sensor"					
+					"text": "Settings for Global Lux Sensor"
 				},
 				"GlobalLuxSensor": {
 					"type": "objectId",
@@ -20,10 +20,10 @@
 					"default": "",
 					"newLine": true
 				},
-				"headerMinCt":{
+				"headerMinCt": {
 					"type": "header",
 					"size": 3,
-					"text": "Setting for Color-Temperature"					
+					"text": "Setting for Color-Temperature"
 				},
 				"minCt": {
 					"type": "number",
@@ -36,10 +36,10 @@
 					"lg": 3,
 					"newLine": true
 				},
-				"headerDimming":{
+				"headerDimming": {
 					"type": "header",
 					"size": 3,
-					"text": "Setting for Dimming"					
+					"text": "Setting for Dimming"
 				},
 				"RampSteps": {
 					"type": "number",
@@ -62,10 +62,10 @@
 					"md": 3,
 					"lg": 3
 				},
-				"headerPrecense":{
+				"headerPrecense": {
 					"type": "header",
 					"size": 3,
-					"text": "Setting for Presence"					
+					"text": "Setting for Presence"
 				},
 				"IsPresenceDp": {
 					"type": "objectId",
@@ -84,47 +84,71 @@
 					"lg": 6,
 					"default": ""
 				},
-				"headerDebug":{
+				"headerDebug": {
 					"type": "header",
 					"size": 3,
-					"text": "Logging"					
+					"text": "Logging"
 				},
-				"debug":{
+				"debug": {
 					"type": "checkbox",
 					"label": "Extended logging"
-				}		
-            }
-        },
-        "LightGroupsTab": {
-            "type": "panel",
-            "label": "LightGroups",
-            "items": {
-                "LightGroups": {
-                    "type": "table",
-                    "label": "LightGroups",
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "items": [
-                        {
-                            "type": "text",
-                            "attr": "Group",
+				}
+			}
+		},
+		"LightGroupsTab": {
+			"type": "panel",
+			"label": "LightGroups",
+			"items": {
+				"LightGroups": {
+					"type": "table",
+					"label": "LightGroups",
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"items": [
+						{
+							"type": "text",
+							"attr": "Group",
 							"width": "30%",
-                            "title": "Group name",
-                            "filter": true,
-                            "sort": true,
-                            "default": ""
-                        },
-                        {							
+							"title": {
+								"en": "Group name",
+								"de": "Bezeichnung",
+								"ru": "Название группы",
+								"pt": "Nome do grupo",
+								"nl": "Groepsnaam",
+								"fr": "Nom du groupe",
+								"it": "Nome gruppo",
+								"es": "Nombre del grupo",
+								"pl": "Nazwa",
+								"uk": "Назва групи",
+								"zh-cn": "姓名"
+							},
+							"filter": true,
+							"sort": true,
+							"default": ""
+						},
+						{
 							"type": "objectId",
 							"attr": "GroupLuxSensor",
 							"width": "70%",
-							"title": "Object ID for LuxSensor",
-							"default": ""							
-                        }
-                    ]
-                }
-            }
-        }
-    }
+							"title": {
+								"en": "Individual Lux Sensor (optional)",
+								"de": "Individueller Lux Sensor (optional)",
+								"ru": "Индивидуальный Lux Sensor (необязательно)",
+								"pt": "Sensor individual Lux (opcional)",
+								"nl": "Individuele Lux Sensor (optioneel)",
+								"fr": "Senseur individuel Lux (facultatif)",
+								"it": "Sensore Lux individuale (opzionale)",
+								"es": "Sensor individual de lujo (opcional)",
+								"pl": "Lux Sensor (odc",
+								"uk": "Індивідуальний датчик Lux (за бажанням)",
+								"zh-cn": "个人Lx Sensor(自愿)"
+							},
+							"default": ""
+						}
+					]
+				}
+			}
+		}
+	}
 }
