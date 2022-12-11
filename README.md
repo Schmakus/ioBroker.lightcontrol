@@ -1,4 +1,5 @@
 ![Logo](admin/lightcontrol.png)
+
 # ioBroker.lightcontrol
 
 [![NPM version](https://img.shields.io/npm/v/iobroker.lightcontrol.svg)](https://www.npmjs.com/package/iobroker.lightcontrol)
@@ -16,22 +17,25 @@
 
 Light control of lamps from various manufacturers
 
-!!! Alpha Version !!! Only for testing!
+## Adapter in Development-Mode! Do not install!!!
 
 [Deutsche Beschreibung hier](docs/de/lightcontrol.md)
 
 [English Description here](docs/en/lightcontrol.md) --> in Dev
 
 ## Changelog
+
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
 
 ### **WORK IN PROGRESS**
-* (Schmakus) initial release
+
+-   (Schmakus) initial release
 
 ## License
+
 MIT License
 
 Copyright (c) 2022 Schmakus <schmakus@gmail.com>

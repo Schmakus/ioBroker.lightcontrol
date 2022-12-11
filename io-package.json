@@ -68,10 +68,12 @@
         "mode": "daemon",
         "type": "lighting",
         "compact": true,
+        "messagebox": true,
         "connectionType": "local",
         "dataSource": "poll",
         "adminUI": {
-            "config": "json"
+            "config": "json",
+            "custom": "json"
         },
         "supportCustoms": true,
         "dependencies": [
@@ -85,10 +87,7 @@
             }
         ]
     },
-    "native": {
-        "option1": true,
-        "option2": "42"
-    },
+    "native": {},
     "objects": [],
     "instanceObjects": []
 }

@@ -26,13 +26,16 @@ class Lightcontrol extends utils.Adapter {
 		this.on("ready", this.onReady.bind(this));
 		this.on("stateChange", this.onStateChange.bind(this));
 		// this.on("objectChange", this.onObjectChange.bind(this));
-		// this.on("message", this.onMessage.bind(this));
+		this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
 		this.GlobalSettings = {};
 		this._LightGroups = [];
 		this.LightGroups = {};
 		this.LuxSensors = [];
 		this.MotionSensors = [];
+
+		this.activeStates = {}; // Array of activated states for LightControl
+		this.validStates = {}; // Array of all created states
 
 		this.ActualGenericLux = 0;
 		this.ActualPresence = true;
@@ -98,22 +101,122 @@ class Lightcontrol extends utils.Adapter {
 		}
 	}
 
-	// If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-	// You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-	// /**
-	//  * Is called if a subscribed object changes
-	//  * @param {string} id
-	//  * @param {ioBroker.Object | null | undefined} obj
-	//  */
-	// onObjectChange(id, obj) {
-	// 	if (obj) {
-	// 		// The object was changed
-	// 		this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-	// 	} else {
-	// 		// The object was deleted
-	// 		this.log.info(`object ${id} deleted`);
-	// 	}
-	// }
+	/**
+	 * Is called if an object changes to ensure (de-) activation of calculation or update configuration settings
+	 * @param {string} id
+	 * @param {ioBroker.Object | null | undefined} obj
+	 */
+	async onObjectChange(id, obj) {
+		//ToDo : Verify with test-results if debounce on object change must be implemented
+		try {
+			const stateID = id;
+
+			// Check if object is activated for LightControl
+			if (obj && obj.common) {
+				// if (obj.from === `system.adapter.${this.namespace}`) return; // Ignore object change if cause by LightControl to prevent overwrite
+				// Verify if custom information is available regarding LightControl
+				if (
+					obj.common.custom &&
+					obj.common.custom[this.namespace] &&
+					obj.common.custom[this.namespace].enabled
+				) {
+					// ignore object changes when caused by SA (memory is handled internally)
+					// if (obj.from !== `system.adapter.${this.namespace}`) {
+					this.writeLog(
+						`Object array of LightControl activated state changed : ${JSON.stringify(
+							obj,
+						)} stored config : ${JSON.stringify(this.activeStates)}`,
+					);
+					// const newDeviceName = stateID.split('.').join('__');
+
+					// Verify if the object was already activated, if not initialize new device
+					if (!this.activeStates[stateID]) {
+						this.log.info(`Enable LightControl for : ${stateID}`);
+						//await this.buildStateDetailsArray(id);
+						// Hier LightControl Object editieren
+						this.writeLog(
+							`Active state array after enabling ${stateID} : ${JSON.stringify(this.activeStates)}`,
+						);
+						if (this.activeStates[stateID]) {
+							//await this.initialize(stateID);
+						} else {
+							this.writeLog(
+								`[Cannot enable LightControl for ${stateID}, check settings and error messages`,
+								"warn",
+							);
+						}
+					} else {
+						this.writeLog(`Updating LightControl configuration for : ${stateID}`);
+						//await this.buildStateDetailsArray(id);
+						this.writeLog(
+							`Active state array after updating configuration of ${stateID} : ${JSON.stringify(
+								this.activeStates,
+							)}`,
+						);
+						// Only run initialisation if state is successfully created during buildStateDetailsArray
+						if (this.activeStates[stateID]) {
+							//await this.initialize(stateID);
+						} else {
+							this.writeLog(
+								`[Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
+								"warn",
+							);
+						}
+					}
+				} else if (this.activeStates[stateID]) {
+					delete this.activeStates[stateID];
+					this.writeLog(`Disabled LightControl for : ${stateID}`, "info");
+					this.writeLog(
+						`Active state array after deactivation of ${stateID} : ${JSON.stringify(this.activeStates)}`,
+					);
+					this.unsubscribeForeignStates(stateID);
+				}
+			} else {
+				// Object change not related to this adapter, ignoring
+			}
+		} catch (error) {
+			// Send code failure to sentry
+			this.writeLog(`[onObjectChange] ${id}`, "error");
+		}
+	}
+
+	/**
+	 * Is called if a message is comming
+	 */
+	async onMessage(msg) {
+		this.writeLog(`onMessage => Incomming Message from: ${JSON.stringify(msg)}`);
+		if (msg.callback) {
+			switch (msg.command) {
+				case "LightGroup": {
+					const groups = [];
+					for (const Group in this.LightGroups) {
+						// iterate through all existing groups and extract group names
+						if (Group === "All") continue;
+						groups.push({ value: Group, label: Group });
+					}
+					this.sendTo(msg.from, msg.command, groups, msg.callback);
+					break;
+				}
+				/*
+				case "lightname": {
+					const names = [];
+					for (const Group in this.LightGroups) {
+						if (Group === "All") continue;
+						for (const key of Object.entries(this.LightGroups[Group])) {
+							if (key === "lights") {
+								for (const light in this.LightGroups[Group][key]) {
+									await this.writeLog(this.LightGroups[Group][key][light].description);
+								}
+							}
+						}
+					}
+					this.sendTo(msg.from, msg.command, names, msg.callback);
+					break;
+				}
+				*/
+			}
+		}
+	}
 
 	/**
 	 * Is called if a subscribed state changes
