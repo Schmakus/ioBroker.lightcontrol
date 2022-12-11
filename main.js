@@ -68,10 +68,16 @@ class Lightcontrol extends utils.Adapter {
 		this.GlobalSettings = this.config;
 		//this.log.debug("GlobalSettings: " + JSON.stringify(this.GlobalSettings));
 		this._LightGroups = this.GlobalSettings.LightGroups;
-		this.log.debug("_LightGroups: " + JSON.stringify(this._LightGroups));
+		if (this.GlobalSettings.debug) this.writeLog("_LightGroups: " + JSON.stringify(this._LightGroups));
+
+		//Create LightGroups Object from GroupNames
+		await this.CreateLightGroupsObject();
+
+		//Init all Objects with custom config
+		await this.InitCustomStates();
 
 		//Create all States, Devices and Channels
-		await init.Init(this); //.catch((e) => this.log.error(`onReady // Init => ${e}`));
+		await init.Init(this);
 		if (this.GlobalSettings.debug) this.log.debug(JSON.stringify(this.LightGroups));
 
 		//Get Latitude and Longitude
@@ -102,6 +108,31 @@ class Lightcontrol extends utils.Adapter {
 	}
 
 	/**
+	 * Create LightGroups Object
+	 * @description Creates Object LightGroups from system.config array
+	 */
+	async CreateLightGroupsObject() {
+		try {
+			for (const Groups of this._LightGroups) {
+				let _temp;
+				for (const [key, value] of Object.entries(Groups)) {
+					if (key === "Group") {
+						this.LightGroups[value] = {};
+						this.LightGroups[value].description = value;
+						_temp = value;
+					} else {
+						this.LightGroups[_temp].LuxSensor = value;
+						this.LightGroups[_temp].lights = {};
+						this.LightGroups[_temp].sensors = {};
+					}
+				}
+			}
+		} catch (e) {
+			this.writeLog(`CreateLightGroupsObject => Error: ${e}`, "error");
+		}
+	}
+
+	/**
 	 * Is called if an object changes to ensure (de-) activation of calculation or update configuration settings
 	 * @param {string} id
 	 * @param {ioBroker.Object | null | undefined} obj
@@ -113,61 +144,64 @@ class Lightcontrol extends utils.Adapter {
 
 			// Check if object is activated for LightControl
 			if (obj && obj.common) {
-				// if (obj.from === `system.adapter.${this.namespace}`) return; // Ignore object change if cause by LightControl to prevent overwrite
 				// Verify if custom information is available regarding LightControl
 				if (
 					obj.common.custom &&
 					obj.common.custom[this.namespace] &&
 					obj.common.custom[this.namespace].enabled
 				) {
-					// ignore object changes when caused by SA (memory is handled internally)
-					// if (obj.from !== `system.adapter.${this.namespace}`) {
 					this.writeLog(
-						`Object array of LightControl activated state changed : ${JSON.stringify(
+						`onObjectChange => Object array of LightControl activated state changed : ${JSON.stringify(
 							obj,
 						)} stored config : ${JSON.stringify(this.activeStates)}`,
 					);
-					// const newDeviceName = stateID.split('.').join('__');
 
-					// Verify if the object was already activated, if not initialize new device
+					// Verify if the object was already activated, if not initialize new parameter
 					if (!this.activeStates[stateID]) {
-						this.log.info(`Enable LightControl for : ${stateID}`);
-						//await this.buildStateDetailsArray(id);
-						// Hier LightControl Object editieren
+						this.writeLog(`onObjectChange => Enable LightControl for : ${stateID}`, "info");
+
+						await this.buildLightGroupParameter(id);
+
 						this.writeLog(
-							`Active state array after enabling ${stateID} : ${JSON.stringify(this.activeStates)}`,
+							`onObjectChange => Active state array after enabling ${stateID} : ${JSON.stringify(
+								this.activeStates,
+							)}`,
 						);
 						if (this.activeStates[stateID]) {
-							//await this.initialize(stateID);
+							await init.Init(this);
 						} else {
 							this.writeLog(
-								`[Cannot enable LightControl for ${stateID}, check settings and error messages`,
+								`onObjectChange => Cannot enable LightControl for ${stateID}, check settings and error messages`,
 								"warn",
 							);
 						}
 					} else {
-						this.writeLog(`Updating LightControl configuration for : ${stateID}`);
-						//await this.buildStateDetailsArray(id);
+						this.writeLog(`onObjectChange => Updating LightControl configuration for : ${stateID}`);
+
+						await this.buildLightGroupParameter(id);
+
 						this.writeLog(
-							`Active state array after updating configuration of ${stateID} : ${JSON.stringify(
+							`onObjectChange => Active state array after updating configuration of ${stateID} : ${JSON.stringify(
 								this.activeStates,
 							)}`,
 						);
 						// Only run initialisation if state is successfully created during buildStateDetailsArray
 						if (this.activeStates[stateID]) {
-							//await this.initialize(stateID);
+							await init.Init(this);
 						} else {
 							this.writeLog(
-								`[Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
+								`onObjectChange => Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
 								"warn",
 							);
 						}
 					}
 				} else if (this.activeStates[stateID]) {
 					delete this.activeStates[stateID];
-					this.writeLog(`Disabled LightControl for : ${stateID}`, "info");
+					this.writeLog(`onObjectChange => Disabled LightControl for : ${stateID}`, "info");
 					this.writeLog(
-						`Active state array after deactivation of ${stateID} : ${JSON.stringify(this.activeStates)}`,
+						`onObjectChange => Active state array after deactivation of ${stateID} : ${JSON.stringify(
+							this.activeStates,
+						)}`,
 					);
 					this.unsubscribeForeignStates(stateID);
 				}
@@ -176,7 +210,7 @@ class Lightcontrol extends utils.Adapter {
 			}
 		} catch (error) {
 			// Send code failure to sentry
-			this.writeLog(`[onObjectChange] ${id}`, "error");
+			this.writeLog(`onObjectChange =>  ${id}`, "error");
 		}
 	}
 
@@ -339,6 +373,148 @@ class Lightcontrol extends utils.Adapter {
 			}
 		} catch (e) {
 			this.log.error(`onStateChange => ${e}`);
+		}
+	}
+
+	/**
+	 * Init all Custom states
+	 * @description Init all Custom states
+	 */
+	async InitCustomStates() {
+		try {
+			// Get all objects with custom configuration items
+			const customStateArray = await this.getObjectViewAsync("system", "custom", {});
+			this.writeLog(`InitCustomStates => All states with custom items : ${JSON.stringify(customStateArray)}`);
+
+			// List all states with custom configuration
+			if (customStateArray && customStateArray.rows) {
+				// Verify first if result is not empty
+
+				// Loop truth all states and check if state is activated for LightControl
+				for (const index in customStateArray.rows) {
+					if (customStateArray.rows[index].value) {
+						// Avoid crash if object is null or empty
+
+						// Check if custom object contains data for LightControl
+						// @ts-ignore
+						if (customStateArray.rows[index].value[this.namespace]) {
+							this.writeLog(`InitCustomStates => LightControl configuration found`);
+
+							// Simplify stateID
+							const stateID = customStateArray.rows[index].id;
+
+							// Check if custom object is enabled for LightControl
+							// @ts-ignore
+							if (customStateArray.rows[index].value[this.namespace].enabled) {
+								// Prepare array in constructor for further processing
+								this.activeStates[stateID] = {};
+								this.writeLog(`InitCustomStates => LightControl enabled state found ${stateID}`);
+							} else {
+								this.writeLog(
+									`InitCustomStates => LightControl configuration found but not Enabled, skipping ${stateID}`,
+								);
+							}
+						} else {
+							console.log(`InitCustomStates => No LightControl configuration found`);
+						}
+					}
+				}
+			}
+
+			const totalEnabledStates = Object.keys(this.activeStates).length;
+			let totalInitiatedStates = 0;
+			let totalFailedStates = 0;
+			this.writeLog(`Found ${totalEnabledStates} LightControl enabled states`, "info");
+
+			// Initialize all discovered states
+			let count = 1;
+			for (const stateID in this.activeStates) {
+				this.writeLog(`InitCustomStates => Initialising (${count} of ${totalEnabledStates}) "${stateID}"`);
+				await this.buildLightGroupParameter(stateID);
+
+				this.writeLog(`InitCustomStates = > hier muss das LightGroups Object erstellt werden`);
+				if (this.activeStates[stateID]) {
+					//await this.initialize(stateID);
+					totalInitiatedStates = totalInitiatedStates + 1;
+					this.writeLog(`Initialization of ${stateID} successfully`, "info");
+				} else {
+					this.writeLog(`Initialization of ${stateID} failed, check warn messages !`, "error");
+					totalFailedStates = totalFailedStates + 1;
+				}
+				count = count + 1;
+			}
+
+			// Subscribe on all foreign objects to detect (de)activation of LightControl enabled states
+			this.subscribeForeignObjects("*");
+
+			if (totalFailedStates > 0) {
+				this.writeLog(
+					`Cannot handle calculations for ${totalFailedStates} of ${totalEnabledStates} enabled states, check error messages`,
+					"warn",
+				);
+			}
+
+			this.writeLog(
+				`Successfully activated LightControl for ${totalInitiatedStates} of ${totalEnabledStates} states, will do my Job until you stop me!`,
+				"info",
+			);
+		} catch (e) {
+			this.writeLog(
+				`GlobalPresenceHandling: Object-ID "this.GlobalSettings.PresenceCounterDp" not exits. Please check your config! (${e})`,
+				"error",
+			);
+		}
+	}
+
+	/**
+	 * Load state definitions to memory this.activeStates[stateID]
+	 * @param {string} stateID ID  of state to refresh memory values
+	 */
+	async buildLightGroupParameter(stateID) {
+		this.writeLog(`buildLightGroupParameter => started for ${stateID}`);
+		try {
+			let stateInfo;
+			try {
+				// Load configuration as provided in object
+				stateInfo = await this.getForeignObjectAsync(stateID);
+				if (!stateInfo) {
+					this.writeLog(
+						`buildLightGroupParameter => Can't get information for ${stateID}, state will be ignored`,
+						"error",
+					);
+					delete this.activeStates[stateID];
+					this.unsubscribeForeignStates(stateID);
+					return;
+				}
+			} catch (error) {
+				this.writeLog(
+					`buildLightGroupParameter => ${stateID} is incorrectly correctly formatted, ${JSON.stringify(
+						error,
+					)}`,
+					"error",
+				);
+				delete this.activeStates[stateID];
+				this.unsubscribeForeignStates(stateID);
+				return;
+			}
+
+			// Check if configuration for LightControl is present, trow error in case of issue in configuration
+			if (stateInfo && stateInfo.common && stateInfo.common.custom && stateInfo.common.custom[this.namespace]) {
+				const customData = stateInfo.common.custom[this.namespace];
+				const commonData = stateInfo.common;
+				this.writeLog(`buildLightGroupParameter => customData ${JSON.stringify(customData)}`);
+				this.writeLog(`buildLightGroupParameter => commonData ${JSON.stringify(commonData)}`);
+
+				//Hier Parameter an Objekt übergeben
+
+				this.writeLog(
+					`[buildStateDetailsArray] completed for ${stateID}: with content ${JSON.stringify(
+						this.activeStates[stateID],
+					)}`,
+				);
+			}
+		} catch (error) {
+			this.writeLog(`[buildStateDetailsArray] ${stateID} => ${error}`, "error");
 		}
 	}
 
@@ -595,8 +771,6 @@ class Lightcontrol extends utils.Adapter {
 	 * Get System Longitude and Latitute
 	 */
 	async GetSystemData() {
-		//if (typeof adapter.config.longitude == undefined || adapter.config.longitude == null || adapter.config.longitude.length == 0 || isNaN(adapter.config.longitude)
-		//	|| typeof adapter.config.latitude == undefined || adapter.config.latitude == null || adapter.config.latitude.length == 0 || isNaN(adapter.config.latitude)) {
 		try {
 			const obj = await this.getForeignObjectAsync("system.config", "state");
 
