@@ -231,23 +231,56 @@ class Lightcontrol extends utils.Adapter {
 					this.sendTo(msg.from, msg.command, groups, msg.callback);
 					break;
 				}
-				/*
+
 				case "lightname": {
-					const names = [];
-					for (const Group in this.LightGroups) {
-						if (Group === "All") continue;
-						for (const key of Object.entries(this.LightGroups[Group])) {
-							if (key === "lights") {
-								for (const light in this.LightGroups[Group][key]) {
-									await this.writeLog(this.LightGroups[Group][key][light].description);
-								}
-							}
+					const LightGroups = msg.message.LightGroups;
+					this.writeLog(`onMessage => getLights for Groups: ${LightGroups}.`);
+					const lights = [];
+					for (const Group of LightGroups) {
+						for (const light of Object.values(this.LightGroups[Group].lights)) {
+							lights.push(light.description);
+							this.writeLog(`onMessage => Light: ${light.description} in Group: ${Group} found.`);
 						}
 					}
-					this.sendTo(msg.from, msg.command, names, msg.callback);
+
+					if (!lights.length) lights.push("Example_Light");
+					this.sendTo(msg.from, msg.command, lights, msg.callback);
 					break;
 				}
-				*/
+
+				case "checkIdForDuplicates": {
+					this.writeLog(`onMessage => checkcheckIdForDuplicates`);
+					this.writeLog(JSON.stringify(msg.message));
+
+					const LightGroups = msg.message.LightGroups;
+
+					const arr = [];
+					for (const Group of LightGroups) {
+						arr.push(Group.Group);
+					}
+					this.writeLog(`onMessage => checkcheckIdForDuplicates: ${arr}`);
+
+					// empty object
+					const map = {};
+					let result = false;
+					for (let i = 0; i < arr.length; i++) {
+						// check if object contains entry with this element as key
+						if (map[arr[i]]) {
+							result = true;
+							// terminate the loop
+							break;
+						}
+						// add entry in object with the element as key
+						map[arr[i]] = true;
+					}
+					if (!result) {
+						this.writeLog(`onMessage => checkcheckIdForDuplicates: No duplicates.`);
+						this.sendTo(msg.from, msg.command, "", msg.callback);
+					} else {
+						this.writeLog(`onMessage => checkcheckIdForDuplicates: Duplicates found.`);
+						this.sendTo(msg.from, msg.command, "labelDuplicateGroup", msg.callback);
+					}
+				}
 			}
 		}
 	}
@@ -432,9 +465,8 @@ class Lightcontrol extends utils.Adapter {
 				this.writeLog(`InitCustomStates => Initialising (${count} of ${totalEnabledStates}) "${stateID}"`);
 				await this.buildLightGroupParameter(stateID);
 
-				this.writeLog(`InitCustomStates = > hier muss das LightGroups Object erstellt werden`);
 				if (this.activeStates[stateID]) {
-					//await this.initialize(stateID);
+					await init.Init(this);
 					totalInitiatedStates = totalInitiatedStates + 1;
 					this.writeLog(`Initialization of ${stateID} successfully`, "info");
 				} else {

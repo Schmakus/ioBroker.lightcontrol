@@ -4,7 +4,7 @@
 	"items": {
 		"type": {
 			"type": "select",
-			"label": "Type of Object-ID",
+			"label": "Type of Object",
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
@@ -19,7 +19,7 @@
 				}
 			],
 			"help": "Choose if this datapoint is for an sensor or a light",
-			"defaultFunc": "!customObj.common || !customObj.common.write ? 'sensor' : 'light'"
+			"defaultFunc": "(!customObj.common || !customObj.common.write) ? 'sensor' : 'light'"
 		},
 		"group": {
 			"type": "selectSendTo",
@@ -28,26 +28,31 @@
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"help": "Choose a LightGroup"
+			"help": "LightGroups are defined at instance settings"
 		},
 		"description": {
+			"type": "text",
+			"label": "Name of the Light",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.type === 'sensor'",
+			"help": "e.g. FloorSpots, Spotlights, Wallpanel, ..."
+		},
+		"_description": {
 			"type": "autocompleteSendTo",
 			"command": "LightName",
-			"jsonData": "{\"LightGroup\": \"${data.group}\"}",
+			"jsonData": "{\"LightGroups\": ${JSON.stringify(data.group)}}",
 			"freeSolo": true,
 			"label": "Light Name",
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"validator": "data.description",
-			"validatorErrorText": "Enter a Description for the Light",
-			"validatorNoSaveOnError": true,
-			"defaultFunc": "data.type === 'sensor' ? '' : data.description",
-			"hidden": "data.type === 'sensor'"
+			"hidden": "data.type !== 'sensor' || data.type !== 'light'"
 		},
 		"func": {
 			"type": "select",
-			"label": "Function of the state",
+			"label": "Function of the Object",
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
@@ -77,9 +82,9 @@
 					"value": "modeswitch"
 				}
 			],
-			"defaultFunc": "!customObj.common || !customObj.common.role ? 'power' : customObj.common.role === 'color.level.temperature' ? 'ct' : customObj.common.role === 'level.color.saturation' ? 'sat' : customObj.common.role === 'level.dimmer' ? 'bri' : customObj.common.role === 'level.color.temperature' ? 'ct' : customObj.common.role === 'level.color.rgb' ? 'color' : customObj.common.role === 'switch.mode.color' ? 'modeswitch' : customObj.common.role === 'switch' ? 'power' : customObj.common.role === 'switch.light' ? 'power' : customObj.common.role === 'state' ? 'power' : 'power'",
+			"defaultFunc": "!customObj.common.role ? 'power' : (customObj.common.role === 'color.level.temperature' ? 'ct' : customObj.common.role === 'level.color.saturation' ? 'sat' : customObj.common.role === 'level.dimmer' ? 'bri' : customObj.common.role === 'level.color.temperature' ? 'ct' : customObj.common.role === 'level.color.rgb' ? 'color' : customObj.common.role === 'switch.mode.color' ? 'modeswitch' : customObj.common.role === 'switch' ? 'power' : customObj.common.role === 'switch.light' ? 'power' : customObj.common.role === 'state' ? 'power' : 'power')",
 			"hidden": "data.type === 'sensor'",
-			"help": "Function of the State",
+			"help": "Function of the Object",
 			"newLine": true
 		},
 		"onVal": {
@@ -89,7 +94,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.func !== 'power' || data.type === 'sensor'",
-			"defaultFunc": "(customObj.common.type === 'boolean') ? true : (customObj.common.type === 'number') ? 1 : (customObj.common.type === 'string') ? 'On' : true"
+			"defaultFunc": "!customObj.common.role ? true : (customObj.common.type === 'boolean' ? true : customObj.common.type === 'number' ? 1 : customObj.common.type === 'string' ? 'On' : true)"
 		},
 		"offVal": {
 			"type": "text",
@@ -98,7 +103,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.func !== 'power' || data.type === 'sensor'",
-			"defaultFunc": "(customObj.common.type === 'boolean') ? false : (customObj.common.type === 'number') ? 0 : (customObj.common.type === 'string') ? 'Off' : false"
+			"defaultFunc": "!customObj.common.role ? false : (customObj.common.type === 'boolean' ? false : customObj.common.type === 'number' ? 0 : customObj.common.type === 'string' ? 'Off' : false)"
 		},
 		"minVal": {
 			"type": "number",
@@ -107,7 +112,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "!['bri', 'ct', 'sat'].includes(data.func) || data.type === 'sensor'",
-			"defaultFunc": "customObj.common.min ? customObj.common.min : 0"
+			"defaultFunc": "!customObj.common.min ? 0 : (customObj.common.min ? customObj.common.min : 0)"
 		},
 		"maxVal": {
 			"type": "number",
@@ -116,7 +121,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "!['bri', 'ct', 'sat'].includes(data.func) || data.type === 'sensor'",
-			"defaultFunc": "customObj.common.max ? customObj.common.max : 100"
+			"defaultFunc": "!customObj.common.max ? 100 : (customObj.common.max ? customObj.common.max : 100)"
 		},
 		"defaultBri": {
 			"type": "number",
@@ -184,7 +189,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.type !== 'sensor'",
-			"defaultFunc": "!customObj.common || !customObj.common.type ? true : (customObj.common.type === 'boolean' ? true : 'On')",
+			"defaultFunc": "!customObj.common.type ? true : (customObj.common.type ?  === 'boolean' ? true : 'On')",
 			"newLine": true
 		},
 		"motionOffVal": {
@@ -194,7 +199,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.type !== 'sensor'",
-			"defaultFunc": "!customObj.common || !customObj.common.type ? false : (customObj.common.type === 'boolean' ? false : 'Off')"
+			"defaultFunc": "!customObj.common.type ? false : (customObj.common.type === 'boolean' ? false : 'Off')"
 		}
 	}
 }

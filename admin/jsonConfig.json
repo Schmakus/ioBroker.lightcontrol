@@ -147,6 +147,17 @@
 							"default": ""
 						}
 					]
+				},
+				"_LightGroupsDuplicateError": {
+					"newLine": true,
+					"container": "div",
+					"type": "textSendTo",
+					"alsoDependsOn": ["LightControl"],
+					"command": "checkIdForDuplicates",
+					"style": {
+						"color": "red"
+					},
+					"jsonData": "{\"LightGroups\": ${JSON.stringify(data.LightGroups)}}"
 				}
 			}
 		}
