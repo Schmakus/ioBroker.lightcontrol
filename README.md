@@ -23,6 +23,10 @@ Light control of lamps from various manufacturers
 
 [English Description here](docs/en/lightcontrol.md) --> in Dev
 
+## ToDo
+
+-   Select more than one LightGroup for one Object-ID (Bug with jsonCustom Select multible)
+
 ## Changelog
 
 <!--

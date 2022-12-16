@@ -31,24 +31,15 @@
 			"help": "LightGroups are defined at instance settings"
 		},
 		"description": {
-			"type": "text",
-			"label": "Name of the Light",
-			"sm": 3,
-			"md": 3,
-			"lg": 3,
-			"hidden": "data.type === 'sensor'",
-			"help": "e.g. FloorSpots, Spotlights, Wallpanel, ..."
-		},
-		"_description": {
 			"type": "autocompleteSendTo",
 			"command": "LightName",
 			"jsonData": "{\"LightGroups\": ${JSON.stringify(data.group)}}",
 			"freeSolo": true,
-			"label": "Light Name",
+			"label": "Name of the Light - autocompleteSendTo",
+			"help": "e.g. FloorSpots, Spotlights, Wallpanel, ...",
 			"sm": 3,
 			"md": 3,
-			"lg": 3,
-			"hidden": "data.type !== 'sensor' || data.type !== 'light'"
+			"lg": 3
 		},
 		"func": {
 			"type": "select",

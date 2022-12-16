@@ -99,7 +99,18 @@
 			"type": "panel",
 			"label": "LightGroups",
 			"items": {
+				"_info": {
+					"type": "staticText",
+					"text": "Warning: If you change a Groupname, then you have to change the Name in all used Object-IDs (Custom Config)!!!",
+					"style": {
+						"color": "red"
+					},
+					"sm": 12,
+					"lg": 12,
+					"md": 12
+				},
 				"LightGroups": {
+					"newLine": true,
 					"type": "table",
 					"label": "LightGroups",
 					"sm": 12,

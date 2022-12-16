@@ -122,8 +122,8 @@ class Lightcontrol extends utils.Adapter {
 						_temp = value;
 					} else {
 						this.LightGroups[_temp].LuxSensor = value;
-						this.LightGroups[_temp].lights = {};
-						this.LightGroups[_temp].sensors = {};
+						this.LightGroups[_temp].lights = [];
+						this.LightGroups[_temp].sensors = [];
 					}
 				}
 			}
@@ -220,67 +220,71 @@ class Lightcontrol extends utils.Adapter {
 	async onMessage(msg) {
 		this.writeLog(`onMessage => Incomming Message from: ${JSON.stringify(msg)}`);
 		if (msg.callback) {
-			switch (msg.command) {
-				case "LightGroup": {
-					const groups = [];
-					for (const Group in this.LightGroups) {
-						// iterate through all existing groups and extract group names
-						if (Group === "All") continue;
-						groups.push({ value: Group, label: Group });
-					}
-					this.sendTo(msg.from, msg.command, groups, msg.callback);
-					break;
-				}
-
-				case "lightname": {
-					const LightGroups = msg.message.LightGroups;
-					this.writeLog(`onMessage => getLights for Groups: ${LightGroups}.`);
-					const lights = [];
-					for (const Group of LightGroups) {
-						for (const light of Object.values(this.LightGroups[Group].lights)) {
-							lights.push(light.description);
-							this.writeLog(`onMessage => Light: ${light.description} in Group: ${Group} found.`);
+			try {
+				switch (msg.command) {
+					case "LightGroup": {
+						const groups = [];
+						for (const Group in this.LightGroups) {
+							// iterate through all existing groups and extract group names
+							if (Group === "All") continue;
+							groups.push({ value: Group, label: Group });
 						}
+						this.sendTo(msg.from, msg.command, groups, msg.callback);
+						break;
 					}
 
-					if (!lights.length) lights.push("Example_Light");
-					this.sendTo(msg.from, msg.command, lights, msg.callback);
-					break;
-				}
+					case "LightName": {
+						const LightGroups = msg.message.LightGroups;
+						this.writeLog(`onMessage => getLights for Groups: ${LightGroups}.`);
+						const lights = [];
 
-				case "checkIdForDuplicates": {
-					this.writeLog(`onMessage => checkcheckIdForDuplicates`);
-					this.writeLog(JSON.stringify(msg.message));
-
-					const LightGroups = msg.message.LightGroups;
-
-					const arr = [];
-					for (const Group of LightGroups) {
-						arr.push(Group.Group);
-					}
-					this.writeLog(`onMessage => checkcheckIdForDuplicates: ${arr}`);
-
-					// empty object
-					const map = {};
-					let result = false;
-					for (let i = 0; i < arr.length; i++) {
-						// check if object contains entry with this element as key
-						if (map[arr[i]]) {
-							result = true;
-							// terminate the loop
-							break;
+						for (const light of Object.values(this.LightGroups[LightGroups].lights)) {
+							lights.push({ value: light.description, label: light.description });
+							this.writeLog(`onMessage => Light: ${light.description} in Group: ${LightGroups} found.`);
 						}
-						// add entry in object with the element as key
-						map[arr[i]] = true;
+
+						if (!lights.length) lights.push({ value: "Example_Light", label: "Example_Light" });
+						this.sendTo(msg.from, msg.command, lights, msg.callback);
+						break;
 					}
-					if (!result) {
-						this.writeLog(`onMessage => checkcheckIdForDuplicates: No duplicates.`);
-						this.sendTo(msg.from, msg.command, "", msg.callback);
-					} else {
-						this.writeLog(`onMessage => checkcheckIdForDuplicates: Duplicates found.`);
-						this.sendTo(msg.from, msg.command, "labelDuplicateGroup", msg.callback);
+
+					case "checkIdForDuplicates": {
+						this.writeLog(`onMessage => checkcheckIdForDuplicates`);
+						this.writeLog(JSON.stringify(msg.message));
+
+						const LightGroups = msg.message.LightGroups;
+
+						const arr = [];
+						for (const Group of LightGroups) {
+							arr.push(Group.Group);
+						}
+						this.writeLog(`onMessage => checkcheckIdForDuplicates: ${arr}`);
+
+						// empty object
+						const map = {};
+						let result = false;
+						for (let i = 0; i < arr.length; i++) {
+							// check if object contains entry with this element as key
+							if (map[arr[i]]) {
+								result = true;
+								// terminate the loop
+								break;
+							}
+							// add entry in object with the element as key
+							map[arr[i]] = true;
+						}
+						if (!result) {
+							this.writeLog(`onMessage => checkcheckIdForDuplicates: No duplicates.`);
+							this.sendTo(msg.from, msg.command, "", msg.callback);
+						} else {
+							this.writeLog(`onMessage => checkcheckIdForDuplicates: Duplicates found.`);
+							this.sendTo(msg.from, msg.command, "labelDuplicateGroup", msg.callback);
+						}
+						break;
 					}
 				}
+			} catch (e) {
+				this.log.error(`onMessage => ${e}`);
 			}
 		}
 	}
@@ -468,9 +472,12 @@ class Lightcontrol extends utils.Adapter {
 				if (this.activeStates[stateID]) {
 					await init.Init(this);
 					totalInitiatedStates = totalInitiatedStates + 1;
-					this.writeLog(`Initialization of ${stateID} successfully`, "info");
+					this.writeLog(`InitCustomStates => Initialization of ${stateID} successfully`, "info");
 				} else {
-					this.writeLog(`Initialization of ${stateID} failed, check warn messages !`, "error");
+					this.writeLog(
+						`InitCustomStates => Initialization of ${stateID} failed, check warn messages !`,
+						"error",
+					);
 					totalFailedStates = totalFailedStates + 1;
 				}
 				count = count + 1;
@@ -533,20 +540,98 @@ class Lightcontrol extends utils.Adapter {
 			// Check if configuration for LightControl is present, trow error in case of issue in configuration
 			if (stateInfo && stateInfo.common && stateInfo.common.custom && stateInfo.common.custom[this.namespace]) {
 				const customData = stateInfo.common.custom[this.namespace];
-				const commonData = stateInfo.common;
+				//const commonData = stateInfo.common;
 				this.writeLog(`buildLightGroupParameter => customData ${JSON.stringify(customData)}`);
-				this.writeLog(`buildLightGroupParameter => commonData ${JSON.stringify(commonData)}`);
+				//this.writeLog(`buildLightGroupParameter => commonData ${JSON.stringify(commonData)}`);
 
-				//Hier Parameter an Objekt übergeben
+				//Covert string to boolean and numbers
+				for (const key in customData) {
+					const val = customData[key];
+					if (val === "false") {
+						customData[key] = false;
+					} else if (val === "true") {
+						customData[key] = true;
+					} else if (parseFloat(val)) {
+						customData[key] = parseFloat(val);
+					}
+				}
+
+				//Add Id to custom data
+				customData.oid = stateID;
+				const params = { bri: ["oid", "minVal", "maxVal", "defaultBri"], power: ["oid", "onVal", "offVal"] };
+
+				//CustomData
+				/*
+					"enabled":true,
+					"defaultBri":"100",
+					"whiteModeVal":false,
+					"colorModeVal":true,
+					"colorType":"rgb",
+					"type":"light",
+					"func":"bri",
+					"onVal":1,
+					"offVal":0,
+					"minVal":0,
+					"maxVal":100,
+					"motionOnVal":null,
+					"motionOffVal":"Off",
+					"group":"Wohnzimmer",
+					"description":"Deckenspots"
+				*/
+				const LightGroup = this.LightGroups[customData.group];
+
+				//Check if a Group is available
+				if (!LightGroup) {
+					this.writeLog(
+						`buildStateDetailsArray => LightGroup ${customData.group} not available or not defined`,
+						"warn",
+					);
+					return;
+				}
+
+				// Function to reduce the customData
+				const getSubset = (obj, ...keys) => keys.reduce((a, c) => ({ ...a, [c]: obj[c] }), {});
+
+				switch (customData.type) {
+					case "light": {
+						//Check if a Lightname is available
+						if (!customData.description) {
+							this.writeLog(
+								`buildStateDetailsArray => No Lightname defined. Initalisiation aborted`,
+								"warn",
+							);
+							return;
+						}
+						const Lights = LightGroup.lights;
+						const index = Lights.findIndex((x) => x.description === customData.description);
+						const Light = (await helper.isNegative(index)) ? (Lights[0] = {}) : Lights[index];
+
+						// Add parameters to Light
+						Light.description = customData.description;
+						Light[customData.func] = getSubset(customData, ...params[customData.func]);
+
+						this.writeLog(
+							`buildStateDetailsArray => Type: Light, in Group: ${JSON.stringify(
+								LightGroup,
+							)} with Lights: ${Lights} and Light: ${Light} with index: ${index}`,
+						);
+
+						break;
+					}
+					case "sensor":
+						break;
+					default:
+						break;
+				}
 
 				this.writeLog(
-					`[buildStateDetailsArray] completed for ${stateID}: with content ${JSON.stringify(
+					`buildStateDetailsArray => completed for ${stateID}: with content ${JSON.stringify(
 						this.activeStates[stateID],
 					)}`,
 				);
 			}
 		} catch (error) {
-			this.writeLog(`[buildStateDetailsArray] ${stateID} => ${error}`, "error");
+			this.writeLog(`buildStateDetailsArray => ${stateID} => ${error}`, "error");
 		}
 	}
 
