@@ -26,6 +26,9 @@ Light control of lamps from various manufacturers
 ## ToDo
 
 -   Select more than one LightGroup for one Object-ID (Bug with jsonCustom Select multible)
+-   Availability for notice with lower brighness and defined seconds before AutoOff
+-   Set Ct, Sat and Color directly to the lamp, also if it's switched off.
+-   Availability to switch on/off lights only with level/brightness state and without switch state
 
 ## Changelog
 
