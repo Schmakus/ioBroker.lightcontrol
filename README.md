@@ -34,7 +34,7 @@ Light control of lamps from various manufacturers
 	### **WORK IN PROGRESS**
 -->
 
-### 0.0.2 (2022-12-20)
+### **WORK IN PROGRESS**
 
 -   (Schmakus) first Alpha Release
 
