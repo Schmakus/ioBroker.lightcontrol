@@ -36,7 +36,7 @@ Light control of lamps from various manufacturers
 
 ### **WORK IN PROGRESS**
 
--   (Schmakus) initial release
+-   (Schmakus) first Alpha Release
 
 ## License
 
