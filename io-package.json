@@ -87,7 +87,9 @@
             }
         ]
     },
-    "native": {},
+    "native": {
+        "_id": 0
+    },
     "objects": [],
     "instanceObjects": []
 }

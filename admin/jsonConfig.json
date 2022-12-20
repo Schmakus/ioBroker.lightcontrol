@@ -18,12 +18,13 @@
 					"md": 6,
 					"lg": 6,
 					"default": "",
-					"newLine": true
+					"newLine": true,
+					"help": "Only numerical states allowed!"
 				},
 				"headerMinCt": {
 					"type": "header",
 					"size": 3,
-					"text": "Setting for Color-Temperature"
+					"text": "Settings for Color-Temperature"
 				},
 				"minCt": {
 					"type": "number",
@@ -39,7 +40,7 @@
 				"headerDimming": {
 					"type": "header",
 					"size": 3,
-					"text": "Setting for Dimming"
+					"text": "Settings for Dimming"
 				},
 				"RampSteps": {
 					"type": "number",
@@ -65,7 +66,7 @@
 				"headerPrecense": {
 					"type": "header",
 					"size": 3,
-					"text": "Setting for Presence"
+					"text": "Settings for Presence"
 				},
 				"IsPresenceDp": {
 					"type": "objectId",

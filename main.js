@@ -25,7 +25,7 @@ class Lightcontrol extends utils.Adapter {
 
 		this.on("ready", this.onReady.bind(this));
 		this.on("stateChange", this.onStateChange.bind(this));
-		// this.on("objectChange", this.onObjectChange.bind(this));
+		this.on("objectChange", this.onObjectChange.bind(this));
 		this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
 		this.GlobalSettings = {};
@@ -34,8 +34,7 @@ class Lightcontrol extends utils.Adapter {
 		this.LuxSensors = [];
 		this.MotionSensors = [];
 
-		this.activeStates = {}; // Array of activated states for LightControl
-		this.validStates = {}; // Array of all created states
+		this.activeStates = []; // Array of activated states for LightControl
 
 		this.ActualGenericLux = 0;
 		this.ActualPresence = true;
@@ -120,7 +119,7 @@ class Lightcontrol extends utils.Adapter {
 						this.LightGroups[value] = {};
 						this.LightGroups[value].description = value;
 						_temp = value;
-					} else {
+					} else if (key === "GroupLuxSensor") {
 						this.LightGroups[_temp].LuxSensor = value;
 						this.LightGroups[_temp].lights = [];
 						this.LightGroups[_temp].sensors = [];
@@ -153,23 +152,15 @@ class Lightcontrol extends utils.Adapter {
 					this.writeLog(
 						`onObjectChange => Object array of LightControl activated state changed : ${JSON.stringify(
 							obj,
-						)} stored config : ${JSON.stringify(this.activeStates)}`,
+						)} stored Objects : ${JSON.stringify(this.activeStates)}`,
 					);
 
 					// Verify if the object was already activated, if not initialize new parameter
-					if (!this.activeStates[stateID]) {
+					if (!this.activeStates.includes(stateID)) {
 						this.writeLog(`onObjectChange => Enable LightControl for : ${stateID}`, "info");
+						await this.buildLightGroupParameter(stateID);
 
-						await this.buildLightGroupParameter(id);
-
-						this.writeLog(
-							`onObjectChange => Active state array after enabling ${stateID} : ${JSON.stringify(
-								this.activeStates,
-							)}`,
-						);
-						if (this.activeStates[stateID]) {
-							await init.Init(this);
-						} else {
+						if (!this.activeStates.includes(stateID)) {
 							this.writeLog(
 								`onObjectChange => Cannot enable LightControl for ${stateID}, check settings and error messages`,
 								"warn",
@@ -178,29 +169,46 @@ class Lightcontrol extends utils.Adapter {
 					} else {
 						this.writeLog(`onObjectChange => Updating LightControl configuration for : ${stateID}`);
 
-						await this.buildLightGroupParameter(id);
+						await this.buildLightGroupParameter(stateID);
 
-						this.writeLog(
-							`onObjectChange => Active state array after updating configuration of ${stateID} : ${JSON.stringify(
-								this.activeStates,
-							)}`,
-						);
-						// Only run initialisation if state is successfully created during buildStateDetailsArray
-						if (this.activeStates[stateID]) {
-							await init.Init(this);
-						} else {
+						if (!this.activeStates.includes(stateID)) {
 							this.writeLog(
 								`onObjectChange => Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
 								"warn",
 							);
 						}
 					}
-				} else if (this.activeStates[stateID]) {
-					delete this.activeStates[stateID];
+				} else if (this.activeStates.includes(stateID)) {
+					//delete this.activeStates[stateID];
+					this.activeStates = await helper.removeValue(this.activeStates, stateID);
 					this.writeLog(`onObjectChange => Disabled LightControl for : ${stateID}`, "info");
+
+					// Loop trough LighGroups and delete Object by oid value
+					const keys = ["power", "bri", "ct", "sat", "color", "modeswitch"];
+					for (const Groups of Object.keys(this.LightGroups)) {
+						for (const Lights of this.LightGroups[Groups].lights) {
+							keys.forEach((key) => {
+								if (Lights[key]) {
+									if (Lights[key].oid === stateID) {
+										this.writeLog(
+											`onObjectChange => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
+											"info",
+										);
+										delete Lights[key];
+									}
+								}
+							});
+						}
+					}
+
 					this.writeLog(
 						`onObjectChange => Active state array after deactivation of ${stateID} : ${JSON.stringify(
 							this.activeStates,
+						)}`,
+					);
+					this.writeLog(
+						`onObjectChange => LightGroups after deactivation of ${stateID} : ${JSON.stringify(
+							this.LightGroups,
 						)}`,
 					);
 					this.unsubscribeForeignStates(stateID);
@@ -230,6 +238,7 @@ class Lightcontrol extends utils.Adapter {
 							groups.push({ value: Group, label: Group });
 						}
 						this.sendTo(msg.from, msg.command, groups, msg.callback);
+						this.writeLog(`onMessage => LightGroups Callback: ${JSON.stringify(groups)}.`);
 						break;
 					}
 
@@ -237,14 +246,36 @@ class Lightcontrol extends utils.Adapter {
 						const LightGroups = msg.message.LightGroups;
 						this.writeLog(`onMessage => getLights for Groups: ${LightGroups}.`);
 						const lights = [];
-
-						for (const light of Object.values(this.LightGroups[LightGroups].lights)) {
-							lights.push({ value: light.description, label: light.description });
-							this.writeLog(`onMessage => Light: ${light.description} in Group: ${LightGroups} found.`);
+						if (LightGroups) {
+							for (const light of Object.values(this.LightGroups[LightGroups].lights)) {
+								lights.push({ value: light.description, label: light.description });
+								this.writeLog(
+									`onMessage => Light: ${light.description} in Group: ${LightGroups} found.`,
+								);
+							}
 						}
 
 						if (!lights.length) lights.push({ value: "Example_Light", label: "Example_Light" });
 						this.sendTo(msg.from, msg.command, lights, msg.callback);
+						break;
+					}
+
+					case "id": {
+						const value = msg.message.value;
+						this.writeLog(`onMessage => Set new ID. Value = ${value}.`);
+						if (msg.message.value !== null) {
+							this.sendTo(msg.from, msg.command, value, msg.callback);
+						} else {
+							const oldID = this.config._id;
+							const newID = oldID + 1;
+
+							await this.extendForeignObjectAsync("system.adapter." + this.namespace, {
+								native: { _id: newID },
+							});
+
+							this.writeLog(`onMessage => Set new ID. OldID = ${oldID}, NewID = ${newID}`);
+							this.sendTo(msg.from, msg.command, newID.toString(), msg.callback);
+						}
 						break;
 					}
 
@@ -277,7 +308,10 @@ class Lightcontrol extends utils.Adapter {
 							this.writeLog(`onMessage => checkcheckIdForDuplicates: No duplicates.`);
 							this.sendTo(msg.from, msg.command, "", msg.callback);
 						} else {
-							this.writeLog(`onMessage => checkcheckIdForDuplicates: Duplicates found.`);
+							this.writeLog(
+								`Define LightGroups => checkcheckIdForDuplicates: Duplicate GroupNames found.`,
+								"warn",
+							);
 							this.sendTo(msg.from, msg.command, "labelDuplicateGroup", msg.callback);
 						}
 						break;
@@ -443,8 +477,7 @@ class Lightcontrol extends utils.Adapter {
 							// Check if custom object is enabled for LightControl
 							// @ts-ignore
 							if (customStateArray.rows[index].value[this.namespace].enabled) {
-								// Prepare array in constructor for further processing
-								this.activeStates[stateID] = {};
+								if (!this.activeStates.includes(stateID)) this.activeStates.push(stateID);
 								this.writeLog(`InitCustomStates => LightControl enabled state found ${stateID}`);
 							} else {
 								this.writeLog(
@@ -458,19 +491,18 @@ class Lightcontrol extends utils.Adapter {
 				}
 			}
 
-			const totalEnabledStates = Object.keys(this.activeStates).length;
+			const totalEnabledStates = this.activeStates.length;
 			let totalInitiatedStates = 0;
 			let totalFailedStates = 0;
 			this.writeLog(`Found ${totalEnabledStates} LightControl enabled states`, "info");
 
 			// Initialize all discovered states
 			let count = 1;
-			for (const stateID in this.activeStates) {
+			for (const stateID of this.activeStates) {
 				this.writeLog(`InitCustomStates => Initialising (${count} of ${totalEnabledStates}) "${stateID}"`);
 				await this.buildLightGroupParameter(stateID);
 
-				if (this.activeStates[stateID]) {
-					await init.Init(this);
+				if (this.activeStates.includes(stateID)) {
 					totalInitiatedStates = totalInitiatedStates + 1;
 					this.writeLog(`InitCustomStates => Initialization of ${stateID} successfully`, "info");
 				} else {
@@ -484,7 +516,10 @@ class Lightcontrol extends utils.Adapter {
 			}
 
 			// Subscribe on all foreign objects to detect (de)activation of LightControl enabled states
-			this.subscribeForeignObjects("*");
+			await this.subscribeForeignObjectsAsync("*");
+			this.writeLog(
+				`InitCustomStates => subscribed all foreign objects to detect (de)activation of LightControl enabled states`,
+			);
 
 			if (totalFailedStates > 0) {
 				this.writeLog(
@@ -521,7 +556,8 @@ class Lightcontrol extends utils.Adapter {
 						`buildLightGroupParameter => Can't get information for ${stateID}, state will be ignored`,
 						"error",
 					);
-					delete this.activeStates[stateID];
+					//delete this.activeStates[stateID];
+					this.activeStates = await helper.removeValue(this.activeStates, stateID);
 					this.unsubscribeForeignStates(stateID);
 					return;
 				}
@@ -532,7 +568,8 @@ class Lightcontrol extends utils.Adapter {
 					)}`,
 					"error",
 				);
-				delete this.activeStates[stateID];
+				//delete this.activeStates[stateID];
+				this.activeStates = await helper.removeValue(this.activeStates, stateID);
 				this.unsubscribeForeignStates(stateID);
 				return;
 			}
@@ -542,7 +579,6 @@ class Lightcontrol extends utils.Adapter {
 				const customData = stateInfo.common.custom[this.namespace];
 				//const commonData = stateInfo.common;
 				this.writeLog(`buildLightGroupParameter => customData ${JSON.stringify(customData)}`);
-				//this.writeLog(`buildLightGroupParameter => commonData ${JSON.stringify(commonData)}`);
 
 				//Covert string to boolean and numbers
 				for (const key in customData) {
@@ -558,7 +594,14 @@ class Lightcontrol extends utils.Adapter {
 
 				//Add Id to custom data
 				customData.oid = stateID;
-				const params = { bri: ["oid", "minVal", "maxVal", "defaultBri"], power: ["oid", "onVal", "offVal"] };
+				const params = {
+					bri: ["oid", "minVal", "maxVal", "defaultBri"],
+					power: ["oid", "onVal", "offVal"],
+					ct: ["oid", "minVal", "maxVal"],
+					sat: ["oid", "minVal", "maxVal"],
+					modeswitch: ["oid", "whiteModeVal", "colorModeVal"],
+					color: ["oid", "colorType", "defaultColor"],
+				};
 
 				//CustomData
 				/*
@@ -611,9 +654,11 @@ class Lightcontrol extends utils.Adapter {
 						Light[customData.func] = getSubset(customData, ...params[customData.func]);
 
 						this.writeLog(
-							`buildStateDetailsArray => Type: Light, in Group: ${JSON.stringify(
+							`buildStateDetailsArray => Type: Light, in Group Object: ${JSON.stringify(
 								LightGroup,
-							)} with Lights: ${Lights} and Light: ${Light} with index: ${index}`,
+							)} with Lights: ${JSON.stringify(Lights)} and Light: ${JSON.stringify(
+								Light,
+							)} with index: ${index}`,
 						);
 
 						break;
@@ -624,11 +669,11 @@ class Lightcontrol extends utils.Adapter {
 						break;
 				}
 
-				this.writeLog(
-					`buildStateDetailsArray => completed for ${stateID}: with content ${JSON.stringify(
-						this.activeStates[stateID],
-					)}`,
-				);
+				//Push stateID after processing
+				if (!this.activeStates.includes(stateID)) this.activeStates.push(stateID);
+
+				this.writeLog(`buildStateDetailsArray => completed for ${stateID}.`);
+				if (this.GlobalSettings.debug) this.writeLog(JSON.stringify(this.LightGroups));
 			}
 		} catch (error) {
 			this.writeLog(`buildStateDetailsArray => ${stateID} => ${error}`, "error");
@@ -773,7 +818,6 @@ class Lightcontrol extends utils.Adapter {
 						if (!NewVal && LightGroups[Group].autoOffTimed.enabled) {
 							//Wenn ausschalten und autoOffTimed ist aktiv, dieses löschen, da sonst erneute ausschaltung nach Ablauf der Zeit. Ist zusätzlich rampon aktiv, führt dieses zu einem einschalten mit sofort folgenden ausschalten
 							await timers.clearAutoOffTimeouts(this, Group);
-							//if (typeof this.AutoOffTimeoutObject[Group] == "object") clearTimeout(this.AutoOffTimeoutObject[Group]);
 						}
 						if (!NewVal && LightGroups[Group].powerCleaningLight) {
 							//Wenn via Cleaninglight angeschaltet wurde, jetzt aber normal ausgeschaltet, powerCleaningLight synchen um Blockade der Autofunktionen zu vermeiden

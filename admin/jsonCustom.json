@@ -25,6 +25,7 @@
 			"type": "selectSendTo",
 			"label": "LightGroup",
 			"command": "LightGroup",
+			"multible": true,
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
@@ -103,7 +104,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "!['bri', 'ct', 'sat'].includes(data.func) || data.type === 'sensor'",
-			"defaultFunc": "!customObj.common.min ? 0 : (customObj.common.min ? customObj.common.min : 0)"
+			"defaultFunc": "!customObj.common.min ? 0 : customObj.common.min ? customObj.common.min : 0"
 		},
 		"maxVal": {
 			"type": "number",
@@ -112,7 +113,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "!['bri', 'ct', 'sat'].includes(data.func) || data.type === 'sensor'",
-			"defaultFunc": "!customObj.common.max ? 100 : (customObj.common.max ? customObj.common.max : 100)"
+			"defaultFunc": "!customObj.common.max ? 100 : customObj.common.max ? customObj.common.max : 100"
 		},
 		"defaultBri": {
 			"type": "number",
