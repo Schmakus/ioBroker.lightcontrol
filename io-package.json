@@ -1,95 +1,108 @@
 {
-    "common": {
-        "name": "lightcontrol",
-        "version": "0.0.1",
-        "news": {
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版",
-                "uk": "початковий випуск"
-            }
-        },
-        "title": "LightControl",
-        "titleLang": {
-            "en": "LightControl",
-            "de": "Lichtsteuerung",
-            "ru": "Управление освещением",
-            "pt": "Controle de luz",
-            "nl": "Lichtbesturing",
-            "fr": "Contrôle de la lumière",
-            "it": "Controllo della luce",
-            "es": "Control de luz",
-            "pl": "Sterowanie oświetleniem",
-            "zh-cn": "光控",
-            "uk": "LightControl"
-        },
-        "desc": {
-            "en": "Light control of lamps from various manufacturers",
-            "de": "Lichtsteuerung von Lampen verschiedener Hersteller",
-            "ru": "Управление светом светильников различных производителей",
-            "pt": "Controle de luz de lâmpadas de vários fabricantes",
-            "nl": "Lichtregeling van lampen van diverse fabrikanten",
-            "fr": "Contrôle de la lumière des lampes de différents fabricants",
-            "it": "Controllo della luce di lampade di vari produttori",
-            "es": "Control de luz de lámparas de varios fabricantes.",
-            "pl": "Sterowanie oświetleniem lamp różnych producentów",
-            "zh-cn": "各厂家灯具的光控",
-            "uk": "Контроль світла ламп різних виробників"
-        },
-        "authors": [
-            "Schmakus <schmakus@gmail.com>"
-        ],
-        "keywords": [
-            "light",
-            "lightcontrol",
-            "control",
-            "motion",
-            "motionsensor",
-            "motiondetection",
-            "smarthome",
-            "iobroker"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "lightcontrol.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
-        "readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "lighting",
-        "compact": true,
-        "messagebox": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json",
-            "custom": "json"
-        },
-        "supportCustoms": true,
-        "dependencies": [
-            {
-                "js-controller": ">=4.0.0"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=5.1.13"
-            }
-        ]
+  "common": {
+    "name": "lightcontrol",
+    "version": "0.0.2",
+    "news": {
+      "0.0.2": {
+        "en": "first Alpha Release",
+        "de": "erste Alpha Release",
+        "ru": "первый альфа-релиз",
+        "pt": "primeiro Alpha Release",
+        "nl": "eerste Alfa Los",
+        "fr": "premier Alpha Release",
+        "it": "primo Alpha Release",
+        "es": "primer lanzamiento alfa",
+        "pl": "okładka",
+        "uk": "перший реліз Альфа",
+        "zh-cn": "首批Alphaam"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "zh-cn": "首次出版",
+        "uk": "початковий випуск"
+      }
     },
-    "native": {
-        "_id": 0
+    "title": "LightControl",
+    "titleLang": {
+      "en": "LightControl",
+      "de": "Lichtsteuerung",
+      "ru": "Управление освещением",
+      "pt": "Controle de luz",
+      "nl": "Lichtbesturing",
+      "fr": "Contrôle de la lumière",
+      "it": "Controllo della luce",
+      "es": "Control de luz",
+      "pl": "Sterowanie oświetleniem",
+      "zh-cn": "光控",
+      "uk": "LightControl"
     },
-    "objects": [],
-    "instanceObjects": []
+    "desc": {
+      "en": "Light control of lamps from various manufacturers",
+      "de": "Lichtsteuerung von Lampen verschiedener Hersteller",
+      "ru": "Управление светом светильников различных производителей",
+      "pt": "Controle de luz de lâmpadas de vários fabricantes",
+      "nl": "Lichtregeling van lampen van diverse fabrikanten",
+      "fr": "Contrôle de la lumière des lampes de différents fabricants",
+      "it": "Controllo della luce di lampade di vari produttori",
+      "es": "Control de luz de lámparas de varios fabricantes.",
+      "pl": "Sterowanie oświetleniem lamp różnych producentów",
+      "zh-cn": "各厂家灯具的光控",
+      "uk": "Контроль світла ламп різних виробників"
+    },
+    "authors": [
+      "Schmakus <schmakus@gmail.com>"
+    ],
+    "keywords": [
+      "light",
+      "lightcontrol",
+      "control",
+      "motion",
+      "motionsensor",
+      "motiondetection",
+      "smarthome",
+      "iobroker"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "lightcontrol.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
+    "readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "lighting",
+    "compact": true,
+    "messagebox": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json",
+      "custom": "json"
+    },
+    "supportCustoms": true,
+    "dependencies": [
+      {
+        "js-controller": ">=4.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.13"
+      }
+    ]
+  },
+  "native": {
+    "_id": 0
+  },
+  "objects": [],
+  "instanceObjects": []
 }
