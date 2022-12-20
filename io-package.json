@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "lightcontrol",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "news": {
+      "0.0.3": {
+        "en": "first Alpha Release",
+        "de": "erste Alpha Release",
+        "ru": "первый альфа-релиз",
+        "pt": "primeiro Alpha Release",
+        "nl": "eerste Alfa Los",
+        "fr": "premier Alpha Release",
+        "it": "primo Alpha Release",
+        "es": "primer lanzamiento alfa",
+        "pl": "okładka",
+        "uk": "перший реліз Альфа",
+        "zh-cn": "首批Alphaam"
+      },
       "0.0.2": {
         "en": "first Alpha Release",
         "de": "erste Alpha Release",
