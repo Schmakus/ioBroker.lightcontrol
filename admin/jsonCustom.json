@@ -36,7 +36,7 @@
 			"command": "LightName",
 			"jsonData": "{\"LightGroups\": ${JSON.stringify(data.group)}}",
 			"freeSolo": true,
-			"label": "Name of the Light - autocompleteSendTo",
+			"label": "Name of the Light",
 			"help": "e.g. FloorSpots, Spotlights, Wallpanel, ...",
 			"sm": 3,
 			"md": 3,
