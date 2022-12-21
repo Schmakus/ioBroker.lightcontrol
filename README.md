@@ -39,7 +39,9 @@ Light control of lamps from various manufacturers
 
 ### **WORK IN PROGRESS**
 
--   (Schmakus) Set Ct, Sat and Color directly to the lamp, also if it's switched off.
+-   (Schmakus) Fix: Moving sensors and lights to other group
+-   (Schmakus) Fix: Adding sensor to groups
+-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 
 ### 0.0.2 (2022-12-20)
 
