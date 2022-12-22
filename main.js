@@ -188,46 +188,6 @@ class Lightcontrol extends utils.Adapter {
 
 						await this.deleteStateIdFromLightGroups(stateID);
 
-						/*
-						// Loop trough LighGroups and delete Object by oid value
-						const keys = ["power", "bri", "ct", "sat", "color", "modeswitch"];
-						for (const Groups of Object.keys(this.LightGroups)) {
-							//Check Lights
-							const lightArray = this.LightGroups[Groups].lights;
-							if (lightArray) {
-								for (const Lights of lightArray) {
-									keys.forEach((key) => {
-										if (Lights[key]) {
-											if (Lights[key].oid === stateID) {
-												this.writeLog(
-													`onObjectChange => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
-													"info",
-												);
-												delete Lights[key];
-											}
-										}
-									});
-								}
-							}
-							//Check Sensors
-							const _oldArray = this.LightGroups[Groups].sensors;
-							if (_oldArray && _oldArray !== "undefined") {
-								this.LightGroups[Groups].sensors = this.LightGroups[Groups].sensors.filter((object) => {
-									return object.oid !== stateID;
-								});
-
-								// Comparing Sensor Array
-								const equalsCheck = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
-								if (!equalsCheck(_oldArray, this.LightGroups[Groups].sensors)) {
-									this.writeLog(
-										`onObjectChange => Sensor with ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}"`,
-										"info",
-									);
-								}
-							}
-						}
-						*/
-
 						this.writeLog(
 							`onObjectChange => Active state array after deactivation of ${stateID} : ${JSON.stringify(
 								this.activeStates,
@@ -703,6 +663,9 @@ class Lightcontrol extends utils.Adapter {
 							motionVal: customData.motionVal,
 							noMotionVal: customData.noMotionVal,
 						});
+
+						await init.DoAllTheMotionSensorThings(this, LightGroup);
+
 						this.writeLog(
 							`buildStateDetailsArray => Type: Sensor, in Group Object: ${JSON.stringify(LightGroup)}`,
 						);
