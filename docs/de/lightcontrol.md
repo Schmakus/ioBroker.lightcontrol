@@ -133,6 +133,8 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
 
 ## 5.1 Lichter
 
+![Light Settings](img/04_customConfig_light.jpg)
+
 -   **Typ des Objekt**
     In vielen Fällen erkennt LightControl, ob es sich um ein Licht oder Sensor handelt. Wenn dies nicht der Fall sein sollte, ist _Licht_ voreingestellt.
 
@@ -145,7 +147,7 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
 -   **Funktion des Objekts**
     In vielen Fällen erkennt LightControl, um welche Funktion es sich handeln könnte. Wenn die automatische Erkennung nicht dem entspricht, was gewünscht ist, dann über das DropDown Menü die jeweilige Funktion auswählen
 
-    ![Type of Object](img/06_customConfig_funcOfObject.jpg)
+    <img src="img/06_customConfig_funcOfObject.jpg" width="50">
 
     -   **Switch**
 
