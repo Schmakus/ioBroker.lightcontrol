@@ -40,7 +40,8 @@
 			"help": "e.g. FloorSpots, Spotlights, Wallpanel, ...",
 			"sm": 3,
 			"md": 3,
-			"lg": 3
+			"lg": 3,
+			"hidden": "data.type === 'sensor'"
 		},
 		"func": {
 			"type": "select",
@@ -164,7 +165,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.func !== 'color' || data.type === 'sensor'",
-			"default": "rgb"
+			"default": "hex"
 		},
 		"defaultColor": {
 			"type": "text",
@@ -172,19 +173,20 @@
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"hidden": "data.func !== 'color' || data.type === 'sensor'"
+			"hidden": "data.func !== 'color' || data.type === 'sensor'",
+			"default": "#FFFFFF"
 		},
-		"motionOnVal": {
+		"motionVal": {
 			"type": "text",
 			"label": "Value for Motion",
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.type !== 'sensor'",
-			"defaultFunc": "!customObj.common.type ? true : (customObj.common.type ?  === 'boolean' ? true : 'On')",
+			"defaultFunc": "!customObj.common.type ? true : (customObj.common.type === 'boolean' ? true : 'On')",
 			"newLine": true
 		},
-		"motionOffVal": {
+		"noMotionVal": {
 			"type": "text",
 			"label": "Value for no Motion",
 			"sm": 3,
@@ -192,6 +194,41 @@
 			"lg": 3,
 			"hidden": "data.type !== 'sensor'",
 			"defaultFunc": "!customObj.common.type ? false : (customObj.common.type === 'boolean' ? false : 'Off')"
+		},
+		"sendCt": {
+			"type": "checkbox",
+			"label": "Send Color-Temperatur",
+			"help": "Send Color-Temperatur to Light if it's off",
+			"hidden": "data.func !== 'ct'",
+			"default": true
+		},
+		"sendSat": {
+			"type": "checkbox",
+			"label": "Send Saturation",
+			"help": "Send Saturation to Light if it's off",
+			"hidden": "data.func !== 'sat'",
+			"default": true
+		},
+		"sendColor": {
+			"type": "checkbox",
+			"label": "Send Color",
+			"help": "Send Color to Light if it's off",
+			"hidden": "data.func !== 'color'",
+			"default": true
+		},
+		"sendModeswitch": {
+			"type": "checkbox",
+			"label": "Send Modeswitch",
+			"help": "Send Modeswitch to Light if it's off",
+			"hidden": "data.func !== 'modeswitch'",
+			"default": true
+		},
+		"useBri": {
+			"type": "checkbox",
+			"label": "Use Brightness for Switching",
+			"help": "Uses Brightness State for On/Off Switch instead of Power State",
+			"hidden": "data.func !== 'bri'",
+			"default": true
 		}
 	}
 }

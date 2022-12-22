@@ -52,6 +52,7 @@ class Lightcontrol extends utils.Adapter {
 		this.lng = "";
 
 		this.DevMode = false;
+		this.processing = false;
 	}
 
 	/**
@@ -139,86 +140,73 @@ class Lightcontrol extends utils.Adapter {
 	async onObjectChange(id, obj) {
 		//ToDo : Verify with test-results if debounce on object change must be implemented
 		try {
-			const stateID = id;
+			if (!this.processing) {
+				this.processing = true;
+				const stateID = id;
 
-			// Check if object is activated for LightControl
-			if (obj && obj.common) {
-				// Verify if custom information is available regarding LightControl
-				if (
-					obj.common.custom &&
-					obj.common.custom[this.namespace] &&
-					obj.common.custom[this.namespace].enabled
-				) {
-					this.writeLog(
-						`onObjectChange => Object array of LightControl activated state changed : ${JSON.stringify(
-							obj,
-						)} stored Objects : ${JSON.stringify(this.activeStates)}`,
-					);
+				// Check if object is activated for LightControl
+				if (obj && obj.common) {
+					// Verify if custom information is available regarding LightControl
+					if (
+						obj.common.custom &&
+						obj.common.custom[this.namespace] &&
+						obj.common.custom[this.namespace].enabled
+					) {
+						this.writeLog(
+							`onObjectChange => Object array of LightControl activated state changed : ${JSON.stringify(
+								obj,
+							)} stored Objects : ${JSON.stringify(this.activeStates)}`,
+						);
 
-					// Verify if the object was already activated, if not initialize new parameter
-					if (!this.activeStates.includes(stateID)) {
-						this.writeLog(`onObjectChange => Enable LightControl for : ${stateID}`, "info");
-						await this.buildLightGroupParameter(stateID);
-
+						// Verify if the object was already activated, if not initialize new parameter
 						if (!this.activeStates.includes(stateID)) {
-							this.writeLog(
-								`onObjectChange => Cannot enable LightControl for ${stateID}, check settings and error messages`,
-								"warn",
-							);
-						}
-					} else {
-						this.writeLog(`onObjectChange => Updating LightControl configuration for : ${stateID}`);
+							this.writeLog(`onObjectChange => Enable LightControl for : ${stateID}`, "info");
+							await this.buildLightGroupParameter(stateID);
 
-						await this.buildLightGroupParameter(stateID);
+							if (!this.activeStates.includes(stateID)) {
+								this.writeLog(
+									`onObjectChange => Cannot enable LightControl for ${stateID}, check settings and error messages`,
+									"warn",
+								);
+							}
+						} else {
+							this.writeLog(`onObjectChange => Updating LightControl configuration for : ${stateID}`);
+							//Cleaning LightGroups from ID and set it new
+							await this.deleteStateIdFromLightGroups(stateID);
+							await this.buildLightGroupParameter(stateID);
 
-						if (!this.activeStates.includes(stateID)) {
-							this.writeLog(
-								`onObjectChange => Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
-								"warn",
-							);
+							if (!this.activeStates.includes(stateID)) {
+								this.writeLog(
+									`onObjectChange => Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
+									"warn",
+								);
+							}
 						}
+					} else if (this.activeStates.includes(stateID)) {
+						this.activeStates = await helper.removeValue(this.activeStates, stateID);
+						this.writeLog(`onObjectChange => Disabled LightControl for : ${stateID}`, "info");
+
+						await this.deleteStateIdFromLightGroups(stateID);
+
+						this.writeLog(
+							`onObjectChange => Active state array after deactivation of ${stateID} : ${JSON.stringify(
+								this.activeStates,
+							)}`,
+						);
+						this.writeLog(
+							`onObjectChange => LightGroups after deactivation of ${stateID} : ${JSON.stringify(
+								this.LightGroups,
+							)}`,
+						);
+						this.unsubscribeForeignStates(stateID);
 					}
-				} else if (this.activeStates.includes(stateID)) {
-					//delete this.activeStates[stateID];
-					this.activeStates = await helper.removeValue(this.activeStates, stateID);
-					this.writeLog(`onObjectChange => Disabled LightControl for : ${stateID}`, "info");
-
-					// Loop trough LighGroups and delete Object by oid value
-					const keys = ["power", "bri", "ct", "sat", "color", "modeswitch"];
-					for (const Groups of Object.keys(this.LightGroups)) {
-						for (const Lights of this.LightGroups[Groups].lights) {
-							keys.forEach((key) => {
-								if (Lights[key]) {
-									if (Lights[key].oid === stateID) {
-										this.writeLog(
-											`onObjectChange => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
-											"info",
-										);
-										delete Lights[key];
-									}
-								}
-							});
-						}
-					}
-
-					this.writeLog(
-						`onObjectChange => Active state array after deactivation of ${stateID} : ${JSON.stringify(
-							this.activeStates,
-						)}`,
-					);
-					this.writeLog(
-						`onObjectChange => LightGroups after deactivation of ${stateID} : ${JSON.stringify(
-							this.LightGroups,
-						)}`,
-					);
-					this.unsubscribeForeignStates(stateID);
+					this.processing = false;
+				} else {
+					// Object change not related to this adapter, ignoring
 				}
-			} else {
-				// Object change not related to this adapter, ignoring
 			}
-		} catch (error) {
-			// Send code failure to sentry
-			this.writeLog(`onObjectChange =>  ${id}`, "error");
+		} catch (e) {
+			this.writeLog(`onObjectChange =>  ${e}`, "error");
 		}
 	}
 
@@ -556,7 +544,6 @@ class Lightcontrol extends utils.Adapter {
 						`buildLightGroupParameter => Can't get information for ${stateID}, state will be ignored`,
 						"error",
 					);
-					//delete this.activeStates[stateID];
 					this.activeStates = await helper.removeValue(this.activeStates, stateID);
 					this.unsubscribeForeignStates(stateID);
 					return;
@@ -568,7 +555,6 @@ class Lightcontrol extends utils.Adapter {
 					)}`,
 					"error",
 				);
-				//delete this.activeStates[stateID];
 				this.activeStates = await helper.removeValue(this.activeStates, stateID);
 				this.unsubscribeForeignStates(stateID);
 				return;
@@ -595,31 +581,38 @@ class Lightcontrol extends utils.Adapter {
 				//Add Id to custom data
 				customData.oid = stateID;
 				const params = {
-					bri: ["oid", "minVal", "maxVal", "defaultBri"],
+					bri: ["oid", "minVal", "maxVal", "defaultBri", "sendBri"],
 					power: ["oid", "onVal", "offVal"],
-					ct: ["oid", "minVal", "maxVal"],
-					sat: ["oid", "minVal", "maxVal"],
-					modeswitch: ["oid", "whiteModeVal", "colorModeVal"],
-					color: ["oid", "colorType", "defaultColor"],
+					ct: ["oid", "minVal", "maxVal", "sendCt"],
+					sat: ["oid", "minVal", "maxVal", "sendCt"],
+					modeswitch: ["oid", "whiteModeVal", "colorModeVal", "sendModeswitch"],
+					color: ["oid", "colorType", "defaultColor", "sendColor"],
 				};
 
-				//CustomData
 				/*
-					"enabled":true,
-					"defaultBri":"100",
-					"whiteModeVal":false,
-					"colorModeVal":true,
-					"colorType":"rgb",
-					"type":"light",
-					"func":"bri",
-					"onVal":1,
-					"offVal":0,
-					"minVal":0,
-					"maxVal":100,
-					"motionOnVal":null,
-					"motionOffVal":"Off",
-					"group":"Wohnzimmer",
-					"description":"Deckenspots"
+				CustomData Example
+				{
+						"enabled": true,
+						"defaultBri": "100",
+						"whiteModeVal": "false",
+						"colorModeVal": "true",
+						"colorType": "rgb",
+						"type": "light",
+						"func": "ct",
+						"onVal": 1,
+						"offVal": 0,
+						"minVal": 450,
+						"maxVal": 252,
+						"motionVal": true,
+						"noMotionVal": false,
+						"group": "Wohnzimmer",
+						"description": "Example_Light",
+						"sendCt": true,
+						"sendSat": true,
+						"sendColor": true,
+						"sendModeswitch": true,
+						"useBri": true
+					}
 				*/
 				const LightGroup = this.LightGroups[customData.group];
 
@@ -663,8 +656,21 @@ class Lightcontrol extends utils.Adapter {
 
 						break;
 					}
-					case "sensor":
+					case "sensor": {
+						const Sensors = LightGroup.sensors;
+						Sensors.push({
+							oid: customData.oid,
+							motionVal: customData.motionVal,
+							noMotionVal: customData.noMotionVal,
+						});
+
+						await init.DoAllTheMotionSensorThings(this, LightGroup);
+
+						this.writeLog(
+							`buildStateDetailsArray => Type: Sensor, in Group Object: ${JSON.stringify(LightGroup)}`,
+						);
 						break;
+					}
 					default:
 						break;
 				}
@@ -985,6 +991,50 @@ class Lightcontrol extends utils.Adapter {
 			}
 		}
 		return i;
+	}
+
+	/**
+	 * deleteStateIdFromLightGroups
+	 * @param {string} stateID ID of the Object
+	 */
+	async deleteStateIdFromLightGroups(stateID) {
+		// Loop trough LighGroups and delete Object by oid value
+		const keys = ["power", "bri", "ct", "sat", "color", "modeswitch"];
+		for (const Groups of Object.keys(this.LightGroups)) {
+			//Check Lights
+			const lightArray = this.LightGroups[Groups].lights;
+			if (lightArray) {
+				for (const Lights of lightArray) {
+					keys.forEach((key) => {
+						if (Lights[key]) {
+							if (Lights[key].oid === stateID) {
+								this.writeLog(
+									`onObjectChange => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
+									"info",
+								);
+								delete Lights[key];
+							}
+						}
+					});
+				}
+			}
+			//Check Sensors
+			const _oldArray = this.LightGroups[Groups].sensors;
+			if (_oldArray && _oldArray !== "undefined") {
+				this.LightGroups[Groups].sensors = this.LightGroups[Groups].sensors.filter((object) => {
+					return object.oid !== stateID;
+				});
+
+				// Comparing Sensor Array
+				const equalsCheck = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
+				if (!equalsCheck(_oldArray, this.LightGroups[Groups].sensors)) {
+					this.writeLog(
+						`onObjectChange => Sensor with ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}"`,
+						"info",
+					);
+				}
+			}
+		}
 	}
 
 	/**

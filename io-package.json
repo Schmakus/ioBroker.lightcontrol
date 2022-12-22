@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "lightcontrol",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "news": {
+      "0.0.3": {
+        "en": "Fix: Moving sensors and lights to other group\nFix: Adding sensor to groups",
+        "de": "Fix: Sensoren und Lichter zu anderen Gruppen bewegen\nFix: Sensor zu Gruppen hinzufügen",
+        "ru": "Исправление: Перемещение датчиков и светов в другую группу\nИсправление: Добавление датчика в группы",
+        "pt": "Fix: Movendo sensores e luzes para outro grupo\nFix: Adicionando o sensor a grupos",
+        "nl": "Verplaats sensoren en lichten naar andere groep\nVoeg sensor toe aan groepen",
+        "fr": "Fix: Déplacer les capteurs et les lumières vers un autre groupe\nCorrection : Ajout d'un capteur aux groupes",
+        "it": "Fisso: Trasferire sensori e luci ad altri gruppi\nFix: Aggiungere il sensore ai gruppi",
+        "es": "Fijación: Mover sensores y luces a otro grupo\nFijación: Agregar sensor a grupos",
+        "pl": "Fix – czujniki i światło do innych grup\nFix – czujnik do grup",
+        "uk": "Виправлення: Переміщення датчиків та вогнів до іншої групи\nВиправлення: Додавання датчика до груп",
+        "zh-cn": "Fix:向其他群体倾斜传感器和照灯\nFix:向各群体增加传感器"
+      },
       "0.0.2": {
         "en": "first Alpha Release",
         "de": "erste Alpha Release",
