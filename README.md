@@ -15,9 +15,7 @@
 
 ## LightControl adapter for ioBroker
 
-Light control of lamps from various manufacturers
-
-## Adapter in Development-Mode! Do not install!!!
+Light control of lamps from various manufacturers 
 
 [Deutsche Beschreibung hier](docs/de/lightcontrol.md)
 
