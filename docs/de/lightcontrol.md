@@ -147,7 +147,7 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
 -   **Funktion des Objekts**
     In vielen Fällen erkennt LightControl, um welche Funktion es sich handeln könnte. Wenn die automatische Erkennung nicht dem entspricht, was gewünscht ist, dann über das DropDown Menü die jeweilige Funktion auswählen
 
-    <img src="img/06_customConfig_funcOfObject.jpg" width="50">
+    <img src="img/06_customConfig_funcOfObject.jpg" width="200">
 
     -   **Switch**
 
