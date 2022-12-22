@@ -15,6 +15,8 @@
     -   [4.1 Lichtgruppen](#41-lichtgruppen)
     -   [4.2 Allgemeine Einstellungen](#42-allgemeine-einstellungen)
 -   [5 Lichter und Sensoren](#5-lichter-und-sensoren)
+    -   [5.1 Lichter](#51-lichter)
+    -   [5.2 Sensoren](#52-sensoren)
 -   [6 Datenpunkte](#7-datenpunkte)
     -   [6.1 Datenpunkte für alle Gruppen](#61-datenpunkte-für-alle-gruppen)
     -   [6.2 Datenpunkte der einzelnen Gruppe](#62-datenpunkte-der-einzelnen-gruppe)
@@ -84,7 +86,7 @@ Das Konfigurationsfenster öffnet sich automatisch mit den Gruppeneinstellungen.
 
 ## 4.1 Lichtgruppen
 
-![Instance Settings - LightGroups](img/02_Instance_Settings_LightGroups.jpg))
+![Instance Settings - LightGroups](img/02_Instance_Settings_LightGroups.jpg)
 
 Mit Klick auf das + wird eine neue Zeile erstellt.
 
@@ -143,7 +145,7 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
 -   **Funktion des Objekts**
     In vielen Fällen erkennt LightControl, um welche Funktion es sich handeln könnte. Wenn die automatische Erkennung nicht dem entspricht, was gewünscht ist, dann über das DropDown Menü die jeweilige Funktion auswählen
 
-    ![Type of Object](img/05_customConfig_funcOfObject.jpg)
+    ![Type of Object](img/06_customConfig_funcOfObject.jpg)
 
     -   **Switch**
 
