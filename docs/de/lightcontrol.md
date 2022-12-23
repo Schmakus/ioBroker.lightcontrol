@@ -93,9 +93,6 @@ Mit Klick auf das + wird eine neue Zeile erstellt.
 -   Bezeichnung: Hier benennt man die Gruppe. Achtung: Keine doppelten Namen anlegen!!
 -   Individueller Lux Sensor: Hier definiert man einen individuellen Lux-Sensor. Über die 3 Punkte an der rechten Seite lässt sich eine Objekt-ID einfügen. Wenn das Feld leer gelassen wir, so wird für die Lichtgruppe der globale Lux-Sensor verwendet, sofern einer definiert ist.
 
-Um eine Gruppe zu bearbeiten, klickt man auf den Gruppennamen. Es öffnet sich ein weiteres Menü.
-Hier lassen sich die jeweiligen Lampen und Sensoren konfigurieren.
-
 ## 4.2 Allgemeine Einstellungen
 
 ![Instance Settings - General](img/01_Instance_Settings.jpg)
