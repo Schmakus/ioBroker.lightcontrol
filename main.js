@@ -664,7 +664,7 @@ class Lightcontrol extends utils.Adapter {
 							noMotionVal: customData.noMotionVal,
 						});
 
-						await init.DoAllTheMotionSensorThings(this, LightGroup);
+						await init.DoAllTheMotionSensorThings(this, customData.group);
 
 						this.writeLog(
 							`buildStateDetailsArray => Type: Sensor, in Group Object: ${JSON.stringify(LightGroup)}`,

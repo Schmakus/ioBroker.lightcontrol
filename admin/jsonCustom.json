@@ -176,6 +176,28 @@
 			"hidden": "data.func !== 'color' || data.type === 'sensor'",
 			"default": "#FFFFFF"
 		},
+		"setCtwithColor": {
+			"type": "checkbox",
+			"label": "Set Color-Temperature with Color"
+		},
+		"warmWhiteColor": {
+			"type": "text",
+			"label": "HEX Value for WarmWhite Color",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'color' || data.setCtwithColor === false || data.type === 'sensor'",
+			"help": "Need only, if no Ct-State available"
+		},
+		"dayLightColor": {
+			"type": "text",
+			"label": "HEX Value for DayLight Color",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'color' || data.setCtwithColor === false || data.type === 'sensor'",
+			"help": "Need only, if no Ct-State available"
+		},
 		"motionVal": {
 			"type": "text",
 			"label": "Value for Motion",
@@ -227,7 +249,7 @@
 			"type": "checkbox",
 			"label": "Use Brightness for Switching",
 			"help": "Uses Brightness State for On/Off Switch instead of Power State",
-			"hidden": "data.func !== 'bri'",
+			"hidden": "data.func !== 'bri' ",
 			"default": true
 		}
 	}

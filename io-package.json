@@ -1,119 +1,134 @@
 {
-	"common": {
-		"name": "lightcontrol",
-		"version": "0.0.3",
-		"news": {
-			"0.0.3": {
-				"en": "Fix: Moving sensors and lights to other group\nFix: Adding sensor to groups",
-				"de": "Fix: Sensoren und Lichter zu anderen Gruppen verschieben\nFix: Sensor zu Gruppen hinzufügen",
-				"ru": "Исправление: Перемещение датчиков и светов в другую группу\nИсправление: Добавление датчика в группы",
-				"pt": "Fix: Movendo sensores e luzes para outro grupo\nFix: Adicionando o sensor a grupos",
-				"nl": "Verplaats sensoren en lichten naar andere groep\nVoeg sensor toe aan groepen",
-				"fr": "Fix: Déplacer les capteurs et les lumières vers un autre groupe\nCorrection : Ajout d'un capteur aux groupes",
-				"it": "Fisso: Trasferire sensori e luci ad altri gruppi\nFix: Aggiungere il sensore ai gruppi",
-				"es": "Fijación: Mover sensores y luces a otro grupo\nFijación: Agregar sensor a grupos",
-				"pl": "Fix – czujniki i światło do innych grup\nFix – czujnik do grup",
-				"uk": "Виправлення: Переміщення датчиків та вогнів до іншої групи\nВиправлення: Додавання датчика до груп",
-				"zh-cn": "Fix:向其他群体倾斜传感器和照灯\nFix:向各群体增加传感器"
-			},
-			"0.0.2": {
-				"en": "first Alpha Release",
-				"de": "erste Alpha Release",
-				"ru": "первый альфа-релиз",
-				"pt": "primeiro Alpha Release",
-				"nl": "eerste Alfa Los",
-				"fr": "premier Alpha Release",
-				"it": "primo Alpha Release",
-				"es": "primer lanzamiento alfa",
-				"pl": "okładka",
-				"uk": "перший реліз Альфа",
-				"zh-cn": "首批Alphaam"
-			},
-			"0.0.1": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"ru": "Начальная версия",
-				"pt": "lançamento inicial",
-				"nl": "Eerste uitgave",
-				"fr": "Première version",
-				"it": "Versione iniziale",
-				"es": "Versión inicial",
-				"pl": "Pierwsze wydanie",
-				"zh-cn": "首次出版",
-				"uk": "початковий випуск"
-			}
-		},
-		"title": "LightControl",
-		"titleLang": {
-			"en": "LightControl",
-			"de": "Lichtsteuerung",
-			"ru": "Управление освещением",
-			"pt": "Controle de luz",
-			"nl": "Lichtbesturing",
-			"fr": "Contrôle de la lumière",
-			"it": "Controllo della luce",
-			"es": "Control de luz",
-			"pl": "Sterowanie oświetleniem",
-			"zh-cn": "光控",
-			"uk": "LightControl"
-		},
-		"desc": {
-			"en": "Light control of lamps from various manufacturers",
-			"de": "Lichtsteuerung von Lampen verschiedener Hersteller",
-			"ru": "Управление светом светильников различных производителей",
-			"pt": "Controle de luz de lâmpadas de vários fabricantes",
-			"nl": "Lichtregeling van lampen van diverse fabrikanten",
-			"fr": "Contrôle de la lumière des lampes de différents fabricants",
-			"it": "Controllo della luce di lampade di vari produttori",
-			"es": "Control de luz de lámparas de varios fabricantes.",
-			"pl": "Sterowanie oświetleniem lamp różnych producentów",
-			"zh-cn": "各厂家灯具的光控",
-			"uk": "Контроль світла ламп різних виробників"
-		},
-		"authors": ["Schmakus <schmakus@gmail.com>"],
-		"keywords": [
-			"light",
-			"lightcontrol",
-			"control",
-			"motion",
-			"motionsensor",
-			"motiondetection",
-			"smarthome",
-			"iobroker"
-		],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "lightcontrol.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
-		"readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "lighting",
-		"compact": true,
-		"messagebox": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"adminUI": {
-			"config": "json",
-			"custom": "json"
-		},
-		"supportCustoms": true,
-		"dependencies": [
-			{
-				"js-controller": ">=4.0.0"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=5.1.13"
-			}
-		]
-	},
-	"native": {
-		"_id": 0
-	},
-	"objects": [],
-	"instanceObjects": []
+  "common": {
+    "name": "lightcontrol",
+    "version": "0.0.4",
+    "news": {
+      "0.0.4": {
+        "en": "Fix: Warning by adding motion sensor to group\nNew: Add Default Values for WarmWhite and DayLight at Color-State\nupdating translations",
+        "de": "Fix: Warnung durch Hinzufügen von Bewegungssensor zur Gruppe\nNeu: Default Werte für WarmWhite und DayLight bei Color-State hinzufügen\naktualisierung von übersetzungen",
+        "ru": "Исправление: Предупреждение, добавив датчик движения в группу\nНовое: Добавьте значения по умолчанию для WarmWhite и DayLight в Color-State\nобновление переводов",
+        "pt": "Fix: Aviso adicionando sensor de movimento ao grupo\nNovo: Adicionar valores padrão para WarmWhite e DayLight no Color-State\natualizar traduções",
+        "nl": "Vertaling:\nVertaling:\nvertaling:",
+        "fr": "Correction : Avertissement en ajoutant le capteur de mouvement au groupe\nNouveau: Ajouter Valeurs par défaut pour WarmWhite et DayLight à Color-State\nmise à jour des traductions",
+        "it": "Fisso: Avvertenza aggiungendo sensore di movimento al gruppo\nNovità: Aggiungi valori di default per WarmWhite e DayLight a Color-State\naggiornamento delle traduzioni",
+        "es": "Fijación: Advertencia agregando sensor de movimiento al grupo\nNuevo: Añadir Valores predeterminados para WarmWhite y DayLight en Color-State\nactualización de las traducciones",
+        "pl": "Fix: Warning poprzez dodanie czujnika ruchu do grup\nAddd Default Values for WarmWhite and DayLight (ang.)\ntłumaczenia",
+        "uk": "Виправлення: Попередження шляхом додавання датчика руху до групи\nНовий: Додати значення за замовчуванням для теплихбілих та DayLight у Color-State\nоновлення перекладів",
+        "zh-cn": "Fix:通过增加对集团的传感器进行战争\n新的:为White和Cor-Ricor-State增加防御价值\n更新翻译"
+      },
+      "0.0.3": {
+        "en": "Fix: Moving sensors and lights to other group\nFix: Adding sensor to groups",
+        "de": "Fix: Sensoren und Lichter zu anderen Gruppen verschieben\nFix: Sensor zu Gruppen hinzufügen",
+        "ru": "Исправление: Перемещение датчиков и светов в другую группу\nИсправление: Добавление датчика в группы",
+        "pt": "Fix: Movendo sensores e luzes para outro grupo\nFix: Adicionando o sensor a grupos",
+        "nl": "Verplaats sensoren en lichten naar andere groep\nVoeg sensor toe aan groepen",
+        "fr": "Fix: Déplacer les capteurs et les lumières vers un autre groupe\nCorrection : Ajout d'un capteur aux groupes",
+        "it": "Fisso: Trasferire sensori e luci ad altri gruppi\nFix: Aggiungere il sensore ai gruppi",
+        "es": "Fijación: Mover sensores y luces a otro grupo\nFijación: Agregar sensor a grupos",
+        "pl": "Fix – czujniki i światło do innych grup\nFix – czujnik do grup",
+        "uk": "Виправлення: Переміщення датчиків та вогнів до іншої групи\nВиправлення: Додавання датчика до груп",
+        "zh-cn": "Fix:向其他群体倾斜传感器和照灯\nFix:向各群体增加传感器"
+      },
+      "0.0.2": {
+        "en": "first Alpha Release",
+        "de": "erste Alpha Release",
+        "ru": "первый альфа-релиз",
+        "pt": "primeiro Alpha Release",
+        "nl": "eerste Alfa Los",
+        "fr": "premier Alpha Release",
+        "it": "primo Alpha Release",
+        "es": "primer lanzamiento alfa",
+        "pl": "okładka",
+        "uk": "перший реліз Альфа",
+        "zh-cn": "首批Alphaam"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "zh-cn": "首次出版",
+        "uk": "початковий випуск"
+      }
+    },
+    "title": "LightControl",
+    "titleLang": {
+      "en": "LightControl",
+      "de": "Lichtsteuerung",
+      "ru": "Управление освещением",
+      "pt": "Controle de luz",
+      "nl": "Lichtbesturing",
+      "fr": "Contrôle de la lumière",
+      "it": "Controllo della luce",
+      "es": "Control de luz",
+      "pl": "Sterowanie oświetleniem",
+      "zh-cn": "光控",
+      "uk": "LightControl"
+    },
+    "desc": {
+      "en": "Light control of lamps from various manufacturers",
+      "de": "Lichtsteuerung von Lampen verschiedener Hersteller",
+      "ru": "Управление светом светильников различных производителей",
+      "pt": "Controle de luz de lâmpadas de vários fabricantes",
+      "nl": "Lichtregeling van lampen van diverse fabrikanten",
+      "fr": "Contrôle de la lumière des lampes de différents fabricants",
+      "it": "Controllo della luce di lampade di vari produttori",
+      "es": "Control de luz de lámparas de varios fabricantes.",
+      "pl": "Sterowanie oświetleniem lamp różnych producentów",
+      "zh-cn": "各厂家灯具的光控",
+      "uk": "Контроль світла ламп різних виробників"
+    },
+    "authors": [
+      "Schmakus <schmakus@gmail.com>"
+    ],
+    "keywords": [
+      "light",
+      "lightcontrol",
+      "control",
+      "motion",
+      "motionsensor",
+      "motiondetection",
+      "smarthome",
+      "iobroker"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "lightcontrol.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
+    "readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "lighting",
+    "compact": true,
+    "messagebox": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json",
+      "custom": "json"
+    },
+    "supportCustoms": true,
+    "dependencies": [
+      {
+        "js-controller": ">=4.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.13"
+      }
+    ]
+  },
+  "native": {
+    "_id": 0
+  },
+  "objects": [],
+  "instanceObjects": []
 }
