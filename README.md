@@ -36,8 +36,7 @@ Light control of lamps from various manufacturers
 
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
-
-### **WORK IN PROGRESS**
+### 0.0.4 (2022-12-23)
 
 -   (Schmakus) Fix: Warning by adding motion sensor to group
 -   (Schmakus) New: Add Default Values for WarmWhite and DayLight at Color-State
