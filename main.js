@@ -188,9 +188,9 @@ class Lightcontrol extends utils.Adapter {
 						await this.deleteStateIdFromLightGroups(stateID);
 
 						this.writeLog(
-							`onObjectChange => Active state array after deactivation of ${stateID} : ${JSON.stringify(
-								this.activeStates,
-							)}`,
+							`onObjectChange => Active state array after deactivation of ${stateID} : ${
+								this.activeStates.length === 0 ? "empty" : JSON.stringify(this.activeStates)
+							}`,
 						);
 						this.writeLog(
 							`onObjectChange => LightGroups after deactivation of ${stateID} : ${JSON.stringify(
@@ -649,25 +649,35 @@ class Lightcontrol extends utils.Adapter {
 							return;
 						}
 						const Lights = LightGroup.lights;
-						//find index in Lights Array if description available
+
+						//Find index in Lights Array if description available
 						const index = Lights.findIndex((x) => x.description === customData.description);
 
-						//if index is negativ, then no Light with this description found
+						// eslint-disable-next-line indent
+						const Light = !(await helper.isNegative(index))
+							? Lights[index]
+							: Lights.length === 0
+							? (Lights[0] = {})
+							: (Lights[Lights.length] = {});
 
-						//if index found, then add params to light
-
-						const Light = (await helper.isNegative(index)) ? (Lights[0] = {}) : Lights[index];
+						/*
+						if (await helper.isNegative(index)) {
+							Light = (Lights.length === 0) ? Lights[0] = {} : Lights[Lights.length - 1] = {};
+						} else {
+							Light = Lights[index];
+						}
+						*/
 
 						// Add parameters to Light
 						Light.description = customData.description;
 						Light[customData.func] = getSubset(customData, ...params[customData.func]);
 
 						this.writeLog(
-							`buildStateDetailsArray => Type: Light, in Group Object: ${JSON.stringify(
-								LightGroup,
-							)} with Lights: ${JSON.stringify(Lights)} and Light: ${JSON.stringify(
+							`buildStateDetailsArray => Type: Light, in Group: ${
+								LightGroup.description
+							} with Lights: ${JSON.stringify(Lights)} and Light: ${JSON.stringify(
 								Light,
-							)} with index: ${index}`,
+							)} with Index: ${index}`,
 						);
 
 						break;
@@ -1038,7 +1048,7 @@ class Lightcontrol extends utils.Adapter {
 					const count = Object.keys(lightArray[i]).length;
 					if (count === 1) {
 						this.writeLog(
-							`deleteStateIdFromLightGroups => Light: ${lightArray[i].description} will be deleted, because no Object-IDs are connected.`,
+							`deleteStateIdFromLightGroups => Light: ${lightArray[i].description} will be deleted, because no Object-IDs are defined.`,
 							"info",
 						);
 						lightArray.splice(i, 1);

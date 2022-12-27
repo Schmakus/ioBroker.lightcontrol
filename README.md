@@ -39,7 +39,8 @@ Light control of lamps from various manufacturers
 
 ### **WORK IN PROGRESS**
 
--   (Schmakus) some code cleaning
+-   (Schmakus) Deleting hole light from group if it contains no states
+-   (Schmakus) Updating CreateState Function for extended debugging
 
 ### 0.0.4 (2022-12-23)
 
