@@ -225,19 +225,19 @@ class Lightcontrol extends utils.Adapter {
 							groups.push({ value: Group, label: Group });
 						}
 						this.sendTo(msg.from, msg.command, groups, msg.callback);
-						this.writeLog(`onMessage => LightGroups Callback: ${JSON.stringify(groups)}.`);
+						this.writeLog(`onMessage => LightGroup => LightGroups Callback: ${JSON.stringify(groups)}.`);
 						break;
 					}
 
 					case "LightName": {
 						const LightGroups = msg.message.LightGroups;
-						this.writeLog(`onMessage => getLights for Groups: ${LightGroups}.`);
+						this.writeLog(`onMessage => LightName => getLights for Groups: ${LightGroups}.`);
 						const lights = [];
 						if (LightGroups) {
 							for (const light of Object.values(this.LightGroups[LightGroups].lights)) {
 								lights.push({ value: light.description, label: light.description });
 								this.writeLog(
-									`onMessage => Light: ${light.description} in Group: ${LightGroups} found.`,
+									`onMessage => LightName => Light: ${light.description} in Group: ${LightGroups} found.`,
 								);
 							}
 						}
@@ -249,7 +249,7 @@ class Lightcontrol extends utils.Adapter {
 
 					case "id": {
 						const value = msg.message.value;
-						this.writeLog(`onMessage => Set new ID. Value = ${value}.`);
+						this.writeLog(`onMessage => id => Set new ID. Value = ${value}.`);
 						if (msg.message.value !== null) {
 							this.sendTo(msg.from, msg.command, value, msg.callback);
 						} else {
@@ -260,7 +260,7 @@ class Lightcontrol extends utils.Adapter {
 								native: { _id: newID },
 							});
 
-							this.writeLog(`onMessage => Set new ID. OldID = ${oldID}, NewID = ${newID}`);
+							this.writeLog(`onMessage => id => Set new ID. OldID = ${oldID}, NewID = ${newID}`);
 							this.sendTo(msg.from, msg.command, newID.toString(), msg.callback);
 						}
 						break;

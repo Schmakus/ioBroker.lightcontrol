@@ -39,6 +39,8 @@ Light control of lamps from various manufacturers
 
 ### **WORK IN PROGRESS**
 
+-   (Schmakus) Fix: [#66](https://github.com/Schmakus/ioBroker.lightcontrol/issues/66) Adding more than one lamp to group
+-   (Schmakus) Fix: CustomConfig Color definitions
 -   (Schmakus) Deleting hole light from group if it contains no states
 -   (Schmakus) Updating CreateState Function for extended debugging
 
