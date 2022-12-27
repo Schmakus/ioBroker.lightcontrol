@@ -1025,13 +1025,24 @@ class Lightcontrol extends utils.Adapter {
 						if (Lights[key]) {
 							if (Lights[key].oid === stateID) {
 								this.writeLog(
-									`onObjectChange => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
+									`deleteStateIdFromLightGroups => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
 									"info",
 								);
 								delete Lights[key];
 							}
 						}
 					});
+				}
+				// Delete complete Light Object if it copntains only description property
+				for (let i = lightArray.length - 1; i >= 0; i--) {
+					const count = Object.keys(lightArray[i]).length;
+					if (count === 1) {
+						this.writeLog(
+							`deleteStateIdFromLightGroups => Light: ${lightArray[i].description} will be deleted, because no Object-IDs are connected.`,
+							"info",
+						);
+						lightArray.splice(i, 1);
+					}
 				}
 			}
 			//Check Sensors
