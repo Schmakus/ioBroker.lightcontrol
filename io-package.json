@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "lightcontrol",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "news": {
+      "0.0.5": {
+        "en": "Fix: [#66](https://github.com/Schmakus/ioBroker.lightcontrol/issues/66) Adding more than one lamp to group\nFix: CustomConfig Color definitions\nDeleting hole light from group if it contains no states\nUpdating CreateState Function for extended debugging",
+        "de": "Fix: #[66](https://github.com/Schmakus/ioBroker.lightcontrol/issues/66) Mehr als eine Lampe zur Gruppe hinzufügen\nFix: CustomConfig Farbdefinitionen\nLöschen von Lochlicht aus der Gruppe, wenn es keine Staaten enthält\nUpdating CreateState-Funktion für erweiterte Debugging",
+        "ru": "Исправление: #[66](https://github.com/Schmakus/ioBroker.lightcontrol/issues/66) Добавление более одной лампы в группу\nИсправление: CustomConfig Цветовые определения\nУдаление отверстия свет от группы, если он не содержит штатов\nОбновление функции CreateState для расширенного отладки",
+        "pt": "Fix: #[66](https://github.com/Schmakus/ioBroker.lightcontrol/issues/66) Adicionando mais de uma lâmpada ao grupo\nFix: CustomConfig Definições de cor\nExcluindo a luz do furo do grupo se não contém estados\nActualizar função CreateState para depuração estendida",
+        "nl": "Quality over Quantity (QoQ) Releases Vertaling: Meer dan één lamp toevoegen aan groep\nCustomConfig Color definities\nVerwijdering van de groep als het geen staat bevat\nUpdate CreateState Function voor uitgebreide mishandeling",
+        "fr": "Correction : #[66](https://github.com/Schmakus/ioBroker.lightcontrol/issues/66) Ajout de plus d'une lampe à groupe\nFix: CustomConfig Définitions de couleur\nSuppression de la lumière du trou du groupe si elle ne contient pas d'états\nMise à jour de la fonction Créer État pour le débogage prolongé",
+        "it": "Fisso: #[66](https://github.com/Schmakus/ioBroker.lightcontrol/issues/66) Aggiungere più di una lampada a gruppo\nFisso: Config personalizzato Definizioni di colore\nCancellare la luce del buco dal gruppo se non contiene stati\nAggiornamento della funzione CreateState per il debug esteso",
+        "es": "Fix: #[66](https://github.com/Schmakus/ioBroker.lightcontrol/issues/66) Añadiendo más de una lámpara a grupo\nFig: CustomConfig Definiciones de color\nEliminar la luz del agujero del grupo si no contiene estados\nActualización Crear Función Estado para la depuración prolongada",
+        "pl": "Fix: #66 (https:/github.com/Schmakus/ioBroker) (ang.). Dokładnie więcej niż jedna lampa do grupowania\n: CelConfig definicja koloru\nUwolnienie światła od grupy, jeśli nie zawiera stanów\nZamknięć CreateState Function",
+        "uk": "Виправлення: #[66](https://github.com/Schmakus/ioBroker.lightcontrol/products/66) Додавання більше однієї лампи до групи\nВиправлення: CustomConfig Кольорові визначення\nВидалення світла отвір з групи, якщо він не містить штатів\nОновлення функції Створювача для розширеного знеболювання",
+        "zh-cn": "Fix:第[66]号(http://github.com/Schmakus/ioBroker.eau Control/issues/66) 向集团增拨不止一处厕所\nFix:习惯纤维 汽车定义\n删除集团的漏洞,如果没有国家\nA. 创造国家扩大反腐作用"
+      },
       "0.0.4": {
         "en": "Fix: Warning by adding motion sensor to group\nNew: Add Default Values for WarmWhite and DayLight at Color-State\nupdating translations",
         "de": "Fix: Warnung durch Hinzufügen von Bewegungssensor zur Gruppe\nNeu: Default Werte für WarmWhite und DayLight bei Color-State hinzufügen\naktualisierung von übersetzungen",
