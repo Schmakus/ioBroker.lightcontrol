@@ -28,8 +28,8 @@ class Lightcontrol extends utils.Adapter {
 		this.on("objectChange", this.onObjectChange.bind(this));
 		this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
+		this.Settings = {};
 		this.GlobalSettings = {};
-		this._LightGroups = [];
 		this.LightGroups = {};
 		this.LuxSensors = [];
 		this.MotionSensors = [];
@@ -66,9 +66,8 @@ class Lightcontrol extends utils.Adapter {
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
 		this.GlobalSettings = this.config;
-		//this.log.debug("GlobalSettings: " + JSON.stringify(this.GlobalSettings));
-		this._LightGroups = this.GlobalSettings.LightGroups;
-		if (this.GlobalSettings.debug) this.writeLog("_LightGroups: " + JSON.stringify(this._LightGroups));
+		this.Settings = this.config;
+		if (this.Settings.debug) this.writeLog("Raw LightGroups: " + JSON.stringify(this.Settings.LightGroups));
 
 		//Create LightGroups Object from GroupNames
 		await this.CreateLightGroupsObject();
@@ -78,7 +77,7 @@ class Lightcontrol extends utils.Adapter {
 
 		//Create all States, Devices and Channels
 		await init.Init(this);
-		if (this.GlobalSettings.debug) this.log.debug(JSON.stringify(this.LightGroups));
+		if (this.Settings.debug) this.log.debug(JSON.stringify(this.LightGroups));
 
 		//Get Latitude and Longitude
 		await this.GetSystemData().catch((e) => this.log.error(`onRready // GetSystemData => ${e}`));
@@ -113,7 +112,7 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async CreateLightGroupsObject() {
 		try {
-			for (const Groups of this._LightGroups) {
+			for (const Groups of this.Settings.LightGroups) {
 				let _temp;
 				for (const [key, value] of Object.entries(Groups)) {
 					if (key === "Group") {
@@ -189,9 +188,9 @@ class Lightcontrol extends utils.Adapter {
 						await this.deleteStateIdFromLightGroups(stateID);
 
 						this.writeLog(
-							`onObjectChange => Active state array after deactivation of ${stateID} : ${JSON.stringify(
-								this.activeStates,
-							)}`,
+							`onObjectChange => Active state array after deactivation of ${stateID} : ${
+								this.activeStates.length === 0 ? "empty" : JSON.stringify(this.activeStates)
+							}`,
 						);
 						this.writeLog(
 							`onObjectChange => LightGroups after deactivation of ${stateID} : ${JSON.stringify(
@@ -226,19 +225,19 @@ class Lightcontrol extends utils.Adapter {
 							groups.push({ value: Group, label: Group });
 						}
 						this.sendTo(msg.from, msg.command, groups, msg.callback);
-						this.writeLog(`onMessage => LightGroups Callback: ${JSON.stringify(groups)}.`);
+						this.writeLog(`onMessage => LightGroup => LightGroups Callback: ${JSON.stringify(groups)}.`);
 						break;
 					}
 
 					case "LightName": {
 						const LightGroups = msg.message.LightGroups;
-						this.writeLog(`onMessage => getLights for Groups: ${LightGroups}.`);
+						this.writeLog(`onMessage => LightName => getLights for Groups: ${LightGroups}.`);
 						const lights = [];
 						if (LightGroups) {
 							for (const light of Object.values(this.LightGroups[LightGroups].lights)) {
 								lights.push({ value: light.description, label: light.description });
 								this.writeLog(
-									`onMessage => Light: ${light.description} in Group: ${LightGroups} found.`,
+									`onMessage => LightName => Light: ${light.description} in Group: ${LightGroups} found.`,
 								);
 							}
 						}
@@ -250,7 +249,7 @@ class Lightcontrol extends utils.Adapter {
 
 					case "id": {
 						const value = msg.message.value;
-						this.writeLog(`onMessage => Set new ID. Value = ${value}.`);
+						this.writeLog(`onMessage => id => Set new ID. Value = ${value}.`);
 						if (msg.message.value !== null) {
 							this.sendTo(msg.from, msg.command, value, msg.callback);
 						} else {
@@ -261,7 +260,7 @@ class Lightcontrol extends utils.Adapter {
 								native: { _id: newID },
 							});
 
-							this.writeLog(`onMessage => Set new ID. OldID = ${oldID}, NewID = ${newID}`);
+							this.writeLog(`onMessage => id => Set new ID. OldID = ${oldID}, NewID = ${newID}`);
 							this.sendTo(msg.from, msg.command, newID.toString(), msg.callback);
 						}
 						break;
@@ -563,6 +562,27 @@ class Lightcontrol extends utils.Adapter {
 			// Check if configuration for LightControl is present, trow error in case of issue in configuration
 			if (stateInfo && stateInfo.common && stateInfo.common.custom && stateInfo.common.custom[this.namespace]) {
 				const customData = stateInfo.common.custom[this.namespace];
+
+				const LightGroup = this.LightGroups[customData.group];
+
+				//Check if a Groupname defined
+				if (!customData.group) {
+					this.writeLog(
+						`buildStateDetailsArray => No Group Name defined for StateID: ${stateID}. Initalisation aborted`,
+						"warn",
+					);
+					return;
+				}
+
+				//Check if a Group in LightGroups is available
+				if (!LightGroup) {
+					this.writeLog(
+						`buildStateDetailsArray => LightGroup ${customData.group} in StateID: ${stateID} not defined in LightGroups`,
+						"warn",
+					);
+					return;
+				}
+
 				//const commonData = stateInfo.common;
 				this.writeLog(`buildLightGroupParameter => customData ${JSON.stringify(customData)}`);
 
@@ -614,16 +634,6 @@ class Lightcontrol extends utils.Adapter {
 						"useBri": true
 					}
 				*/
-				const LightGroup = this.LightGroups[customData.group];
-
-				//Check if a Group is available
-				if (!LightGroup) {
-					this.writeLog(
-						`buildStateDetailsArray => LightGroup ${customData.group} not available or not defined`,
-						"warn",
-					);
-					return;
-				}
 
 				// Function to reduce the customData
 				const getSubset = (obj, ...keys) => keys.reduce((a, c) => ({ ...a, [c]: obj[c] }), {});
@@ -639,19 +649,35 @@ class Lightcontrol extends utils.Adapter {
 							return;
 						}
 						const Lights = LightGroup.lights;
+
+						//Find index in Lights Array if description available
 						const index = Lights.findIndex((x) => x.description === customData.description);
-						const Light = (await helper.isNegative(index)) ? (Lights[0] = {}) : Lights[index];
+
+						// eslint-disable-next-line indent
+						const Light = !(await helper.isNegative(index))
+							? Lights[index]
+							: Lights.length === 0
+							? (Lights[0] = {})
+							: (Lights[Lights.length] = {});
+
+						/*
+						if (await helper.isNegative(index)) {
+							Light = (Lights.length === 0) ? Lights[0] = {} : Lights[Lights.length - 1] = {};
+						} else {
+							Light = Lights[index];
+						}
+						*/
 
 						// Add parameters to Light
 						Light.description = customData.description;
 						Light[customData.func] = getSubset(customData, ...params[customData.func]);
 
 						this.writeLog(
-							`buildStateDetailsArray => Type: Light, in Group Object: ${JSON.stringify(
-								LightGroup,
-							)} with Lights: ${JSON.stringify(Lights)} and Light: ${JSON.stringify(
+							`buildStateDetailsArray => Type: Light, in Group: ${
+								LightGroup.description
+							} with Lights: ${JSON.stringify(Lights)} and Light: ${JSON.stringify(
 								Light,
-							)} with index: ${index}`,
+							)} with Index: ${index}`,
 						);
 
 						break;
@@ -1009,13 +1035,24 @@ class Lightcontrol extends utils.Adapter {
 						if (Lights[key]) {
 							if (Lights[key].oid === stateID) {
 								this.writeLog(
-									`onObjectChange => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
+									`deleteStateIdFromLightGroups => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
 									"info",
 								);
 								delete Lights[key];
 							}
 						}
 					});
+				}
+				// Delete complete Light Object if it copntains only description property
+				for (let i = lightArray.length - 1; i >= 0; i--) {
+					const count = Object.keys(lightArray[i]).length;
+					if (count === 1) {
+						this.writeLog(
+							`deleteStateIdFromLightGroups => Light: ${lightArray[i].description} will be deleted, because no Object-IDs are defined.`,
+							"info",
+						);
+						lightArray.splice(i, 1);
+					}
 				}
 			}
 			//Check Sensors

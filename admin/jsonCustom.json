@@ -25,6 +25,7 @@
 			"type": "selectSendTo",
 			"label": "LightGroup",
 			"command": "LightGroup",
+			"onChange": { "alsoDependsOn": ["data.description"], "ignoreOwnChanges": true },
 			"multible": true,
 			"sm": 3,
 			"md": 3,
@@ -178,7 +179,8 @@
 		},
 		"setCtwithColor": {
 			"type": "checkbox",
-			"label": "Set Color-Temperature with Color"
+			"label": "Set Color-Temperature with Color",
+			"hidden": "data.func !== 'color' || data.type === 'sensor'"
 		},
 		"warmWhiteColor": {
 			"type": "text",
