@@ -28,8 +28,8 @@ class Lightcontrol extends utils.Adapter {
 		this.on("objectChange", this.onObjectChange.bind(this));
 		this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
+		this.Settings = {};
 		this.GlobalSettings = {};
-		this._LightGroups = [];
 		this.LightGroups = {};
 		this.LuxSensors = [];
 		this.MotionSensors = [];
@@ -66,9 +66,8 @@ class Lightcontrol extends utils.Adapter {
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
 		this.GlobalSettings = this.config;
-		//this.log.debug("GlobalSettings: " + JSON.stringify(this.GlobalSettings));
-		this._LightGroups = this.GlobalSettings.LightGroups;
-		if (this.GlobalSettings.debug) this.writeLog("_LightGroups: " + JSON.stringify(this._LightGroups));
+		this.Settings = this.config;
+		if (this.Settings.debug) this.writeLog("Raw LightGroups: " + JSON.stringify(this.Settings.LightGroups));
 
 		//Create LightGroups Object from GroupNames
 		await this.CreateLightGroupsObject();
@@ -78,7 +77,7 @@ class Lightcontrol extends utils.Adapter {
 
 		//Create all States, Devices and Channels
 		await init.Init(this);
-		if (this.GlobalSettings.debug) this.log.debug(JSON.stringify(this.LightGroups));
+		if (this.Settings.debug) this.log.debug(JSON.stringify(this.LightGroups));
 
 		//Get Latitude and Longitude
 		await this.GetSystemData().catch((e) => this.log.error(`onRready // GetSystemData => ${e}`));
@@ -113,7 +112,7 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async CreateLightGroupsObject() {
 		try {
-			for (const Groups of this._LightGroups) {
+			for (const Groups of this.Settings.LightGroups) {
 				let _temp;
 				for (const [key, value] of Object.entries(Groups)) {
 					if (key === "Group") {
@@ -563,6 +562,27 @@ class Lightcontrol extends utils.Adapter {
 			// Check if configuration for LightControl is present, trow error in case of issue in configuration
 			if (stateInfo && stateInfo.common && stateInfo.common.custom && stateInfo.common.custom[this.namespace]) {
 				const customData = stateInfo.common.custom[this.namespace];
+
+				const LightGroup = this.LightGroups[customData.group];
+
+				//Check if a Groupname defined
+				if (!customData.group) {
+					this.writeLog(
+						`buildStateDetailsArray => No Group Name defined for StateID: ${stateID}. Initalisation aborted`,
+						"warn",
+					);
+					return;
+				}
+
+				//Check if a Group in LightGroups is available
+				if (!LightGroup) {
+					this.writeLog(
+						`buildStateDetailsArray => LightGroup ${customData.group} in StateID: ${stateID} not defined in LightGroups`,
+						"warn",
+					);
+					return;
+				}
+
 				//const commonData = stateInfo.common;
 				this.writeLog(`buildLightGroupParameter => customData ${JSON.stringify(customData)}`);
 
@@ -614,16 +634,6 @@ class Lightcontrol extends utils.Adapter {
 						"useBri": true
 					}
 				*/
-				const LightGroup = this.LightGroups[customData.group];
-
-				//Check if a Group is available
-				if (!LightGroup) {
-					this.writeLog(
-						`buildStateDetailsArray => LightGroup ${customData.group} not available or not defined`,
-						"warn",
-					);
-					return;
-				}
 
 				// Function to reduce the customData
 				const getSubset = (obj, ...keys) => keys.reduce((a, c) => ({ ...a, [c]: obj[c] }), {});
@@ -639,7 +649,13 @@ class Lightcontrol extends utils.Adapter {
 							return;
 						}
 						const Lights = LightGroup.lights;
+						//find index in Lights Array if description available
 						const index = Lights.findIndex((x) => x.description === customData.description);
+
+						//if index is negativ, then no Light with this description found
+
+						//if index found, then add params to light
+
 						const Light = (await helper.isNegative(index)) ? (Lights[0] = {}) : Lights[index];
 
 						// Add parameters to Light

@@ -15,7 +15,7 @@
 
 ## LightControl adapter for ioBroker
 
-Light control of lamps from various manufacturers 
+Light control of lamps from various manufacturers
 
 [Deutsche Beschreibung hier](docs/de/lightcontrol.md)
 
@@ -36,6 +36,11 @@ Light control of lamps from various manufacturers
 
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) some code cleaning
+
 ### 0.0.4 (2022-12-23)
 
 -   (Schmakus) Fix: Warning by adding motion sensor to group
