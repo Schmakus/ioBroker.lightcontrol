@@ -653,20 +653,13 @@ class Lightcontrol extends utils.Adapter {
 						//Find index in Lights Array if description available
 						const index = Lights.findIndex((x) => x.description === customData.description);
 
-						// eslint-disable-next-line indent
-						const Light = !(await helper.isNegative(index))
-							? Lights[index]
-							: Lights.length === 0
-							? (Lights[0] = {})
-							: (Lights[Lights.length] = {});
+						let Light;
 
-						/*
 						if (await helper.isNegative(index)) {
-							Light = (Lights.length === 0) ? Lights[0] = {} : Lights[Lights.length - 1] = {};
+							Light = Lights.length === 0 ? (Lights[0] = {}) : (Lights[Lights.length - 1] = {});
 						} else {
 							Light = Lights[index];
 						}
-						*/
 
 						// Add parameters to Light
 						Light.description = customData.description;
