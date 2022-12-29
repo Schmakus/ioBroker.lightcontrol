@@ -215,58 +215,58 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
 -   **Gruppe**
 
     -   **autoOffLux:** AutoOff des Lichts bei erreichen einer Helligkeitsschwelle
-    -   **enabled:** AutoOff bei Helligkeit aktivieren/deaktivieren
-    -   **minLux:** minimaler Lichtwert
-    -   **dailyLock:** Bei false wird AutoOffTimed nicht ausgeführt
-    -   **operator:** Vergleich ob Licht über oder unter _minLux_ ausgehen soll (z.B. > / < / >= / <=)
+        -   **enabled:** AutoOff bei Helligkeit aktivieren/deaktivieren
+        -   **minLux:** minimaler Lichtwert
+        -   **dailyLock:** Bei false wird AutoOffTimed nicht ausgeführt
+        -   **operator:** Vergleich ob Licht über oder unter _minLux_ ausgehen soll (z.B. > / < / >= / <=)
 
     -   **autoOffTimed:** AutoOff nach fest eingestellter Zeit (Nur in Verbindung mit den Sensoren)
-    -   **enabled:** AutoOff aktivieren/deaktivieren
-    -   **autoOffTime:** Zeit bis AutoOff in Sekunden
-    -   **noAutoOffWhenMotion:** AutoOff resetten bei erneuter Bewegung
-    -   **noticeEnabled:** Hinweis für AutoOff aktivieren/deaktivieren (Aktuell noch ohne Funktion)
-    -   **noticeBri:** Helligkeit in Prozent bevor AutoOff
-    -   **noticeTime:** Zeit in Sekunden wann der Hinweis aktiviert wird bevor AutoOff
+        -   **enabled:** AutoOff aktivieren/deaktivieren
+        -   **autoOffTime:** Zeit bis AutoOff in Sekunden
+        -   **noAutoOffWhenMotion:** AutoOff resetten bei erneuter Bewegung
+        -   **noticeEnabled:** Hinweis für AutoOff aktivieren/deaktivieren (Aktuell noch ohne Funktion)
+        -   **noticeBri:** Helligkeit in Prozent bevor AutoOff
+        -   **noticeTime:** Zeit in Sekunden wann der Hinweis aktiviert wird bevor AutoOff
 
     -   **autoOnLux:** Automatisch Licht ein bei Lux
-    -   **enabled:** Aktivieren/Deaktivieren
-    -   **minLux:** Lux-Schwellwert für das Schalten
-    -   **bri:** Helligkeit, mit der das Licht an geht
-    -   **color:** Farbe, mit das Licht an geht
-    -   **switchOnlyWhenPresence:** Nur Schalten, wenn jemand zuhause ist
-    -   **switchOnlyWhenNoPresence:** Nur schalten, wenn niemand zu hause ist
-    -   **dailyLock:** Bei false wird AutoOnLux nicht ausgeführt
-    -   **operator:** Vergleich ob Licht über oder unter _minLux_ ausgehen soll (z.B. > / < / >= / <=)
+        -   **enabled:** Aktivieren/Deaktivieren
+        -   **minLux:** Lux-Schwellwert für das Schalten
+        -   **bri:** Helligkeit, mit der das Licht an geht
+        -   **color:** Farbe, mit das Licht an geht
+        -   **switchOnlyWhenPresence:** Nur Schalten, wenn jemand zuhause ist
+        -   **switchOnlyWhenNoPresence:** Nur schalten, wenn niemand zu hause ist
+        -   **dailyLock:** Bei false wird AutoOnLux nicht ausgeführt
+        -   **operator:** Vergleich ob Licht über oder unter _minLux_ ausgehen soll (z.B. > / < / >= / <=)
 
     -   **autoOnMotion:** Automatisch Licht ein bei Bewegung
-    -   **enabled:** Aktivieren/Deaktivieren
-    -   **minLux:** Lux-Schwellwert für das Schalten
-    -   **bri:** Helligkeit, mit der das Licht an geht
-    -   **color:** Farbe, mit das Licht an geht
+        -   **enabled:** Aktivieren/Deaktivieren
+        -   **minLux:** Lux-Schwellwert für das Schalten
+        -   **bri:** Helligkeit, mit der das Licht an geht
+        -   **color:** Farbe, mit das Licht an geht
 
     -   **autoOnPresenceIncrease:** Automatisch Licht ein, wenn sich der Wert des Anwesenheitszähler größe als der letztere war
-    -   **enabled:** Aktivieren/Deaktivieren
-    -   **minLux:** Lux-Schwellwert für das Schalten
-    -   **bri:** Helligkeit, mit der das Licht an geht
-    -   **color:** Farbe, mit das Licht an geht
+        -   **enabled:** Aktivieren/Deaktivieren
+        -   **minLux:** Lux-Schwellwert für das Schalten
+        -   **bri:** Helligkeit, mit der das Licht an geht
+        -   **color:** Farbe, mit das Licht an geht
 
     -   **blink:** Blinken
-    -   **enabled:** Startet Blinken in Endlosschleife, => false beendet Blinken
-    -   **start:** Startet Blinken bis Anzahl erreicht.
-    -   **frequency:** Blinkfrequenz in Sekunden
-    -   **blinks:** Anzahl der Blinker
-    -   **bri:** Helligkeit der Lampen beim Blinken
-    -   **color:** Farbe der Lampen beim Blinken
+        -   **enabled:** Startet Blinken in Endlosschleife, => false beendet Blinken
+        -   **start:** Startet Blinken bis Anzahl erreicht.
+        -   **frequency:** Blinkfrequenz in Sekunden
+        -   **blinks:** Anzahl der Blinker
+        -   **bri:** Helligkeit der Lampen beim Blinken
+        -   **color:** Farbe der Lampen beim Blinken
 
     -   **rampOff:** Runterdimmen beim Ausschalten
-    -   **enabled:** Aktivieren/Deaktivieren
-    -   **time:** Zeit für das Runterdimmen (sollte nicht kleiner als 10 Sekunden sein)
-    -   **switchOutletsLast:** Lampen welche nur ein-/ausgeschaltet werden zuletzt aktivieren?
+        -   **enabled:** Aktivieren/Deaktivieren
+        -   **time:** Zeit für das Runterdimmen (sollte nicht kleiner als 10 Sekunden sein)
+        -   **switchOutletsLast:** Lampen welche nur ein-/ausgeschaltet werden zuletzt aktivieren?
 
     -   **rampOn:** Hochdimmen beim Einschalten
-    -   **enabled:** Aktivieren/Deaktivieren
-    -   **time:** Zeit für das Hochdimmen (sollte nicht kleiner als 10 Sekunden sein)
-    -   **switchOutletsLast:** Lampen welche nur ein-/ausgeschaltet werden zuletzt aktivieren?
+        -   **enabled:** Aktivieren/Deaktivieren
+        -   **time:** Zeit für das Hochdimmen (sollte nicht kleiner als 10 Sekunden sein)
+        -   **switchOutletsLast:** Lampen welche nur ein-/ausgeschaltet werden zuletzt aktivieren?
 
     -   **adaptiveBri:** Adaptive Helligkeit ein-/ausschalten
     -   **adaptiveCt:** Adaptive Farbtemperatur ein-/ausschalten
