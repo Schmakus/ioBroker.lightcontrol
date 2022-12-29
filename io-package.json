@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.0.5",
+		"version": "0.0.6",
 		"news": {
+			"0.0.6": {
+				"en": "New: [#61](https://github.com/Schmakus/ioBroker.lightcontrol/issues/61) Added infinite blinking. Please read the documentation.",
+				"de": "Neu: #[61](https://github.com/Schmakus/ioBroker.lightcontrol/issues/61) Endloses Blinken hinzugefügt. Bitte die Dokumentation lesen.",
+				"ru": "Новое: #[61](https://github.com/Schmakus/ioBroker.lightcontrol/issues/61) Добавлена бесконечная ссылка. Пожалуйста, прочитайте документацию.",
+				"pt": "Novo: #[61](https://github.com/Schmakus/ioBroker.lightcontrol/issues/61) Adicionado piscar infinito. Por favor, leia a documentação.",
+				"nl": "New: 61 00: #github /Schmakus/ioBroker. Gevoegd oneindig knipperen. Lees alsjeblieft de documentatie.",
+				"fr": "Nouveau: #[61](https://github.com/Schmakus/ioBroker.lightcontrol/issues/61) Ajout d'un clignotement infini. Veuillez lire la documentation.",
+				"it": "Novità: #[61](https://github.com/Schmakus/ioBroker.lightcontrol/issues/61) Aggiunto infinito lampeggiante. Si prega di leggere la documentazione.",
+				"es": "Nuevo: #[61](https://github.com/Schmakus/ioBroker.lightcontrol/issues/61) Se agregó un parpadeo infinito. Por favor lea la documentación.",
+				"pl": "#61(https:/github.com/Schmakus/ioBroker.lightcontrol/issues/61) (ang.). Dodał nieskończony mrug. Czy czytamy dokumenty.",
+				"uk": "Нова: #[61](https://github.com/Schmakus/ioBroker.lightcontrol/products/61) Додано нескінченне посилання. Будь ласка, прочитайте документацію.",
+				"zh-cn": "新的:第[61]号(http://github.com/Schmakus/ioBroker.eau Control/issues/61) 添加了混凝土。 请阅读文件。."
+			},
 			"0.0.5": {
 				"en": "Fix: [#66](https://github.com/Schmakus/ioBroker.lightcontrol/issues/66) Adding more than one lamp to group\nFix: CustomConfig Color definitions\nDeleting light from group if it contains no states\nUpdating CreateState Function for extended debugging",
 				"de": "Fix: #[66](https://github.com/Schmakus/ioBroker.lightcontrol/issues/66) Mehr als eine Lampe zu einer Gruppe hinzufügen\nFix: CustomConfig Farbdefinitionen\nLöschen des gesamten Lichts aus der Gruppe, wenn es keine States enthält\nUpdating CreateState-Funktion für erweitertes Debugging",

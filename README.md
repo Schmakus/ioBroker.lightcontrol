@@ -37,9 +37,10 @@ Light control of lamps from various manufacturers
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
 
-### **WORK IN PROGRESS**
+### 0.0.6 (2022-12-29)
 
 -   (Schmakus) New: [#61](https://github.com/Schmakus/ioBroker.lightcontrol/issues/61) Added infinite blinking. Please read the documentation.
+-   (Schmakus) Fix: some little things.
 
 ### 0.0.5 (2022-12-27)
 
