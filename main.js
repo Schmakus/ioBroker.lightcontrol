@@ -656,7 +656,7 @@ class Lightcontrol extends utils.Adapter {
 						let Light;
 
 						if (await helper.isNegative(index)) {
-							Light = Lights.length === 0 ? (Lights[0] = {}) : (Lights[Lights.length - 1] = {});
+							Light = Lights.length === 0 ? (Lights[0] = {}) : (Lights[Lights.length] = {});
 						} else {
 							Light = Lights[index];
 						}
@@ -899,8 +899,18 @@ class Lightcontrol extends utils.Adapter {
 				case "blink.color":
 					break;
 				case "blink.enabled":
-					await switchingOnOff.blink(this, Group);
+					if (NewVal && NewVal !== OldVal) {
+						await helper.SetValueToObject(LightGroups[Group], "blink.infinite", true);
+						await helper.SetValueToObject(LightGroups[Group], "blink.stop", false);
+						await switchingOnOff.blink(this, Group);
+					} else if (!NewVal) {
+						await helper.SetValueToObject(LightGroups[Group], "blink.stop", true);
+					}
 					handeled = true;
+					break;
+				case "blink.start":
+					await helper.SetValueToObject(LightGroups[Group], ["blink.stop", "blink.infinite"], false);
+					await switchingOnOff.blink(this, Group);
 					break;
 				default:
 					this.log.error(`Controller => Error, unknown or missing property: "${prop1}"`);
