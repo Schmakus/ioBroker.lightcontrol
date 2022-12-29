@@ -899,8 +899,18 @@ class Lightcontrol extends utils.Adapter {
 				case "blink.color":
 					break;
 				case "blink.enabled":
-					await switchingOnOff.blink(this, Group);
+					if (NewVal && NewVal !== OldVal) {
+						await helper.SetValueToObject(LightGroups[Group], "blink.infinite", true);
+						await helper.SetValueToObject(LightGroups[Group], "blink.stop", false);
+						await switchingOnOff.blink(this, Group);
+					} else if (!NewVal) {
+						await helper.SetValueToObject(LightGroups[Group], "blink.stop", true);
+					}
 					handeled = true;
+					break;
+				case "blink.start":
+					await helper.SetValueToObject(LightGroups[Group], ["blink.stop", "blink.infinite"], false);
+					await switchingOnOff.blink(this, Group);
 					break;
 				default:
 					this.log.error(`Controller => Error, unknown or missing property: "${prop1}"`);
