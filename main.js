@@ -656,7 +656,7 @@ class Lightcontrol extends utils.Adapter {
 						let Light;
 
 						if (await helper.isNegative(index)) {
-							Light = Lights.length === 0 ? (Lights[0] = {}) : (Lights[Lights.length - 1] = {});
+							Light = Lights.length === 0 ? (Lights[0] = {}) : (Lights[Lights.length] = {});
 						} else {
 							Light = Lights[index];
 						}
