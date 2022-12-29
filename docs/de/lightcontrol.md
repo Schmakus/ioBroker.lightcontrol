@@ -250,8 +250,9 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
     -   **bri:** Helligkeit, mit der das Licht an geht
     -   **color:** Farbe, mit das Licht an geht
 
-    -   **blink:** Blinken lassen
-    -   **enabled:** Blinken lassen
+    -   **blink:** Blinken
+    -   **enabled:** Startet Blinken in Endlosschleife, => false beendet Blinken
+    -   **start:** Startet Blinken bis Anzahl erreicht.
     -   **frequency:** Blinkfrequenz in Sekunden
     -   **blinks:** Anzahl der Blinker
     -   **bri:** Helligkeit der Lampen beim Blinken
