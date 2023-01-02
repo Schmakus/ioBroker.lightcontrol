@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.0.8",
+		"version": "0.1.0",
 		"news": {
+			"0.1.0": {
+				"en": "Latest Release",
+				"de": "Neuste Veröffentlichung",
+				"ru": "Последний релиз",
+				"pt": "Última versão",
+				"nl": "Laatste vrijlating",
+				"fr": "Dernière sortie",
+				"it": "Ultime notizie",
+				"es": "Última publicación",
+				"pl": "Latesta",
+				"uk": "Останні релізи",
+				"zh-cn": "试验释放"
+			},
 			"0.0.8": {
 				"en": "Ability to remove unused lights and sensors when deleting the light group\nSome code cleaning and update debug logs\nUpdate dependencies\nUpdate translations",
 				"de": "Möglichkeit, ungenutzte Lichter und Sensoren zu entfernen, wenn die Lichtgruppe gelöscht wird\nEinige Code-Bereinigung und Aktualisierungen von Debug-Logs\nAbhängigkeiten aktualisiert\nÜbersetzungen aktualisiert",
@@ -80,19 +93,6 @@
 				"pl": "okładka",
 				"uk": "перший реліз Альфа",
 				"zh-cn": "首批Alphaam"
-			},
-			"0.0.1": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"ru": "Начальная версия",
-				"pt": "lançamento inicial",
-				"nl": "Eerste uitgave",
-				"fr": "Première version",
-				"it": "Versione iniziale",
-				"es": "Versión inicial",
-				"pl": "Pierwsze wydanie",
-				"zh-cn": "首次出版",
-				"uk": "початковий випуск"
 			}
 		},
 		"title": "LightControl",
