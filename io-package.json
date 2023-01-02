@@ -1,7 +1,7 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.0.6",
+		"version": "0.0.8",
 		"news": {
 			"0.0.8": {
 				"en": "Ability to remove unused lights and sensors when deleting the light group\nSome code cleaning and update debug logs\nUpdate dependencies\nUpdate translations",
