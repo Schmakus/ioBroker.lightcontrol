@@ -6,6 +6,7 @@
 [![Downloads](https://img.shields.io/npm/dm/iobroker.lightcontrol.svg)](https://www.npmjs.com/package/iobroker.lightcontrol)
 ![Number of Installations](https://iobroker.live/badges/lightcontrol-installed.svg)
 ![Current version in stable repository](https://iobroker.live/badges/lightcontrol-stable.svg)
+[![Translation status](https://weblate.iobroker.net/widgets/adapters/-/lightcontrol/svg-badge.svg)](https://weblate.iobroker.net/engage/adapters/?utm_source=widget)
 
 [![NPM](https://nodei.co/npm/iobroker.lightcontrol.png?downloads=true)](https://nodei.co/npm/iobroker.lightcontrol/)
 
@@ -36,6 +37,10 @@ Light control of lamps from various manufacturers
 
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Update dependencies
 
 ### 0.0.6 (2022-12-29)
 
