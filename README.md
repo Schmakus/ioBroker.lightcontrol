@@ -41,6 +41,7 @@ Light control of lamps from various manufacturers
 ### **WORK IN PROGRESS**
 
 -   (Schmakus) Update dependencies
+-   (Schmakus) Update translations
 
 ### 0.0.6 (2022-12-29)
 
