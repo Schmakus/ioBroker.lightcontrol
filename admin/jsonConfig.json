@@ -30,7 +30,7 @@
 							"width": "30%",
 							"title": {
 								"en": "Group name",
-								"de": "Bezeichnung",
+								"de": "Gruppenname",
 								"ru": "Название группы",
 								"pt": "Nome do grupo",
 								"nl": "Groepsnaam",
@@ -76,6 +76,11 @@
 						"color": "red"
 					},
 					"jsonData": "{\"LightGroups\": ${JSON.stringify(data.LightGroups)}}"
+				},
+				"deleteUnusedConfig": {
+					"type": "checkbox",
+					"label": "Deactivate lights and sensors settings when the light group is deleted",
+					"default": true
 				}
 			}
 		},

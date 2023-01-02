@@ -67,7 +67,7 @@ class Lightcontrol extends utils.Adapter {
 		// this.config:
 		this.GlobalSettings = this.config;
 		this.Settings = this.config;
-		if (this.Settings.debug) this.writeLog("Raw LightGroups: " + JSON.stringify(this.Settings.LightGroups));
+		this.writeLog(`onReady => Raw LightGroups from Settings: ${JSON.stringify(this.Settings.LightGroups)}`);
 
 		//Create LightGroups Object from GroupNames
 		await this.CreateLightGroupsObject();
@@ -76,16 +76,16 @@ class Lightcontrol extends utils.Adapter {
 		await this.InitCustomStates();
 
 		//Create all States, Devices and Channels
-		await init.Init(this);
-		if (this.Settings.debug) this.log.debug(JSON.stringify(this.LightGroups));
+		if (Object.keys(this.LightGroups).length !== 0) {
+			await init.Init(this);
+			//Set LightState
+			await this.SetLightState().catch((e) => this.log.error(`onRready // SetLightState => ${e}`));
+		} else {
+			this.writeLog(`onReady => no Init because no LightGroups defined in Settings`);
+		}
 
 		//Get Latitude and Longitude
 		await this.GetSystemData().catch((e) => this.log.error(`onRready // GetSystemData => ${e}`));
-
-		//Set LightState
-		this.SetLightState().catch((e) => this.log.error(`onRready // SetLightState => ${e}`));
-
-		//this.setState("info.connection", true, true);
 	}
 
 	/**
@@ -112,19 +112,25 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async CreateLightGroupsObject() {
 		try {
-			for (const Groups of this.Settings.LightGroups) {
-				let _temp;
-				for (const [key, value] of Object.entries(Groups)) {
-					if (key === "Group") {
-						this.LightGroups[value] = {};
-						this.LightGroups[value].description = value;
-						_temp = value;
-					} else if (key === "GroupLuxSensor") {
-						this.LightGroups[_temp].LuxSensor = value;
-						this.LightGroups[_temp].lights = [];
-						this.LightGroups[_temp].sensors = [];
+			if (this.Settings.LightGroups) {
+				if (this.Settings.LightGroups.length) {
+					for (const Groups of this.Settings.LightGroups) {
+						let _temp;
+						for (const [key, value] of Object.entries(Groups)) {
+							if (key === "Group") {
+								this.LightGroups[value] = {};
+								this.LightGroups[value].description = value;
+								_temp = value;
+							} else if (key === "GroupLuxSensor") {
+								this.LightGroups[_temp].LuxSensor = value;
+								this.LightGroups[_temp].lights = [];
+								this.LightGroups[_temp].sensors = [];
+							}
+						}
 					}
 				}
+			} else {
+				this.writeLog(`No LightGroups defined in instanse settings!`, "warn");
 			}
 		} catch (e) {
 			this.writeLog(`CreateLightGroupsObject => Error: ${e}`, "error");
@@ -219,10 +225,12 @@ class Lightcontrol extends utils.Adapter {
 				switch (msg.command) {
 					case "LightGroup": {
 						const groups = [];
-						for (const Group in this.LightGroups) {
-							// iterate through all existing groups and extract group names
-							if (Group === "All") continue;
-							groups.push({ value: Group, label: Group });
+						if (Object.keys(this.LightGroups).length !== 0) {
+							for (const Group in this.LightGroups) {
+								// iterate through all existing groups and extract group names
+								if (Group === "All") continue;
+								groups.push({ value: Group, label: Group });
+							}
 						}
 						this.sendTo(msg.from, msg.command, groups, msg.callback);
 						this.writeLog(`onMessage => LightGroup => LightGroups Callback: ${JSON.stringify(groups)}.`);
@@ -272,34 +280,38 @@ class Lightcontrol extends utils.Adapter {
 
 						const LightGroups = msg.message.LightGroups;
 
-						const arr = [];
-						for (const Group of LightGroups) {
-							arr.push(Group.Group);
-						}
-						this.writeLog(`onMessage => checkcheckIdForDuplicates: ${arr}`);
-
-						// empty object
-						const map = {};
-						let result = false;
-						for (let i = 0; i < arr.length; i++) {
-							// check if object contains entry with this element as key
-							if (map[arr[i]]) {
-								result = true;
-								// terminate the loop
-								break;
+						if (LightGroups && LightGroups !== undefined) {
+							const arr = [];
+							for (const Group of LightGroups) {
+								arr.push(Group.Group);
 							}
-							// add entry in object with the element as key
-							map[arr[i]] = true;
-						}
-						if (!result) {
-							this.writeLog(`onMessage => checkcheckIdForDuplicates: No duplicates.`);
-							this.sendTo(msg.from, msg.command, "", msg.callback);
+							this.writeLog(`onMessage => checkcheckIdForDuplicates: ${arr}`);
+
+							// empty object
+							const map = {};
+							let result = false;
+							for (let i = 0; i < arr.length; i++) {
+								// check if object contains entry with this element as key
+								if (map[arr[i]]) {
+									result = true;
+									// terminate the loop
+									break;
+								}
+								// add entry in object with the element as key
+								map[arr[i]] = true;
+							}
+							if (!result) {
+								this.writeLog(`onMessage => checkcheckIdForDuplicates: No duplicates.`);
+								this.sendTo(msg.from, msg.command, "", msg.callback);
+							} else {
+								this.writeLog(
+									`Define LightGroups => checkcheckIdForDuplicates: Duplicate GroupNames found.`,
+									"warn",
+								);
+								this.sendTo(msg.from, msg.command, "labelDuplicateGroup", msg.callback);
+							}
 						} else {
-							this.writeLog(
-								`Define LightGroups => checkcheckIdForDuplicates: Duplicate GroupNames found.`,
-								"warn",
-							);
-							this.sendTo(msg.from, msg.command, "labelDuplicateGroup", msg.callback);
+							this.sendTo(msg.from, msg.command, "", msg.callback);
 						}
 						break;
 					}
@@ -574,12 +586,32 @@ class Lightcontrol extends utils.Adapter {
 					return;
 				}
 
-				//Check if a Group in LightGroups is available
+				//Check if a Group in LightGroups is available or deleted by user
 				if (!LightGroup) {
-					this.writeLog(
-						`buildStateDetailsArray => LightGroup ${customData.group} in StateID: ${stateID} not defined in LightGroups`,
-						"warn",
-					);
+					//If checkbox for removing lights and sensor setting is acitaved in instance settings
+					if (this.Settings.deleteUnusedConfig) {
+						this.writeLog(
+							`buildStateDetailsArray => Light group "${customData.group}" was deleted by the user in the instance settings! LightControl settings will be deactivated for this StateID: ${stateID})`,
+							"warn",
+						);
+						this.writeLog(
+							`buildStateDetailsArray => => Object before deactivating: ${JSON.stringify(stateInfo)}`,
+						);
+
+						stateInfo.common.custom[this.namespace].enabled = false;
+
+						this.writeLog(
+							`buildStateDetailsArray => => Object after deactivating: ${JSON.stringify(stateInfo)}`,
+						);
+
+						await this.setForeignObjectAsync(stateID, stateInfo);
+					} else {
+						this.writeLog(
+							`buildStateDetailsArray => Light group "${customData.group}" was deleted by the user in the instance settings! (StateID: ${stateID})`,
+							"warn",
+						);
+					}
+
 					return;
 				}
 
