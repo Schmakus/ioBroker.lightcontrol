@@ -37,7 +37,8 @@ Light control of lamps from various manufacturers
 
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
-### 0.0.7 (2023-01-02)
+
+### **WORK IN PROGRESS**
 
 -   (Schmakus) Ability to remove unused lights and sensors when deleting the light group
 -   (Schmakus) Some code cleaning and update debug logs
