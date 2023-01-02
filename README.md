@@ -40,6 +40,8 @@ Light control of lamps from various manufacturers
 
 ### **WORK IN PROGRESS**
 
+-   (Schmakus) Ability to remove unused lights and sensors when deleting the light group
+-   (Schmakus) Some code cleaning and update debug logs
 -   (Schmakus) Update dependencies
 -   (Schmakus) Update translations
 

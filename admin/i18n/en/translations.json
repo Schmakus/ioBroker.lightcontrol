@@ -88,5 +88,6 @@
 	"Yes": "Yes",
 	"e.g. FloorSpots, Spotlights, Wallpanel, ...": "e.g. FloorSpots, Spotlights, Wallpanel, ...",
 	"labelDuplicateGroup": "Group name must not exist more than once!!!",
-	"lightcontrol adapter settings": "Adapter settings for lightcontrol"
+	"lightcontrol adapter settings": "Adapter settings for lightcontrol",
+	"Deactivate lights and sensors settings when the light group is deleted": "Deactivate lights and sensors settings when the light group is deleted"
 }
