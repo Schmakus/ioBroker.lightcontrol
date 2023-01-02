@@ -20,7 +20,7 @@ Light control of lamps from various manufacturers
 
 [Deutsche Beschreibung hier](docs/de/lightcontrol.md)
 
-[English Description here](docs/en/lightcontrol.md) --> in Dev
+[English Description here](docs/en/lightcontrol.md)
 
 ## ToDo
 
@@ -37,6 +37,7 @@ Light control of lamps from various manufacturers
 
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
+
 ### 0.1.0 (2023-01-02)
 
 -   (Schmakus) Latest Release
