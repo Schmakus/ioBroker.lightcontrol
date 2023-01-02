@@ -390,22 +390,22 @@ class Lightcontrol extends utils.Adapter {
 							for (const Group in this.LightGroups) {
 								if (Group === "All") continue;
 
-								for (const Sensor in this.LightGroups[Group].sensors) {
-									if (this.LightGroups[Group].sensors[Sensor].oid === id) {
+								for (const Sensor of this.LightGroups[Group].sensors) {
+									if (Sensor.oid === id) {
 										this.log.debug(
 											`onStateChange => It's a MotionSensor in following Group: ${Group}`,
 										);
 
-										if (state.val === this.LightGroups[Group].sensors[Sensor].motionVal) {
+										if (state.val === Sensor.motionVal) {
 											//Inhalt lesen und neues Property anlegen und füllen
-											this.LightGroups[Group].sensors[Sensor].isMotion = true;
+											Sensor.isMotion = true;
 											this.log.debug(
-												`onStateChange => Sensor="${Sensor}" in Group="${Group}". This isMotion="true"`,
+												`onStateChange => Sensor in Group="${Group}". This isMotion="true"`,
 											);
 										} else {
-											this.LightGroups[Group].sensors[Sensor].isMotion = false;
+											Sensor.isMotion = false;
 											this.log.debug(
-												`onStateChange => Sensor="${Sensor}" in Group="${Group}". This isMotion="false"`,
+												`onStateChange => Sensor in Group="${Group}". This isMotion="false"`,
 											);
 										}
 
@@ -969,10 +969,10 @@ class Lightcontrol extends utils.Adapter {
 
 			let Motionstate = false;
 
-			for (const Sensor in this.LightGroups[Group].sensors) {
-				if (this.LightGroups[Group].sensors[Sensor].isMotion) {
+			for (const Sensor of this.LightGroups[Group].sensors) {
+				if (Sensor.isMotion) {
 					this.log.debug(
-						`SummarizeSensors => Group="${Group}" Sensor="${Sensor}" with target ${this.LightGroups[Group].sensors[Sensor].oid} has value ${this.LightGroups[Group].sensors[Sensor].isMotion}`,
+						`SummarizeSensors => Group="${Group}" Sensor with target ${Sensor.oid} has value ${Sensor.isMotion}`,
 					);
 					Motionstate = true;
 				}
@@ -991,7 +991,7 @@ class Lightcontrol extends utils.Adapter {
 				);
 			}
 		} catch (e) {
-			this.log.error(`SummarizeSensors => ${e}`);
+			this.writeLog(`SummarizeSensors => ${e}`, "error");
 		}
 	}
 
