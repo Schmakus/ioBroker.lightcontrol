@@ -1139,7 +1139,7 @@ class Lightcontrol extends utils.Adapter {
 			if (logtype === "warn") this.log.warn(logtext);
 
 			if (logtype === "error") {
-				this.log.error(logtext);
+				//this.log.error(logtext);
 
 				if (!disableSentry) {
 					if (this.supportsFeature && this.supportsFeature("PLUGINS")) {
@@ -1157,7 +1157,7 @@ class Lightcontrol extends utils.Adapter {
 				}
 			}
 		} catch (e) {
-			this.log.error(`writeLog error => ${e.message} , stack: ${e.stack}`);
+			this.log.error(`[ writeLog ] error: ${e}`);
 		}
 	}
 }
