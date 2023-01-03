@@ -38,6 +38,10 @@ Light control of lamps from various manufacturers
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
 
+### **WORK IN PROGRESS**
+
+-   (Schmakus) translation updates
+
 ### 0.1.0 (2023-01-02)
 
 -   (Schmakus) Latest Release
