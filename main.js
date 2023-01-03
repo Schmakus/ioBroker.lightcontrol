@@ -13,6 +13,9 @@ const timers = require("./lib/timers");
 const switchingOnOff = require("./lib/switchingOnOff");
 const lightHandling = require("./lib/lightHandling");
 
+// Sentry error reporting, disable when testing alpha source code locally!
+const disableSentry = false;
+
 class Lightcontrol extends utils.Adapter {
 	/**
 	 * @param {Partial<utils.AdapterOptions>} [options={}]
@@ -1115,7 +1118,7 @@ class Lightcontrol extends utils.Adapter {
 	/**
 	 * a function for log output
 	 * @param {string} logtext
-	 * @param {string} logtype ('silly' | 'info' | 'debug' | 'warn' | 'error')
+	 * @param {string} logtype ("silly" | "info" | "debug" | "warn" | "error")
 	 */
 	async writeLog(logtext, logtype = "debug") {
 		try {
@@ -1123,9 +1126,27 @@ class Lightcontrol extends utils.Adapter {
 			if (logtype === "info") this.log.info(logtext);
 			if (logtype === "debug") this.log.debug(logtext);
 			if (logtype === "warn") this.log.warn(logtext);
-			if (logtype === "error") this.log.error(logtext);
-		} catch (error) {
-			this.log.error(`writeLog error => ${error} , stack: ${error.stack}`);
+
+			if (logtype === "error") {
+				this.log.error(logtext);
+
+				if (!disableSentry) {
+					if (this.supportsFeature && this.supportsFeature("PLUGINS")) {
+						const sentryInstance = this.getPluginInstance("sentry");
+						if (sentryInstance) {
+							this.log.info(
+								`[Error caught and sent to Sentry, thank you for collaborating!] error: ${logtext}`,
+							);
+							sentryInstance.getSentryObject().captureException(logtext);
+						}
+					}
+				} else {
+					this.log.error(`Sentry disabled`);
+					console.error(`Sentry disabled, error caught : ${logtext}`);
+				}
+			}
+		} catch (e) {
+			this.log.error(`writeLog error => ${e.message} , stack: ${e.stack}`);
 		}
 	}
 }
