@@ -2,308 +2,316 @@
 
 # LightControl
 
-### _Steuerung von Lampen unterschiedlicher Hersteller_
+### _Light control of lamps from various manufacturers_
 
 ---
 
-# Inhaltsverzeichnis
+# table of contents
 
 -   [1 Features](#1-features)
 -   [2 Installation](#2-installation)
--   [3 Konfiguration](#3-konfiguration)
--   [4 Gruppeneinstellungen - Startseite](#4-gruppeneinstellungen)
-    -   [4.1 Lichtgruppen](#41-lichtgruppen)
-    -   [4.2 Allgemeine Einstellungen](#42-allgemeine-einstellungen)
--   [5 Lichter und Sensoren](#5-lichter-und-sensoren)
-    -   [5.1 Lichter](#51-lichter)
-    -   [5.2 Sensoren](#52-sensoren)
--   [6 Datenpunkte](#7-datenpunkte)
-    -   [6.1 Datenpunkte für alle Gruppen](#61-datenpunkte-für-alle-gruppen)
-    -   [6.2 Datenpunkte der einzelnen Gruppe](#62-datenpunkte-der-einzelnen-gruppe)
--   [7 Was ist für die Zukunft geplant](#6-was-ist-fr-die-zukunft-geplant)
--   [8 Was ist nicht geplant](#8-was-ist-nicht-geplant)
+-   [3 Configuration](#3-konfiguration)
+-   [4 Group Settings](#4-gruppeneinstellungen)
+    -   [4.1 Light groups](#41-lichtgruppen)
+    -   [4.2 General Settings](#42-allgemeine-einstellungen)
+-   [5 Lights and Sensors](#5-lichter-und-sensoren)
+    -   [5.1 Lights](#51-lichter)
+    -   [5.2 Sensors](#52-sensoren)
+-   [6 Datapoints](#7-datenpunkte)
+    -   [6.1 Datapoints for all groups](#61-datenpunkte-für-alle-gruppen)
+    -   [6.2 Datapoints for each group](#62-datenpunkte-der-einzelnen-gruppe)
+-   [7 What is planned for future](#6-was-ist-fr-die-zukunft-geplant)
+-   [8 What is not planned](#8-was-ist-nicht-geplant)
 
 ---
 
 # 1. Features
 
--   Gruppierung beliebig vieler Lampen/Leuchtmittel
--   Verwendung gemischter Lampen/Farbsystemen und Umrechnung der Farbsysteme (Hex,Rgb,Xy)
--   Möglichkeit der Zuweisung von defaultwerten zu jedem Leuchtmittel (gleiche Helligkeit trotz unterschiedlich leistungsstarker Leuchtmittel)
--   Verwendung beliebig vieler Bewegungsmelder pro Gruppe
--   Ramping (langsame Änderung der Helligkeit bis Zielwert) für on und off
--   Hoch- und Runterdimmen
--   AutoOff nach Zeit / Kein Off bei Bewegung;
--   AutoOff nach Helligkeit
--   AutoOn bei Bewegung ab bestimmter Helligkeit
--   AutoOn bei Dunkelheit
--   AutoOn bei Anwesenheitszählererhöhung ab bestimmter Helligkeit (Begrüßungslicht bei heimkommen)
--   Override on (Putzlicht)
--   Masterswitch um alle Gruppen gemeinsam ein- und auszuschalten (Gleichzeitig Indikator, wenn alle Gruppen an sind)
--   Info Datenpunkt für "beliebige Gruppe ist ein"
--   Blinken (Alarm, Türklingel, etc.)
--   Adaptive Helligkeit (Bei Aussenhelligkeit über 1000 Lux volle Helligkeit (100%), darunter linear dunkler bis 0 Lux (2%))
--   Adaptive Farbtemperatur (4 dynamische Modi: Linear (linear ansteigend von Sonnenaufgang bis Sonnenmittag, dann linear abfallend bis Sonnenuntergang), Solar (entsprechend der Sonnenhöhe errechneter Sinus, maxCt ist Jahreszeitenabhängig), SolarInterpoliert (wie Solar, jedoch ohne Jahreszeitenabhängigkeit), StartYourDay (linear Absteigend von Start-Uhrzeit - Sonnenuntergang) ![adaptive_Ct.png](/docs/de/img/adaptive_Ct.png)
+-   Grouping of any number of lamps/bulbs
+-   Use of mixed lamps/colour systems and conversion of colour systems (hex, rgb, xy)
+-   Possibility to assign default values to each illuminant (same brightness despite differently powerful illuminant)
+-   Use any number of motion sensors per group
+-   Ramping (slow change of brightness to target value) for on and off
+-   Dimming up and down
+-   AutoOff by time / No off if motion;
+-   AutoOff by brightness
+-   AutoOn when moving from certain brightness
+-   AutoOn in the dark
+-   AutoOn at presence counter increase from certain brightness (welcome light when coming home)
+-   Override on (cleaning light)
+-   Masterswitch to switch all groups on and off together (Simultaneously indicator when all groups are on)
+-   Info Data point for "any group is a"
+-   flashing (alarm, doorbell, etc.)
+-   Adaptive brightness (At outdoor brightness above 1000 lux full brightness (100%), including linearly darker to 0 lux (2%))
+-   Adaptive color temperature (4 dynamic modes: Linear (linearly rising from sunrise to noon, then linearly falling to sunset), Solar (according to the sun height calculated sine, maxCt is seasonal), SolarInterpolished (like solar, but without seasonal dependency), StartYourDay (linear descending from start-time - sunset) ![adaptive_Ct.png](/docs/de/img/adaptive_Ct.png)
 
 ---
 
--   [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+-   [back to table of contents](#inhaltsverzeichnis)
 
 ---
 
 # 2. Installation
 
-Der Adapter befindet sich in der Testphase und ist noch nicht bei ioBroker released.
-Um ihn installieren zu können muss man zu den Adapter von ioBroker gehen und über die "Katze" (Experteneinstellung) "Benutzerdefiniert" anklicken.
-Dann den Github-Link: [https://github.com/Schmakus/ioBroker.lightcontrol.git](https://github.com/Schmakus/ioBroker.lightcontrol.git) einfügen.
+The adapter is in the test phase and is not yet released by ioBroker.
+To install you have to go to the ioBroker adapter tab and click on the "Cat" (expert setting) "Custom".
+Then add the Github link: [https://github.com/Schmakus/ioBroker.lightcontrol.git](https://github.com/Schmakus/ioBroker.lightcontrol.git).
 
-Nach dem Download kann man durch anklicken des (+) eine Instanz angelgen.
-
----
-
--   [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+After the download you can click on the (+) an instance.
 
 ---
 
-# 3. Konfiguration
-
-Sollte in dem Installationsfenster die Checkbox "**_schließen, wenn fertig_**" nicht angehakt sein muss man dieses natürlich noch schließen.
-
-Das Konfigurationsfenster besteht aus den Reitern:
-
--   [4. Gruppeneinstellungen](#4-gruppen-einstellungen)
--   [5. Lichter und Sensoren](#5-lichter-und-sensoren)
+-   [back to table of contents](#inhaltsverzeichnis)
 
 ---
 
--   [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+# 3. Configuration
+
+If the checkbox "**_should close in the installation window, if finished_**" is not checked you have to close it.
+
+The configuration window consists of the tabs:
+
+-   [4. Group settings](#4-gruppen-einstellungen)
+-   [5. Lights and Sensors](#5-lichter-und-sensoren)
 
 ---
 
-# 4. Gruppeneinstellungen
+-   [back to table of contents](#inhaltsverzeichnis)
 
-Das Konfigurationsfenster öffnet sich automatisch mit den Gruppeneinstellungen. Hier werden die einzelnen Lichtgruppen erstellt.
+---
 
-## 4.1 Lichtgruppen
+# 4. Group Settings
+
+The configuration window opens automatically with the group settings, where the individual light groups are created.
+
+## 4.1 Light Groups
 
 ![Instance Settings - LightGroups](img/02_Instance_Settings_LightGroups.jpg)
 
-Mit Klick auf das + wird eine neue Zeile erstellt.
+Clicking on the + will create a new line.
 
--   Bezeichnung: Hier benennt man die Gruppe. Achtung: Keine doppelten Namen anlegen!!
--   Individueller Lux Sensor: Hier definiert man einen individuellen Lux-Sensor. Über die 3 Punkte an der rechten Seite lässt sich eine Objekt-ID einfügen. Wenn das Feld leer gelassen wir, so wird für die Lichtgruppe der globale Lux-Sensor verwendet, sofern einer definiert ist.
+-   Description: Here you name the group. Attention: Do not create dublicates!!
+-   Individual lux sensor: Here you define an individual lux sensor. An object ID can be inserted via the 3 dots on the right side. If the field is left empty, the global lux sensor is used for the light group, if one is defined.
 
-## 4.2 Allgemeine Einstellungen
+## 4.2 General Settings
 
 ![Instance Settings - General](img/01_Instance_Settings.jpg)
 
--   **Einstellungen für globalen Lux-Sensor**
-    -   Dieser Sensor wird global verwendet, sofern nicht innerhalb einer Gruppe ein individueller Sensor gewählt wurde
-    -   Es muss ein numerischer Datenpunkt gewählt werden!
--   **Einstellungen für die Farbtemperatur**
-    -   Minimalwert für die Farbtemperatur in Kelvin => Standard: 2700
-    -   Maximalwert für die Farbtemperatur in Kelvin => Standard: 6500
--   **Einstellungen zum Dimmen**
-    -   Rampenschritte zum Dimmen => Standard: 10
-    -   Mindeshelligkeit beim Dimmen über den Datenpunkt _DimmDown_ => Standard: 10
--   **Einstellungen für Anwesenheit**
-    -   Objekt-ID der Anwesenheit => Muss _true_ oder _false_ sein
-    -   Objekt-ID des Anwesenheitszählers => Muss eine Nummer sein.
+-   **Global lux sensor settings**
+    -   This sensor is used globally unless an individual sensor has been selected within a group
+    -   A numeric data point must be selected!
+-   **Color temperature settings**
+    -   Minimum value for color temperature in Kelvin => standard: 2700
+    -   Maximum color temperature in Kelvin => Standard: 6500
+-   **Dimming settings**
+    -   Ramp steps for dimming => Default: 10
+    -   Minimum brightness when dimming via the data point _DimmDown_ => Default: 10
+-   **Presence settings**
+    -   Object ID of presence => Must be _true_ or _false_
+    -   Object ID of the attendance counter => Must be a number.
 -   **Logging**
-    -   Erweitertes User-Logging
+    -   Advanced user logging
 
 ---
 
--   [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+-   [back to table of contents](#inhaltsverzeichnis)
 
 ---
 
-# 5 Lichter und Sensoren
+# 5 Lights and Sensors
 
-Alle Lichter und Sensoren werden über die jeweiligen Datenpunkte den Lichtgruppen hinzugefügt:
+All lights and sensors are added to the light groups via the respective data points:
 
 ![Custom Configuration](img/07_customConfig_openSettings.jpg)
 
-Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
+After opening the settings, the configuration must be activated:
 
 ![Activate Custom Config](img/03_activate_customConfig.jpg)
 
-## 5.1 Lichter
+## 5.1 Lights
 
 ![Light Settings](img/04_customConfig_light.jpg)
 
--   **Typ des Objekt**
-    In vielen Fällen erkennt LightControl, ob es sich um ein Licht oder Sensor handelt. Wenn dies nicht der Fall sein sollte, ist _Licht_ voreingestellt.
+-   **Type of object**
+    In many cases, LightControl detects whether it is a light or sensor, if not, then \_Licht_is preset.
 
--   **Licht Gruppe**
-    Hier wählt man die zuvor in den Instanzeinstellungen definierten Lichtgruppen aus (Mehrfachauswahl möglich -> Bug)
+-   **Light group**
+    Here you select the previously defined light groups in the instance settings (multiple selection possible -> bug)
 
--   **Lichtname**
-    Hier einen Namen für das Licht definieren. Schon zuvor definierte Namen werden zur Auswahl vorgeschlagen
+-   **Light name**
+    Define a name for the light Previously defined names are suggested for selection
 
--   **Funktion des Objekts**
-    In vielen Fällen erkennt LightControl, um welche Funktion es sich handeln könnte. Wenn die automatische Erkennung nicht dem entspricht, was gewünscht ist, dann über das DropDown Menü die jeweilige Funktion auswählen
+-   **Function of object**
+    In many cases, LightControl detects which function it could be. If the automatic detection does not correspond to what is desired, then select the respective function via the DropDown menu
 
     <img src="img/06_customConfig_funcOfObject.jpg" width="200">
 
     -   **Switch**
 
-        -   Power On Value - _Wert für Ein. z.B. true_
-        -   Power Off Value - _Wert für Aus. z.B. false_
+        -   Power On Value - _value for exampletrue_
+        -   Power Off Value - _value for examplefalse_
 
     -   **Brightness**
 
-        -   Value for minimum Brightness - _Wert die geringste Helligkeit. z.B. 0_
-        -   Value for maximum Brightnes - _Wert für die maximalste Helligkeit. z.B. 100_
-        -   Value/Offset for Brightness - _Wert in Prozent für die Anpassung der Helligkeit gegenüber den anderen Lampen innerhalb der Gruppe. 100 = keine Anpassung // 50 = Halb so hell_
-        -   Verwende Helligkeit zum Schalten der Lampe (noch ohne Funktion)
+        -   Value for minimum brightness - _value the lowest brightness.eg0_
+        -   Value for maximum Brightnes - _value for maximum brightness.eg100_
+        -   Value/Offset for Brightness - _value in percent for adjusting the brightness against the other lamps within the group. 100 = no adjustment // 50 = half as hell_
+        -   Use brightness to switch the lamp (still without function)
 
     -   **Color-Temperature**
 
-        -   Value for minimum Color-Temperature - _Wert Warmweiß. z.B. 250_
-        -   Value for maximum Color-Temperature - _Wert für Kaltweiß. z.B. 452_
-        -   Sende Farbtemperatur direkt zu Lampe (noch ohne Funktion)
+        -   Value for minimum Color-Temperature - _Value warm white.eg250_
+        -   Value for maximum Color-Temperature - _value for cold white, for example452_
+        -   Send color temperature directly to lamp (still without function)
 
     -   **Saturation**
 
-        -   Value for minimum Saturation - _Wert für die geringste Sättigung. z.B. 0_
-        -   Value for maximum Saturation - _Wert für die maximale Sättigung. z.B. 100_
-        -   Sende Saturation direkt zu Lampe (noch ohne Funktion)
+        -   Value for minimum saturation - _value for the lowest saturation.eg0_
+        -   Value for maximum saturation - _value for maximum saturation.eg100_
+        -   Send saturation directly to lamp (still without function)
 
     -   **ModeSwitch**
 
-        -   Value for White Mode - _Wert für den Weiß-Modus. z.B. false_
-        -   Value for Color Mode - _Wert für den Farbmodus. z.B. true_
+        -   Value for White Mode - _Value for White Mode, e.g., false_
+        -   Value for Color Mode - _value for the color mode, e.g., true_
 
     -   **Color**
-        -   Color Type - _Typ der Farbvorgabe (HEX => #FFFFFF // RGB => 255,255,255 // XY => [0.4992,0.418])_
-        -   Default Value for Color- _Standardwert. z.B. #FFFFFF_
-        -   Sende Farbe direkt zu Lampe (noch ohne Funktion)
+        -   Color Type - _Type of color specification (HEX => #FFFFFF // RGB => 255,255 // XY => [0.4992,0.418])_
+        -   Default Value for Color- _Default value, e.g., #FFFFFF_
+        -   Send color directly to lamp (still without function)
 
--   [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+-   [back to table of contents](#inhaltsverzeichnis)
 
 ---
 
-## 5.2 Sensoren
+## 5.2 Sensors
 
-### 4.2.1 Allgemeines
+### 4.2.1 General
 
--   Wenn ein Sensor auslöst, wird das Licht geschalten (sofern in den Datenpunkten aktiviert).
--   Erst wenn ALLE Sensoren nichts mehr registrieren, wird der Ausschaltprozess gestartet (sofern in den Datenpunkten aktiviert).
+-   When a sensor triggers, the light is switched (if activated in the data points).
+-   Only when ALL sensors no longer register, the switch-off process is started (if activated in the data points).
 
-> Hinweis: Theoretisch können hier auch Schalter angegeben werden. Hauptsache es gibt für Ein/Aus unterschiedliche Werte. Jedoch verhält sich der Auschaltprozess je nach Einstellung. z.B. Licht geht aus nach 60 Sekunden
+> Note: Theoretically, switches can also be specified here, as long as there are different values for on/off. However, the shutdown process depends on the setting, for example, light goes off after 60 seconds
 
 ![Custom Config Sensor](img/08_customConfig_sensor.jpg)
 
--   Value for Motion - _Wert für Bewegung erkannt. z.B. true_
--   Value for noMotion - _Wert für keine Bewegung. z.B. false_
+-   Value for Motion - _Value for motion detected; e.g., true_
+-   Value for noMotion - _Value for no movement, e.g., false_
 
 ---
 
--   [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+-   [back to table of contents](#inhaltsverzeichnis)
 
-# 6 Datenpunkte
+# 6 Datapoints
 
-## 6.1 Datenpunkte für alle Gruppen
+## 6.1 Datapoints for all Groups
 
 -   **All**
-    -   **power:** Alle Gruppen ein-/ausschalten / Indikator, wenn alle Gruppen an sind
-    -   **anyOn:** _true_ wenn mindestens eine Gruppe an ist
+    -   **power:** All groups on/off / indicator when all groups are on
+    -   **anyOn:** _true_ if at least one group is on
 
-## 6.2 Datenpunkte der einzelnen Gruppe
+## 6.2 Datapoints for each group
 
--   **Gruppe**
+-   **Group**
 
-    -   **autoOffLux:** AutoOff des Lichts bei erreichen einer Helligkeitsschwelle
-        -   **enabled:** AutoOff bei Helligkeit aktivieren/deaktivieren
-        -   **minLux:** minimaler Lichtwert
-        -   **dailyLock:** Bei false wird AutoOffTimed nicht ausgeführt
-        -   **operator:** Vergleich ob Licht über oder unter _minLux_ ausgehen soll (z.B. > / < / >= / <=)
+    -   **autoOffLux:** AutoOff of light reaching a brightness threshold
 
-    -   **autoOffTimed:** AutoOff nach fest eingestellter Zeit (Nur in Verbindung mit den Sensoren)
-        -   **enabled:** AutoOff aktivieren/deaktivieren
-        -   **autoOffTime:** Zeit bis AutoOff in Sekunden
-        -   **noAutoOffWhenMotion:** AutoOff resetten bei erneuter Bewegung
-        -   **noticeEnabled:** Hinweis für AutoOff aktivieren/deaktivieren (Aktuell noch ohne Funktion)
-        -   **noticeBri:** Helligkeit in Prozent bevor AutoOff
-        -   **noticeTime:** Zeit in Sekunden wann der Hinweis aktiviert wird bevor AutoOff
+        -   **enabled:** Enable/disable AutoOff at brightness
+        -   **minLux:** minimum light value
+        -   **dailyLock:** AutoOffTimed not running if false
+        -   **operator:** Compare if light should go above or below _minLux_ (e.g., > / < / >= / <=)
 
-    -   **autoOnLux:** Automatisch Licht ein bei Lux
-        -   **enabled:** Aktivieren/Deaktivieren
-        -   **minLux:** Lux-Schwellwert für das Schalten
-        -   **bri:** Helligkeit, mit der das Licht an geht
-        -   **color:** Farbe, mit das Licht an geht
-        -   **switchOnlyWhenPresence:** Nur Schalten, wenn jemand zuhause ist
-        -   **switchOnlyWhenNoPresence:** Nur schalten, wenn niemand zu hause ist
-        -   **dailyLock:** Bei false wird AutoOnLux nicht ausgeführt
-        -   **operator:** Vergleich ob Licht über oder unter _minLux_ ausgehen soll (z.B. > / < / >= / <=)
+    -   **autoOffTimed:** AutoOff after fixed time (only in connection with the sensors)
 
-    -   **autoOnMotion:** Automatisch Licht ein bei Bewegung
-        -   **enabled:** Aktivieren/Deaktivieren
-        -   **minLux:** Lux-Schwellwert für das Schalten
-        -   **bri:** Helligkeit, mit der das Licht an geht
-        -   **color:** Farbe, mit das Licht an geht
+        -   **enabled:** Enable/Disable AutoOff
+        -   **autoOffTime:** Time to AutoOff in seconds
+        -   \*noAutoOffWhenMotion:\*\* AutoOff reset when moving again
+        -   **noticeEnabled:** Enable/Disable Hint for AutoOff (Currently Not Working)
+        -   **noticeBri:** Brightness in percent before AutoOff
+        -   **noticeTime:** Time in seconds before AutoOff
 
-    -   **autoOnPresenceIncrease:** Automatisch Licht ein, wenn sich der Wert des Anwesenheitszähler größe als der letztere war
-        -   **enabled:** Aktivieren/Deaktivieren
-        -   **minLux:** Lux-Schwellwert für das Schalten
-        -   **bri:** Helligkeit, mit der das Licht an geht
-        -   **color:** Farbe, mit das Licht an geht
+    -   **autoOnLux:** Automatically light on at Lux
 
-    -   **blink:** Blinken
-        -   **enabled:** Startet Blinken in Endlosschleife, => false beendet Blinken
-        -   **start:** Startet Blinken bis Anzahl erreicht.
-        -   **frequency:** Blinkfrequenz in Sekunden
-        -   **blinks:** Anzahl der Blinker
-        -   **bri:** Helligkeit der Lampen beim Blinken
-        -   **color:** Farbe der Lampen beim Blinken
+        -   **enabled:** Enable/Disable
+        -   **minLux:** Lux threshold for switching
+        -   **bri:** Brightness with which the light turns on
+        -   **color:** color with which light goes on
+        -   **switchOnlyWhenPresence:** Only switch when someone is at home
+        -   **switchOnlyWhenNoPresence:** Only switch when no one is at home
+        -   **dailyLock:** AutoOnLux does not run if false
+        -   **operator:** Compare if light should go above or below _minLux_ (e.g., > / < / >= / <=)
 
-    -   **rampOff:** Runterdimmen beim Ausschalten
-        -   **enabled:** Aktivieren/Deaktivieren
-        -   **time:** Zeit für das Runterdimmen (sollte nicht kleiner als 10 Sekunden sein)
-        -   **switchOutletsLast:** Lampen welche nur ein-/ausgeschaltet werden zuletzt aktivieren?
+    -   **autoOnMotion:** Automatically light on when moving
 
-    -   **rampOn:** Hochdimmen beim Einschalten
-        -   **enabled:** Aktivieren/Deaktivieren
-        -   **time:** Zeit für das Hochdimmen (sollte nicht kleiner als 10 Sekunden sein)
-        -   **switchOutletsLast:** Lampen welche nur ein-/ausgeschaltet werden zuletzt aktivieren?
+        -   **enabled:** Enable/Disable
+        -   **minLux:** Lux threshold for switching
+        -   **bri:** Brightness with which the light turns on
+        -   **color:** color with which light goes on
 
-    -   **adaptiveBri:** Adaptive Helligkeit ein-/ausschalten
-    -   **adaptiveCt:** Adaptive Farbtemperatur ein-/ausschalten
-    -   **adaptiveCtMode:** Modus der adaptiven Farbtemperatur
-        -   **Linear** (Sonnenaufgang --> Mittag --> Sonnenuntergang)
-        -   **Solar** (entsprechend der Sonnenhöhe errechneter Sinus, maxCt ist Jahreszeitenabhängig)
-        -   **SolarInterpoliert** (wie Solar, jedoch ohne Jahreszeitenabhängigkeit)
-        -   **StartYourDay** (linear Absteigend von Start-Uhrzeit - Sonnenuntergang)
-    -   **adaptiveCtTime:** Startzeit Adaptive Farbtemperature bei Modus: StartYourDay
-    -   **bri:** Helligkeit setzen (0-100%)
-    -   **color:** Farbe setzen als Hex-Wert (#FFFFFF)
-    -   **ct:** Farbtemeratur setzen in Kelvin
-    -   **dimmAmount:** Schritte zum Dimmen in %
-    -   **dimmDown:** Button Runterdimmen
-    -   **dimmUp:** Button Hochdimmen
-    -   **isMotion:** Aktivieren/Deaktivieren der Sensoren
-    -   **power:** Ein-/Ausschalten
-    -   **powerCleaningLight:** Putzlicht (setzt Helligkeit auf 100% und Farbtemperatur auf Kaltweiß)
+    -   **autoOnPresenceIncrease:** Automatically light on when the value of the attendance counter was larger than the latter
 
----
+        -   **enabled:** Enable/Disable
+        -   **minLux:** Lux threshold for switching
+        -   **bri:** Brightness with which the light turns on
+        -   **color:** color with which light goes on
 
--   [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+    -   **blink:** blink
 
----
+        -   **enabled:** Starts flashing in infinite loop, => stops flashing
+        -   **start:** Starts flashing until number reached.
+        -   **frequency:** flashing frequency in seconds
+        -   **blinks:** Number of indicators
+        -   **bri:** Brightness of the lamps when flashing
+        -   **color:** Color of the lamps when flashing
 
-# 7 Was ist für die Zukunft geplant
+    -   **rampOff:** Dimming when power off
 
--   [ ] CodeCleaning.... ;-)
--   [ ] Hinweisfunktion bei AutoOff mit reduzierter Helligkeit
--   [ ] Intergration von einfachen Button-Events (Ein/Aus/Dimmen) für jede Gruppe
+        -   **enabled:** Enable/Disable
+        -   **time:** Dimming time (should not be less than 10 seconds)
+        -   **switchOutletsLast:** Lights that are only turned on/off last?
+
+    -   **rampOn:** High tuning when switching on
+
+        -   **enabled:** Enable/Disable
+        -   **time:** time for high pitching (should not be less than 10 seconds)
+        -   **switchOutletsLast:** Lights that are only turned on/off last?
+
+    -   **adaptiveBri:** Adaptive brightness on/off
+    -   **adaptiveCt:** Adaptive color temperature on/off
+    -   \*adaptive mode:\*\* adaptive color temperature mode
+        -   **Linear** (sunrise -> noon -> sunset)
+        -   **Solar** (according to the sun height of calculated sine, maxCt is seasonal)
+        -   **SolarInterpolished** (like solar, but without seasonal dependency)
+        -   **StartYourDay** (linear descending from start time - sunset)
+    -   **adaptiveCtTime:** Start time Adaptive color temperatures at mode: StartYourDay
+    -   **bri:** Set brightness (0-100%)
+    -   **color:** Set color as hex value (#FFFFFF)
+    -   **ct:** Set color value in Kelvin
+    -   **dimmAmount:** Steps to dim in %
+    -   **dimmDown:** Button Dimming
+    -   **dimmUp:** Button Treble
+    -   \*isMotion:\*\* Enable/Disable Sensors
+    -   **power:** Power on/off
+    -   **powerCleaningLight:** cleaning light (sets brightness to 100% and color temperature to cool white)
 
 ---
 
--   [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
+-   [back to table of contents](#inhaltsverzeichnis)
 
 ---
 
-# 8 Was ist nicht geplant
+# 7 What is planned for the future
 
--   [x] Zeitpläne für das Aktivieren oder Deaktivieren von Funktionen oder zum setzten von verschiedenen Helligkeiten, etc.
+-   [ ] CodeCleaning...;-)
+-   [ ] Hint function for AutoOff with reduced brightness
+-   [ ] Integration of simple button events (on/off/dimming) for each group
+
+---
+
+-   [back to table of contents](#inhaltsverzeichnis)
+
+---
+
+# 8 What is not planned
+
+-   [x] Schedules for enabling or disabling functions or setting different brightness levels, etc.
