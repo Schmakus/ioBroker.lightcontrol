@@ -85,7 +85,9 @@ class Lightcontrol extends utils.Adapter {
 		}
 
 		//Get Latitude and Longitude
-		await this.GetSystemData().catch((e) => this.log.error(`onRready // GetSystemData => ${e}`));
+		await this.GetSystemData().catch((e) =>
+			this.writeLog(`[ v${this.version} onReady // GetSystemData ] error: ${e} stack: ${e.stack}`),
+		);
 	}
 
 	/**
@@ -644,26 +646,27 @@ class Lightcontrol extends utils.Adapter {
 				/*
 				CustomData Example
 				{
-						"enabled": true,
-						"defaultBri": "100",
-						"whiteModeVal": "false",
-						"colorModeVal": "true",
-						"colorType": "rgb",
-						"type": "light",
-						"func": "ct",
-						"onVal": 1,
-						"offVal": 0,
-						"minVal": 450,
-						"maxVal": 252,
-						"motionVal": true,
-						"noMotionVal": false,
-						"group": "Wohnzimmer",
-						"description": "Example_Light",
-						"sendCt": true,
-						"sendSat": true,
-						"sendColor": true,
-						"sendModeswitch": true,
-						"useBri": true
+					"enabled": true,
+					"defaultBri": "100",
+					"whiteModeVal": "false",
+					"colorModeVal": "true",
+					"colorType": "hex",
+					"defaultColor": "#FFFFFF",
+					"sendCt": true,
+					"sendSat": true,
+					"sendColor": true,
+					"sendModeswitch": true,
+					"useBri": true,
+					"type": "light",
+					"func": "bri",
+					"onVal": 1,
+					"offVal": 0,
+					"minVal": 0,
+					"maxVal": 100,
+					"motionVal": "On",
+					"noMotionVal": "Off",
+					"group": "Wohnzimmer",
+					"description": "Licht1"
 					}
 				*/
 

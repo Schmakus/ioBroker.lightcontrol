@@ -40,7 +40,11 @@ Light control of lamps from various manufacturers
 
 ### **WORK IN PROGRESS**
 
+<<<<<<< HEAD
 -   (Schmakus) Availability to switch on/off lights only with level/brightness state and without switch state
+=======
+-   (Schmakus) Fix issue [#80](https://github.com/Schmakus/ioBroker.lightcontrol/issues/80)
+>>>>>>> main
 -   (Schmakus) general translation updates and translation of states
 
 ### 0.1.0 (2023-01-02)
