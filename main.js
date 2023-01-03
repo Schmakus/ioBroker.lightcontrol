@@ -62,12 +62,6 @@ class Lightcontrol extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-		// Initialize your adapter here
-		// Reset the connection indicator during startup
-		//this.setState("info.connection", false, true);
-
-		// The adapters config (in the instance object everything under the attribute "native") is accessible via
-		// this.config:
 		this.GlobalSettings = this.config;
 		this.Settings = this.config;
 		this.writeLog(`onReady => Raw LightGroups from Settings: ${JSON.stringify(this.Settings.LightGroups)}`);
@@ -82,15 +76,32 @@ class Lightcontrol extends utils.Adapter {
 		if (Object.keys(this.LightGroups).length !== 0) {
 			await init.Init(this);
 			//Set LightState
-			await this.SetLightState().catch((e) => this.log.error(`onRready // SetLightState => ${e}`));
+			await this.SetLightState().catch((e) =>
+				this.writeLog(
+					`[ v${this.version} onRready // SetLightState ] error: ${e.message} // stack: ${e.stack}`,
+					"error",
+				),
+			);
 		} else {
-			this.writeLog(`onReady => no Init because no LightGroups defined in Settings`);
+			this.writeLog(`[ onReady ] No Init because no LightGroups defined in settings`);
 		}
 
 		//Get Latitude and Longitude
 		await this.GetSystemData().catch((e) =>
-			this.writeLog(`[ v${this.version} onReady // GetSystemData ] error: ${e} stack: ${e.stack}`),
+			this.writeLog(
+				`[ v${this.version} onReady // GetSystemData ] error: ${e.message} // stack: ${e.stack}`,
+				"error",
+			),
 		);
+
+		try {
+			throw new Error("...");
+		} catch (e) {
+			this.writeLog(
+				`[ v${this.version} onReady // GetSystemData ] error: ${e.message} // stack: ${e.stack}`,
+				"error",
+			);
+		}
 	}
 
 	/**
