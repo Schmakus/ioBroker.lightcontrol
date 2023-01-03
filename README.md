@@ -40,7 +40,7 @@ Light control of lamps from various manufacturers
 
 ### **WORK IN PROGRESS**
 
--   (Schmakus) translation updates
+-   (Schmakus) general translation updates and translation of states
 
 ### 0.1.0 (2023-01-02)
 
