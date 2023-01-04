@@ -14,7 +14,7 @@ const switchingOnOff = require("./lib/switchingOnOff");
 const lightHandling = require("./lib/lightHandling");
 
 // Sentry error reporting, disable when testing alpha source code locally!
-const disableSentry = false;
+const disableSentry = true;
 
 class Lightcontrol extends utils.Adapter {
 	/**
@@ -64,7 +64,7 @@ class Lightcontrol extends utils.Adapter {
 	async onReady() {
 		this.GlobalSettings = this.config;
 		this.Settings = this.config;
-		this.writeLog(`onReady => Raw LightGroups from Settings: ${JSON.stringify(this.Settings.LightGroups)}`);
+		this.writeLog(`[ onReady ] LightGroups from Settings: ${JSON.stringify(this.Settings.LightGroups)}`);
 
 		//Create LightGroups Object from GroupNames
 		await this.CreateLightGroupsObject();
@@ -76,32 +76,13 @@ class Lightcontrol extends utils.Adapter {
 		if (Object.keys(this.LightGroups).length !== 0) {
 			await init.Init(this);
 			//Set LightState
-			await this.SetLightState().catch((e) =>
-				this.writeLog(
-					`[ v${this.version} onRready // SetLightState ] error: ${e.message} // stack: ${e.stack}`,
-					"error",
-				),
-			);
+			await this.SetLightState();
 		} else {
 			this.writeLog(`[ onReady ] No Init because no LightGroups defined in settings`);
 		}
 
 		//Get Latitude and Longitude
-		await this.GetSystemData().catch((e) =>
-			this.writeLog(
-				`[ v${this.version} onReady // GetSystemData ] error: ${e.message} // stack: ${e.stack}`,
-				"error",
-			),
-		);
-
-		try {
-			throw new Error("...");
-		} catch (e) {
-			this.writeLog(
-				`[ v${this.version} onReady // GetSystemData ] error: ${e.message} // stack: ${e.stack}`,
-				"error",
-			);
-		}
+		await this.GetSystemData();
 	}
 
 	/**
@@ -117,7 +98,8 @@ class Lightcontrol extends utils.Adapter {
 			this.clearTimeout(this.TickerIntervall);
 
 			callback();
-		} catch (e) {
+		} catch (error) {
+			this.errorHandling(error, "onUnload");
 			callback();
 		}
 	}
@@ -146,10 +128,10 @@ class Lightcontrol extends utils.Adapter {
 					}
 				}
 			} else {
-				this.writeLog(`No LightGroups defined in instanse settings!`, "warn");
+				this.writeLog(`[ CreateLightGroupsObject ] No LightGroups defined in instanse settings!`, "warn");
 			}
-		} catch (e) {
-			this.writeLog(`CreateLightGroupsObject => Error: ${e}`, "error");
+		} catch (error) {
+			this.errorHandling(error, "CreateLightGroupsObject");
 		}
 	}
 
@@ -174,48 +156,48 @@ class Lightcontrol extends utils.Adapter {
 						obj.common.custom[this.namespace].enabled
 					) {
 						this.writeLog(
-							`onObjectChange => Object array of LightControl activated state changed : ${JSON.stringify(
+							`[ onObjectChange ] Object array of LightControl activated state changed : ${JSON.stringify(
 								obj,
 							)} stored Objects : ${JSON.stringify(this.activeStates)}`,
 						);
 
 						// Verify if the object was already activated, if not initialize new parameter
 						if (!this.activeStates.includes(stateID)) {
-							this.writeLog(`onObjectChange => Enable LightControl for : ${stateID}`, "info");
+							this.writeLog(`[ onObjectChange ] Enable LightControl for : ${stateID}`, "info");
 							await this.buildLightGroupParameter(stateID);
 
 							if (!this.activeStates.includes(stateID)) {
 								this.writeLog(
-									`onObjectChange => Cannot enable LightControl for ${stateID}, check settings and error messages`,
+									`[ onObjectChange ] Cannot enable LightControl for ${stateID}, check settings and error messages`,
 									"warn",
 								);
 							}
 						} else {
-							this.writeLog(`onObjectChange => Updating LightControl configuration for : ${stateID}`);
+							this.writeLog(`[ onObjectChange ] Updating LightControl configuration for : ${stateID}`);
 							//Cleaning LightGroups from ID and set it new
 							await this.deleteStateIdFromLightGroups(stateID);
 							await this.buildLightGroupParameter(stateID);
 
 							if (!this.activeStates.includes(stateID)) {
 								this.writeLog(
-									`onObjectChange => Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
+									`[ onObjectChange ] Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
 									"warn",
 								);
 							}
 						}
 					} else if (this.activeStates.includes(stateID)) {
 						this.activeStates = await helper.removeValue(this.activeStates, stateID);
-						this.writeLog(`onObjectChange => Disabled LightControl for : ${stateID}`, "info");
+						this.writeLog(`[ onObjectChange ] Disabled LightControl for : ${stateID}`, "info");
 
 						await this.deleteStateIdFromLightGroups(stateID);
 
 						this.writeLog(
-							`onObjectChange => Active state array after deactivation of ${stateID} : ${
+							`[ onObjectChange ] Active state array after deactivation of ${stateID} : ${
 								this.activeStates.length === 0 ? "empty" : JSON.stringify(this.activeStates)
 							}`,
 						);
 						this.writeLog(
-							`onObjectChange => LightGroups after deactivation of ${stateID} : ${JSON.stringify(
+							`[ onObjectChange ] LightGroups after deactivation of ${stateID} : ${JSON.stringify(
 								this.LightGroups,
 							)}`,
 						);
@@ -226,8 +208,8 @@ class Lightcontrol extends utils.Adapter {
 					// Object change not related to this adapter, ignoring
 				}
 			}
-		} catch (e) {
-			this.writeLog(`onObjectChange =>  ${e}`, "error");
+		} catch (error) {
+			this.errorHandling(error, "onObjectChange");
 		}
 	}
 
@@ -235,7 +217,7 @@ class Lightcontrol extends utils.Adapter {
 	 * Is called if a message is comming
 	 */
 	async onMessage(msg) {
-		this.writeLog(`onMessage => Incomming Message from: ${JSON.stringify(msg)}`);
+		this.writeLog(`[ onMessage ] Incomming Message from: ${JSON.stringify(msg)}`);
 		if (msg.callback) {
 			try {
 				switch (msg.command) {
@@ -249,19 +231,19 @@ class Lightcontrol extends utils.Adapter {
 							}
 						}
 						this.sendTo(msg.from, msg.command, groups, msg.callback);
-						this.writeLog(`onMessage => LightGroup => LightGroups Callback: ${JSON.stringify(groups)}.`);
+						this.writeLog(`[ onMessage ] LightGroup => LightGroups Callback: ${JSON.stringify(groups)}.`);
 						break;
 					}
 
 					case "LightName": {
 						const LightGroups = msg.message.LightGroups;
-						this.writeLog(`onMessage => LightName => getLights for Groups: ${LightGroups}.`);
+						this.writeLog(`[ onMessage ] LightName => getLights for Groups: ${LightGroups}.`);
 						const lights = [];
 						if (LightGroups) {
 							for (const light of Object.values(this.LightGroups[LightGroups].lights)) {
 								lights.push({ value: light.description, label: light.description });
 								this.writeLog(
-									`onMessage => LightName => Light: ${light.description} in Group: ${LightGroups} found.`,
+									`[ onMessage ] LightName => Light: ${light.description} in Group: ${LightGroups} found.`,
 								);
 							}
 						}
@@ -273,7 +255,7 @@ class Lightcontrol extends utils.Adapter {
 
 					case "id": {
 						const value = msg.message.value;
-						this.writeLog(`onMessage => id => Set new ID. Value = ${value}.`);
+						this.writeLog(`[ onMessage ] id => Set new ID. Value = ${value}.`);
 						if (msg.message.value !== null) {
 							this.sendTo(msg.from, msg.command, value, msg.callback);
 						} else {
@@ -284,14 +266,14 @@ class Lightcontrol extends utils.Adapter {
 								native: { _id: newID },
 							});
 
-							this.writeLog(`onMessage => id => Set new ID. OldID = ${oldID}, NewID = ${newID}`);
+							this.writeLog(`[ onMessage ] id => Set new ID. OldID = ${oldID}, NewID = ${newID}`);
 							this.sendTo(msg.from, msg.command, newID.toString(), msg.callback);
 						}
 						break;
 					}
 
 					case "checkIdForDuplicates": {
-						this.writeLog(`onMessage => checkcheckIdForDuplicates`);
+						this.writeLog(`[ onMessage ] checkcheckIdForDuplicates`);
 						this.writeLog(JSON.stringify(msg.message));
 
 						const LightGroups = msg.message.LightGroups;
@@ -301,7 +283,7 @@ class Lightcontrol extends utils.Adapter {
 							for (const Group of LightGroups) {
 								arr.push(Group.Group);
 							}
-							this.writeLog(`onMessage => checkcheckIdForDuplicates: ${arr}`);
+							this.writeLog(`[ onMessage ] checkcheckIdForDuplicates: ${arr}`);
 
 							// empty object
 							const map = {};
@@ -317,11 +299,11 @@ class Lightcontrol extends utils.Adapter {
 								map[arr[i]] = true;
 							}
 							if (!result) {
-								this.writeLog(`onMessage => checkcheckIdForDuplicates: No duplicates.`);
+								this.writeLog(`[ onMessage ] checkcheckIdForDuplicates: No duplicates.`);
 								this.sendTo(msg.from, msg.command, "", msg.callback);
 							} else {
 								this.writeLog(
-									`Define LightGroups => checkcheckIdForDuplicates: Duplicate GroupNames found.`,
+									`[ onMessage ] Define LightGroups => checkcheckIdForDuplicates: Duplicate GroupNames found.`,
 									"warn",
 								);
 								this.sendTo(msg.from, msg.command, "labelDuplicateGroup", msg.callback);
@@ -332,8 +314,8 @@ class Lightcontrol extends utils.Adapter {
 						break;
 					}
 				}
-			} catch (e) {
-				this.log.error(`onMessage => ${e}`);
+			} catch (error) {
+				this.errorHandling(error, "onMessage");
 			}
 		}
 	}
@@ -348,17 +330,16 @@ class Lightcontrol extends utils.Adapter {
 			const ids = id.split(".");
 
 			if (state && state.val !== null) {
-				this.log.debug(`onStateChange => state ${id} changed: ${state.val} (ack = ${state.ack})`);
+				this.writeLog(`[ onStateChange ] state ${id} changed: ${state.val} (ack = ${state.ack})`);
 
 				if (ids[0] == "lightcontrol") {
 					if (!state.ack) {
 						const NewVal = state.val;
 						let OldVal;
 
-						this.log.debug(`onStateChange => InternalState`);
 						const _state = await helper.CheckInputGeneral(this, id, state);
-						this.log.debug(
-							`onStateChange => CheckInputGeneral for ${id} with state: ${NewVal} is: ${_state}`,
+						this.writeLog(
+							`[ onStateChange ] CheckInputGeneral for ${id} with state: ${NewVal} is: ${_state}`,
 						);
 
 						const OwnId = await helper.removeNamespace(this, id);
@@ -379,15 +360,15 @@ class Lightcontrol extends utils.Adapter {
 				} else {
 					//Handle External States
 					if (state.ack || !state.ack) {
-						this.log.debug(`onStateChange => ExternalState`);
+						this.writeLog(`[ onStateChange ] ExternalState`);
 
 						//Check if it's a LuxSensor
 						if (this.LuxSensors.includes(id)) {
 							for (const Group in this.LightGroups) {
 								if (this.LightGroups[Group].LuxSensor === id) {
 									if (state.val !== this.LightGroups[Group].actualLux) {
-										this.log.debug(
-											`onStateChange => It's a LuxSensor in following Group: ${Group}`,
+										this.writeLog(
+											`[ onStateChange ] It's a LuxSensor in following Group: ${Group}`,
 										);
 										this.LightGroups[Group].actualLux = state.val;
 										await this.Controller(
@@ -408,20 +389,20 @@ class Lightcontrol extends utils.Adapter {
 
 								for (const Sensor of this.LightGroups[Group].sensors) {
 									if (Sensor.oid === id) {
-										this.log.debug(
-											`onStateChange => It's a MotionSensor in following Group: ${Group}`,
+										this.writeLog(
+											`[ onStateChange ] It's a MotionSensor in following Group: ${Group}`,
 										);
 
 										if (state.val === Sensor.motionVal) {
 											//Inhalt lesen und neues Property anlegen und füllen
 											Sensor.isMotion = true;
-											this.log.debug(
-												`onStateChange => Sensor in Group="${Group}". This isMotion="true"`,
+											this.writeLog(
+												`[ onStateChange ] Sensor in Group="${Group}". This isMotion="true"`,
 											);
 										} else {
 											Sensor.isMotion = false;
-											this.log.debug(
-												`onStateChange => Sensor in Group="${Group}". This isMotion="false"`,
+											this.writeLog(
+												`[ onStateChange ] Sensor in Group="${Group}". This isMotion="false"`,
 											);
 										}
 
@@ -432,21 +413,21 @@ class Lightcontrol extends utils.Adapter {
 
 							//Check if it's Presence
 						} else if (this.GlobalSettings.IsPresenceDp === id) {
-							this.log.debug(`onStateChange => It's IsPresenceDp: ${id}`);
+							this.writeLog(`[ onStateChange ] It's IsPresenceDp: ${id}`);
 
 							this.ActualPresence = typeof state.val === "boolean" ? state.val : false;
 							await switchingOnOff.AutoOnPresenceIncrease(this).catch((e) => this.log.error(e));
 
 							//Check if it's Presence Counter
 						} else if (this.GlobalSettings.PresenceCountDp === id) {
-							this.log.debug(`onStateChange => It's PresenceCountDp: ${id}`);
+							this.writeLog(`[ onStateChange ] It's PresenceCountDp: ${id}`);
 
 							this.ActualPresenceCount.oldVal = this.ActualPresenceCount.newVal;
 							this.ActualPresenceCount.newVal = typeof state.val === "number" ? state.val : 0;
 
 							if (this.ActualPresenceCount.newVal > this.ActualPresenceCount.oldVal) {
-								this.log.debug(
-									`onStateChange => PresenceCountDp value is greater than old value: ${state.val}`,
+								this.writeLog(
+									`[ onStateChange ] PresenceCountDp value is greater than old value: ${state.val}`,
 								);
 								await switchingOnOff.AutoOnPresenceIncrease(this).catch((e) => this.log.error(e));
 							}
@@ -455,10 +436,10 @@ class Lightcontrol extends utils.Adapter {
 				}
 			} else {
 				// The state was deleted
-				this.log.debug(`onStateChange => state ${id} deleted`);
+				this.writeLog(`[ onStateChange ] state ${id} deleted`);
 			}
-		} catch (e) {
-			this.log.error(`onStateChange => ${e}`);
+		} catch (error) {
+			this.errorHandling(error, "onStateChange");
 		}
 	}
 
@@ -470,7 +451,7 @@ class Lightcontrol extends utils.Adapter {
 		try {
 			// Get all objects with custom configuration items
 			const customStateArray = await this.getObjectViewAsync("system", "custom", {});
-			this.writeLog(`InitCustomStates => All states with custom items : ${JSON.stringify(customStateArray)}`);
+			this.writeLog(`[ InitCustomStates ] All states with custom items : ${JSON.stringify(customStateArray)}`);
 
 			// List all states with custom configuration
 			if (customStateArray && customStateArray.rows) {
@@ -484,7 +465,7 @@ class Lightcontrol extends utils.Adapter {
 						// Check if custom object contains data for LightControl
 						// @ts-ignore
 						if (customStateArray.rows[index].value[this.namespace]) {
-							this.writeLog(`InitCustomStates => LightControl configuration found`);
+							this.writeLog(`[ InitCustomStates ] LightControl configuration found`);
 
 							// Simplify stateID
 							const stateID = customStateArray.rows[index].id;
@@ -493,14 +474,14 @@ class Lightcontrol extends utils.Adapter {
 							// @ts-ignore
 							if (customStateArray.rows[index].value[this.namespace].enabled) {
 								if (!this.activeStates.includes(stateID)) this.activeStates.push(stateID);
-								this.writeLog(`InitCustomStates => LightControl enabled state found ${stateID}`);
+								this.writeLog(`[ InitCustomStates ] LightControl enabled state found ${stateID}`);
 							} else {
 								this.writeLog(
-									`InitCustomStates => LightControl configuration found but not Enabled, skipping ${stateID}`,
+									`[ InitCustomStates ] LightControl configuration found but not Enabled, skipping ${stateID}`,
 								);
 							}
 						} else {
-							console.log(`InitCustomStates => No LightControl configuration found`);
+							this.writeLog(`No Light and Sensor configurations found`, "warn");
 						}
 					}
 				}
@@ -514,16 +495,16 @@ class Lightcontrol extends utils.Adapter {
 			// Initialize all discovered states
 			let count = 1;
 			for (const stateID of this.activeStates) {
-				this.writeLog(`InitCustomStates => Initialising (${count} of ${totalEnabledStates}) "${stateID}"`);
+				this.writeLog(`[ InitCustomStates ] Initialising (${count} of ${totalEnabledStates}) "${stateID}"`);
 				await this.buildLightGroupParameter(stateID);
 
 				if (this.activeStates.includes(stateID)) {
 					totalInitiatedStates = totalInitiatedStates + 1;
-					this.writeLog(`InitCustomStates => Initialization of ${stateID} successfully`, "info");
+					this.writeLog(`Initialization of ${stateID} successfully`, "info");
 				} else {
 					this.writeLog(
-						`InitCustomStates => Initialization of ${stateID} failed, check warn messages !`,
-						"error",
+						`[ InitCustomStates ] Initialization of ${stateID} failed, check warn messages !`,
+						"warn",
 					);
 					totalFailedStates = totalFailedStates + 1;
 				}
@@ -533,12 +514,12 @@ class Lightcontrol extends utils.Adapter {
 			// Subscribe on all foreign objects to detect (de)activation of LightControl enabled states
 			await this.subscribeForeignObjectsAsync("*");
 			this.writeLog(
-				`InitCustomStates => subscribed all foreign objects to detect (de)activation of LightControl enabled states`,
+				`[ InitCustomStates ] subscribed all foreign objects to detect (de)activation of LightControl enabled states`,
 			);
 
 			if (totalFailedStates > 0) {
 				this.writeLog(
-					`Cannot handle calculations for ${totalFailedStates} of ${totalEnabledStates} enabled states, check error messages`,
+					`[ InitCustomStates ] Cannot handle calculations for ${totalFailedStates} of ${totalEnabledStates} enabled states, check error messages`,
 					"warn",
 				);
 			}
@@ -547,11 +528,8 @@ class Lightcontrol extends utils.Adapter {
 				`Successfully activated LightControl for ${totalInitiatedStates} of ${totalEnabledStates} states, will do my Job until you stop me!`,
 				"info",
 			);
-		} catch (e) {
-			this.writeLog(
-				`GlobalPresenceHandling: Object-ID "this.GlobalSettings.PresenceCounterDp" not exits. Please check your config! (${e})`,
-				"error",
-			);
+		} catch (error) {
+			this.errorHandling(error, "InitCustomStates");
 		}
 	}
 
@@ -560,7 +538,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} stateID ID  of state to refresh memory values
 	 */
 	async buildLightGroupParameter(stateID) {
-		this.writeLog(`buildLightGroupParameter => started for ${stateID}`);
+		this.writeLog(`[ buildStateDetailsArray ] started for ${stateID}`);
 		try {
 			let stateInfo;
 			try {
@@ -568,8 +546,8 @@ class Lightcontrol extends utils.Adapter {
 				stateInfo = await this.getForeignObjectAsync(stateID);
 				if (!stateInfo) {
 					this.writeLog(
-						`buildLightGroupParameter => Can't get information for ${stateID}, state will be ignored`,
-						"error",
+						`[ buildStateDetailsArray ] Can't get information for ${stateID}, state will be ignored`,
+						"warn",
 					);
 					this.activeStates = await helper.removeValue(this.activeStates, stateID);
 					this.unsubscribeForeignStates(stateID);
@@ -577,7 +555,7 @@ class Lightcontrol extends utils.Adapter {
 				}
 			} catch (error) {
 				this.writeLog(
-					`buildLightGroupParameter => ${stateID} is incorrectly correctly formatted, ${JSON.stringify(
+					`[ buildStateDetailsArray ] ${stateID} is incorrectly correctly formatted, ${JSON.stringify(
 						error,
 					)}`,
 					"error",
@@ -596,7 +574,7 @@ class Lightcontrol extends utils.Adapter {
 				//Check if a Groupname defined
 				if (!customData.group) {
 					this.writeLog(
-						`buildStateDetailsArray => No Group Name defined for StateID: ${stateID}. Initalisation aborted`,
+						`[ buildStateDetailsArray ] No Group Name defined for StateID: ${stateID}. Initalisation aborted`,
 						"warn",
 					);
 					return;
@@ -607,23 +585,23 @@ class Lightcontrol extends utils.Adapter {
 					//If checkbox for removing lights and sensor setting is acitaved in instance settings
 					if (this.Settings.deleteUnusedConfig) {
 						this.writeLog(
-							`buildStateDetailsArray => Light group "${customData.group}" was deleted by the user in the instance settings! LightControl settings will be deactivated for this StateID: ${stateID})`,
+							`[ buildStateDetailsArray ] Light group "${customData.group}" was deleted by the user in the instance settings! LightControl settings will be deactivated for this StateID: ${stateID})`,
 							"warn",
 						);
 						this.writeLog(
-							`buildStateDetailsArray => => Object before deactivating: ${JSON.stringify(stateInfo)}`,
+							`[ buildStateDetailsArray ] Object before deactivating: ${JSON.stringify(stateInfo)}`,
 						);
 
 						stateInfo.common.custom[this.namespace].enabled = false;
 
 						this.writeLog(
-							`buildStateDetailsArray => => Object after deactivating: ${JSON.stringify(stateInfo)}`,
+							`[ buildStateDetailsArray ] Object after deactivating: ${JSON.stringify(stateInfo)}`,
 						);
 
 						await this.setForeignObjectAsync(stateID, stateInfo);
 					} else {
 						this.writeLog(
-							`buildStateDetailsArray => Light group "${customData.group}" was deleted by the user in the instance settings! (StateID: ${stateID})`,
+							`[ buildStateDetailsArray ] Light group "${customData.group}" was deleted by the user in the instance settings! (StateID: ${stateID})`,
 							"warn",
 						);
 					}
@@ -632,7 +610,7 @@ class Lightcontrol extends utils.Adapter {
 				}
 
 				//const commonData = stateInfo.common;
-				this.writeLog(`buildLightGroupParameter => customData ${JSON.stringify(customData)}`);
+				this.writeLog(`[ buildLightGroupParameter ] customData ${JSON.stringify(customData)}`);
 
 				//Covert string to boolean and numbers
 				for (const key in customData) {
@@ -692,7 +670,7 @@ class Lightcontrol extends utils.Adapter {
 						//Check if a Lightname is available
 						if (!customData.description) {
 							this.writeLog(
-								`buildStateDetailsArray => No Lightname defined. Initalisiation aborted`,
+								`[ buildStateDetailsArray ] No Lightname defined. Initalisiation aborted`,
 								"warn",
 							);
 							return;
@@ -715,7 +693,7 @@ class Lightcontrol extends utils.Adapter {
 						Light[customData.func] = getSubset(customData, ...params[customData.func]);
 
 						this.writeLog(
-							`buildStateDetailsArray => Type: Light, in Group: ${
+							`[ buildStateDetailsArray ] Type: Light, in Group: ${
 								LightGroup.description
 							} with Lights: ${JSON.stringify(Lights)} and Light: ${JSON.stringify(
 								Light,
@@ -725,6 +703,7 @@ class Lightcontrol extends utils.Adapter {
 						break;
 					}
 					case "sensor": {
+						this.writeLog(`[ buildStateDetailsArray ] Type: Sensor in Group ${LightGroup.description}}`);
 						const Sensors = LightGroup.sensors;
 						Sensors.push({
 							oid: customData.oid,
@@ -734,9 +713,6 @@ class Lightcontrol extends utils.Adapter {
 
 						await init.DoAllTheMotionSensorThings(this, customData.group);
 
-						this.writeLog(
-							`buildStateDetailsArray => Type: Sensor, in Group Object: ${JSON.stringify(LightGroup)}`,
-						);
 						break;
 					}
 					default:
@@ -746,11 +722,11 @@ class Lightcontrol extends utils.Adapter {
 				//Push stateID after processing
 				if (!this.activeStates.includes(stateID)) this.activeStates.push(stateID);
 
-				this.writeLog(`buildStateDetailsArray => completed for ${stateID}.`);
-				if (this.GlobalSettings.debug) this.writeLog(JSON.stringify(this.LightGroups));
+				this.writeLog(`[ buildStateDetailsArray ] completed for ${stateID}.`);
+				this.writeLog(`[ buildStateDetailsArray ] Updated LightGroups: ${JSON.stringify(this.LightGroups)}`);
 			}
 		} catch (error) {
-			this.writeLog(`buildStateDetailsArray => ${stateID} => ${error}`, "error");
+			this.errorHandling(error, "buildStateDetailsArray");
 		}
 	}
 
@@ -768,10 +744,11 @@ class Lightcontrol extends utils.Adapter {
 			const LightGroups = this.LightGroups;
 			let handeled = false;
 
-			this.log.info(
-				`Reaching Controller, Group="${Group}" Property="${prop1}" NewVal="${NewVal}", OldVal="${
+			this.writeLog(
+				`[ Controller ] Reaching, Group="${Group}" Property="${prop1}" NewVal="${NewVal}", OldVal="${
 					OldVal === undefined ? "" : OldVal
 				}"`,
+				"info",
 			);
 
 			await helper.SetValueToObject(LightGroups[Group], prop1, NewVal);
@@ -962,7 +939,7 @@ class Lightcontrol extends utils.Adapter {
 					await switchingOnOff.blink(this, Group);
 					break;
 				default:
-					this.log.error(`Controller => Error, unknown or missing property: "${prop1}"`);
+					this.writeLog(`[ Controller ] Error, unknown or missing property: "${prop1}"`, "warn");
 					handeled = true;
 			}
 
@@ -971,8 +948,8 @@ class Lightcontrol extends utils.Adapter {
 					await this.setStateAsync(id, NewVal, true);
 				}
 			}
-		} catch (e) {
-			this.log.error(`Controller => ${e}`);
+		} catch (error) {
+			this.errorHandling(error, "Controller");
 		}
 	}
 
@@ -982,33 +959,33 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async SummarizeSensors(Group) {
 		try {
-			this.log.debug(`Reaching SummarizeSensors, Group="${Group}"`);
+			this.writeLog(`[ SummarizeSensors ] Reaching, Group="${Group}"`);
 
 			let Motionstate = false;
 
 			for (const Sensor of this.LightGroups[Group].sensors) {
 				if (Sensor.isMotion) {
-					this.log.debug(
-						`SummarizeSensors => Group="${Group}" Sensor with target ${Sensor.oid} has value ${Sensor.isMotion}`,
+					this.writeLog(
+						`[ SummarizeSensors ] Group="${Group}" Sensor with target ${Sensor.oid} has value ${Sensor.isMotion}`,
 					);
 					Motionstate = true;
 				}
 			}
 
 			if (this.LightGroups[Group].isMotion !== Motionstate) {
-				this.log.debug(
-					`SummarizeSensors => Summarized IsMotion for Group="${Group}" = ${Motionstate}, go to Controller...`,
+				this.writeLog(
+					`[ SummarizeSensors ] Summarized IsMotion for Group="${Group}" = ${Motionstate}, go to Controller...`,
 				);
 				this.LightGroups[Group].isMotion = Motionstate;
 				await this.setStateAsync(Group + ".isMotion", Motionstate, true);
 				await this.Controller(Group, "isMotion", this.LightGroups[Group].isMotion, Motionstate);
 			} else {
-				this.log.debug(
-					`SummarizeSensors => No Motionstate="${Group}" = ${Motionstate}, nothing changed -> nothin to do`,
+				this.writeLog(
+					`[ SummarizeSensors ] Motionstate="${Group}" = ${Motionstate}, nothing changed -> nothin to do`,
 				);
 			}
-		} catch (e) {
-			this.writeLog(`SummarizeSensors => ${e}`, "error");
+		} catch (error) {
+			this.errorHandling(error, "SummarizeSensors");
 		}
 	}
 
@@ -1023,16 +1000,15 @@ class Lightcontrol extends utils.Adapter {
 				this.lng = obj.common.longitude;
 				this.lat = obj.common.latitude;
 
-				this.log.debug(`GetSystemData => longitude: ${this.lng} | latitude: ${this.lat}`);
+				this.writeLog(`[ GetSystemData ] longitude: ${this.lng} | latitude: ${this.lat}`);
 			} else {
-				this.log.error(
+				this.writeLog(
 					"system settings cannot be called up (Longitute, Latitude). Please check your ioBroker configuration!",
+					"warn",
 				);
 			}
-		} catch (e) {
-			this.log.error(
-				`GetSystemData => system settings 'Latitude and Longitude' cannot be called up. Please check configuration!`,
-			);
+		} catch (error) {
+			this.errorHandling(error, "GetSystemData");
 		}
 		//}
 	}
@@ -1046,13 +1022,14 @@ class Lightcontrol extends utils.Adapter {
 			const groupLength = Object.keys(this.LightGroups).length - 1;
 			const countGroups = await this.countGroups();
 
+			// @ts-ignore
 			await helper.SetValueToObject(this.LightGroups, "All.anyOn", countGroups > 0 ? true : false);
 			await helper.SetValueToObject(this.LightGroups, "All.power", countGroups === groupLength ? true : false);
 			await this.setStateAsync("All.anyOn", this.LightGroups.All.anyOn, true);
 			this.log.debug(`SetLightState => Set State "All.anyOn" to ${this.LightGroups.All.anyOn}`);
 			await this.setStateAsync("All.power", this.LightGroups.All.power, true);
-		} catch (e) {
-			this.log.error(`SetLightState => ${e}`);
+		} catch (error) {
+			this.errorHandling(error, "SetLightState");
 		}
 	}
 
@@ -1060,15 +1037,19 @@ class Lightcontrol extends utils.Adapter {
 	 * Helper: count Power in Groups
 	 */
 	async countGroups() {
-		let i = 0;
-		for (const Group in this.LightGroups) {
-			if (Group === "All") continue;
+		try {
+			let i = 0;
+			for (const Group in this.LightGroups) {
+				if (Group === "All") continue;
 
-			if (this.LightGroups[Group].power) {
-				i++;
+				if (this.LightGroups[Group].power) {
+					i++;
+				}
 			}
+			return i;
+		} catch (error) {
+			this.errorHandling(error, "countGroups");
 		}
-		return i;
 	}
 
 	/**
@@ -1076,53 +1057,57 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} stateID ID of the Object
 	 */
 	async deleteStateIdFromLightGroups(stateID) {
-		// Loop trough LighGroups and delete Object by oid value
-		const keys = ["power", "bri", "ct", "sat", "color", "modeswitch"];
-		for (const Groups of Object.keys(this.LightGroups)) {
-			//Check Lights
-			const lightArray = this.LightGroups[Groups].lights;
-			if (lightArray) {
-				for (const Lights of lightArray) {
-					keys.forEach((key) => {
-						if (Lights[key]) {
-							if (Lights[key].oid === stateID) {
-								this.writeLog(
-									`deleteStateIdFromLightGroups => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
-									"info",
-								);
-								delete Lights[key];
+		try {
+			// Loop trough LighGroups and delete Object by oid value
+			const keys = ["power", "bri", "ct", "sat", "color", "modeswitch"];
+			for (const Groups of Object.keys(this.LightGroups)) {
+				//Check Lights
+				const lightArray = this.LightGroups[Groups].lights;
+				if (lightArray) {
+					for (const Lights of lightArray) {
+						keys.forEach((key) => {
+							if (Lights[key]) {
+								if (Lights[key].oid === stateID) {
+									this.writeLog(
+										`deleteStateIdFromLightGroups => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
+										"info",
+									);
+									delete Lights[key];
+								}
 							}
+						});
+					}
+					// Delete complete Light Object if it copntains only description property
+					for (let i = lightArray.length - 1; i >= 0; i--) {
+						const count = Object.keys(lightArray[i]).length;
+						if (count === 1) {
+							this.writeLog(
+								`deleteStateIdFromLightGroups => Light: ${lightArray[i].description} will be deleted, because no Object-IDs are defined.`,
+								"info",
+							);
+							lightArray.splice(i, 1);
 						}
-					});
+					}
 				}
-				// Delete complete Light Object if it copntains only description property
-				for (let i = lightArray.length - 1; i >= 0; i--) {
-					const count = Object.keys(lightArray[i]).length;
-					if (count === 1) {
+				//Check Sensors
+				const _oldArray = this.LightGroups[Groups].sensors;
+				if (_oldArray && _oldArray !== "undefined") {
+					this.LightGroups[Groups].sensors = this.LightGroups[Groups].sensors.filter((object) => {
+						return object.oid !== stateID;
+					});
+
+					// Comparing Sensor Array
+					const equalsCheck = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
+					if (!equalsCheck(_oldArray, this.LightGroups[Groups].sensors)) {
 						this.writeLog(
-							`deleteStateIdFromLightGroups => Light: ${lightArray[i].description} will be deleted, because no Object-IDs are defined.`,
+							`onObjectChange => Sensor with ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}"`,
 							"info",
 						);
-						lightArray.splice(i, 1);
 					}
 				}
 			}
-			//Check Sensors
-			const _oldArray = this.LightGroups[Groups].sensors;
-			if (_oldArray && _oldArray !== "undefined") {
-				this.LightGroups[Groups].sensors = this.LightGroups[Groups].sensors.filter((object) => {
-					return object.oid !== stateID;
-				});
-
-				// Comparing Sensor Array
-				const equalsCheck = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
-				if (!equalsCheck(_oldArray, this.LightGroups[Groups].sensors)) {
-					this.writeLog(
-						`onObjectChange => Sensor with ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}"`,
-						"info",
-					);
-				}
-			}
+		} catch (error) {
+			this.errorHandling(error, "deleteStateIdFromLightGroups");
 		}
 	}
 
@@ -1137,27 +1122,30 @@ class Lightcontrol extends utils.Adapter {
 			if (logtype === "info") this.log.info(logtext);
 			if (logtype === "debug") this.log.debug(logtext);
 			if (logtype === "warn") this.log.warn(logtext);
-
-			if (logtype === "error") {
-				//this.log.error(logtext);
-
-				if (!disableSentry) {
-					if (this.supportsFeature && this.supportsFeature("PLUGINS")) {
-						const sentryInstance = this.getPluginInstance("sentry");
-						if (sentryInstance) {
-							this.log.info(
-								`[Error caught and sent to Sentry, thank you for collaborating!] error: ${logtext}`,
-							);
-							sentryInstance.getSentryObject().captureException(logtext);
-						}
-					}
-				} else {
-					this.log.error(`Sentry disabled`);
-					console.error(`Sentry disabled, error caught : ${logtext}`);
-				}
-			}
+			if (logtype === "error") this.log.error(logtext);
 		} catch (e) {
 			this.log.error(`[ writeLog ] error: ${e}`);
+		}
+	}
+
+	/**
+	 * Error Handling
+	 * @param {object} error
+	 */
+	async errorHandling(error, codePart) {
+		try {
+			this.writeLog(`[ ${codePart} ] error: ${error.message} // stack: ${error.stack}`, "error");
+			if (!disableSentry) {
+				if (this.supportsFeature && this.supportsFeature("PLUGINS")) {
+					const sentryInstance = this.getPluginInstance("sentry");
+					if (sentryInstance) {
+						const Sentry = sentryInstance.getSentryObject();
+						if (Sentry) Sentry.captureException(`[ v${this.version} ${codePart} ] ${error}`);
+					}
+				}
+			}
+		} catch (error) {
+			this.writeLog(`[ errorHandling ] error: ${error}`, "error");
 		}
 	}
 }
