@@ -42,6 +42,7 @@ Light control of lamps from various manufacturers
 
 ### **WORK IN PROGRESS**
 
+-   (Schmakus) Add Sentry Plugin
 -   (Schmakus) Fix issue [#80](https://github.com/Schmakus/ioBroker.lightcontrol/issues/80)
 -   (Schmakus) general translation updates and translation of states
 
