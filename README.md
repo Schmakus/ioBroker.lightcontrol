@@ -39,8 +39,7 @@ Light control of lamps from various manufacturers
 
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
-
-### **WORK IN PROGRESS**
+### 0.1.1 (2023-01-04)
 
 -   (Schmakus) Add Sentry Plugin
 -   (Schmakus) Fix issue [#80](https://github.com/Schmakus/ioBroker.lightcontrol/issues/80)
