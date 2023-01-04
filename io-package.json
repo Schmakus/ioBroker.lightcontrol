@@ -141,6 +141,11 @@
 			"config": "json",
 			"custom": "json"
 		},
+		"plugins": {
+			"sentry": {
+				"dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229"
+			}
+		},
 		"supportCustoms": true,
 		"dependencies": [
 			{
