@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.1.0",
+		"version": "0.1.1",
 		"news": {
+			"0.1.1": {
+				"en": "Add Sentry Plugin\nFix issue [#80](https://github.com/Schmakus/ioBroker.lightcontrol/issues/80)\ngeneral translation updates and translation of states",
+				"de": "Sentry Plugin hinzugefügt\nProblem behoben #[80](https://github.com/Schmakus/ioBroker.lightcontrol/issues/80)\nAllgemeine Aktualisierungen der Übersetzungen und Übersetzung von States",
+				"ru": "Добавить Sentry Plugin\nИсправлена проблема #[80](https://github.com/Schmakus/ioBroker.lightcontrol/issues/80)\nобщие обновления перевода и перевод состояний",
+				"pt": "Adicionar Plugin de Sentry\nCorrigir a questão #[80](https://github.com/Schmakus/ioBroker.lightcontrol/issues/80)\natualizações gerais de tradução e tradução de estados",
+				"nl": "Plugin\nQuality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
+				"fr": "Ajouter Sentry Plugin\nCorrection du numéro #[80](https://github.com/Schmakus/ioBroker.lightcontrol/issues/80)\nmises à jour générales de traduction et traduction des états",
+				"it": "Aggiungere Sentry Plugin\nProblema fisso #[80](https://github.com/Schmakus/ioBroker.lightcontrol/issues/80)\naggiornamenti generali di traduzione e traduzione degli stati",
+				"es": "Add Sentry Plugin\nEdición fija #[80](https://github.com/Schmakus/ioBroker.lightcontrol/issues/80)\nactualizaciones generales de traducción y traducción de estados",
+				"pl": "Add Sentry Plugin (ang.)\n#80 (https:/github.com/Schmakus/ioBroker) (ang.)\ntłumaczenie ogólne",
+				"uk": "Додати шлунок плагін\nФіксований випуск #[80] (https://github.com/Schmakus/ioBroker.lightcontrol/products/80)\nзагальні оновлення перекладу та переклад держав",
+				"zh-cn": "增 编\nFix #[80](https://github.com/Schmakus/ioBroker.eau Control/issues/80)\na. 总翻译更新和翻译国家"
+			},
 			"0.1.0": {
 				"en": "Latest Release",
 				"de": "Neuste Veröffentlichung",
@@ -80,19 +93,6 @@
 				"pl": "Fix – czujniki i światło do innych grup\nFix – czujnik do grup",
 				"uk": "Виправлення: Переміщення датчиків та вогнів до іншої групи\nВиправлення: Додавання датчика до груп",
 				"zh-cn": "Fix:向其他群体倾斜传感器和照灯\nFix:向各群体增加传感器"
-			},
-			"0.0.2": {
-				"en": "first Alpha Release",
-				"de": "erste Alpha Release",
-				"ru": "первый альфа-релиз",
-				"pt": "primeiro Alpha Release",
-				"nl": "eerste Alfa Los",
-				"fr": "premier Alpha Release",
-				"it": "primo Alpha Release",
-				"es": "primer lanzamiento alfa",
-				"pl": "okładka",
-				"uk": "перший реліз Альфа",
-				"zh-cn": "首批Alphaam"
 			}
 		},
 		"titleLang": {
