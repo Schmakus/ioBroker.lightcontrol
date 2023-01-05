@@ -14,7 +14,7 @@ const switchingOnOff = require("./lib/switchingOnOff");
 const lightHandling = require("./lib/lightHandling");
 
 // Sentry error reporting, disable when testing alpha source code locally!
-const disableSentry = true;
+const disableSentry = false;
 
 class Lightcontrol extends utils.Adapter {
 	/**
