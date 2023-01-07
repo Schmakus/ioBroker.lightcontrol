@@ -773,7 +773,6 @@ class Lightcontrol extends utils.Adapter {
 					if (!this.LightGroups[Group].powerCleaningLight) {
 						if (LightGroups[Group].isMotion && LightGroups[Group].power) {
 							//AutoOff Timer wird nach jeder Bewegung neugestartet
-							//this.log.info(`Controller: Motion detected, restarting AutoOff Timer for Group="${Group}"`);
 							await switchingOnOff.AutoOffTimed(this, Group);
 						}
 
