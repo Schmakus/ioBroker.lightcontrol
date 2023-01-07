@@ -39,6 +39,11 @@ Light control of lamps from various manufacturers
 
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Fix: Adaptive Color-Temperature (failure by reading settings minCt and maxCt)
+
 ### 0.1.1 (2023-01-04)
 
 -   (Schmakus) Add Sentry Plugin
