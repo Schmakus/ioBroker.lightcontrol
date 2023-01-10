@@ -147,6 +147,10 @@
 			}
 		},
 		"supportCustoms": true,
+		"docs": {
+			"en": "docs/en/lightcontrol.md",
+			"de": "docs/de/lightcontrol.md"
+		},
 		"dependencies": [
 			{
 				"js-controller": ">=4.0.0"
