@@ -6,7 +6,6 @@
 
 // The adapter-core module gives you access to the core ioBroker functions
 const utils = require("@iobroker/adapter-core");
-let SunCalc = require("suncalc3");
 
 // eslint-disable-next-line no-unused-vars
 const helper = require("./lib/helper");
@@ -58,6 +57,8 @@ class Lightcontrol extends utils.Adapter {
 
 		this.DevMode = false;
 		this.processing = false;
+
+		this.SunCalc = require("suncalc2");
 	}
 
 	/**
