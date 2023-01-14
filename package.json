@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.7",
-    "materialize-css": "^1.0.0",
     "suncalc": "^1.9.0"
   },
   "devDependencies": {
