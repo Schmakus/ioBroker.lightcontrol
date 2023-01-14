@@ -57,8 +57,6 @@ class Lightcontrol extends utils.Adapter {
 
 		this.DevMode = false;
 		this.processing = false;
-
-		this.SunCalc = require("suncalc2");
 	}
 
 	/**
@@ -83,9 +81,6 @@ class Lightcontrol extends utils.Adapter {
 		} else {
 			this.writeLog(`[ onReady ] No Init because no LightGroups defined in settings`);
 		}
-
-		//Get Latitude and Longitude
-		await this.GetSystemData();
 	}
 
 	/**
@@ -1010,8 +1005,10 @@ class Lightcontrol extends utils.Adapter {
 					"warn",
 				);
 			}
+			return true;
 		} catch (error) {
 			this.errorHandling(error, "GetSystemData");
+			return false;
 		}
 		//}
 	}
