@@ -75,9 +75,9 @@
     "lint": "eslint .",
     "translate": "translate-adapter",
     "release": "release-script",
-    "release-patch": "release-script patch --yes",
-    "release-minor": "release-script minor --yes",
-    "release-major": "release-script major --yes"
+    "release-patch": "release-script patch --yes --dry",
+    "release-minor": "release-script minor --yes --dry",
+    "release-major": "release-script major --yes --dry"
   },
   "bugs": {
     "url": "https://github.com/Schmakus/ioBroker.lightcontrol/issues"
