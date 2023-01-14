@@ -42,6 +42,7 @@ Light control of lamps from various manufacturers
 
 ### **WORK IN PROGRESS**
 
+-   (Schmakus) Fix: Update for ioBroker Beta-Repo
 -   (Schmakus) Fix: Adaptive Color-Temperature (failure by reading settings minCt and maxCt)
 
 ### 0.1.1 (2023-01-04)
