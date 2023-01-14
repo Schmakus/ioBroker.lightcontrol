@@ -238,11 +238,13 @@ class Lightcontrol extends utils.Adapter {
 						this.writeLog(`[ onMessage ] LightName => getLights for Groups: ${LightGroups}.`);
 						const lights = [];
 						if (LightGroups) {
-							for (const light of Object.values(this.LightGroups[LightGroups].lights)) {
-								lights.push({ value: light.description, label: light.description });
-								this.writeLog(
-									`[ onMessage ] LightName => Light: ${light.description} in Group: ${LightGroups} found.`,
-								);
+							if (this.LightGroups && this.LightGroups[LightGroups]) {
+								for (const light of Object.values(this.LightGroups[LightGroups].lights)) {
+									lights.push({ value: light.description, label: light.description });
+									this.writeLog(
+										`[ onMessage ] LightName => Light: ${light.description} in Group: ${LightGroups} found.`,
+									);
+								}
 							}
 						}
 
@@ -992,7 +994,7 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async GetSystemData() {
 		try {
-			const obj = await this.getForeignObjectAsync("system.config", "state");
+			const obj = await this.getForeignObjectAsync("system.config");
 
 			if (obj && obj.common && obj.common.longitude && obj.common.latitude) {
 				this.lng = obj.common.longitude;

@@ -1,6 +1,6 @@
 {
   "name": "iobroker.lightcontrol",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Light control of lamps from various manufacturers",
   "author": {
     "name": "Schmakus",
@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.7",
-    "materialize-css": "^1.0.0",
     "suncalc2": "^1.8.1"
   },
   "devDependencies": {
@@ -75,7 +74,8 @@
     "check": "tsc --noEmit -p tsconfig.check.json",
     "lint": "eslint .",
     "translate": "translate-adapter",
-    "release": "release-script patch --yes",
+    "release": "release-script",
+    "release-patch": "release-script patch --yes",
     "release-minor": "release-script minor --yes",
     "release-major": "release-script major --yes"
   },
