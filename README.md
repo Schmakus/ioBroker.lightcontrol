@@ -39,9 +39,10 @@ Light control of lamps from various manufacturers
 
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
+### 0.1.2 (2023-01-14)
 
-### **WORK IN PROGRESS**
-
+-   (Schmakus) Some different small bugfixes and code cleaning
+-   (Schmakus) Fix: Update for ioBroker Beta-Repo
 -   (Schmakus) Fix: Adaptive Color-Temperature (failure by reading settings minCt and maxCt)
 
 ### 0.1.1 (2023-01-04)
