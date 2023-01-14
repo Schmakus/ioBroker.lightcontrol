@@ -1,114 +1,136 @@
 {
-	"common": {
-		"name": "lightcontrol",
-		"version": "0.1.1",
-		"news": {
-			"0.1.1": {
-				"en": "Add Sentry Plugin\nFix issue [#80]\ngeneral translation updates and translation of states",
-				"de": "Sentry Plugin hinzugefügt\nProblem behoben #[80]\nAllgemeine Aktualisierungen der Übersetzungen und Übersetzung von States",
-				"ru": "Добавить Sentry Plugin\nИсправлена проблема #[80]\nобщие обновления перевода и перевод состояний",
-				"pt": "Adicionar Plugin de Sentry\nCorrigir a questão #[80]\natualizações gerais de tradução e tradução de estados",
-				"nl": "Plugin\nQuality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
-				"fr": "Ajouter Sentry Plugin\nCorrection du numéro #[80]\nmises à jour générales de traduction et traduction des états",
-				"it": "Aggiungere Sentry Plugin\nProblema fisso #[80]\naggiornamenti generali di traduzione e traduzione degli stati",
-				"es": "Add Sentry Plugin\nEdición fija #[80]\nactualizaciones generales de traducción y traducción de estados",
-				"pl": "Add Sentry Plugin (ang.)\n#80 (ang.)\ntłumaczenie ogólne",
-				"uk": "Додати шлунок плагін\nФіксований випуск #[80] \nзагальні оновлення перекладу та переклад держав",
-				"zh-cn": "增 编\nFix #[80] Control/issues/80)\na. 总翻译更新和翻译国家"
-			},
-			"0.1.0": {
-				"en": "Latest Release",
-				"de": "Neuste Veröffentlichung",
-				"ru": "Последний релиз",
-				"pt": "Última versão",
-				"nl": "Laatste vrijlating",
-				"fr": "Dernière sortie",
-				"it": "Ultime notizie",
-				"es": "Última publicación",
-				"pl": "Latesta",
-				"uk": "Останні релізи",
-				"zh-cn": "试验释放"
-			},
-			"0.0.8": {
-				"en": "Ability to remove unused lights and sensors when deleting the light group\nSome code cleaning and update debug logs\nUpdate dependencies\nUpdate translations",
-				"de": "Möglichkeit, ungenutzte Lichter und Sensoren zu entfernen, wenn die Lichtgruppe gelöscht wird\nEinige Code-Bereinigung und Aktualisierungen von Debug-Logs\nAbhängigkeiten aktualisiert\nÜbersetzungen aktualisiert",
-				"ru": "Возможность удаления неиспользованных светильников и датчиков при удалении световой группы\nНекоторая чистка кода и обновление debug logs\nОбновить зависимости\nОбновление переводов",
-				"pt": "Capacidade de remover luzes e sensores não utilizados ao excluir o grupo de luz\nAlguns registros de limpeza e atualização de depuração de código\nDependências de atualização\nAtualizar traduções",
-				"nl": "Vermogen om onbruikbare lichten en sensoren te verwijderen als ze de lichtgroep verwijderen\nWat code schoonmaken en update debug logboeken\nUpdate afhankelijkheid\nVertaling:",
-				"fr": "Possibilité de supprimer les lumières et les capteurs inutilisés lors de la suppression du groupe de lumière\nNettoyage de code et mise à jour des journaux debug\nMettre à jour les dépendances\nMise à jour des traductions",
-				"it": "Capacità di rimuovere luci e sensori non utilizzati durante la cancellazione del gruppo di luce\nAlcuni codici di pulizia e aggiornamento dei registri di debug\nDipendenze di aggiornamento\nAggiornare le traduzioni",
-				"es": "Capacidad para eliminar luces y sensores no utilizados al eliminar el grupo de luz\nAlgunos registros de limpieza y actualización de código\nActualizar las dependencias\nTraducción actualizada",
-				"pl": "Możliwość usuwania nieużywanych światła i czujników, gdy wyładują grupę światła\nNiektóre kody czyszczą i aktualizują logi debugowe\nZależności aktualnej\nTłumaczenie aktualne",
-				"uk": "Можливість видалити невикористані вогні та датчики при видаленні світлової групи\nДеякі журнали очищення коду і оновлення\nОновлення залежності\nОновлення перекладів",
-				"zh-cn": "删除未用的照明和传感器的流动\n某些守则 清洁和更新纤维\n最新依赖\n最新翻译"
-			}
-		},
-		"titleLang": {
-			"en": "LightControl",
-			"de": "Lichtsteuerung",
-			"ru": "Управление освещением",
-			"pt": "Controle de luz",
-			"nl": "Lichtbesturing",
-			"fr": "Contrôle de la lumière",
-			"it": "Controllo della luce",
-			"es": "Control de luz",
-			"pl": "Sterowanie oświetleniem",
-			"zh-cn": "光控",
-			"uk": "LightControl"
-		},
-		"desc": {
-			"en": "Light control of lamps from various manufacturers",
-			"de": "Lichtsteuerung von Lampen verschiedener Hersteller",
-			"ru": "Управление светом светильников различных производителей",
-			"pt": "Controle de luz de lâmpadas de vários fabricantes",
-			"nl": "Lichtregeling van lampen van diverse fabrikanten",
-			"fr": "Contrôle de la lumière des lampes de différents fabricants",
-			"it": "Controllo della luce di lampade di vari produttori",
-			"es": "Control de luz de lámparas de varios fabricantes.",
-			"pl": "Sterowanie oświetleniem lamp różnych producentów",
-			"zh-cn": "各厂家灯具的光控",
-			"uk": "Контроль світла ламп різних виробників"
-		},
-		"authors": ["Schmakus <schmakus@gmail.com>"],
-		"keywords": ["light", "lightcontrol", "control", "motion", "motionsensor", "motiondetection"],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "lightcontrol.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
-		"readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "lighting",
-		"compact": true,
-		"messagebox": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"adminUI": {
-			"config": "json",
-			"custom": "json"
-		},
-		"plugins": {
-			"sentry": {
-				"dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229"
-			}
-		},
-		"supportCustoms": true,
-		"dependencies": [
-			{
-				"js-controller": ">=4.0.0"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=5.1.13"
-			}
-		]
-	},
-	"native": {
-		"_id": 0
-	},
-	"objects": [],
-	"instanceObjects": []
+  "common": {
+    "name": "lightcontrol",
+    "version": "0.1.2",
+    "news": {
+      "0.1.2": {
+        "en": "Some different small bugfixes and code cleaning\nFix: Update for ioBroker Beta-Repo\nFix: Adaptive Color-Temperature (failure by reading settings minCt and maxCt)",
+        "de": "Einige verschiedene kleine Bugfixes und Codereinigung\nFix: Update für ioBroker Beta-Repo\nFix: Adaptive Color-Temperatur (Versagen durch Leseeinstellungen minCt und maxCt)",
+        "ru": "Некоторые различные небольшие исправления и очистки кода\nFix: Обновление для ioBroker Beta-Repo\nИсправление: Адаптивный цвет-температуру (потеря по настройкам чтения minCt и maxCt)",
+        "pt": "Alguns pequenos bugfixs diferentes e limpeza de código\nFix: Atualização para ioBroker Beta-Repo\nFix: Adaptive Color-Temperature (falha pelas configurações de leitura minCt e maxCt)",
+        "nl": "Andere kleine insecten en code schoonmaken\nUpdate voor ioBroker Beta-Repo\nAdaptive Color-Temperature ( falen door het lezen van minct en maxCt)",
+        "fr": "Quelques petits bugfix différents et le nettoyage de code\nCorrection : Mise à jour pour ioBroker Beta-Repo\nFixe: Adaptive Color-Temperature (failure en lecture réglages minCt et maxCt)",
+        "it": "Alcuni diversi piccoli bugfix e pulizia del codice\nFix: Aggiornamento per ioBroker Beta-Repo\nFisso: Adaptive Color-Temperature (fallimento tramite le impostazioni di lettura minCt e maxCt)",
+        "es": "Algunos bugfixs diferentes y la limpieza de códigos\nCorrección: Actualización para ioBroker Beta-Repo\nFijación: Adaptive Color-Temperatura (failure by reading settings minCt and maxCt)",
+        "pl": "Niektóre małe trąbki i kod czyszczenie\nFix: Update for ioBroker Beta-Repo (ang.)\nFix: Adaptive Color-Temperature (ang.)",
+        "uk": "Деякі різні невеликі виправлення помилок і очищення коду\nВиправлення: Оновлення для ioBroker Beta-Repo\nВиправлення: Адаптивний колір-температура (дотримання параметрів читання minCt і maxCt)",
+        "zh-cn": "一些不同的小型配件和清洁守则\nFix:io Broker Beta-Repo的最新情况\nFix:Aaptive Color-Temperature(因阅读环境微克特和不可xCt而丧失)"
+      },
+      "0.1.1": {
+        "en": "Add Sentry Plugin\nFix issue [#80]\ngeneral translation updates and translation of states",
+        "de": "Sentry Plugin hinzugefügt\nProblem behoben #[80]\nAllgemeine Aktualisierungen der Übersetzungen und Übersetzung von States",
+        "ru": "Добавить Sentry Plugin\nИсправлена проблема #[80]\nобщие обновления перевода и перевод состояний",
+        "pt": "Adicionar Plugin de Sentry\nCorrigir a questão #[80]\natualizações gerais de tradução e tradução de estados",
+        "nl": "Plugin\nQuality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
+        "fr": "Ajouter Sentry Plugin\nCorrection du numéro #[80]\nmises à jour générales de traduction et traduction des états",
+        "it": "Aggiungere Sentry Plugin\nProblema fisso #[80]\naggiornamenti generali di traduzione e traduzione degli stati",
+        "es": "Add Sentry Plugin\nEdición fija #[80]\nactualizaciones generales de traducción y traducción de estados",
+        "pl": "Add Sentry Plugin (ang.)\n#80 (ang.)\ntłumaczenie ogólne",
+        "uk": "Додати шлунок плагін\nФіксований випуск #[80] \nзагальні оновлення перекладу та переклад держав",
+        "zh-cn": "增 编\nFix #[80] Control/issues/80)\na. 总翻译更新和翻译国家"
+      },
+      "0.1.0": {
+        "en": "Latest Release",
+        "de": "Neuste Veröffentlichung",
+        "ru": "Последний релиз",
+        "pt": "Última versão",
+        "nl": "Laatste vrijlating",
+        "fr": "Dernière sortie",
+        "it": "Ultime notizie",
+        "es": "Última publicación",
+        "pl": "Latesta",
+        "uk": "Останні релізи",
+        "zh-cn": "试验释放"
+      },
+      "0.0.8": {
+        "en": "Ability to remove unused lights and sensors when deleting the light group\nSome code cleaning and update debug logs\nUpdate dependencies\nUpdate translations",
+        "de": "Möglichkeit, ungenutzte Lichter und Sensoren zu entfernen, wenn die Lichtgruppe gelöscht wird\nEinige Code-Bereinigung und Aktualisierungen von Debug-Logs\nAbhängigkeiten aktualisiert\nÜbersetzungen aktualisiert",
+        "ru": "Возможность удаления неиспользованных светильников и датчиков при удалении световой группы\nНекоторая чистка кода и обновление debug logs\nОбновить зависимости\nОбновление переводов",
+        "pt": "Capacidade de remover luzes e sensores não utilizados ao excluir o grupo de luz\nAlguns registros de limpeza e atualização de depuração de código\nDependências de atualização\nAtualizar traduções",
+        "nl": "Vermogen om onbruikbare lichten en sensoren te verwijderen als ze de lichtgroep verwijderen\nWat code schoonmaken en update debug logboeken\nUpdate afhankelijkheid\nVertaling:",
+        "fr": "Possibilité de supprimer les lumières et les capteurs inutilisés lors de la suppression du groupe de lumière\nNettoyage de code et mise à jour des journaux debug\nMettre à jour les dépendances\nMise à jour des traductions",
+        "it": "Capacità di rimuovere luci e sensori non utilizzati durante la cancellazione del gruppo di luce\nAlcuni codici di pulizia e aggiornamento dei registri di debug\nDipendenze di aggiornamento\nAggiornare le traduzioni",
+        "es": "Capacidad para eliminar luces y sensores no utilizados al eliminar el grupo de luz\nAlgunos registros de limpieza y actualización de código\nActualizar las dependencias\nTraducción actualizada",
+        "pl": "Możliwość usuwania nieużywanych światła i czujników, gdy wyładują grupę światła\nNiektóre kody czyszczą i aktualizują logi debugowe\nZależności aktualnej\nTłumaczenie aktualne",
+        "uk": "Можливість видалити невикористані вогні та датчики при видаленні світлової групи\nДеякі журнали очищення коду і оновлення\nОновлення залежності\nОновлення перекладів",
+        "zh-cn": "删除未用的照明和传感器的流动\n某些守则 清洁和更新纤维\n最新依赖\n最新翻译"
+      }
+    },
+    "titleLang": {
+      "en": "LightControl",
+      "de": "Lichtsteuerung",
+      "ru": "Управление освещением",
+      "pt": "Controle de luz",
+      "nl": "Lichtbesturing",
+      "fr": "Contrôle de la lumière",
+      "it": "Controllo della luce",
+      "es": "Control de luz",
+      "pl": "Sterowanie oświetleniem",
+      "zh-cn": "光控",
+      "uk": "LightControl"
+    },
+    "desc": {
+      "en": "Light control of lamps from various manufacturers",
+      "de": "Lichtsteuerung von Lampen verschiedener Hersteller",
+      "ru": "Управление светом светильников различных производителей",
+      "pt": "Controle de luz de lâmpadas de vários fabricantes",
+      "nl": "Lichtregeling van lampen van diverse fabrikanten",
+      "fr": "Contrôle de la lumière des lampes de différents fabricants",
+      "it": "Controllo della luce di lampade di vari produttori",
+      "es": "Control de luz de lámparas de varios fabricantes.",
+      "pl": "Sterowanie oświetleniem lamp różnych producentów",
+      "zh-cn": "各厂家灯具的光控",
+      "uk": "Контроль світла ламп різних виробників"
+    },
+    "authors": [
+      "Schmakus <schmakus@gmail.com>"
+    ],
+    "keywords": [
+      "light",
+      "lightcontrol",
+      "control",
+      "motion",
+      "motionsensor",
+      "motiondetection"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "lightcontrol.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
+    "readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "lighting",
+    "compact": true,
+    "messagebox": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json",
+      "custom": "json"
+    },
+    "plugins": {
+      "sentry": {
+        "dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229"
+      }
+    },
+    "supportCustoms": true,
+    "dependencies": [
+      {
+        "js-controller": ">=4.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.13"
+      }
+    ]
+  },
+  "native": {
+    "_id": 0
+  },
+  "objects": [],
+  "instanceObjects": []
 }
