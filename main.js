@@ -994,7 +994,7 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async GetSystemData() {
 		try {
-			const obj = await this.getForeignObjectAsync("system.config", "state");
+			const obj = await this.getForeignObjectAsync("system.config");
 
 			if (obj && obj.common && obj.common.longitude && obj.common.latitude) {
 				this.lng = obj.common.longitude;
