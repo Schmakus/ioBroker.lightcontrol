@@ -1032,10 +1032,10 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * Set anyOn and Masterswitch Light State
+	 * @param {string} from From which Function?
 	 */
-	async SetLightState() {
+	async SetLightState(from = "noFunction") {
 		try {
-			this.log.debug("Reaching SetLightState: anyOn and Masterswitch");
 			const groupLength = Object.keys(this.LightGroups).length - 1;
 			const countGroups = await this.countGroups();
 
@@ -1043,7 +1043,9 @@ class Lightcontrol extends utils.Adapter {
 			await helper.SetValueToObject(this.LightGroups, "All.anyOn", countGroups > 0 ? true : false);
 			await helper.SetValueToObject(this.LightGroups, "All.power", countGroups === groupLength ? true : false);
 			await this.setStateAsync("All.anyOn", this.LightGroups.All.anyOn, true);
-			this.log.debug(`SetLightState => Set State "All.anyOn" to ${this.LightGroups.All.anyOn}`);
+			this.writeLog(
+				`[ SetLightState ] Set State "All.anyOn" to ${this.LightGroups.All.anyOn} from function="${from}"`,
+			);
 			await this.setStateAsync("All.power", this.LightGroups.All.power, true);
 		} catch (error) {
 			this.errorHandling(error, "SetLightState");
