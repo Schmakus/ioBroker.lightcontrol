@@ -153,34 +153,49 @@ class Lightcontrol extends utils.Adapter {
 						obj.common.custom[this.namespace] &&
 						obj.common.custom[this.namespace].enabled
 					) {
-						this.writeLog(
-							`[ onObjectChange ] Object array of LightControl activated state changed : ${JSON.stringify(
-								obj,
-							)} stored Objects : ${JSON.stringify(this.activeStates)}`,
-						);
-
-						// Verify if the object was already activated, if not initialize new parameter
-						if (!this.activeStates.includes(stateID)) {
-							this.writeLog(`[ onObjectChange ] Enable LightControl for : ${stateID}`, "info");
-							await this.buildLightGroupParameter(stateID);
-
-							if (!this.activeStates.includes(stateID)) {
-								this.writeLog(
-									`[ onObjectChange ] Cannot enable LightControl for ${stateID}, check settings and error messages`,
-									"warn",
-								);
+						//Check if its an own Lightcontrol State
+						if (stateID.includes(this.namespace)) {
+							this.writeLog(
+								`[ onObjectChange ] This Object-ID: "${stateID}" is not allowed, because it's an LightControl State! The settings will be deaktivated automatically!`,
+								"warn",
+							);
+							const stateInfo = await this.getForeignObjectAsync(stateID);
+							if (stateInfo?.common?.custom) {
+								stateInfo.common.custom[this.namespace].enabled = false;
+								await this.setForeignObjectAsync(stateID, stateInfo);
 							}
 						} else {
-							this.writeLog(`[ onObjectChange ] Updating LightControl configuration for : ${stateID}`);
-							//Cleaning LightGroups from ID and set it new
-							await this.deleteStateIdFromLightGroups(stateID);
-							await this.buildLightGroupParameter(stateID);
+							this.writeLog(
+								`[ onObjectChange ] Object array of LightControl activated state changed : ${JSON.stringify(
+									obj,
+								)} stored Objects : ${JSON.stringify(this.activeStates)}`,
+							);
 
+							// Verify if the object was already activated, if not initialize new parameter
 							if (!this.activeStates.includes(stateID)) {
+								this.writeLog(`[ onObjectChange ] Enable LightControl for : ${stateID}`, "info");
+								await this.buildLightGroupParameter(stateID);
+
+								if (!this.activeStates.includes(stateID)) {
+									this.writeLog(
+										`[ onObjectChange ] Cannot enable LightControl for ${stateID}, check settings and error messages`,
+										"warn",
+									);
+								}
+							} else {
 								this.writeLog(
-									`[ onObjectChange ] Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
-									"warn",
+									`[ onObjectChange ] Updating LightControl configuration for : ${stateID}`,
 								);
+								//Cleaning LightGroups from ID and set it new
+								await this.deleteStateIdFromLightGroups(stateID);
+								await this.buildLightGroupParameter(stateID);
+
+								if (!this.activeStates.includes(stateID)) {
+									this.writeLog(
+										`[ onObjectChange ] Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
+										"warn",
+									);
+								}
 							}
 						}
 					} else if (this.activeStates.includes(stateID)) {
@@ -1017,10 +1032,10 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * Set anyOn and Masterswitch Light State
+	 * @param {string} from From which Function?
 	 */
-	async SetLightState() {
+	async SetLightState(from = "noFunction") {
 		try {
-			this.log.debug("Reaching SetLightState: anyOn and Masterswitch");
 			const groupLength = Object.keys(this.LightGroups).length - 1;
 			const countGroups = await this.countGroups();
 
@@ -1028,7 +1043,9 @@ class Lightcontrol extends utils.Adapter {
 			await helper.SetValueToObject(this.LightGroups, "All.anyOn", countGroups > 0 ? true : false);
 			await helper.SetValueToObject(this.LightGroups, "All.power", countGroups === groupLength ? true : false);
 			await this.setStateAsync("All.anyOn", this.LightGroups.All.anyOn, true);
-			this.log.debug(`SetLightState => Set State "All.anyOn" to ${this.LightGroups.All.anyOn}`);
+			this.writeLog(
+				`[ SetLightState ] Set State "All.anyOn" to ${this.LightGroups.All.anyOn} from function="${from}"`,
+			);
 			await this.setStateAsync("All.power", this.LightGroups.All.power, true);
 		} catch (error) {
 			this.errorHandling(error, "SetLightState");
