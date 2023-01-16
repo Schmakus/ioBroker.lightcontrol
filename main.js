@@ -155,34 +155,49 @@ class Lightcontrol extends utils.Adapter {
 						obj.common.custom[this.namespace] &&
 						obj.common.custom[this.namespace].enabled
 					) {
-						this.writeLog(
-							`[ onObjectChange ] Object array of LightControl activated state changed : ${JSON.stringify(
-								obj,
-							)} stored Objects : ${JSON.stringify(this.activeStates)}`,
-						);
-
-						// Verify if the object was already activated, if not initialize new parameter
-						if (!this.activeStates.includes(stateID)) {
-							this.writeLog(`[ onObjectChange ] Enable LightControl for : ${stateID}`, "info");
-							await this.buildLightGroupParameter(stateID);
-
-							if (!this.activeStates.includes(stateID)) {
-								this.writeLog(
-									`[ onObjectChange ] Cannot enable LightControl for ${stateID}, check settings and error messages`,
-									"warn",
-								);
+						//Check if its an own Lightcontrol State
+						if (stateID.includes(this.namespace)) {
+							this.writeLog(
+								`[ onObjectChange ] This Object-ID: "${stateID}" is not allowed, because it's an LightControl State! The settings will be deaktivated automatically!`,
+								"warn",
+							);
+							const stateInfo = await this.getForeignObjectAsync(stateID);
+							if (stateInfo?.common?.custom) {
+								stateInfo.common.custom[this.namespace].enabled = false;
+								await this.setForeignObjectAsync(stateID, stateInfo);
 							}
 						} else {
-							this.writeLog(`[ onObjectChange ] Updating LightControl configuration for : ${stateID}`);
-							//Cleaning LightGroups from ID and set it new
-							await this.deleteStateIdFromLightGroups(stateID);
-							await this.buildLightGroupParameter(stateID);
+							this.writeLog(
+								`[ onObjectChange ] Object array of LightControl activated state changed : ${JSON.stringify(
+									obj,
+								)} stored Objects : ${JSON.stringify(this.activeStates)}`,
+							);
 
+							// Verify if the object was already activated, if not initialize new parameter
 							if (!this.activeStates.includes(stateID)) {
+								this.writeLog(`[ onObjectChange ] Enable LightControl for : ${stateID}`, "info");
+								await this.buildLightGroupParameter(stateID);
+
+								if (!this.activeStates.includes(stateID)) {
+									this.writeLog(
+										`[ onObjectChange ] Cannot enable LightControl for ${stateID}, check settings and error messages`,
+										"warn",
+									);
+								}
+							} else {
 								this.writeLog(
-									`[ onObjectChange ] Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
-									"warn",
+									`[ onObjectChange ] Updating LightControl configuration for : ${stateID}`,
 								);
+								//Cleaning LightGroups from ID and set it new
+								await this.deleteStateIdFromLightGroups(stateID);
+								await this.buildLightGroupParameter(stateID);
+
+								if (!this.activeStates.includes(stateID)) {
+									this.writeLog(
+										`[ onObjectChange ] Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
+										"warn",
+									);
+								}
 							}
 						}
 					} else if (this.activeStates.includes(stateID)) {
