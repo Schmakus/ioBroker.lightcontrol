@@ -53,10 +53,7 @@
 
 # 2. Installation
 
-The adapter is in the test phase and is not yet released by ioBroker.
-To install you have to go to the ioBroker adapter tab and click on the "Cat" (expert setting) "Custom".
-Then add the Github link: [https://github.com/Schmakus/ioBroker.lightcontrol.git](https://github.com/Schmakus/ioBroker.lightcontrol.git).
-
+The adapter is in the beta-repository of ioBroker
 After the download you can click on the (+) an instance.
 
 ---

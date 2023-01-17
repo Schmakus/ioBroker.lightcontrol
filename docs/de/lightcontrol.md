@@ -53,10 +53,7 @@
 
 # 2. Installation
 
-Der Adapter befindet sich in der Testphase und ist noch nicht bei ioBroker released.
-Um ihn installieren zu können muss man zu den Adapter von ioBroker gehen und über die "Katze" (Experteneinstellung) "Benutzerdefiniert" anklicken.
-Dann den Github-Link: [https://github.com/Schmakus/ioBroker.lightcontrol.git](https://github.com/Schmakus/ioBroker.lightcontrol.git) einfügen.
-
+Der Adapter befindet sich in der Beta-Repository des ioBrokers.
 Nach dem Download kann man durch anklicken des (+) eine Instanz angelgen.
 
 ---
@@ -215,12 +212,14 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
 -   **Gruppe**
 
     -   **autoOffLux:** AutoOff des Lichts bei erreichen einer Helligkeitsschwelle
+
         -   **enabled:** AutoOff bei Helligkeit aktivieren/deaktivieren
         -   **minLux:** minimaler Lichtwert
         -   **dailyLock:** Bei false wird AutoOffTimed nicht ausgeführt
         -   **operator:** Vergleich ob Licht über oder unter _minLux_ ausgehen soll (z.B. > / < / >= / <=)
 
     -   **autoOffTimed:** AutoOff nach fest eingestellter Zeit (Nur in Verbindung mit den Sensoren)
+
         -   **enabled:** AutoOff aktivieren/deaktivieren
         -   **autoOffTime:** Zeit bis AutoOff in Sekunden
         -   **noAutoOffWhenMotion:** AutoOff resetten bei erneuter Bewegung
@@ -229,6 +228,7 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
         -   **noticeTime:** Zeit in Sekunden wann der Hinweis aktiviert wird bevor AutoOff
 
     -   **autoOnLux:** Automatisch Licht ein bei Lux
+
         -   **enabled:** Aktivieren/Deaktivieren
         -   **minLux:** Lux-Schwellwert für das Schalten
         -   **bri:** Helligkeit, mit der das Licht an geht
@@ -239,18 +239,21 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
         -   **operator:** Vergleich ob Licht über oder unter _minLux_ ausgehen soll (z.B. > / < / >= / <=)
 
     -   **autoOnMotion:** Automatisch Licht ein bei Bewegung
+
         -   **enabled:** Aktivieren/Deaktivieren
         -   **minLux:** Lux-Schwellwert für das Schalten
         -   **bri:** Helligkeit, mit der das Licht an geht
         -   **color:** Farbe, mit das Licht an geht
 
     -   **autoOnPresenceIncrease:** Automatisch Licht ein, wenn sich der Wert des Anwesenheitszähler größe als der letztere war
+
         -   **enabled:** Aktivieren/Deaktivieren
         -   **minLux:** Lux-Schwellwert für das Schalten
         -   **bri:** Helligkeit, mit der das Licht an geht
         -   **color:** Farbe, mit das Licht an geht
 
     -   **blink:** Blinken
+
         -   **enabled:** Startet Blinken in Endlosschleife, => false beendet Blinken
         -   **start:** Startet Blinken bis Anzahl erreicht.
         -   **frequency:** Blinkfrequenz in Sekunden
@@ -259,11 +262,13 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
         -   **color:** Farbe der Lampen beim Blinken
 
     -   **rampOff:** Runterdimmen beim Ausschalten
+
         -   **enabled:** Aktivieren/Deaktivieren
         -   **time:** Zeit für das Runterdimmen (sollte nicht kleiner als 10 Sekunden sein)
         -   **switchOutletsLast:** Lampen welche nur ein-/ausgeschaltet werden zuletzt aktivieren?
 
     -   **rampOn:** Hochdimmen beim Einschalten
+
         -   **enabled:** Aktivieren/Deaktivieren
         -   **time:** Zeit für das Hochdimmen (sollte nicht kleiner als 10 Sekunden sein)
         -   **switchOutletsLast:** Lampen welche nur ein-/ausgeschaltet werden zuletzt aktivieren?
