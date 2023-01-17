@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.1.2",
+		"version": "0.1.3",
 		"news": {
+			"0.1.3": {
+				"en": "Added AdaptiveCt functionality. Was not implemented in older versions.",
+				"de": "AdaptiveCt-Funktionalität hinzugefügt. Wurde nicht in älteren Versionen implementiert.",
+				"ru": "Добавьте функциональность AdapteriveCt. Не было реализовано в старых версиях.",
+				"pt": "Adicione a funcionalidade AdaptiveCt. Não foi implementado em versões mais antigas.",
+				"nl": "AdaptiveCt functionaliteit. Werd niet geïnfiltreerd in oudere versies.",
+				"fr": "Ajouter la fonctionnalité AdaptiveCt. Elle n ' a pas été mise en œuvre dans des versions plus anciennes.",
+				"it": "Aggiungi funzionalità AdaptiveCt. Non è stato implementato nelle versioni precedenti.",
+				"es": "Añadir funcionalidad AdaptiveCt. No se implementó en versiones anteriores.",
+				"pl": "Funkcja adaptacyjna. Nie został zrealizowany w starszych wersjach.",
+				"uk": "Додати функцію адаптивногоCt. Не реалізовано в старих версіях.",
+				"zh-cn": "增加功能。 未在较长的版本中实施瓦斯。."
+			},
 			"0.1.2": {
 				"en": "Some different small bugfixes and code cleaning\nFix: Update for ioBroker Beta-Repo\nFix: Adaptive Color-Temperature (failure by reading settings minCt and maxCt)",
 				"de": "Einige verschiedene kleine Bugfixes und Codereinigung\nFix: Update für ioBroker Beta-Repo\nFix: Adaptive Color-Temperatur (Versagen durch Leseeinstellungen minCt und maxCt)",
