@@ -40,6 +40,10 @@ Light control of lamps from various manufacturers
 	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
 
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Update adaptername translations in io-package.json
+
 ### 0.1.3 (2023-01-17)
 
 -   (Schmakus) Added AdaptiveCt functionality. Was not implemented in older versions.
