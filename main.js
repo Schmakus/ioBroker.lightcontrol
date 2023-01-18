@@ -496,7 +496,7 @@ class Lightcontrol extends utils.Adapter {
 								);
 							}
 						} else {
-							this.writeLog(`No Light and Sensor configurations found`);
+							this.writeLog(`[ InitCustomStates ] No Light and Sensor configurations found`);
 						}
 					}
 				}
