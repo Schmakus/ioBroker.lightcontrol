@@ -43,6 +43,7 @@ Light control of lamps from various manufacturers
 ### **WORK IN PROGRESS**
 
 -   (Schmakus) Update adaptername translations in io-package.json
+-   (Schmakus) Some little bugfixes and corrections for logging
 
 ### 0.1.3 (2023-01-17)
 
