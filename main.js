@@ -495,8 +495,6 @@ class Lightcontrol extends utils.Adapter {
 									`[ InitCustomStates ] LightControl configuration found but not Enabled, skipping ${stateID}`,
 								);
 							}
-						} else {
-							this.writeLog(`[ InitCustomStates ] No Light and Sensor configurations found`);
 						}
 					}
 				}
