@@ -9,11 +9,11 @@
 ![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/iobroker.lightcontrol?label=npm%20dependencies&style=flat-square)
 [![Translation status](https://weblate.iobroker.net/widgets/adapters/-/lightcontrol/svg-badge.svg)](https://weblate.iobroker.net/engage/adapters/?utm_source=widget)
 
-![GitHub](https://img.shields.io/github/license/klein0r/iobroker.lightcontrol?style=flat-square)
-![GitHub repo size](https://img.shields.io/github/repo-size/klein0r/iobroker.lightcontrol?logo=github&style=flat-square)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/klein0r/iobroker.lightcontrol?logo=github&style=flat-square)
-![GitHub last commit](https://img.shields.io/github/last-commit/klein0r/iobroker.lightcontrol?logo=github&style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues/klein0r/iobroker.lightcontrol?logo=github&style=flat-square)
+![GitHub](https://img.shields.io/github/license/schmakus/iobroker.lightcontrol?style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/schmakus/iobroker.lightcontrol?logo=github&style=flat-square)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/schmakus/iobroker.lightcontrol?logo=github&style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/schmakus/iobroker.lightcontrol?logo=github&style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/schmakus/iobroker.lightcontrol?logo=github&style=flat-square)
 
 ![Test and Release](https://github.com/Schmakus/ioBroker.lightcontrol/workflows/Test%20and%20Release/badge.svg)
 
