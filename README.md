@@ -12,17 +12,31 @@
 
 **Tests:** ![Test and Release](https://github.com/Schmakus/ioBroker.lightcontrol/workflows/Test%20and%20Release/badge.svg)
 
+## Versions
+
+![Beta](https://img.shields.io/npm/v/iobroker.birthdays.svg?color=red&label=beta)
+
+<!--![Stable](http://iobroker.live/badges/birthdays-stable.svg)-->
+
+![Installed](http://iobroker.live/badges/birthdays-installed.svg)
+
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
-**Falls euch meine Arbeit gefällt:** [![Paypal Donation](https://img.shields.io/badge/paypal-donate%20%7C%20spenden-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PK89K4V2RBU78&source=url)
+**If you like my work:** [![Paypal Donation](https://img.shields.io/badge/paypal-donate%20%7C%20spenden-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PK89K4V2RBU78&source=url)
 
-## LightControl adapter for ioBroker
+## Installation
 
-Light control of lamps from various manufacturers
+Please use the "adapter list" & Beta Repository in ioBroker to install a beta version of this adapter. You can also use the CLI to install this adapter:
 
-[Deutsche Beschreibung hier](docs/de/lightcontrol.md)
+```
+iobroker add lightcontrol
+```
 
-[English Description here](docs/en/lightcontrol.md)
+## Documentation
+
+[🇺🇸 Documentation](./en/lightcontrol.md)
+
+[🇩🇪 Dokumentation](./docs/de/lightcontrol.md)
 
 ## ToDo
 
