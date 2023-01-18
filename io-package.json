@@ -71,16 +71,16 @@
 		},
 		"titleLang": {
 			"en": "LightControl",
-			"de": "Lichtsteuerung",
-			"ru": "Управление освещением",
+			"de": "LightControl",
+			"ru": "LightControl",
 			"pt": "Controle de luz",
-			"nl": "Lichtbesturing",
-			"fr": "Contrôle de la lumière",
+			"nl": "LightControl",
+			"fr": "LightControl",
 			"it": "Controllo della luce",
-			"es": "Control de luz",
-			"pl": "Sterowanie oświetleniem",
-			"zh-cn": "光控",
-			"uk": "LightControl"
+			"es": "LightControl",
+			"pl": "LightControl",
+			"uk": "Управління",
+			"zh-cn": "A. 灯 律"
 		},
 		"desc": {
 			"en": "Light control of lamps from various manufacturers",
