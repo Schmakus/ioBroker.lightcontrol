@@ -9,6 +9,12 @@
 ![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/iobroker.lightcontrol?label=npm%20dependencies&style=flat-square)
 [![Translation status](https://weblate.iobroker.net/widgets/adapters/-/lightcontrol/svg-badge.svg)](https://weblate.iobroker.net/engage/adapters/?utm_source=widget)
 
+![GitHub](https://img.shields.io/github/license/klein0r/iobroker.lightcontrol?style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/klein0r/iobroker.lightcontrol?logo=github&style=flat-square)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/klein0r/iobroker.lightcontrol?logo=github&style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/klein0r/iobroker.lightcontrol?logo=github&style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/klein0r/iobroker.lightcontrol?logo=github&style=flat-square)
+
 ![Test and Release](https://github.com/Schmakus/ioBroker.lightcontrol/workflows/Test%20and%20Release/badge.svg)
 
 [![NPM](https://nodei.co/npm/iobroker.lightcontrol.png?downloads=true)](https://nodei.co/npm/iobroker.lightcontrol/)
@@ -21,7 +27,7 @@
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
-## If you like my work:\*\*
+## If you like my work:
 
 [![Paypal Donation](https://img.shields.io/badge/paypal-donate%20%7C%20spenden-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PK89K4V2RBU78&source=url)
 
