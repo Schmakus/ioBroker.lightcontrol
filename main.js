@@ -559,6 +559,9 @@ class Lightcontrol extends utils.Adapter {
 			try {
 				// Load configuration as provided in object
 				stateInfo = await this.getForeignObjectAsync(stateID);
+
+				/** @type {ioBroker.StateObject} */
+
 				if (!stateInfo) {
 					this.writeLog(
 						`[ buildStateDetailsArray ] Can't get information for ${stateID}, state will be ignored`,
