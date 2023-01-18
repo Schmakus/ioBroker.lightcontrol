@@ -133,7 +133,15 @@
 		]
 	},
 	"native": {
-		"_id": 0
+		"_id": 0,
+		"deleteUnusedConfig": true,
+		"GlobalLuxSensor": "",
+		"minCt": 2700,
+		"maxCt": 6500,
+		"RampSteps": 10,
+		"minBri": 10,
+		"IsPresenceDp": "",
+		"PresenceCountDp": ""
 	},
 	"objects": [],
 	"instanceObjects": []
