@@ -4,8 +4,9 @@
 
 [![NPM version](https://img.shields.io/npm/v/iobroker.lightcontrol.svg)](https://www.npmjs.com/package/iobroker.lightcontrol)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.lightcontrol.svg)](https://www.npmjs.com/package/iobroker.lightcontrol)
-![Number of Installations](https://iobroker.live/badges/lightcontrol-installed.svg)
-![Current version in stable repository](https://iobroker.live/badges/lightcontrol-stable.svg)
+![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/iobroker.lightcontrol?label=npm%20vulnerabilities&style=flat-square)
+![node-lts](https://img.shields.io/node/v-lts/iobroker.lightcontrol?style=flat-square)
+![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/iobroker.lightcontrol?label=npm%20dependencies&style=flat-square)
 [![Translation status](https://weblate.iobroker.net/widgets/adapters/-/lightcontrol/svg-badge.svg)](https://weblate.iobroker.net/engage/adapters/?utm_source=widget)
 
 [![NPM](https://nodei.co/npm/iobroker.lightcontrol.png?downloads=true)](https://nodei.co/npm/iobroker.lightcontrol/)
@@ -14,15 +15,15 @@
 
 ## Versions
 
-![Beta](https://img.shields.io/npm/v/iobroker.birthdays.svg?color=red&label=beta)
-
-<!--![Stable](http://iobroker.live/badges/birthdays-stable.svg)-->
-
-![Installed](http://iobroker.live/badges/birthdays-installed.svg)
+![Beta](https://img.shields.io/npm/v/iobroker.lightcontrol.svg?color=red&label=beta)
+![Stable](http://iobroker.live/badges/lightcontrol-stable.svg)
+![Installed](http://iobroker.live/badges/lightcontrol-installed.svg)
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
-**If you like my work:** [![Paypal Donation](https://img.shields.io/badge/paypal-donate%20%7C%20spenden-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PK89K4V2RBU78&source=url)
+## If you like my work:\*\*
+
+[![Paypal Donation](https://img.shields.io/badge/paypal-donate%20%7C%20spenden-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PK89K4V2RBU78&source=url)
 
 ## Installation
 
