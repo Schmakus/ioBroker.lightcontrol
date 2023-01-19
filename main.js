@@ -643,7 +643,7 @@ class Lightcontrol extends utils.Adapter {
 				//Add Id to custom data
 				customData.oid = stateID;
 				const params = {
-					bri: ["oid", "minVal", "maxVal", "defaultBri", "sendBri"],
+					bri: ["oid", "minVal", "maxVal", "defaultBri", "useBri"],
 					power: ["oid", "onVal", "offVal"],
 					ct: ["oid", "minVal", "maxVal", "sendCt"],
 					sat: ["oid", "minVal", "maxVal", "sendCt"],
@@ -1088,7 +1088,7 @@ class Lightcontrol extends utils.Adapter {
 							if (Lights[key]) {
 								if (Lights[key].oid === stateID) {
 									this.writeLog(
-										`deleteStateIdFromLightGroups => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
+										`ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
 										"info",
 									);
 									delete Lights[key];
@@ -1101,7 +1101,7 @@ class Lightcontrol extends utils.Adapter {
 						const count = Object.keys(lightArray[i]).length;
 						if (count === 1) {
 							this.writeLog(
-								`deleteStateIdFromLightGroups => Light: ${lightArray[i].description} will be deleted, because no Object-IDs are defined.`,
+								`Light: ${lightArray[i].description} will be deleted, because no Object-IDs are defined.`,
 								"info",
 							);
 							lightArray.splice(i, 1);
@@ -1119,7 +1119,7 @@ class Lightcontrol extends utils.Adapter {
 					const equalsCheck = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
 					if (!equalsCheck(_oldArray, this.LightGroups[Groups].sensors)) {
 						this.writeLog(
-							`onObjectChange => Sensor with ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}"`,
+							`Sensor with ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}"`,
 							"info",
 						);
 					}
