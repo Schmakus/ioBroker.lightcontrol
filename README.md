@@ -63,8 +63,10 @@ iobroker add lightcontrol
 
 ### **WORK IN PROGRESS**
 
+-   (Schmakus) Added new Modus for AdaptiveCt: StartYourDay interplated. It's a sinus half curve from morning time to sunset.
 -   (Schmakus) Update adaptername translations in io-package.json
 -   (Schmakus) Some little bugfixes and corrections for logging
+-   (Schmakus) Fix AdaptiveCt, because there was a problem with date object.
 
 ### 0.1.3 (2023-01-17)
 
