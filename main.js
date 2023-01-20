@@ -761,8 +761,8 @@ class Lightcontrol extends utils.Adapter {
 			let handeled = false;
 
 			this.writeLog(
-				`[ Controller ] Reaching, Group="${Group}" Property="${prop1}" NewVal="${NewVal}", OldVal="${
-					OldVal === undefined ? "" : OldVal
+				`[ Controller ] Reaching, Group="${Group}" Property="${prop1}" NewVal="${NewVal}", ${
+					OldVal === undefined ? "" : "OldVal=" + OldVal
 				}"`,
 				"info",
 			);
