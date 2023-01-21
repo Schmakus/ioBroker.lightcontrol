@@ -232,9 +232,9 @@ class Lightcontrol extends utils.Adapter {
 	async onMessage(msg) {
 		this.writeLog(`[ onMessage ] Incomming Message from: ${JSON.stringify(msg)}`);
 		if (msg.callback) {
-			try {
-				switch (msg.command) {
-					case "LightGroup": {
+			switch (msg.command) {
+				case "LightGroup": {
+					try {
 						const groups = [];
 						if (Object.keys(this.LightGroups).length !== 0) {
 							for (const Group in this.LightGroups) {
@@ -245,10 +245,14 @@ class Lightcontrol extends utils.Adapter {
 						}
 						this.sendTo(msg.from, msg.command, groups, msg.callback);
 						this.writeLog(`[ onMessage ] LightGroup => LightGroups Callback: ${JSON.stringify(groups)}.`);
-						break;
+					} catch (error) {
+						this.errorHandling(error, "onMessage // case LightGroup");
 					}
+					break;
+				}
 
-					case "LightName": {
+				case "LightName": {
+					try {
 						const LightGroups = msg.message.LightGroups;
 						this.writeLog(`[ onMessage ] LightName => getLights for Groups: ${LightGroups}.`);
 						const lights = [];
@@ -265,10 +269,14 @@ class Lightcontrol extends utils.Adapter {
 
 						if (!lights.length) lights.push({ value: "Example_Light", label: "Example_Light" });
 						this.sendTo(msg.from, msg.command, lights, msg.callback);
-						break;
+					} catch (error) {
+						this.errorHandling(error, "onMessage // case LightName");
 					}
+					break;
+				}
 
-					case "id": {
+				case "id": {
+					try {
 						const value = msg.message.value;
 						this.writeLog(`[ onMessage ] id => Set new ID. Value = ${value}.`);
 						if (msg.message.value !== null) {
@@ -284,10 +292,14 @@ class Lightcontrol extends utils.Adapter {
 							this.writeLog(`[ onMessage ] id => Set new ID. OldID = ${oldID}, NewID = ${newID}`);
 							this.sendTo(msg.from, msg.command, newID.toString(), msg.callback);
 						}
-						break;
+					} catch (error) {
+						this.errorHandling(error, "onMessage // case id");
 					}
+					break;
+				}
 
-					case "checkIdForDuplicates": {
+				case "checkIdForDuplicates": {
+					try {
 						this.writeLog(`[ onMessage ] checkcheckIdForDuplicates`);
 						this.writeLog(JSON.stringify(msg.message));
 
@@ -326,11 +338,11 @@ class Lightcontrol extends utils.Adapter {
 						} else {
 							this.sendTo(msg.from, msg.command, "", msg.callback);
 						}
-						break;
+					} catch (error) {
+						this.errorHandling(error, "onMessage // case checkIdForDuplicates");
 					}
+					break;
 				}
-			} catch (error) {
-				this.errorHandling(error, "onMessage");
 			}
 		}
 	}
@@ -352,10 +364,12 @@ class Lightcontrol extends utils.Adapter {
 						const NewVal = state.val;
 						let OldVal;
 
+						/*
 						const _state = await helper.CheckInputGeneral(this, id, state);
 						this.writeLog(
 							`[ onStateChange ] CheckInputGeneral for ${id} with state: ${NewVal} is: ${_state}`,
 						);
+						*/
 
 						const OwnId = await helper.removeNamespace(this, id);
 						const Group = (await helper.ExtractGroupAndProp(OwnId)).Group;
