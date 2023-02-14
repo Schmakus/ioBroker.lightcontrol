@@ -253,21 +253,30 @@ class Lightcontrol extends utils.Adapter {
 
 				case "LightName": {
 					try {
-						const LightGroups = msg.message.LightGroups;
-						this.writeLog(`[ onMessage ] LightName => getLights for Groups: ${LightGroups}.`);
+						const lightGroups = msg.message.LightGroups;
+						const DEFAULT_LIGHT = { value: "Example_Light", label: "Example_Light" };
+						this.writeLog(`[ onMessage ] LightName => getLights for Groups: ${lightGroups}.`);
 						const lights = [];
-						if (LightGroups) {
-							if (this.LightGroups && this.LightGroups[LightGroups]) {
-								for (const light of Object.values(this.LightGroups[LightGroups].lights)) {
+
+						if (
+							lightGroups &&
+							this.LightGroups &&
+							Object.prototype.hasOwnProperty.call(this.LightGroups, lightGroups)
+						) {
+							const group = this.LightGroups[lightGroups];
+							if (group && group.lights) {
+								for (const light of group.lights) {
 									lights.push({ value: light.description, label: light.description });
 									this.writeLog(
-										`[ onMessage ] LightName => Light: ${light.description} in Group: ${LightGroups} found.`,
+										`[ onMessage ] LightName => Light: ${light.description} in Group: ${lightGroups} found.`,
 									);
 								}
 							}
 						}
 
-						if (!lights.length) lights.push({ value: "Example_Light", label: "Example_Light" });
+						if (!lights.length) {
+							lights.push(DEFAULT_LIGHT);
+						}
 						this.sendTo(msg.from, msg.command, lights, msg.callback);
 					} catch (error) {
 						this.errorHandling(error, "onMessage // case LightName");
