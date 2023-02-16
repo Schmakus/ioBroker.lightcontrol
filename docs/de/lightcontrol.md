@@ -236,7 +236,7 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
         -   **switchOnlyWhenPresence:** Nur Schalten, wenn jemand zuhause ist
         -   **switchOnlyWhenNoPresence:** Nur schalten, wenn niemand zu hause ist
         -   **dailyLock:** Bei false wird AutoOnLux nicht ausgeführt
-        -   **operator:** Vergleich ob Licht über oder unter _minLux_ ausgehen soll (z.B. > / < / >= / <=)
+        -   **operator:** Vergleich ob Licht über oder unter _minLux_ angehen soll (z.B. > / < / >= / <=)
 
     -   **autoOnMotion:** Automatisch Licht ein bei Bewegung
 
