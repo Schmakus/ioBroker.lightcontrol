@@ -859,6 +859,8 @@ class Lightcontrol extends utils.Adapter {
 					break;
 				case "autoOnLux.enabled":
 					break;
+				case "autoOnLux.operator":
+					break;
 				case "autoOnLux.switchOnlyWhenNoPresence":
 					break;
 				case "autoOnLux.switchOnlyWhenPresence":
