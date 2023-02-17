@@ -790,7 +790,7 @@ class Lightcontrol extends utils.Adapter {
 				"info",
 			);
 
-			await helper.SetValueToObject(LightGroups[Group], prop1, NewVal);
+			if (prop1 !== "power") await helper.SetValueToObject(LightGroups[Group], prop1, NewVal);
 
 			switch (prop1) {
 				case "actualLux":
