@@ -57,12 +57,11 @@ iobroker add lightcontrol
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
-
-	-   (Schmakus) Add: Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -->
 
 ### **WORK IN PROGRESS**
 
+-   (Schmakus) Added: If you want, Set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -   (Schmakus) Added new Modus for AdaptiveCt: StartYourDay interplated. It's a sinus half curve from morning time to sunset.
 -   (Schmakus) Update adaptername translations in io-package.json
 -   (Schmakus) Some little bugfixes and corrections for logging
