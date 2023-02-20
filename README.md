@@ -49,8 +49,6 @@ iobroker add lightcontrol
 
 -   Select more than one LightGroup for one Object-ID (Bug with jsonCustom Select multible)
 -   Availability for notice with lower brighness and defined seconds before AutoOff
--   Set Ct, Sat and Color directly to the lamp, also if it's switched off.
--   Availability to switch on/off lights only with level/brightness state and without switch state
 
 ## Changelog
 
@@ -61,7 +59,8 @@ iobroker add lightcontrol
 
 ### **WORK IN PROGRESS**
 
--   (Schmakus) Added: If you want, Set Ct, Sat and Color directly to the lamp, also if it's switched off.
+-   (Schmakus) Availability to switch on/off lights only with level/brightness state and without switch state
+-   (Schmakus) Availability to set Ct, Sat and Color directly to the lamp, also if it's switched off.
 -   (Schmakus) Added new Modus for AdaptiveCt: StartYourDay interplated. It's a sinus half curve from morning time to sunset.
 -   (Schmakus) Update adaptername translations in io-package.json
 -   (Schmakus) Some little bugfixes and corrections for logging
