@@ -216,7 +216,7 @@ After opening the settings, the configuration must be activated:
         -   **enabled:** Enable/disable AutoOff at brightness
         -   **minLux:** minimum light value
         -   **dailyLock:** AutoOffTimed not running if false
-        -   **operator:** Compare if light should go above or below _minLux_ (e.g., > / < / >= / <=)
+        -   **operator:** Compare if light should off above or below _minLux_ (e.g., > / < / >= / <=)
 
     -   **autoOffTimed:** AutoOff after fixed time (only in connection with the sensors)
 
@@ -236,7 +236,7 @@ After opening the settings, the configuration must be activated:
         -   **switchOnlyWhenPresence:** Only switch when someone is at home
         -   **switchOnlyWhenNoPresence:** Only switch when no one is at home
         -   **dailyLock:** AutoOnLux does not run if false
-        -   **operator:** Compare if light should go above or below _minLux_ (e.g., > / < / >= / <=)
+        -   **operator:** Compare if light should on above or below _minLux_ (e.g., > / < / >= / <=)
 
     -   **autoOnMotion:** Automatically light on when moving
 

@@ -232,9 +232,9 @@ class Lightcontrol extends utils.Adapter {
 	async onMessage(msg) {
 		this.writeLog(`[ onMessage ] Incomming Message from: ${JSON.stringify(msg)}`);
 		if (msg.callback) {
-			try {
-				switch (msg.command) {
-					case "LightGroup": {
+			switch (msg.command) {
+				case "LightGroup": {
+					try {
 						const groups = [];
 						if (Object.keys(this.LightGroups).length !== 0) {
 							for (const Group in this.LightGroups) {
@@ -245,30 +245,47 @@ class Lightcontrol extends utils.Adapter {
 						}
 						this.sendTo(msg.from, msg.command, groups, msg.callback);
 						this.writeLog(`[ onMessage ] LightGroup => LightGroups Callback: ${JSON.stringify(groups)}.`);
-						break;
+					} catch (error) {
+						this.errorHandling(error, "onMessage // case LightGroup");
 					}
+					break;
+				}
 
-					case "LightName": {
-						const LightGroups = msg.message.LightGroups;
-						this.writeLog(`[ onMessage ] LightName => getLights for Groups: ${LightGroups}.`);
+				case "LightName": {
+					try {
+						const lightGroups = msg.message.LightGroups;
+						const DEFAULT_LIGHT = { value: "Example_Light", label: "Example_Light" };
+						this.writeLog(`[ onMessage ] LightName => getLights for Groups: ${lightGroups}.`);
 						const lights = [];
-						if (LightGroups) {
-							if (this.LightGroups && this.LightGroups[LightGroups]) {
-								for (const light of Object.values(this.LightGroups[LightGroups].lights)) {
+
+						if (
+							lightGroups &&
+							this.LightGroups &&
+							Object.prototype.hasOwnProperty.call(this.LightGroups, lightGroups)
+						) {
+							const group = this.LightGroups[lightGroups];
+							if (group && group.lights) {
+								for (const light of group.lights) {
 									lights.push({ value: light.description, label: light.description });
 									this.writeLog(
-										`[ onMessage ] LightName => Light: ${light.description} in Group: ${LightGroups} found.`,
+										`[ onMessage ] LightName => Light: ${light.description} in Group: ${lightGroups} found.`,
 									);
 								}
 							}
 						}
 
-						if (!lights.length) lights.push({ value: "Example_Light", label: "Example_Light" });
+						if (!lights.length) {
+							lights.push(DEFAULT_LIGHT);
+						}
 						this.sendTo(msg.from, msg.command, lights, msg.callback);
-						break;
+					} catch (error) {
+						this.errorHandling(error, "onMessage // case LightName");
 					}
+					break;
+				}
 
-					case "id": {
+				case "id": {
+					try {
 						const value = msg.message.value;
 						this.writeLog(`[ onMessage ] id => Set new ID. Value = ${value}.`);
 						if (msg.message.value !== null) {
@@ -284,10 +301,14 @@ class Lightcontrol extends utils.Adapter {
 							this.writeLog(`[ onMessage ] id => Set new ID. OldID = ${oldID}, NewID = ${newID}`);
 							this.sendTo(msg.from, msg.command, newID.toString(), msg.callback);
 						}
-						break;
+					} catch (error) {
+						this.errorHandling(error, "onMessage // case id");
 					}
+					break;
+				}
 
-					case "checkIdForDuplicates": {
+				case "checkIdForDuplicates": {
+					try {
 						this.writeLog(`[ onMessage ] checkcheckIdForDuplicates`);
 						this.writeLog(JSON.stringify(msg.message));
 
@@ -326,11 +347,11 @@ class Lightcontrol extends utils.Adapter {
 						} else {
 							this.sendTo(msg.from, msg.command, "", msg.callback);
 						}
-						break;
+					} catch (error) {
+						this.errorHandling(error, "onMessage // case checkIdForDuplicates");
 					}
+					break;
 				}
-			} catch (error) {
-				this.errorHandling(error, "onMessage");
 			}
 		}
 	}
@@ -352,10 +373,12 @@ class Lightcontrol extends utils.Adapter {
 						const NewVal = state.val;
 						let OldVal;
 
+						/*
 						const _state = await helper.CheckInputGeneral(this, id, state);
 						this.writeLog(
 							`[ onStateChange ] CheckInputGeneral for ${id} with state: ${NewVal} is: ${_state}`,
 						);
+						*/
 
 						const OwnId = await helper.removeNamespace(this, id);
 						const Group = (await helper.ExtractGroupAndProp(OwnId)).Group;
@@ -495,8 +518,6 @@ class Lightcontrol extends utils.Adapter {
 									`[ InitCustomStates ] LightControl configuration found but not Enabled, skipping ${stateID}`,
 								);
 							}
-						} else {
-							this.writeLog(`No Light and Sensor configurations found`, "warn");
 						}
 					}
 				}
@@ -559,6 +580,9 @@ class Lightcontrol extends utils.Adapter {
 			try {
 				// Load configuration as provided in object
 				stateInfo = await this.getForeignObjectAsync(stateID);
+
+				/** @type {ioBroker.StateObject} */
+
 				if (!stateInfo) {
 					this.writeLog(
 						`[ buildStateDetailsArray ] Can't get information for ${stateID}, state will be ignored`,
@@ -642,7 +666,7 @@ class Lightcontrol extends utils.Adapter {
 				//Add Id to custom data
 				customData.oid = stateID;
 				const params = {
-					bri: ["oid", "minVal", "maxVal", "defaultBri", "sendBri"],
+					bri: ["oid", "minVal", "maxVal", "defaultBri", "useBri"],
 					power: ["oid", "onVal", "offVal"],
 					ct: ["oid", "minVal", "maxVal", "sendCt"],
 					sat: ["oid", "minVal", "maxVal", "sendCt"],
@@ -760,13 +784,13 @@ class Lightcontrol extends utils.Adapter {
 			let handeled = false;
 
 			this.writeLog(
-				`[ Controller ] Reaching, Group="${Group}" Property="${prop1}" NewVal="${NewVal}", OldVal="${
-					OldVal === undefined ? "" : OldVal
+				`[ Controller ] Reaching, Group="${Group}" Property="${prop1}" NewVal="${NewVal}", ${
+					OldVal === undefined ? "" : "OldVal=" + OldVal
 				}"`,
 				"info",
 			);
 
-			await helper.SetValueToObject(LightGroups[Group], prop1, NewVal);
+			if (prop1 !== "power") await helper.SetValueToObject(LightGroups[Group], prop1, NewVal);
 
 			switch (prop1) {
 				case "actualLux":
@@ -788,7 +812,6 @@ class Lightcontrol extends utils.Adapter {
 					if (!this.LightGroups[Group].powerCleaningLight) {
 						if (LightGroups[Group].isMotion && LightGroups[Group].power) {
 							//AutoOff Timer wird nach jeder Bewegung neugestartet
-							//this.log.info(`Controller: Motion detected, restarting AutoOff Timer for Group="${Group}"`);
 							await switchingOnOff.AutoOffTimed(this, Group);
 						}
 
@@ -835,6 +858,8 @@ class Lightcontrol extends utils.Adapter {
 					handeled = true;
 					break;
 				case "autoOnLux.enabled":
+					break;
+				case "autoOnLux.operator":
 					break;
 				case "autoOnLux.switchOnlyWhenNoPresence":
 					break;
@@ -1088,7 +1113,7 @@ class Lightcontrol extends utils.Adapter {
 							if (Lights[key]) {
 								if (Lights[key].oid === stateID) {
 									this.writeLog(
-										`deleteStateIdFromLightGroups => ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
+										`ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}", Param = ${key}`,
 										"info",
 									);
 									delete Lights[key];
@@ -1101,7 +1126,7 @@ class Lightcontrol extends utils.Adapter {
 						const count = Object.keys(lightArray[i]).length;
 						if (count === 1) {
 							this.writeLog(
-								`deleteStateIdFromLightGroups => Light: ${lightArray[i].description} will be deleted, because no Object-IDs are defined.`,
+								`Light: ${lightArray[i].description} will be deleted, because no Object-IDs are defined.`,
 								"info",
 							);
 							lightArray.splice(i, 1);
@@ -1119,7 +1144,7 @@ class Lightcontrol extends utils.Adapter {
 					const equalsCheck = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
 					if (!equalsCheck(_oldArray, this.LightGroups[Groups].sensors)) {
 						this.writeLog(
-							`onObjectChange => Sensor with ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}"`,
+							`Sensor with ID = ${stateID} will delete in Group = "${this.LightGroups[Groups].description}"`,
 							"info",
 						);
 					}
