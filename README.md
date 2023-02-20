@@ -56,8 +56,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.2.0 (2023-02-20)
 
 -   (Schmakus) Availability to switch on/off lights only with level/brightness state and without switch state
 -   (Schmakus) Availability to set Ct, Sat and Color directly to the lamp, also if it's switched off.
