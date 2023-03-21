@@ -118,10 +118,10 @@
 		},
 		"CtReverse": {
 			"type": "select",
-			"label": "Range of Color-Temperature",
-			"sm": 3,
-			"md": 3,
-			"lg": 3,
+			"label": "Behavior of Color-Temperature",
+			"sm": 6,
+			"md": 6,
+			"lg": 6,
 			"options": [
 				{
 					"label": "WarmWhite to DayLight",
@@ -134,7 +134,8 @@
 			],
 			"help": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite'",
 			"default": false,
-			"hidden": "data.func !== 'ct'"
+			"hidden": "data.func !== 'ct'",
+			"newLine": true
 		},
 		"defaultBri": {
 			"type": "number",
@@ -243,7 +244,8 @@
 			"label": "Send Color-Temperatur",
 			"help": "Send Color-Temperatur to Light if it's off",
 			"hidden": "data.func !== 'ct'",
-			"default": true
+			"default": true,
+			"newLine": true
 		},
 		"sendSat": {
 			"type": "checkbox",

@@ -153,29 +153,31 @@ After opening the settings, the configuration must be activated:
         -   Value for minimum brightness - _value the lowest brightness.eg0_
         -   Value for maximum Brightnes - _value for maximum brightness.eg100_
         -   Value/Offset for Brightness - _value in percent for adjusting the brightness against the other lamps within the group. 100 = no adjustment // 50 = half as hell_
-        -   Use brightness to switch the lamp (still without function)
+        -   Use Brightness for Switching - _Use the brightness state of the lamp to switch it on/off instead the power state_
 
     -   **Color-Temperature**
 
         -   Value for minimum Color-Temperature - _Value warm white.eg250_
         -   Value for maximum Color-Temperature - _value for cold white, for example452_
-        -   Send color temperature directly to lamp (still without function)
+        -   Behavior of Color-Temperature - _WarmWhite to DayLight or DayLight to WarmwWhite_
+        -   Send Color-Temperatur - _Set value of color-temperature also if the lamp is switched of_
 
     -   **Saturation**
 
         -   Value for minimum saturation - _value for the lowest saturation.eg0_
         -   Value for maximum saturation - _value for maximum saturation.eg100_
-        -   Send saturation directly to lamp (still without function)
+        -   Send Saturation - _Set value of saturation also if the lamp is switched of_
 
     -   **ModeSwitch**
 
         -   Value for White Mode - _Value for White Mode, e.g., false_
         -   Value for Color Mode - _value for the color mode, e.g., true_
+        -   Send ModeSwitch - _Set value of modeswitch also if the lamp is switched of_
 
     -   **Color**
         -   Color Type - _Type of color specification (HEX => #FFFFFF // RGB => 255,255 // XY => [0.4992,0.418])_
         -   Default Value for Color- _Default value, e.g., #FFFFFF_
-        -   Send color directly to lamp (still without function)
+        -   Send Color - _Set value of color also if the lamp is switched of_
 
 -   [back to table of contents](#inhaltsverzeichnis)
 

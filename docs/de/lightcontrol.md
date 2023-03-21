@@ -153,29 +153,31 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
         -   Value for minimum Brightness - _Wert die geringste Helligkeit. z.B. 0_
         -   Value for maximum Brightnes - _Wert für die maximalste Helligkeit. z.B. 100_
         -   Value/Offset for Brightness - _Wert in Prozent für die Anpassung der Helligkeit gegenüber den anderen Lampen innerhalb der Gruppe. 100 = keine Anpassung // 50 = Halb so hell_
-        -   Verwende Helligkeit zum Schalten der Lampe (noch ohne Funktion)
+        -   Use Brightness for Switching - _Verwendet den Helligkeits Datenpunkt der Lampe, um diese zu schalten, anstatt den Power Datenpunkt_
 
     -   **Color-Temperature**
 
         -   Value for minimum Color-Temperature - _Wert Warmweiß. z.B. 250_
         -   Value for maximum Color-Temperature - _Wert für Kaltweiß. z.B. 452_
-        -   Sende Farbtemperatur direkt zu Lampe (noch ohne Funktion)
+        -   Verhalten der Farbtemperatur - _Festlegen des Verlaufs der Farbtemperatur (Warm- zu Kaltweiß oder Kalt- zu Warmweiß)_
+        -   Send Color-Temperatur - _Sende die Farbtemperatur an die Lampe, auch wenn diese ausgeschaltet ist_
 
     -   **Saturation**
 
         -   Value for minimum Saturation - _Wert für die geringste Sättigung. z.B. 0_
         -   Value for maximum Saturation - _Wert für die maximale Sättigung. z.B. 100_
-        -   Sende Saturation direkt zu Lampe (noch ohne Funktion)
+        -   Send Saturation - _Sende die Sättigung an die Lampe, auch wenn diese ausgeschaltet ist_
 
     -   **ModeSwitch**
 
         -   Value for White Mode - _Wert für den Weiß-Modus. z.B. false_
         -   Value for Color Mode - _Wert für den Farbmodus. z.B. true_
+        -   Send ModeSwitch - _Ändere den Modus der Lampe, auch wenn diese ausgeschaltet ist_
 
     -   **Color**
         -   Color Type - _Typ der Farbvorgabe (HEX => #FFFFFF // RGB => 255,255,255 // XY => [0.4992,0.418])_
         -   Default Value for Color- _Standardwert. z.B. #FFFFFF_
-        -   Sende Farbe direkt zu Lampe (noch ohne Funktion)
+        -   Send Color - _Sende die Farbe an die Lampe, auch wenn diese ausgeschaltet ist_
 
 -   [zurück zum Inhaltsverzeichnis](#inhaltsverzeichnis)
 

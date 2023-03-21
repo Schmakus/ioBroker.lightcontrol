@@ -108,23 +108,15 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async CreateLightGroupsObject() {
 		try {
-			if (this.Settings.LightGroups) {
-				if (this.Settings.LightGroups.length) {
-					for (const Groups of this.Settings.LightGroups) {
-						let _temp;
-						for (const [key, value] of Object.entries(Groups)) {
-							if (key === "Group") {
-								this.LightGroups[value] = {};
-								this.LightGroups[value].description = value;
-								_temp = value;
-							} else if (key === "GroupLuxSensor") {
-								this.LightGroups[_temp].LuxSensor = value;
-								this.LightGroups[_temp].lights = [];
-								this.LightGroups[_temp].sensors = [];
-							}
-						}
-					}
-				}
+			if (this.Settings.LightGroups && this.Settings.LightGroups.length) {
+				this.Settings.LightGroups.forEach(({ Group, GroupLuxSensor }) => {
+					this.LightGroups[Group] = {
+						description: Group,
+						LuxSensor: GroupLuxSensor,
+						lights: [],
+						sensors: [],
+					};
+				});
 			} else {
 				this.writeLog(`[ CreateLightGroupsObject ] No LightGroups defined in instanse settings!`, "warn");
 			}
@@ -1174,17 +1166,31 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * Error Handling
-	 * @param {object} error
+	 * @param {object} error error message from catch block
+	 * @param {string} codePart described the code part or function
+	 * @param {string} extended extended info about the error
 	 */
-	async errorHandling(error, codePart) {
+	async errorHandling(error, codePart, extended = "") {
 		try {
-			this.writeLog(`[ ${codePart} ] error: ${error.message} // stack: ${error.stack}`, "error");
+			this.writeLog(
+				`[ ${codePart} ] error: ${error.message} // stack: ${error.stack} ${
+					extended ? " // extended info: " + extended : ""
+				}`,
+				"error",
+			);
 			if (!disableSentry) {
 				if (this.supportsFeature && this.supportsFeature("PLUGINS")) {
 					const sentryInstance = this.getPluginInstance("sentry");
 					if (sentryInstance) {
 						const Sentry = sentryInstance.getSentryObject();
-						if (Sentry) Sentry.captureException(`[ v${this.version} ${codePart} ] ${error}`);
+						if (Sentry)
+							Sentry.captureException(
+								`[ v${
+									this.version
+								} ${codePart} ] ${error} // extended info: ${extended} // memory: ${JSON.stringify(
+									this.LightGroups,
+								)}`,
+							);
 					}
 				}
 			}
