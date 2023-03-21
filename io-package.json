@@ -1,170 +1,174 @@
 {
-    "common": {
-        "name": "lightcontrol",
-        "version": "0.2.0",
-        "news": {
-            "0.2.0": {
-                "en": "Availability to switch on/off lights only with level/brightness state and without switch state\nAvailability to set Ct, Sat and Color directly to the lamp, also if it's switched off.\nAdded new Modus for AdaptiveCt: StartYourDay interplated. It's a sinus half curve from morning time to sunset.\nUpdate adaptername translations in io-package.json\nSome little bugfixes and corrections for logging\nFix AdaptiveCt, because there was a problem with date object.",
-                "de": "Möglichkeit zum Einschalten/Ausschalten von Lichtern nur mit Helligkeits-Datenpunkt\nMöglichkeit zum Setzen von Ct, Sat und Farbe direkt an die Lampe, auch wenn diese über power ausgeschaltet ist.\nNeuer Modus für AdaptiveCt hinzugefügt: StartYourDay interpolated. Eine Sinus-Halbkurve von Morgen bis Sonnenuntergang.\nUpdate Adapternamen-Übersetzungen in io-package.json\nEinige kleine Bugfixes und Korrekturen für die Protokollierung\nFix AdaptiveCt",
-                "ru": "Доступность для включения/выключения светов только с состоянием уровня/яркости и без переключения состояния\nДоступность для установки Ct, Sat и Color непосредственно к лампе, также если он выключен.\nДобавлен новый Modus для AdapteriveCt: StartYour День переплетен. Это грешная половина кривой с утра до заката.\nОбновление переводов в io-package.json\nНемного исправлений и исправлений для входа\nFix AdapterCt, потому что возникла проблема с объектом даты.",
-                "pt": "Disponibilidade para ligar/desligar luzes apenas com nível/brilho estado e sem mudar estado\nDisponibilidade para definir Ct, Sat e Cor diretamente para a lâmpada, também se estiver desligado.\nAdicionado novo Modus para AdaptiveCt: StartYour Dia intercalado. É uma meia curva sinusal da manhã ao pôr-do-sol.\nAtualizar traduções do nome do adaptador em io-package.json\nAlguns pequenos bugfixes e correções para registro\nFix AdaptiveCt, porque houve um problema com o objeto de data.",
-                "nl": "Vermogen om lichten uit te schakelen met niveau/brightness staat en zonder overschrijving van de staat\nAansprakelijkheid Ct, Sat en Color rechtstreeks naar de lamp, ook als het uitgezet is.\nVertaling: Dag verwisseld. Het is een sinus half curve van ochtend tot zonsondergang.\nVertaling:\nEnkele kleine insecten en correcties voor logeren\nFix AdaptiveCt, want er was een probleem met datum object.",
-                "fr": "Disponibilité pour allumer/éteindre les feux uniquement avec l'état de niveau/brightness et sans changement d'état\nDisponibilité à définir Ct, sat et couleur directement à la lampe, aussi si elle est éteinte.\nAjout du nouveau Modus pour AdaptiveCt: StartYour Jour intercalé. C'est une demi courbe de sinus du matin au coucher du soleil.\nMettre à jour les traductions de nom d'adaptateur dans io-package.json\nQuelques petits bugfix et corrections pour l'enregistrement\nFix AdaptiveCt, parce qu'il y avait un problème avec objet date.",
-                "it": "Disponibilità di accendere / spegnere solo con livello / stato di luminosità e senza stato di commutazione\nDisponibilità per impostare Ct, Sat e Color direttamente alla lampada, anche se spenta.\nAggiunto il nuovo Modus per AdaptiveCt: StartYour Giorno interrato. E' una curva a metà sinusale dal mattino al tramonto.\nAggiorna le traduzioni del nome dell'adattatore in io-package.json\nAlcuni piccoli bugfix e correzioni per la registrazione\nFix AdaptiveCt, perché c'era un problema con l'oggetto data.",
-                "es": "Disponibilidad para encender / apagar las luces sólo con nivel / estado de rectitud y sin estado de conmutación\nDisponibilidad para establecer Ct, Sat y Color directamente a la lámpara, también si se apaga.\nAñadido nuevo Modus for AdaptiveCt: StartYour Día interplatado. Es una media curva sinusica de la mañana al atardecer.\nActualizar las traducciones de nombre de adaptador en io-package.json\nAlgunas pequeñas bugfixes y correcciones para registrar\nFix AdaptiveCt, porque había un problema con el objeto de fecha.",
-                "pl": "Niemożliwość przełączania się na/off lights tylko z stanem/brightness State i bez zmiany stanu stanowego\nNiemożliwość ustalenia Ct, Sat i Color bezpośrednio do lampy, również jeśli zamieniono.\nNowy Modus adaptacyjny Day interplated (ang.). Jest to krzywa w połowie zatoki od rana do zachodu słońca.\nTłumaczenie adaptername w io-package.json\nNiektóre małe trąbki i poprawki do logowania\nFix AdaptiveCt, jako że istnieje problem z danym obiektem.",
-                "uk": "Наявність перемикача на / відключення вогнів тільки з рівнем / ситуацією стану і без переключення стану\nНаявність комплекту Ct, Сб і колір безпосередньо до лампи, також якщо це вимкнено.\nДодано новий Modus для адаптивногоCt: StartYour День переплетений. Це синус половина криві з ранку до заходу сонця.\nОновлення перекладу імені адаптера в io-package.json\nДеякі маленькі виправлення помилок і виправлення для входу\nВиправлено АдаптивнийCt, тому що було проблема з об'єктом дати.",
-                "zh-cn": "只有在有水平/权利状态和没有转换国家的情况下,才有可能转换/弃权。\nA. 能否确定 特区、萨特和科罗尔直接向该区开除。.\n增加新资历:启动 日间。 从上午到日来,它有一个半曲线。.\nA. 最新变量的翻译\n对伐木的投机和更正很少。\n由于迄今为止有问题。."
-            },
-            "0.1.3": {
-                "en": "Added AdaptiveCt functionality. Was not implemented in older versions.",
-                "de": "AdaptiveCt-Funktionalität hinzugefügt. Wurde nicht in älteren Versionen implementiert.",
-                "ru": "Добавьте функциональность AdapteriveCt. Не было реализовано в старых версиях.",
-                "pt": "Adicione a funcionalidade AdaptiveCt. Não foi implementado em versões mais antigas.",
-                "nl": "AdaptiveCt functionaliteit. Werd niet geïnfiltreerd in oudere versies.",
-                "fr": "Ajouter la fonctionnalité AdaptiveCt. Elle n ' a pas été mise en œuvre dans des versions plus anciennes.",
-                "it": "Aggiungi funzionalità AdaptiveCt. Non è stato implementato nelle versioni precedenti.",
-                "es": "Añadir funcionalidad AdaptiveCt. No se implementó en versiones anteriores.",
-                "pl": "Funkcja adaptacyjna. Nie został zrealizowany w starszych wersjach.",
-                "uk": "Додати функцію адаптивногоCt. Не реалізовано в старих версіях.",
-                "zh-cn": "增加功能。 未在较长的版本中实施瓦斯。."
-            },
-            "0.1.2": {
-                "en": "Some different small bugfixes and code cleaning\nFix: Update for ioBroker Beta-Repo\nFix: Adaptive Color-Temperature (failure by reading settings minCt and maxCt)",
-                "de": "Einige verschiedene kleine Bugfixes und Codereinigung\nFix: Update für ioBroker Beta-Repo\nFix: Adaptive Color-Temperatur (Versagen durch Leseeinstellungen minCt und maxCt)",
-                "ru": "Некоторые различные небольшие исправления и очистки кода\nFix: Обновление для ioBroker Beta-Repo\nИсправление: Адаптивный цвет-температуру (потеря по настройкам чтения minCt и maxCt)",
-                "pt": "Alguns pequenos bugfixs diferentes e limpeza de código\nFix: Atualização para ioBroker Beta-Repo\nFix: Adaptive Color-Temperature (falha pelas configurações de leitura minCt e maxCt)",
-                "nl": "Andere kleine insecten en code schoonmaken\nUpdate voor ioBroker Beta-Repo\nAdaptive Color-Temperature ( falen door het lezen van minct en maxCt)",
-                "fr": "Quelques petits bugfix différents et le nettoyage de code\nCorrection : Mise à jour pour ioBroker Beta-Repo\nFixe: Adaptive Color-Temperature (failure en lecture réglages minCt et maxCt)",
-                "it": "Alcuni diversi piccoli bugfix e pulizia del codice\nFix: Aggiornamento per ioBroker Beta-Repo\nFisso: Adaptive Color-Temperature (fallimento tramite le impostazioni di lettura minCt e maxCt)",
-                "es": "Algunos bugfixs diferentes y la limpieza de códigos\nCorrección: Actualización para ioBroker Beta-Repo\nFijación: Adaptive Color-Temperatura (failure by reading settings minCt and maxCt)",
-                "pl": "Niektóre małe trąbki i kod czyszczenie\nFix: Update for ioBroker Beta-Repo (ang.)\nFix: Adaptive Color-Temperature (ang.)",
-                "uk": "Деякі різні невеликі виправлення помилок і очищення коду\nВиправлення: Оновлення для ioBroker Beta-Repo\nВиправлення: Адаптивний колір-температура (дотримання параметрів читання minCt і maxCt)",
-                "zh-cn": "一些不同的小型配件和清洁守则\nFix:io Broker Beta-Repo的最新情况\nFix:Aaptive Color-Temperature(因阅读环境微克特和不可xCt而丧失)"
-            },
-            "0.1.1": {
-                "en": "Add Sentry Plugin\nFix issue [#80]\ngeneral translation updates and translation of states",
-                "de": "Sentry Plugin hinzugefügt\nProblem behoben #[80]\nAllgemeine Aktualisierungen der Übersetzungen und Übersetzung von States",
-                "ru": "Добавить Sentry Plugin\nИсправлена проблема #[80]\nобщие обновления перевода и перевод состояний",
-                "pt": "Adicionar Plugin de Sentry\nCorrigir a questão #[80]\natualizações gerais de tradução e tradução de estados",
-                "nl": "Plugin\nQuality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
-                "fr": "Ajouter Sentry Plugin\nCorrection du numéro #[80]\nmises à jour générales de traduction et traduction des états",
-                "it": "Aggiungere Sentry Plugin\nProblema fisso #[80]\naggiornamenti generali di traduzione e traduzione degli stati",
-                "es": "Add Sentry Plugin\nEdición fija #[80]\nactualizaciones generales de traducción y traducción de estados",
-                "pl": "Add Sentry Plugin (ang.)\n#80 (ang.)\ntłumaczenie ogólne",
-                "uk": "Додати шлунок плагін\nФіксований випуск #[80] \nзагальні оновлення перекладу та переклад держав",
-                "zh-cn": "增 编\nFix #[80] Control/issues/80)\na. 总翻译更新和翻译国家"
-            },
-            "0.1.0": {
-                "en": "Latest Release",
-                "de": "Neuste Veröffentlichung",
-                "ru": "Последний релиз",
-                "pt": "Última versão",
-                "nl": "Laatste vrijlating",
-                "fr": "Dernière sortie",
-                "it": "Ultime notizie",
-                "es": "Última publicación",
-                "pl": "Latesta",
-                "uk": "Останні релізи",
-                "zh-cn": "试验释放"
-            },
-            "0.0.8": {
-                "en": "Ability to remove unused lights and sensors when deleting the light group\nSome code cleaning and update debug logs\nUpdate dependencies\nUpdate translations",
-                "de": "Möglichkeit, ungenutzte Lichter und Sensoren zu entfernen, wenn die Lichtgruppe gelöscht wird\nEinige Code-Bereinigung und Aktualisierungen von Debug-Logs\nAbhängigkeiten aktualisiert\nÜbersetzungen aktualisiert",
-                "ru": "Возможность удаления неиспользованных светильников и датчиков при удалении световой группы\nНекоторая чистка кода и обновление debug logs\nОбновить зависимости\nОбновление переводов",
-                "pt": "Capacidade de remover luzes e sensores não utilizados ao excluir o grupo de luz\nAlguns registros de limpeza e atualização de depuração de código\nDependências de atualização\nAtualizar traduções",
-                "nl": "Vermogen om onbruikbare lichten en sensoren te verwijderen als ze de lichtgroep verwijderen\nWat code schoonmaken en update debug logboeken\nUpdate afhankelijkheid\nVertaling:",
-                "fr": "Possibilité de supprimer les lumières et les capteurs inutilisés lors de la suppression du groupe de lumière\nNettoyage de code et mise à jour des journaux debug\nMettre à jour les dépendances\nMise à jour des traductions",
-                "it": "Capacità di rimuovere luci e sensori non utilizzati durante la cancellazione del gruppo di luce\nAlcuni codici di pulizia e aggiornamento dei registri di debug\nDipendenze di aggiornamento\nAggiornare le traduzioni",
-                "es": "Capacidad para eliminar luces y sensores no utilizados al eliminar el grupo de luz\nAlgunos registros de limpieza y actualización de código\nActualizar las dependencias\nTraducción actualizada",
-                "pl": "Możliwość usuwania nieużywanych światła i czujników, gdy wyładują grupę światła\nNiektóre kody czyszczą i aktualizują logi debugowe\nZależności aktualnej\nTłumaczenie aktualne",
-                "uk": "Можливість видалити невикористані вогні та датчики при видаленні світлової групи\nДеякі журнали очищення коду і оновлення\nОновлення залежності\nОновлення перекладів",
-                "zh-cn": "删除未用的照明和传感器的流动\n某些守则 清洁和更新纤维\n最新依赖\n最新翻译"
-            }
-        },
-        "titleLang": {
-            "en": "LightControl",
-            "de": "LightControl",
-            "ru": "LightControl",
-            "pt": "LightControl",
-            "nl": "LightControl",
-            "fr": "LightControl",
-            "it": "LightControl",
-            "es": "LightControl",
-            "pl": "LightControl",
-            "uk": "Управління",
-            "zh-cn": "A. 灯 律"
-        },
-        "desc": {
-            "en": "Light control of lamps from various manufacturers",
-            "de": "Lichtsteuerung von Lampen verschiedener Hersteller",
-            "ru": "Управление светом светильников различных производителей",
-            "pt": "Controle de luz de lâmpadas de vários fabricantes",
-            "nl": "Lichtregeling van lampen van diverse fabrikanten",
-            "fr": "Contrôle de la lumière des lampes de différents fabricants",
-            "it": "Controllo della luce di lampade di vari produttori",
-            "es": "Control de luz de lámparas de varios fabricantes.",
-            "pl": "Sterowanie oświetleniem lamp różnych producentów",
-            "zh-cn": "各厂家灯具的光控",
-            "uk": "Контроль світла ламп різних виробників"
-        },
-        "authors": [
-            "Schmakus <schmakus@gmail.com>"
-        ],
-        "keywords": [
-            "light",
-            "lightcontrol",
-            "control",
-            "motion",
-            "motionsensor",
-            "motiondetection"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "lightcontrol.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
-        "readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "lighting",
-        "compact": true,
-        "messagebox": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json",
-            "custom": "json"
-        },
-        "plugins": {
-            "sentry": {
-                "dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229"
-            }
-        },
-        "supportCustoms": true,
-        "dependencies": [
-            {
-                "js-controller": ">=4.0.0"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=5.1.13"
-            }
-        ]
-    },
-    "native": {
-        "_id": 0,
-        "deleteUnusedConfig": true,
-        "GlobalLuxSensor": "",
-        "minCt": 2700,
-        "maxCt": 6500,
-        "RampSteps": 10,
-        "minBri": 10,
-        "IsPresenceDp": "",
-        "PresenceCountDp": ""
-    },
-    "objects": [],
-    "instanceObjects": []
+	"common": {
+		"name": "lightcontrol",
+		"version": "0.2.1",
+		"news": {
+			"0.2.1": {
+				"en": "Fix calculation of color-temperature and added ct-reverse mode ([#96] [#89])\nAdded brightness converting. Now you can use brighness states with 0-254 or 0-100\nsome little bugfixes",
+				"de": "Fix: Berechnung der Farbtemperatur und ct-Reverse-Modus hinzugefügt ([#96] [#89])\nHelligkeits-Konverter hinzugefügt. Jetzt können States mit 0-254 oder 0-100 verwendet werden\nein paar kleine bugfixes",
+				"ru": "Исправление расчёта цветовой температуры и добавленного режима ct-reverse ([#96] [#89])\nДобавлено преобразование яркости. Теперь вы можете использовать brighness состояния с 0-254 или 0-100\nнекоторые маленькие багфиксы",
+				"pt": "Corrigir o cálculo da temperatura de cor e modo ct-reverso adicionado ([#96] [#89])\nAdicionada conversão de brilho. Agora você pode usar estados de brighness com 0-254 ou 0-100\nalguns pequenos bugs",
+				"nl": "Vertaling:\nToegevoegd helderheid. Nu kun je omkoping gebruiken met 0-254 of 0-100\nwat insectenfixen",
+				"fr": "Calcul fixe de la température de couleur et du mode ct-reverse ajouté ([#96] [#89])\nAjout de la luminosité de la conversion. Maintenant, vous pouvez utiliser les états de brighness avec 0-254 ou 0-100\nquelques petits bugfix",
+				"it": "Fissare il calcolo della temperatura del colore e aggiungere la modalità ct-reverse ([#96] [#89])\nAggiunto conversione di luminosità. Ora è possibile utilizzare stati di corruzione con 0-254 o 0-100\nqualche piccolo bugfix",
+				"es": "Corregir el cálculo de la temperatura de color y el modo ct-reverso añadido ([#96] [#89])\nSe agregó brillo. Ahora puede utilizar estados de briguera con 0-254 o 0-100\nalgunos pequeños bugfixes",
+				"pl": "Obliczenia koloru i dodał tryb ct-reverse (#96 89)\nDodała jasność. Teraz można użyć stanu brydżowego z 0-254 lub 0-100\ntrąbka",
+				"uk": "Фіксований розрахунок кольору та додано ct-reverse режим ([#96] [#89])\nДодано яскравість перетворення. Тепер ви можете використовувати стани з вагою 0-254 або 0-100\nдеякі маленькі fixes",
+				"zh-cn": "九. 定量计算和增加微量反弹([第96][第89]号决议)\n改变光明。 如今,你可以使用0.-254或0-100的超级州。\n一些小的配件"
+			},
+			"0.2.0": {
+				"en": "Availability to switch on/off lights only with level/brightness state and without switch state\nAvailability to set Ct, Sat and Color directly to the lamp, also if it's switched off.\nAdded new Modus for AdaptiveCt: StartYourDay interplated. It's a sinus half curve from morning time to sunset.\nUpdate adaptername translations in io-package.json\nSome little bugfixes and corrections for logging\nFix AdaptiveCt, because there was a problem with date object.",
+				"de": "Möglichkeit zum Einschalten/Ausschalten von Lichtern nur mit Helligkeits-Datenpunkt\nMöglichkeit zum Setzen von Ct, Sat und Farbe direkt an die Lampe, auch wenn diese über power ausgeschaltet ist.\nNeuer Modus für AdaptiveCt hinzugefügt: StartYourDay interpolated. Eine Sinus-Halbkurve von Morgen bis Sonnenuntergang.\nUpdate Adapternamen-Übersetzungen in io-package.json\nEinige kleine Bugfixes und Korrekturen für die Protokollierung\nFix AdaptiveCt",
+				"ru": "Доступность для включения/выключения светов только с состоянием уровня/яркости и без переключения состояния\nДоступность для установки Ct, Sat и Color непосредственно к лампе, также если он выключен.\nДобавлен новый Modus для AdapteriveCt: StartYour День переплетен. Это грешная половина кривой с утра до заката.\nОбновление переводов в io-package.json\nНемного исправлений и исправлений для входа\nFix AdapterCt, потому что возникла проблема с объектом даты.",
+				"pt": "Disponibilidade para ligar/desligar luzes apenas com nível/brilho estado e sem mudar estado\nDisponibilidade para definir Ct, Sat e Cor diretamente para a lâmpada, também se estiver desligado.\nAdicionado novo Modus para AdaptiveCt: StartYour Dia intercalado. É uma meia curva sinusal da manhã ao pôr-do-sol.\nAtualizar traduções do nome do adaptador em io-package.json\nAlguns pequenos bugfixes e correções para registro\nFix AdaptiveCt, porque houve um problema com o objeto de data.",
+				"nl": "Vermogen om lichten uit te schakelen met niveau/brightness staat en zonder overschrijving van de staat\nAansprakelijkheid Ct, Sat en Color rechtstreeks naar de lamp, ook als het uitgezet is.\nVertaling: Dag verwisseld. Het is een sinus half curve van ochtend tot zonsondergang.\nVertaling:\nEnkele kleine insecten en correcties voor logeren\nFix AdaptiveCt, want er was een probleem met datum object.",
+				"fr": "Disponibilité pour allumer/éteindre les feux uniquement avec l'état de niveau/brightness et sans changement d'état\nDisponibilité à définir Ct, sat et couleur directement à la lampe, aussi si elle est éteinte.\nAjout du nouveau Modus pour AdaptiveCt: StartYour Jour intercalé. C'est une demi courbe de sinus du matin au coucher du soleil.\nMettre à jour les traductions de nom d'adaptateur dans io-package.json\nQuelques petits bugfix et corrections pour l'enregistrement\nFix AdaptiveCt, parce qu'il y avait un problème avec objet date.",
+				"it": "Disponibilità di accendere / spegnere solo con livello / stato di luminosità e senza stato di commutazione\nDisponibilità per impostare Ct, Sat e Color direttamente alla lampada, anche se spenta.\nAggiunto il nuovo Modus per AdaptiveCt: StartYour Giorno interrato. E' una curva a metà sinusale dal mattino al tramonto.\nAggiorna le traduzioni del nome dell'adattatore in io-package.json\nAlcuni piccoli bugfix e correzioni per la registrazione\nFix AdaptiveCt, perché c'era un problema con l'oggetto data.",
+				"es": "Disponibilidad para encender / apagar las luces sólo con nivel / estado de rectitud y sin estado de conmutación\nDisponibilidad para establecer Ct, Sat y Color directamente a la lámpara, también si se apaga.\nAñadido nuevo Modus for AdaptiveCt: StartYour Día interplatado. Es una media curva sinusica de la mañana al atardecer.\nActualizar las traducciones de nombre de adaptador en io-package.json\nAlgunas pequeñas bugfixes y correcciones para registrar\nFix AdaptiveCt, porque había un problema con el objeto de fecha.",
+				"pl": "Niemożliwość przełączania się na/off lights tylko z stanem/brightness State i bez zmiany stanu stanowego\nNiemożliwość ustalenia Ct, Sat i Color bezpośrednio do lampy, również jeśli zamieniono.\nNowy Modus adaptacyjny Day interplated (ang.). Jest to krzywa w połowie zatoki od rana do zachodu słońca.\nTłumaczenie adaptername w io-package.json\nNiektóre małe trąbki i poprawki do logowania\nFix AdaptiveCt, jako że istnieje problem z danym obiektem.",
+				"uk": "Наявність перемикача на / відключення вогнів тільки з рівнем / ситуацією стану і без переключення стану\nНаявність комплекту Ct, Сб і колір безпосередньо до лампи, також якщо це вимкнено.\nДодано новий Modus для адаптивногоCt: StartYour День переплетений. Це синус половина криві з ранку до заходу сонця.\nОновлення перекладу імені адаптера в io-package.json\nДеякі маленькі виправлення помилок і виправлення для входу\nВиправлено АдаптивнийCt, тому що було проблема з об'єктом дати.",
+				"zh-cn": "只有在有水平/权利状态和没有转换国家的情况下,才有可能转换/弃权。\nA. 能否确定 特区、萨特和科罗尔直接向该区开除。.\n增加新资历:启动 日间。 从上午到日来,它有一个半曲线。.\nA. 最新变量的翻译\n对伐木的投机和更正很少。\n由于迄今为止有问题。."
+			},
+			"0.1.3": {
+				"en": "Added AdaptiveCt functionality. Was not implemented in older versions.",
+				"de": "AdaptiveCt-Funktionalität hinzugefügt. Wurde nicht in älteren Versionen implementiert.",
+				"ru": "Добавьте функциональность AdapteriveCt. Не было реализовано в старых версиях.",
+				"pt": "Adicione a funcionalidade AdaptiveCt. Não foi implementado em versões mais antigas.",
+				"nl": "AdaptiveCt functionaliteit. Werd niet geïnfiltreerd in oudere versies.",
+				"fr": "Ajouter la fonctionnalité AdaptiveCt. Elle n ' a pas été mise en œuvre dans des versions plus anciennes.",
+				"it": "Aggiungi funzionalità AdaptiveCt. Non è stato implementato nelle versioni precedenti.",
+				"es": "Añadir funcionalidad AdaptiveCt. No se implementó en versiones anteriores.",
+				"pl": "Funkcja adaptacyjna. Nie został zrealizowany w starszych wersjach.",
+				"uk": "Додати функцію адаптивногоCt. Не реалізовано в старих версіях.",
+				"zh-cn": "增加功能。 未在较长的版本中实施瓦斯。."
+			},
+			"0.1.2": {
+				"en": "Some different small bugfixes and code cleaning\nFix: Update for ioBroker Beta-Repo\nFix: Adaptive Color-Temperature (failure by reading settings minCt and maxCt)",
+				"de": "Einige verschiedene kleine Bugfixes und Codereinigung\nFix: Update für ioBroker Beta-Repo\nFix: Adaptive Color-Temperatur (Versagen durch Leseeinstellungen minCt und maxCt)",
+				"ru": "Некоторые различные небольшие исправления и очистки кода\nFix: Обновление для ioBroker Beta-Repo\nИсправление: Адаптивный цвет-температуру (потеря по настройкам чтения minCt и maxCt)",
+				"pt": "Alguns pequenos bugfixs diferentes e limpeza de código\nFix: Atualização para ioBroker Beta-Repo\nFix: Adaptive Color-Temperature (falha pelas configurações de leitura minCt e maxCt)",
+				"nl": "Andere kleine insecten en code schoonmaken\nUpdate voor ioBroker Beta-Repo\nAdaptive Color-Temperature ( falen door het lezen van minct en maxCt)",
+				"fr": "Quelques petits bugfix différents et le nettoyage de code\nCorrection : Mise à jour pour ioBroker Beta-Repo\nFixe: Adaptive Color-Temperature (failure en lecture réglages minCt et maxCt)",
+				"it": "Alcuni diversi piccoli bugfix e pulizia del codice\nFix: Aggiornamento per ioBroker Beta-Repo\nFisso: Adaptive Color-Temperature (fallimento tramite le impostazioni di lettura minCt e maxCt)",
+				"es": "Algunos bugfixs diferentes y la limpieza de códigos\nCorrección: Actualización para ioBroker Beta-Repo\nFijación: Adaptive Color-Temperatura (failure by reading settings minCt and maxCt)",
+				"pl": "Niektóre małe trąbki i kod czyszczenie\nFix: Update for ioBroker Beta-Repo (ang.)\nFix: Adaptive Color-Temperature (ang.)",
+				"uk": "Деякі різні невеликі виправлення помилок і очищення коду\nВиправлення: Оновлення для ioBroker Beta-Repo\nВиправлення: Адаптивний колір-температура (дотримання параметрів читання minCt і maxCt)",
+				"zh-cn": "一些不同的小型配件和清洁守则\nFix:io Broker Beta-Repo的最新情况\nFix:Aaptive Color-Temperature(因阅读环境微克特和不可xCt而丧失)"
+			},
+			"0.1.1": {
+				"en": "Add Sentry Plugin\nFix issue [#80]\ngeneral translation updates and translation of states",
+				"de": "Sentry Plugin hinzugefügt\nProblem behoben #[80]\nAllgemeine Aktualisierungen der Übersetzungen und Übersetzung von States",
+				"ru": "Добавить Sentry Plugin\nИсправлена проблема #[80]\nобщие обновления перевода и перевод состояний",
+				"pt": "Adicionar Plugin de Sentry\nCorrigir a questão #[80]\natualizações gerais de tradução e tradução de estados",
+				"nl": "Plugin\nQuality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
+				"fr": "Ajouter Sentry Plugin\nCorrection du numéro #[80]\nmises à jour générales de traduction et traduction des états",
+				"it": "Aggiungere Sentry Plugin\nProblema fisso #[80]\naggiornamenti generali di traduzione e traduzione degli stati",
+				"es": "Add Sentry Plugin\nEdición fija #[80]\nactualizaciones generales de traducción y traducción de estados",
+				"pl": "Add Sentry Plugin (ang.)\n#80 (ang.)\ntłumaczenie ogólne",
+				"uk": "Додати шлунок плагін\nФіксований випуск #[80] \nзагальні оновлення перекладу та переклад держав",
+				"zh-cn": "增 编\nFix #[80] Control/issues/80)\na. 总翻译更新和翻译国家"
+			},
+			"0.1.0": {
+				"en": "Latest Release",
+				"de": "Neuste Veröffentlichung",
+				"ru": "Последний релиз",
+				"pt": "Última versão",
+				"nl": "Laatste vrijlating",
+				"fr": "Dernière sortie",
+				"it": "Ultime notizie",
+				"es": "Última publicación",
+				"pl": "Latesta",
+				"uk": "Останні релізи",
+				"zh-cn": "试验释放"
+			},
+			"0.0.8": {
+				"en": "Ability to remove unused lights and sensors when deleting the light group\nSome code cleaning and update debug logs\nUpdate dependencies\nUpdate translations",
+				"de": "Möglichkeit, ungenutzte Lichter und Sensoren zu entfernen, wenn die Lichtgruppe gelöscht wird\nEinige Code-Bereinigung und Aktualisierungen von Debug-Logs\nAbhängigkeiten aktualisiert\nÜbersetzungen aktualisiert",
+				"ru": "Возможность удаления неиспользованных светильников и датчиков при удалении световой группы\nНекоторая чистка кода и обновление debug logs\nОбновить зависимости\nОбновление переводов",
+				"pt": "Capacidade de remover luzes e sensores não utilizados ao excluir o grupo de luz\nAlguns registros de limpeza e atualização de depuração de código\nDependências de atualização\nAtualizar traduções",
+				"nl": "Vermogen om onbruikbare lichten en sensoren te verwijderen als ze de lichtgroep verwijderen\nWat code schoonmaken en update debug logboeken\nUpdate afhankelijkheid\nVertaling:",
+				"fr": "Possibilité de supprimer les lumières et les capteurs inutilisés lors de la suppression du groupe de lumière\nNettoyage de code et mise à jour des journaux debug\nMettre à jour les dépendances\nMise à jour des traductions",
+				"it": "Capacità di rimuovere luci e sensori non utilizzati durante la cancellazione del gruppo di luce\nAlcuni codici di pulizia e aggiornamento dei registri di debug\nDipendenze di aggiornamento\nAggiornare le traduzioni",
+				"es": "Capacidad para eliminar luces y sensores no utilizados al eliminar el grupo de luz\nAlgunos registros de limpieza y actualización de código\nActualizar las dependencias\nTraducción actualizada",
+				"pl": "Możliwość usuwania nieużywanych światła i czujników, gdy wyładują grupę światła\nNiektóre kody czyszczą i aktualizują logi debugowe\nZależności aktualnej\nTłumaczenie aktualne",
+				"uk": "Можливість видалити невикористані вогні та датчики при видаленні світлової групи\nДеякі журнали очищення коду і оновлення\nОновлення залежності\nОновлення перекладів",
+				"zh-cn": "删除未用的照明和传感器的流动\n某些守则 清洁和更新纤维\n最新依赖\n最新翻译"
+			}
+		},
+		"titleLang": {
+			"en": "LightControl",
+			"de": "LightControl",
+			"ru": "LightControl",
+			"pt": "LightControl",
+			"nl": "LightControl",
+			"fr": "LightControl",
+			"it": "LightControl",
+			"es": "LightControl",
+			"pl": "LightControl",
+			"uk": "Управління",
+			"zh-cn": "A. 灯 律"
+		},
+		"desc": {
+			"en": "Light control of lamps from various manufacturers",
+			"de": "Lichtsteuerung von Lampen verschiedener Hersteller",
+			"ru": "Управление светом светильников различных производителей",
+			"pt": "Controle de luz de lâmpadas de vários fabricantes",
+			"nl": "Lichtregeling van lampen van diverse fabrikanten",
+			"fr": "Contrôle de la lumière des lampes de différents fabricants",
+			"it": "Controllo della luce di lampade di vari produttori",
+			"es": "Control de luz de lámparas de varios fabricantes.",
+			"pl": "Sterowanie oświetleniem lamp różnych producentów",
+			"zh-cn": "各厂家灯具的光控",
+			"uk": "Контроль світла ламп різних виробників"
+		},
+		"authors": ["Schmakus <schmakus@gmail.com>"],
+		"keywords": ["light", "lightcontrol", "control", "motion", "motionsensor", "motiondetection"],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "lightcontrol.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
+		"readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "lighting",
+		"compact": true,
+		"messagebox": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"adminUI": {
+			"config": "json",
+			"custom": "json"
+		},
+		"plugins": {
+			"sentry": {
+				"dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229"
+			}
+		},
+		"supportCustoms": true,
+		"dependencies": [
+			{
+				"js-controller": ">=4.0.0"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=5.1.13"
+			}
+		]
+	},
+	"native": {
+		"_id": 0,
+		"deleteUnusedConfig": true,
+		"GlobalLuxSensor": "",
+		"minCt": 2700,
+		"maxCt": 6500,
+		"RampSteps": 10,
+		"minBri": 10,
+		"IsPresenceDp": "",
+		"PresenceCountDp": ""
+	},
+	"objects": [],
+	"instanceObjects": []
 }

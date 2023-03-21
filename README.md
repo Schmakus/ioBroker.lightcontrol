@@ -57,7 +57,7 @@ iobroker add lightcontrol
 	### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS**
+### 0.2.1 (2023-03-21)
 
 -   (Schmakus) Fix calculation of color-temperature and added ct-reverse mode ([#96] [#89])
 -   (Schmakus) Added brightness converting. Now you can use brighness states with 0-254 or 0-100
