@@ -1,0 +1,279 @@
+{
+	"i18n": true,
+	"type": "panel",
+	"items": {
+		"type": {
+			"type": "select",
+			"label": "Type of Object",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"options": [
+				{
+					"label": "Light",
+					"value": "light"
+				},
+				{
+					"label": "Sensor",
+					"value": "sensor"
+				}
+			],
+			"help": "Choose if this datapoint is for an sensor or a light",
+			"defaultFunc": "(!customObj.common || !customObj.common.write) ? 'sensor' : 'light'"
+		},
+		"group": {
+			"type": "selectSendTo",
+			"label": "LightGroup",
+			"command": "LightGroup",
+			"onChange": { "alsoDependsOn": ["data.description"], "ignoreOwnChanges": false },
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"help": "LightGroups are defined at instance settings"
+		},
+		"description": {
+			"type": "autocompleteSendTo",
+			"command": "LightName",
+			"jsonData": "{\"LightGroups\": ${JSON.stringify(data.group)}}",
+			"freeSolo": true,
+			"label": "Name of the Light",
+			"help": "e.g. FloorSpots, Spotlights, Wallpanel, ...",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.type === 'sensor'"
+		},
+		"func": {
+			"type": "select",
+			"label": "Function of the Object",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"options": [
+				{
+					"label": "Switch",
+					"value": "power"
+				},
+				{
+					"label": "Brightness",
+					"value": "bri"
+				},
+				{
+					"label": "Color-Temperature",
+					"value": "ct"
+				},
+				{
+					"label": "Saturation",
+					"value": "sat"
+				},
+				{
+					"label": "Color",
+					"value": "color"
+				},
+				{
+					"label": "Mode-Switch",
+					"value": "modeswitch"
+				}
+			],
+			"defaultFunc": "!customObj.common.role ? 'power' : (customObj.common.role === 'color.level.temperature' ? 'ct' : customObj.common.role === 'level.color.saturation' ? 'sat' : customObj.common.role === 'level.dimmer' ? 'bri' : customObj.common.role === 'level.color.temperature' ? 'ct' : customObj.common.role === 'level.color.rgb' ? 'color' : customObj.common.role === 'switch.mode.color' ? 'modeswitch' : customObj.common.role === 'switch' ? 'power' : customObj.common.role === 'switch.light' ? 'power' : customObj.common.role === 'state' ? 'power' : 'power')",
+			"hidden": "data.type === 'sensor'",
+			"help": "Function of the Object",
+			"newLine": true
+		},
+		"onVal": {
+			"type": "text",
+			"label": "Power On Value",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'power' || data.type === 'sensor'",
+			"defaultFunc": "!customObj.common.role ? true : (customObj.common.type === 'boolean' ? true : customObj.common.type === 'number' ? 1 : customObj.common.type === 'string' ? 'On' : true)"
+		},
+		"offVal": {
+			"type": "text",
+			"label": "Power Off Value",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'power' || data.type === 'sensor'",
+			"defaultFunc": "!customObj.common.role ? false : (customObj.common.type === 'boolean' ? false : customObj.common.type === 'number' ? 0 : customObj.common.type === 'string' ? 'Off' : false)"
+		},
+		"minVal": {
+			"type": "number",
+			"label": "Minimum value",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "!['bri', 'ct', 'sat'].includes(data.func) || data.type === 'sensor'",
+			"defaultFunc": "!customObj.common.min ? 0 : customObj.common.min ? customObj.common.min : 0"
+		},
+		"maxVal": {
+			"type": "number",
+			"label": "Maximum value",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "!['bri', 'ct', 'sat'].includes(data.func) || data.type === 'sensor'",
+			"defaultFunc": "!customObj.common.max ? 100 : customObj.common.max ? customObj.common.max : 100"
+		},
+		"CtReverse": {
+			"type": "select",
+			"label": "Behavior of Color-Temperature",
+			"sm": 6,
+			"md": 6,
+			"lg": 6,
+			"options": [
+				{
+					"label": "WarmWhite to DayLight",
+					"value": false
+				},
+				{
+					"label": "DayLight to WarmWhite",
+					"value": true
+				}
+			],
+			"help": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite'",
+			"default": false,
+			"hidden": "data.func !== 'ct'",
+			"newLine": true
+		},
+		"defaultBri": {
+			"type": "number",
+			"label": "Value for Brightness Correction",
+			"help": "If some Lights brighter than other, than you can set a correction in Percent.",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'bri' || data.type === 'sensor'",
+			"default": "100"
+		},
+		"whiteModeVal": {
+			"type": "text",
+			"label": "Value white mode",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'modeswitch' || data.type === 'sensor'",
+			"default": "false"
+		},
+		"colorModeVal": {
+			"type": "text",
+			"label": "Value color mode",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'modeswitch' || data.type === 'sensor'",
+			"default": "true"
+		},
+		"colorType": {
+			"type": "select",
+			"label": "Value for Color Mode",
+			"options": [
+				{
+					"label": "RGB",
+					"value": "rgb"
+				},
+				{
+					"label": "HEX",
+					"value": "hex"
+				},
+				{
+					"label": "XY",
+					"value": "xy"
+				}
+			],
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'color' || data.type === 'sensor'",
+			"default": "hex"
+		},
+		"defaultColor": {
+			"type": "text",
+			"label": "Value for default color",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'color' || data.type === 'sensor'",
+			"default": "#FFFFFF"
+		},
+		"setCtwithColor": {
+			"type": "checkbox",
+			"label": "Set Color-Temperature with Color",
+			"hidden": "data.func !== 'color' || data.type === 'sensor'"
+		},
+		"warmWhiteColor": {
+			"type": "text",
+			"label": "HEX Value for WarmWhite Color",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'color' || data.setCtwithColor === false || data.type === 'sensor'",
+			"help": "Need only, if no Ct-State available"
+		},
+		"dayLightColor": {
+			"type": "text",
+			"label": "HEX Value for DayLight Color",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.func !== 'color' || data.setCtwithColor === false || data.type === 'sensor'",
+			"help": "Need only, if no Ct-State available"
+		},
+		"motionVal": {
+			"type": "text",
+			"label": "Value for Motion",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.type !== 'sensor'",
+			"defaultFunc": "!customObj.common.type ? true : (customObj.common.type === 'boolean' ? true : 'On')",
+			"newLine": true
+		},
+		"noMotionVal": {
+			"type": "text",
+			"label": "Value for no Motion",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "data.type !== 'sensor'",
+			"defaultFunc": "!customObj.common.type ? false : (customObj.common.type === 'boolean' ? false : 'Off')"
+		},
+		"sendCt": {
+			"type": "checkbox",
+			"label": "Send Color-Temperatur",
+			"help": "Send Color-Temperatur to Light if it's off",
+			"hidden": "data.func !== 'ct'",
+			"default": true,
+			"newLine": true
+		},
+		"sendSat": {
+			"type": "checkbox",
+			"label": "Send Saturation",
+			"help": "Send Saturation to Light if it's off",
+			"hidden": "data.func !== 'sat'",
+			"default": true
+		},
+		"sendColor": {
+			"type": "checkbox",
+			"label": "Send Color",
+			"help": "Send Color to Light if it's off",
+			"hidden": "data.func !== 'color'",
+			"default": true
+		},
+		"sendModeswitch": {
+			"type": "checkbox",
+			"label": "Send Modeswitch",
+			"help": "Send Modeswitch to Light if it's off",
+			"hidden": "data.func !== 'modeswitch'",
+			"default": true
+		},
+		"useBri": {
+			"type": "checkbox",
+			"label": "Use Brightness for Switching",
+			"help": "Uses Brightness State for On/Off Switch instead of Power State",
+			"hidden": "data.func !== 'bri' ",
+			"default": true
+		}
+	}
+}

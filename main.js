@@ -109,6 +109,7 @@ class Lightcontrol extends utils.Adapter {
 	async CreateLightGroupsObject() {
 		try {
 			if (this.Settings.LightGroups && this.Settings.LightGroups.length) {
+				this.writeLog(`[ CreateLightGroupsObject ] LightGroups are defined in instance settings`);
 				this.Settings.LightGroups.forEach(({ Group, GroupLuxSensor }) => {
 					this.LightGroups[Group] = {
 						description: Group,
@@ -117,6 +118,7 @@ class Lightcontrol extends utils.Adapter {
 						sensors: [],
 					};
 				});
+				this.writeLog(`[ CreateLightGroupsObject ] LightGroups: ${JSON.stringify(this.LightGroups)}`);
 			} else {
 				this.writeLog(`[ CreateLightGroupsObject ] No LightGroups defined in instanse settings!`, "warn");
 			}
