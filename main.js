@@ -33,7 +33,6 @@ class Lightcontrol extends utils.Adapter {
 		this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
 		this.Settings = {};
-		this.GlobalSettings = {};
 		this.LightGroups = {};
 		this.LuxSensors = [];
 		this.MotionSensors = [];
@@ -68,15 +67,12 @@ class Lightcontrol extends utils.Adapter {
 		this.writeLog(`[ onReady ] LightGroups from Settings: ${JSON.stringify(this.Settings.LightGroups)}`);
 
 		//Create LightGroups Object from GroupNames
-		await this.CreateLightGroupsObject();
-
-		//Init all Objects with custom config
-		await this.InitCustomStates();
+		await init.CreateLightGroupsObject(this);
 
 		//Create all States, Devices and Channels
 		if (Object.keys(this.LightGroups).length !== 0) {
 			await init.Init(this);
-			//Set LightState
+			await this.InitCustomStates();
 			await this.SetLightState();
 		} else {
 			this.writeLog(`[ onReady ] No Init because no LightGroups defined in settings`);
@@ -99,31 +95,6 @@ class Lightcontrol extends utils.Adapter {
 		} catch (error) {
 			this.errorHandling(error, "onUnload");
 			callback();
-		}
-	}
-
-	/**
-	 * Create LightGroups Object
-	 * @description Creates Object LightGroups from system.config array
-	 */
-	async CreateLightGroupsObject() {
-		try {
-			if (this.Settings.LightGroups && this.Settings.LightGroups.length) {
-				this.writeLog(`[ CreateLightGroupsObject ] LightGroups are defined in instance settings`);
-				this.Settings.LightGroups.forEach(({ Group, GroupLuxSensor }) => {
-					this.LightGroups[Group] = {
-						description: Group,
-						LuxSensor: GroupLuxSensor,
-						lights: [],
-						sensors: [],
-					};
-				});
-				this.writeLog(`[ CreateLightGroupsObject ] LightGroups: ${JSON.stringify(this.LightGroups)}`);
-			} else {
-				this.writeLog(`[ CreateLightGroupsObject ] No LightGroups defined in instanse settings!`, "warn");
-			}
-		} catch (error) {
-			this.errorHandling(error, "CreateLightGroupsObject");
 		}
 	}
 
@@ -444,14 +415,14 @@ class Lightcontrol extends utils.Adapter {
 							}
 
 							//Check if it's Presence
-						} else if (this.GlobalSettings.IsPresenceDp === id) {
+						} else if (this.Settings.IsPresenceDp === id) {
 							this.writeLog(`[ onStateChange ] It's IsPresenceDp: ${id}`);
 
 							this.ActualPresence = typeof state.val === "boolean" ? state.val : false;
 							await switchingOnOff.AutoOnPresenceIncrease(this).catch((e) => this.log.error(e));
 
 							//Check if it's Presence Counter
-						} else if (this.GlobalSettings.PresenceCountDp === id) {
+						} else if (this.Settings.PresenceCountDp === id) {
 							this.writeLog(`[ onStateChange ] It's PresenceCountDp: ${id}`);
 
 							this.ActualPresenceCount.oldVal = this.ActualPresenceCount.newVal;
