@@ -410,6 +410,7 @@ class Lightcontrol extends utils.Adapter {
 										}
 
 										await this.SummarizeSensors(Group).catch((e) => this.log.error(e));
+										break;
 									}
 								}
 							}
@@ -971,7 +972,7 @@ class Lightcontrol extends utils.Adapter {
 			for (const Sensor of this.LightGroups[Group].sensors) {
 				if (Sensor.isMotion) {
 					this.writeLog(
-						`[ SummarizeSensors ] Group="${Group}" Sensor with target ${Sensor.oid} has value ${Sensor.isMotion}`,
+						`[ SummarizeSensors ] Group="${Group}" Sensor with target "${Sensor.oid}" has value ${Sensor.isMotion}`,
 					);
 					Motionstate = true;
 				}
