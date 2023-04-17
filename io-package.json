@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.2",
+		"version": "0.2.3",
 		"news": {
+			"0.2.3": {
+				"en": "No special characters allowed in group names except dashes and underlines => Please change your group names if needed!!!",
+				"de": "Keine Sonderzeichen erlaubt in Gruppennamen außer Bindestriche und Unterstriche => Bitte Gruppennamen bei Bedarf ändern!",
+				"ru": "Не допускаются специальные символы в именах групп, кроме dashes и underlines => Пожалуйста, измените названия вашей группы, если это необходимо!",
+				"pt": "Sem caracteres especiais permitidos em nomes de grupo exceto traços e sublinhados => Por favor, altere seus nomes de grupo se necessário!",
+				"nl": "Geen bijzondere personages toegestaan behalve Dashes en Underlines in Verander alsjeblieft je groepsnamen als het nodig is!",
+				"fr": "Pas de caractères spéciaux autorisés dans les noms de groupe sauf les tirets et les titres = Veuillez changer vos noms de groupe si nécessaire!",
+				"it": "Nessun carattere speciale consentito in nomi di gruppo tranne trattini e sottolineature = > Si prega di cambiare i nomi di gruppo se necessario!",
+				"es": "No se admiten caracteres especiales en los nombres de grupos, excepto dashes y underlines = Por favor, cambie sus nombres de grupo si es necesario!",
+				"pl": "Żadne ze specjalnych znaków nie pozwalało na nazwy grup, z wyjątkiem dashów i podlin/>>. Pozwoliło się na zmianę nazw grup, jeśli będą potrzebne!",
+				"uk": "Немає спеціальних символів, дозволених в групових іменах, крім дашів і underlines => Будь ласка, змініть імена груп, якщо це необхідно!",
+				"zh-cn": "除达什和格罗维斯以外的集团名称上不允许的特殊性=> 请在必要时修改你的集团名称。!"
+			},
 			"0.2.2": {
 				"en": "Fix: Create Groups without any global lux-sensor or individial lux-sensor\nUpdate dependencies\nEnhancements for better debugging",
 				"de": "Fix: Gruppen erstellen ohne globalen Lux-Sensor oder individuellen Lux-Sensor\nAbhängigkeiten aktualisiert\nVerbesserungen für besseres Debugging",
@@ -80,19 +93,6 @@
 				"pl": "Add Sentry Plugin (ang.)\n#80 (ang.)\ntłumaczenie ogólne",
 				"uk": "Додати шлунок плагін\nФіксований випуск #[80] \nзагальні оновлення перекладу та переклад держав",
 				"zh-cn": "增 编\nFix #[80] Control/issues/80)\na. 总翻译更新和翻译国家"
-			},
-			"0.1.0": {
-				"en": "Latest Release",
-				"de": "Neuste Veröffentlichung",
-				"ru": "Последний релиз",
-				"pt": "Última versão",
-				"nl": "Laatste vrijlating",
-				"fr": "Dernière sortie",
-				"it": "Ultime notizie",
-				"es": "Última publicación",
-				"pl": "Latesta",
-				"uk": "Останні релізи",
-				"zh-cn": "试验释放"
 			}
 		},
 		"titleLang": {

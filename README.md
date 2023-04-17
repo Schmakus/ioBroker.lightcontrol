@@ -56,8 +56,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.2.3 (2023-04-17)
 
 -   (Schmakus) No special characters allowed in group names except dashes and underlines => Please change your group names if needed!!!
 
