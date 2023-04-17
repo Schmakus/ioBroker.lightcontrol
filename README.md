@@ -57,6 +57,11 @@ iobroker add lightcontrol
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Update dependencies
+-   (Schmakus) Enhancements for better debugging
+
 ### 0.2.1 (2023-03-21)
 
 -   (Schmakus) Fix calculation of color-temperature and added ct-reverse mode ([#96] [#89])
