@@ -59,7 +59,7 @@ iobroker add lightcontrol
 
 ### **WORK IN PROGRESS**
 
--   (Schmakus) Fix: Creat Groups without any global lux-sensor or individial lux-sensor
+-   (Schmakus) Fix: Create Groups without any global lux-sensor or individial lux-sensor
 -   (Schmakus) Update dependencies
 -   (Schmakus) Enhancements for better debugging
 
