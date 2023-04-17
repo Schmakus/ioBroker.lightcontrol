@@ -1159,11 +1159,7 @@ class Lightcontrol extends utils.Adapter {
 						const Sentry = sentryInstance.getSentryObject();
 						if (Sentry)
 							Sentry.captureException(
-								`[ v${
-									this.version
-								} ${codePart} ] ${error} // extended info: ${extended} // memory: ${JSON.stringify(
-									this.LightGroups,
-								)}`,
+								`[ v${this.version} ${codePart} ] ${error} // extended info: ${extended} )}`,
 							);
 					}
 				}
