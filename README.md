@@ -56,8 +56,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.2.4 (2023-04-17)
 
 -   (Schmakus) renew release. no changes. please use this release.
 

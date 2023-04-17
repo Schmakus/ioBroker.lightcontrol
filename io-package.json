@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.3",
+		"version": "0.2.4",
 		"news": {
+			"0.2.4": {
+				"en": "renew release. no changes. please use this release.",
+				"de": "Erneuerung. Keine Änderungen. Bitte nutze diese Veröffentlichung.",
+				"ru": "обновление релиза. никаких изменений. пожалуйста, используйте этот релиз.",
+				"pt": "renovar a liberação. sem alterações. por favor, use esta versão.",
+				"nl": "nieuwe vrijlating. geen veranderingen. gebruik deze vrijlating.",
+				"fr": "renouvellement. pas de changement. veuillez utiliser cette version.",
+				"it": "rinnovare il rilascio. nessun cambiamento. si prega di utilizzare questa release.",
+				"es": "renovar la liberación. sin cambios. por favor, usa esta versión.",
+				"pl": "renowacja. nie zmienia się. użycie tego wydania.",
+				"uk": "новий реліз. немає змін. будь ласка, використовуйте цей реліз.",
+				"zh-cn": "再次获释。 没有变化。 请使用这一释放。."
+			},
 			"0.2.3": {
 				"en": "No special characters allowed in group names except dashes and underlines => Please change your group names if needed!!!",
 				"de": "Keine Sonderzeichen erlaubt in Gruppennamen außer Bindestriche und Unterstriche => Bitte Gruppennamen bei Bedarf ändern!",
@@ -80,19 +93,6 @@
 				"pl": "Niektóre małe trąbki i kod czyszczenie\nFix: Update for ioBroker Beta-Repo (ang.)\nFix: Adaptive Color-Temperature (ang.)",
 				"uk": "Деякі різні невеликі виправлення помилок і очищення коду\nВиправлення: Оновлення для ioBroker Beta-Repo\nВиправлення: Адаптивний колір-температура (дотримання параметрів читання minCt і maxCt)",
 				"zh-cn": "一些不同的小型配件和清洁守则\nFix:io Broker Beta-Repo的最新情况\nFix:Aaptive Color-Temperature(因阅读环境微克特和不可xCt而丧失)"
-			},
-			"0.1.1": {
-				"en": "Add Sentry Plugin\nFix issue [#80]\ngeneral translation updates and translation of states",
-				"de": "Sentry Plugin hinzugefügt\nProblem behoben #[80]\nAllgemeine Aktualisierungen der Übersetzungen und Übersetzung von States",
-				"ru": "Добавить Sentry Plugin\nИсправлена проблема #[80]\nобщие обновления перевода и перевод состояний",
-				"pt": "Adicionar Plugin de Sentry\nCorrigir a questão #[80]\natualizações gerais de tradução e tradução de estados",
-				"nl": "Plugin\nQuality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
-				"fr": "Ajouter Sentry Plugin\nCorrection du numéro #[80]\nmises à jour générales de traduction et traduction des états",
-				"it": "Aggiungere Sentry Plugin\nProblema fisso #[80]\naggiornamenti generali di traduzione e traduzione degli stati",
-				"es": "Add Sentry Plugin\nEdición fija #[80]\nactualizaciones generales de traducción y traducción de estados",
-				"pl": "Add Sentry Plugin (ang.)\n#80 (ang.)\ntłumaczenie ogólne",
-				"uk": "Додати шлунок плагін\nФіксований випуск #[80] \nзагальні оновлення перекладу та переклад держав",
-				"zh-cn": "增 编\nFix #[80] Control/issues/80)\na. 总翻译更新和翻译国家"
 			}
 		},
 		"titleLang": {
