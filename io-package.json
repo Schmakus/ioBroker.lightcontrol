@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.1",
+		"version": "0.2.2",
 		"news": {
+			"0.2.2": {
+				"en": "Fix: Create Groups without any global lux-sensor or individial lux-sensor\nUpdate dependencies\nEnhancements for better debugging",
+				"de": "Fix: Gruppen erstellen ohne globalen Lux-Sensor oder individuellen Lux-Sensor\nAbhängigkeiten aktualisiert\nVerbesserungen für besseres Debugging",
+				"ru": "Fix: Создание групп без любого глобального цензуры или индивидуального цензуры\nОбновить зависимости\nУлучшения для лучшего отладки",
+				"pt": "Fix: Criar grupos sem qualquer lux-sensor global ou lux-sensor individial\nDependências de atualização\nMelhorias para melhor depuração",
+				"nl": "Create Groups zonder enige lux-sensor of individvidviduele lux-sensor\nUpdate afhankelijkheid\nVerbeteringen voor beter ontbreken",
+				"fr": "Fix: Créer des groupes sans lex-senseur global ou individial lux-senseur\nMettre à jour les dépendances\nEnhancements for better debugging",
+				"it": "Fix: Crea gruppi senza alcun sensore lux globale o lux-sensore individiale\nDipendenze di aggiornamento\nMiglioramenti per una migliore debug",
+				"es": "Fijación: Crear grupos sin ningún lux-sensor global o lux-sensor individial\nActualizar las dependencias\nMejoras para una mejor depuración",
+				"pl": "Fix: Grupy Kreatywne bez żadnego czujnika globalnego lub niepodzielnego czujnika luksusowego\nZależności aktualnej\nZalecenia dla lepszej debugowania",
+				"uk": "Виправлення: Створення груп без будь-якого глобального люкс-сенсора або невидимого люкс-сенсора\nОновлення залежності\nПокращення для кращого знеболювання",
+				"zh-cn": "Fix:在没有任何全球声音或不可分割的声音下设立集团\n最新依赖\nB. 增强工作力度"
+			},
 			"0.2.1": {
 				"en": "Fix calculation of color-temperature and added ct-reverse mode ([#96] [#89])\nAdded brightness converting. Now you can use brighness states with 0-254 or 0-100\nsome little bugfixes",
 				"de": "Fix: Berechnung der Farbtemperatur und ct-Reverse-Modus hinzugefügt ([#96] [#89])\nHelligkeits-Konverter hinzugefügt. Jetzt können States mit 0-254 oder 0-100 verwendet werden\nein paar kleine bugfixes",
@@ -80,19 +93,6 @@
 				"pl": "Latesta",
 				"uk": "Останні релізи",
 				"zh-cn": "试验释放"
-			},
-			"0.0.8": {
-				"en": "Ability to remove unused lights and sensors when deleting the light group\nSome code cleaning and update debug logs\nUpdate dependencies\nUpdate translations",
-				"de": "Möglichkeit, ungenutzte Lichter und Sensoren zu entfernen, wenn die Lichtgruppe gelöscht wird\nEinige Code-Bereinigung und Aktualisierungen von Debug-Logs\nAbhängigkeiten aktualisiert\nÜbersetzungen aktualisiert",
-				"ru": "Возможность удаления неиспользованных светильников и датчиков при удалении световой группы\nНекоторая чистка кода и обновление debug logs\nОбновить зависимости\nОбновление переводов",
-				"pt": "Capacidade de remover luzes e sensores não utilizados ao excluir o grupo de luz\nAlguns registros de limpeza e atualização de depuração de código\nDependências de atualização\nAtualizar traduções",
-				"nl": "Vermogen om onbruikbare lichten en sensoren te verwijderen als ze de lichtgroep verwijderen\nWat code schoonmaken en update debug logboeken\nUpdate afhankelijkheid\nVertaling:",
-				"fr": "Possibilité de supprimer les lumières et les capteurs inutilisés lors de la suppression du groupe de lumière\nNettoyage de code et mise à jour des journaux debug\nMettre à jour les dépendances\nMise à jour des traductions",
-				"it": "Capacità di rimuovere luci e sensori non utilizzati durante la cancellazione del gruppo di luce\nAlcuni codici di pulizia e aggiornamento dei registri di debug\nDipendenze di aggiornamento\nAggiornare le traduzioni",
-				"es": "Capacidad para eliminar luces y sensores no utilizados al eliminar el grupo de luz\nAlgunos registros de limpieza y actualización de código\nActualizar las dependencias\nTraducción actualizada",
-				"pl": "Możliwość usuwania nieużywanych światła i czujników, gdy wyładują grupę światła\nNiektóre kody czyszczą i aktualizują logi debugowe\nZależności aktualnej\nTłumaczenie aktualne",
-				"uk": "Можливість видалити невикористані вогні та датчики при видаленні світлової групи\nДеякі журнали очищення коду і оновлення\nОновлення залежності\nОновлення перекладів",
-				"zh-cn": "删除未用的照明和传感器的流动\n某些守则 清洁和更新纤维\n最新依赖\n最新翻译"
 			}
 		},
 		"titleLang": {
