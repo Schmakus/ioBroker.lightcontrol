@@ -43,7 +43,10 @@
 							},
 							"filter": true,
 							"sort": true,
-							"default": ""
+							"default": "",
+							"validator": "data.Group.match(/^[a-zA-Z0-9_-]*$/)",
+							"validatorErrorText": "No special characters allowed except - and _",
+							"validatorNoSaveOnError": true
 						},
 						{
 							"type": "objectId",
