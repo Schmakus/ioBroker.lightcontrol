@@ -56,6 +56,11 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) check-function to create LightGroups only if group name contains no special chars.
+
 ### 0.2.5 (2023-04-19)
 
 -   (Schmakus) Fix: set brightness although no brightness state is available (blink)
