@@ -56,6 +56,11 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Fix: set brightness although no brightness state is available (blink)
+
 ### 0.2.4 (2023-04-17)
 
 -   (Schmakus) renew release. no changes. please use this release.
