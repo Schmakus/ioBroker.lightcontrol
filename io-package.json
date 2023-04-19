@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.5",
+		"version": "0.2.6",
 		"news": {
+			"0.2.6": {
+				"en": "Creating LightGroups is only possible if the group name does not contain any special characters other than _ and -.",
+				"de": "Erstellen von LightGroups nur möglich, sofern der Gruppenname keine speziellen Zeichen außer _ und - enthält.",
+				"ru": "check-функция для создания LightGroups только если название группы не содержит специальных символов.",
+				"pt": "função de verificação para criar LightGroups apenas se o nome do grupo não contém caracteres especiais.",
+				"nl": "control-functie creëren Alleen als groepsnaam geen speciale kaarten bevat.",
+				"fr": "check-fonction pour créer LightGroups seulement si le nom de groupe ne contient pas de chars spéciaux.",
+				"it": "funzione di controllo per creare LightGroups solo se il nome del gruppo non contiene nessun char speciale.",
+				"es": "función de verificación para crear LightGroups sólo si el nombre del grupo no contiene chars especiales.",
+				"pl": "funkcja kontrolna do tworzenia LightGroups tylko wtedy, gdy nazwa grupy nie zawiera specjalnych charytatywnych.",
+				"uk": "контроль LightGroups тільки якщо назва групи не містить спеціальних chars.",
+				"zh-cn": "d. 建立检查职能 只有集团名称没有特殊的慈善机构,才有灯塔。."
+			},
 			"0.2.5": {
 				"en": "Fix: set brightness although no brightness state is available (blink)",
 				"de": "Fix: Helligkeit setzen, obwohl kein Helligkeits-Datenpunkt vorhanden ist (blink)",
@@ -80,19 +93,6 @@
 				"pl": "Niemożliwość przełączania się na/off lights tylko z stanem/brightness State i bez zmiany stanu stanowego\nNiemożliwość ustalenia Ct, Sat i Color bezpośrednio do lampy, również jeśli zamieniono.\nNowy Modus adaptacyjny Day interplated (ang.). Jest to krzywa w połowie zatoki od rana do zachodu słońca.\nTłumaczenie adaptername w io-package.json\nNiektóre małe trąbki i poprawki do logowania\nFix AdaptiveCt, jako że istnieje problem z danym obiektem.",
 				"uk": "Наявність перемикача на / відключення вогнів тільки з рівнем / ситуацією стану і без переключення стану\nНаявність комплекту Ct, Сб і колір безпосередньо до лампи, також якщо це вимкнено.\nДодано новий Modus для адаптивногоCt: StartYour День переплетений. Це синус половина криві з ранку до заходу сонця.\nОновлення перекладу імені адаптера в io-package.json\nДеякі маленькі виправлення помилок і виправлення для входу\nВиправлено АдаптивнийCt, тому що було проблема з об'єктом дати.",
 				"zh-cn": "只有在有水平/权利状态和没有转换国家的情况下,才有可能转换/弃权。\nA. 能否确定 特区、萨特和科罗尔直接向该区开除。.\n增加新资历:启动 日间。 从上午到日来,它有一个半曲线。.\nA. 最新变量的翻译\n对伐木的投机和更正很少。\n由于迄今为止有问题。."
-			},
-			"0.1.3": {
-				"en": "Added AdaptiveCt functionality. Was not implemented in older versions.",
-				"de": "AdaptiveCt-Funktionalität hinzugefügt. Wurde nicht in älteren Versionen implementiert.",
-				"ru": "Добавьте функциональность AdapteriveCt. Не было реализовано в старых версиях.",
-				"pt": "Adicione a funcionalidade AdaptiveCt. Não foi implementado em versões mais antigas.",
-				"nl": "AdaptiveCt functionaliteit. Werd niet geïnfiltreerd in oudere versies.",
-				"fr": "Ajouter la fonctionnalité AdaptiveCt. Elle n ' a pas été mise en œuvre dans des versions plus anciennes.",
-				"it": "Aggiungi funzionalità AdaptiveCt. Non è stato implementato nelle versioni precedenti.",
-				"es": "Añadir funcionalidad AdaptiveCt. No se implementó en versiones anteriores.",
-				"pl": "Funkcja adaptacyjna. Nie został zrealizowany w starszych wersjach.",
-				"uk": "Додати функцію адаптивногоCt. Не реалізовано в старих версіях.",
-				"zh-cn": "增加功能。 未在较长的版本中实施瓦斯。."
 			}
 		},
 		"titleLang": {

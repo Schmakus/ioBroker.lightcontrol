@@ -57,9 +57,9 @@ iobroker add lightcontrol
 	### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS**
+### 0.2.6 (2023-04-19)
 
--   (Schmakus) check-function to create LightGroups only if group name contains no special chars.
+-   (Schmakus) Creating LightGroups is only possible if the group name does not contain any special characters other than \_ and -.
 
 ### 0.2.5 (2023-04-19)
 
