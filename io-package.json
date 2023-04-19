@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.4",
+		"version": "0.2.5",
 		"news": {
+			"0.2.5": {
+				"en": "Fix: set brightness although no brightness state is available (blink)",
+				"de": "Fix: Helligkeit setzen, obwohl kein Helligkeits-Datenpunkt vorhanden ist (blink)",
+				"ru": "Исправление: установите яркость, хотя нет состояния яркости (blink)",
+				"pt": "Fix: brilho definido embora nenhum estado de brilho esteja disponível (blink)",
+				"nl": "Verlichting, hoewel er geen zonnige staat beschikbaar is",
+				"fr": "Fix: définir la luminosité bien qu'aucun état de luminosité n'est disponible (blink)",
+				"it": "Fisso: impostare la luminosità, anche se non è disponibile uno stato di luminosità (blink)",
+				"es": "Fijación: brillo de conjunto aunque no hay estado de brillo disponible (blink)",
+				"pl": "Fix: set brightness, choć nie ma jasnego stanu (blink)",
+				"uk": "Фіксація: встановити яскравість, хоча немає яскравості стану (посилання)",
+				"zh-cn": "九:建立光明,尽管没有光明国家(联系)"
+			},
 			"0.2.4": {
 				"en": "renew release. no changes. please use this release.",
 				"de": "Erneuerung. Keine Änderungen. Bitte nutze diese Veröffentlichung.",
@@ -80,19 +93,6 @@
 				"pl": "Funkcja adaptacyjna. Nie został zrealizowany w starszych wersjach.",
 				"uk": "Додати функцію адаптивногоCt. Не реалізовано в старих версіях.",
 				"zh-cn": "增加功能。 未在较长的版本中实施瓦斯。."
-			},
-			"0.1.2": {
-				"en": "Some different small bugfixes and code cleaning\nFix: Update for ioBroker Beta-Repo\nFix: Adaptive Color-Temperature (failure by reading settings minCt and maxCt)",
-				"de": "Einige verschiedene kleine Bugfixes und Codereinigung\nFix: Update für ioBroker Beta-Repo\nFix: Adaptive Color-Temperatur (Versagen durch Leseeinstellungen minCt und maxCt)",
-				"ru": "Некоторые различные небольшие исправления и очистки кода\nFix: Обновление для ioBroker Beta-Repo\nИсправление: Адаптивный цвет-температуру (потеря по настройкам чтения minCt и maxCt)",
-				"pt": "Alguns pequenos bugfixs diferentes e limpeza de código\nFix: Atualização para ioBroker Beta-Repo\nFix: Adaptive Color-Temperature (falha pelas configurações de leitura minCt e maxCt)",
-				"nl": "Andere kleine insecten en code schoonmaken\nUpdate voor ioBroker Beta-Repo\nAdaptive Color-Temperature ( falen door het lezen van minct en maxCt)",
-				"fr": "Quelques petits bugfix différents et le nettoyage de code\nCorrection : Mise à jour pour ioBroker Beta-Repo\nFixe: Adaptive Color-Temperature (failure en lecture réglages minCt et maxCt)",
-				"it": "Alcuni diversi piccoli bugfix e pulizia del codice\nFix: Aggiornamento per ioBroker Beta-Repo\nFisso: Adaptive Color-Temperature (fallimento tramite le impostazioni di lettura minCt e maxCt)",
-				"es": "Algunos bugfixs diferentes y la limpieza de códigos\nCorrección: Actualización para ioBroker Beta-Repo\nFijación: Adaptive Color-Temperatura (failure by reading settings minCt and maxCt)",
-				"pl": "Niektóre małe trąbki i kod czyszczenie\nFix: Update for ioBroker Beta-Repo (ang.)\nFix: Adaptive Color-Temperature (ang.)",
-				"uk": "Деякі різні невеликі виправлення помилок і очищення коду\nВиправлення: Оновлення для ioBroker Beta-Repo\nВиправлення: Адаптивний колір-температура (дотримання параметрів читання minCt і maxCt)",
-				"zh-cn": "一些不同的小型配件和清洁守则\nFix:io Broker Beta-Repo的最新情况\nFix:Aaptive Color-Temperature(因阅读环境微克特和不可xCt而丧失)"
 			}
 		},
 		"titleLang": {
