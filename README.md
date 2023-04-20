@@ -57,6 +57,10 @@ iobroker add lightcontrol
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Fix switching on/off
+
 ### 0.2.6 (2023-04-19)
 
 -   (Schmakus) Creating LightGroups is only possible if the group name does not contain any special characters other than \_ and -.
