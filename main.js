@@ -871,7 +871,7 @@ class Lightcontrol extends utils.Adapter {
 				case "power":
 					if (NewVal !== OldVal) {
 						await switchingOnOff.GroupPowerOnOff(this, Group, NewVal); //Alles schalten
-						await lightHandling.PowerOnAftercare(this, Group);
+						if (NewVal) await lightHandling.PowerOnAftercare(this, Group);
 						if (!NewVal && LightGroups[Group].autoOffTimed.enabled) {
 							//Wenn ausschalten und autoOffTimed ist aktiv, dieses löschen, da sonst erneute ausschaltung nach Ablauf der Zeit. Ist zusätzlich rampon aktiv, führt dieses zu einem einschalten mit sofort folgenden ausschalten
 							await timers.clearAutoOffTimeouts(this, Group);
@@ -881,11 +881,7 @@ class Lightcontrol extends utils.Adapter {
 							LightGroups[Group].powerCleaningLight = false;
 							await this.setStateAsync(Group + ".powerCleaningLight", false, true);
 						}
-					} else {
-						await timers.clearAutoOffTimeouts(this, Group);
-						await switchingOnOff.SimpleGroupPowerOnOff(this, Group, NewVal);
 					}
-
 					handeled = true;
 					break;
 				case "powerCleaningLight":
