@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.6",
+		"version": "0.2.7",
 		"news": {
+			"0.2.7": {
+				"en": "Fix simple switching on/off",
+				"de": "Fix einfaches Einschalten/Ausschalten",
+				"ru": "Fix переключение на/выключение",
+				"pt": "Fix de ligar/desligar",
+				"nl": "Vertaling:",
+				"fr": "Interrupteur fixe/arrêt",
+				"it": "Correggere l'accensione/spegnimento",
+				"es": "Activación/desactivación",
+				"pl": "Fix zmienia się na/off",
+				"uk": "Фіксація перемикача / вимкнення",
+				"zh-cn": "九. 固定转换/弃权"
+			},
 			"0.2.6": {
 				"en": "Creating LightGroups is only possible if the group name does not contain any special characters other than _ and -.",
 				"de": "Erstellen von LightGroups nur möglich, sofern der Gruppenname keine speziellen Zeichen außer _ und - enthält.",
@@ -80,19 +93,6 @@
 				"pl": "Obliczenia koloru i dodał tryb ct-reverse (#96 89)\nDodała jasność. Teraz można użyć stanu brydżowego z 0-254 lub 0-100\ntrąbka",
 				"uk": "Фіксований розрахунок кольору та додано ct-reverse режим ([#96] [#89])\nДодано яскравість перетворення. Тепер ви можете використовувати стани з вагою 0-254 або 0-100\nдеякі маленькі fixes",
 				"zh-cn": "九. 定量计算和增加微量反弹([第96][第89]号决议)\n改变光明。 如今,你可以使用0.-254或0-100的超级州。\n一些小的配件"
-			},
-			"0.2.0": {
-				"en": "Availability to switch on/off lights only with level/brightness state and without switch state\nAvailability to set Ct, Sat and Color directly to the lamp, also if it's switched off.\nAdded new Modus for AdaptiveCt: StartYourDay interplated. It's a sinus half curve from morning time to sunset.\nUpdate adaptername translations in io-package.json\nSome little bugfixes and corrections for logging\nFix AdaptiveCt, because there was a problem with date object.",
-				"de": "Möglichkeit zum Einschalten/Ausschalten von Lichtern nur mit Helligkeits-Datenpunkt\nMöglichkeit zum Setzen von Ct, Sat und Farbe direkt an die Lampe, auch wenn diese über power ausgeschaltet ist.\nNeuer Modus für AdaptiveCt hinzugefügt: StartYourDay interpolated. Eine Sinus-Halbkurve von Morgen bis Sonnenuntergang.\nUpdate Adapternamen-Übersetzungen in io-package.json\nEinige kleine Bugfixes und Korrekturen für die Protokollierung\nFix AdaptiveCt",
-				"ru": "Доступность для включения/выключения светов только с состоянием уровня/яркости и без переключения состояния\nДоступность для установки Ct, Sat и Color непосредственно к лампе, также если он выключен.\nДобавлен новый Modus для AdapteriveCt: StartYour День переплетен. Это грешная половина кривой с утра до заката.\nОбновление переводов в io-package.json\nНемного исправлений и исправлений для входа\nFix AdapterCt, потому что возникла проблема с объектом даты.",
-				"pt": "Disponibilidade para ligar/desligar luzes apenas com nível/brilho estado e sem mudar estado\nDisponibilidade para definir Ct, Sat e Cor diretamente para a lâmpada, também se estiver desligado.\nAdicionado novo Modus para AdaptiveCt: StartYour Dia intercalado. É uma meia curva sinusal da manhã ao pôr-do-sol.\nAtualizar traduções do nome do adaptador em io-package.json\nAlguns pequenos bugfixes e correções para registro\nFix AdaptiveCt, porque houve um problema com o objeto de data.",
-				"nl": "Vermogen om lichten uit te schakelen met niveau/brightness staat en zonder overschrijving van de staat\nAansprakelijkheid Ct, Sat en Color rechtstreeks naar de lamp, ook als het uitgezet is.\nVertaling: Dag verwisseld. Het is een sinus half curve van ochtend tot zonsondergang.\nVertaling:\nEnkele kleine insecten en correcties voor logeren\nFix AdaptiveCt, want er was een probleem met datum object.",
-				"fr": "Disponibilité pour allumer/éteindre les feux uniquement avec l'état de niveau/brightness et sans changement d'état\nDisponibilité à définir Ct, sat et couleur directement à la lampe, aussi si elle est éteinte.\nAjout du nouveau Modus pour AdaptiveCt: StartYour Jour intercalé. C'est une demi courbe de sinus du matin au coucher du soleil.\nMettre à jour les traductions de nom d'adaptateur dans io-package.json\nQuelques petits bugfix et corrections pour l'enregistrement\nFix AdaptiveCt, parce qu'il y avait un problème avec objet date.",
-				"it": "Disponibilità di accendere / spegnere solo con livello / stato di luminosità e senza stato di commutazione\nDisponibilità per impostare Ct, Sat e Color direttamente alla lampada, anche se spenta.\nAggiunto il nuovo Modus per AdaptiveCt: StartYour Giorno interrato. E' una curva a metà sinusale dal mattino al tramonto.\nAggiorna le traduzioni del nome dell'adattatore in io-package.json\nAlcuni piccoli bugfix e correzioni per la registrazione\nFix AdaptiveCt, perché c'era un problema con l'oggetto data.",
-				"es": "Disponibilidad para encender / apagar las luces sólo con nivel / estado de rectitud y sin estado de conmutación\nDisponibilidad para establecer Ct, Sat y Color directamente a la lámpara, también si se apaga.\nAñadido nuevo Modus for AdaptiveCt: StartYour Día interplatado. Es una media curva sinusica de la mañana al atardecer.\nActualizar las traducciones de nombre de adaptador en io-package.json\nAlgunas pequeñas bugfixes y correcciones para registrar\nFix AdaptiveCt, porque había un problema con el objeto de fecha.",
-				"pl": "Niemożliwość przełączania się na/off lights tylko z stanem/brightness State i bez zmiany stanu stanowego\nNiemożliwość ustalenia Ct, Sat i Color bezpośrednio do lampy, również jeśli zamieniono.\nNowy Modus adaptacyjny Day interplated (ang.). Jest to krzywa w połowie zatoki od rana do zachodu słońca.\nTłumaczenie adaptername w io-package.json\nNiektóre małe trąbki i poprawki do logowania\nFix AdaptiveCt, jako że istnieje problem z danym obiektem.",
-				"uk": "Наявність перемикача на / відключення вогнів тільки з рівнем / ситуацією стану і без переключення стану\nНаявність комплекту Ct, Сб і колір безпосередньо до лампи, також якщо це вимкнено.\nДодано новий Modus для адаптивногоCt: StartYour День переплетений. Це синус половина криві з ранку до заходу сонця.\nОновлення перекладу імені адаптера в io-package.json\nДеякі маленькі виправлення помилок і виправлення для входу\nВиправлено АдаптивнийCt, тому що було проблема з об'єктом дати.",
-				"zh-cn": "只有在有水平/权利状态和没有转换国家的情况下,才有可能转换/弃权。\nA. 能否确定 特区、萨特和科罗尔直接向该区开除。.\n增加新资历:启动 日间。 从上午到日来,它有一个半曲线。.\nA. 最新变量的翻译\n对伐木的投机和更正很少。\n由于迄今为止有问题。."
 			}
 		},
 		"titleLang": {
