@@ -1119,18 +1119,28 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * a function for log output
+	 * @async
+	 * @function
 	 * @param {string} logtext
-	 * @param {string} logtype ("silly" | "info" | "debug" | "warn" | "error")
+	 * @param {string} [logtype = "debug"] ("silly" | "info" | "debug" | "warn" | "error")
+	 * @param {string} [funcName = ""] Extended info. Example the name of the function
+	 * @return {Promise<void>}
 	 */
-	async writeLog(logtext, logtype = "debug") {
+	async writeLog(logtext, logtype, funcName) {
 		try {
-			if (logtype === "silly") this.log.silly(logtext);
-			if (logtype === "info") this.log.info(logtext);
-			if (logtype === "debug") this.log.debug(logtext);
-			if (logtype === "warn") this.log.warn(logtext);
-			if (logtype === "error") this.log.error(logtext);
-		} catch (e) {
-			this.log.error(`[ writeLog ] error: ${e}`);
+			const logFunctions = {
+				silly: this.log.silly,
+				info: this.log.info,
+				debug: this.log.debug,
+				warn: this.log.warn,
+				error: this.log.error,
+			};
+			const logFn = logFunctions[logtype];
+			if (logFn) {
+				logFn(`${funcName ? "[ " + funcName + " ] " : ""} ${logtext}`);
+			}
+		} catch (error) {
+			this.log.error(`[ writeLog ] error: ${error}`);
 		}
 	}
 
@@ -1143,10 +1153,9 @@ class Lightcontrol extends utils.Adapter {
 	async errorHandling(error, codePart, extended = "") {
 		try {
 			this.writeLog(
-				`[ ${codePart} ] error: ${error.message} // stack: ${error.stack} ${
-					extended ? " // extended info: " + extended : ""
-				}`,
+				`error: ${error.message} // stack: ${error.stack} ${extended ? " // extended info: " + extended : ""}`,
 				"error",
+				codePart,
 			);
 			if (!disableSentry) {
 				if (this.supportsFeature && this.supportsFeature("PLUGINS")) {
