@@ -54,7 +54,7 @@ class Lightcontrol extends utils.Adapter {
 		this.lat = "";
 		this.lng = "";
 
-		this.DevMode = false;
+		this.DevMode = true;
 		this.processing = false;
 	}
 
@@ -1122,11 +1122,11 @@ class Lightcontrol extends utils.Adapter {
 	 * @async
 	 * @function
 	 * @param {string} logtext
-	 * @param {string} [logtype = "debug"] ("silly" | "info" | "debug" | "warn" | "error")
-	 * @param {string} [funcName = ""] Extended info. Example the name of the function
+	 * @param {string} logtype ("silly" | "info" | "debug" | "warn" | "error")
+	 * @param {string} funcName Extended info. Example the name of the function
 	 * @return {Promise<void>}
 	 */
-	async writeLog(logtext, logtype, funcName) {
+	async writeLog(logtext, logtype = "debug", funcName = "") {
 		try {
 			const logFunctions = {
 				silly: this.log.silly,
