@@ -352,6 +352,7 @@ class Lightcontrol extends utils.Adapter {
 						if (Prop === "power" && Group !== "All") {
 							OldVal = this.LightGroups[Group].powerOldVal = this.LightGroups[Group].powerNewVal;
 							this.LightGroups[Group].powerNewVal = NewVal;
+							this.writeLog(`New LightGroups Object: ${JSON.stringify(this.LightGroups[Group])}`);
 						}
 
 						if (Group === "All") {
