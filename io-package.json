@@ -167,7 +167,13 @@
 		"RampSteps": 10,
 		"minBri": 10,
 		"IsPresenceDp": "",
-		"PresenceCountDp": ""
+		"PresenceCountDp": "",
+		"LightGroups": [
+			{
+				"Group": "Wohnzimmer",
+				"GroupLuxSensor": ""
+			}
+		]
 	},
 	"objects": [],
 	"instanceObjects": []

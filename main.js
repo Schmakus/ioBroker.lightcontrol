@@ -54,7 +54,7 @@ class Lightcontrol extends utils.Adapter {
 		this.lat = "";
 		this.lng = "";
 
-		this.DevMode = false;
+		this.DevMode = true;
 		this.processing = false;
 	}
 
@@ -338,16 +338,8 @@ class Lightcontrol extends utils.Adapter {
 						const NewVal = state.val;
 						let OldVal;
 
-						/*
-						const _state = await helper.CheckInputGeneral(this, id, state);
-						this.writeLog(
-							`[ onStateChange ] CheckInputGeneral for ${id} with state: ${NewVal} is: ${_state}`,
-						);
-						*/
-
 						const OwnId = await helper.removeNamespace(this, id);
-						const Group = (await helper.ExtractGroupAndProp(OwnId)).Group;
-						const Prop = (await helper.ExtractGroupAndProp(OwnId)).Prop;
+						const { Group, Prop } = await helper.ExtractGroupAndProp(OwnId);
 
 						if (Prop === "power" && Group !== "All") {
 							OldVal = this.LightGroups[Group].powerOldVal = this.LightGroups[Group].powerNewVal;
@@ -367,21 +359,17 @@ class Lightcontrol extends utils.Adapter {
 
 						//Check if it's a LuxSensor
 						if (this.LuxSensors.includes(id)) {
-							for (const Group in this.LightGroups) {
-								if (this.LightGroups[Group].LuxSensor === id) {
-									if (state.val !== this.LightGroups[Group].actualLux) {
-										this.writeLog(
-											`[ onStateChange ] It's a LuxSensor in following Group: ${Group}`,
-										);
-										this.LightGroups[Group].actualLux = state.val;
-										await this.Controller(
-											Group,
-											"actualLux",
-											state.val,
-											this.LightGroups[Group].actualLux,
-											"",
-										);
-									}
+							const groupsWithLuxSensor = Object.values(this.LightGroups).filter(
+								(group) => group.LuxSensor === id,
+							);
+
+							for (const group of groupsWithLuxSensor) {
+								if (state.val !== group.actualLux) {
+									this.writeLog(
+										`[ onStateChange ] It's a LuxSensor in following Group: ${group.name}`,
+									);
+									group.actualLux = state.val;
+									await this.Controller(group.name, "actualLux", state.val, group.actualLux, "");
 								}
 							}
 
@@ -1119,18 +1107,28 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * a function for log output
+	 * @async
+	 * @function
 	 * @param {string} logtext
 	 * @param {string} logtype ("silly" | "info" | "debug" | "warn" | "error")
+	 * @param {string} funcName Extended info. Example the name of the function
+	 * @return {Promise<void>}
 	 */
-	async writeLog(logtext, logtype = "debug") {
+	async writeLog(logtext, logtype = "debug", funcName = "") {
 		try {
-			if (logtype === "silly") this.log.silly(logtext);
-			if (logtype === "info") this.log.info(logtext);
-			if (logtype === "debug") this.log.debug(logtext);
-			if (logtype === "warn") this.log.warn(logtext);
-			if (logtype === "error") this.log.error(logtext);
-		} catch (e) {
-			this.log.error(`[ writeLog ] error: ${e}`);
+			const logFunctions = {
+				silly: this.log.silly,
+				info: this.log.info,
+				debug: this.log.debug,
+				warn: this.log.warn,
+				error: this.log.error,
+			};
+			const logFn = logFunctions[logtype];
+			if (logFn) {
+				logFn(`${funcName ? "[ " + funcName + " ] " : ""} ${logtext}`);
+			}
+		} catch (error) {
+			this.log.error(`[ writeLog ] error: ${error}`);
 		}
 	}
 
@@ -1143,10 +1141,9 @@ class Lightcontrol extends utils.Adapter {
 	async errorHandling(error, codePart, extended = "") {
 		try {
 			this.writeLog(
-				`[ ${codePart} ] error: ${error.message} // stack: ${error.stack} ${
-					extended ? " // extended info: " + extended : ""
-				}`,
+				`error: ${error.message} // stack: ${error.stack} ${extended ? " // extended info: " + extended : ""}`,
 				"error",
+				codePart,
 			);
 			if (!disableSentry) {
 				if (this.supportsFeature && this.supportsFeature("PLUGINS")) {
