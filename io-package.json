@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.7",
+		"version": "0.2.8",
 		"news": {
+			"0.2.8": {
+				"en": "Fix switch on/off\nSome code improvements",
+				"de": "Fehler beim Ein-/Ausschalten behoben\nEinige Code Verbesserungen",
+				"ru": "Fix переключатель on/off\nНекоторые улучшения кода",
+				"pt": "Fix interruptor ligar/desligar\nAlgumas melhorias de código",
+				"nl": "Vertaling:\nSommige code verbetering",
+				"fr": "Interrupteur fixe/arrêt\nQuelques améliorations de code",
+				"it": "Accendere/disattivare l'interruttore\nAlcuni miglioramenti del codice",
+				"es": "Interruptor de fijación/desactivado\nAlgunas mejoras de código",
+				"pl": "Fix przełącza się/off\nNiektóre poprawy kodu",
+				"uk": "Фіксація перемикача / вимкнення\nДеякі покращення коду",
+				"zh-cn": "Fix 转换/弃权\n有些守则的改进"
+			},
 			"0.2.7": {
 				"en": "Fix simple switching on/off",
 				"de": "Fix einfaches Einschalten/Ausschalten",
@@ -80,19 +93,6 @@
 				"pl": "Fix: Grupy Kreatywne bez żadnego czujnika globalnego lub niepodzielnego czujnika luksusowego\nZależności aktualnej\nZalecenia dla lepszej debugowania",
 				"uk": "Виправлення: Створення груп без будь-якого глобального люкс-сенсора або невидимого люкс-сенсора\nОновлення залежності\nПокращення для кращого знеболювання",
 				"zh-cn": "Fix:在没有任何全球声音或不可分割的声音下设立集团\n最新依赖\nB. 增强工作力度"
-			},
-			"0.2.1": {
-				"en": "Fix calculation of color-temperature and added ct-reverse mode ([#96] [#89])\nAdded brightness converting. Now you can use brighness states with 0-254 or 0-100\nsome little bugfixes",
-				"de": "Fix: Berechnung der Farbtemperatur und ct-Reverse-Modus hinzugefügt ([#96] [#89])\nHelligkeits-Konverter hinzugefügt. Jetzt können States mit 0-254 oder 0-100 verwendet werden\nein paar kleine bugfixes",
-				"ru": "Исправление расчёта цветовой температуры и добавленного режима ct-reverse ([#96] [#89])\nДобавлено преобразование яркости. Теперь вы можете использовать brighness состояния с 0-254 или 0-100\nнекоторые маленькие багфиксы",
-				"pt": "Corrigir o cálculo da temperatura de cor e modo ct-reverso adicionado ([#96] [#89])\nAdicionada conversão de brilho. Agora você pode usar estados de brighness com 0-254 ou 0-100\nalguns pequenos bugs",
-				"nl": "Vertaling:\nToegevoegd helderheid. Nu kun je omkoping gebruiken met 0-254 of 0-100\nwat insectenfixen",
-				"fr": "Calcul fixe de la température de couleur et du mode ct-reverse ajouté ([#96] [#89])\nAjout de la luminosité de la conversion. Maintenant, vous pouvez utiliser les états de brighness avec 0-254 ou 0-100\nquelques petits bugfix",
-				"it": "Fissare il calcolo della temperatura del colore e aggiungere la modalità ct-reverse ([#96] [#89])\nAggiunto conversione di luminosità. Ora è possibile utilizzare stati di corruzione con 0-254 o 0-100\nqualche piccolo bugfix",
-				"es": "Corregir el cálculo de la temperatura de color y el modo ct-reverso añadido ([#96] [#89])\nSe agregó brillo. Ahora puede utilizar estados de briguera con 0-254 o 0-100\nalgunos pequeños bugfixes",
-				"pl": "Obliczenia koloru i dodał tryb ct-reverse (#96 89)\nDodała jasność. Teraz można użyć stanu brydżowego z 0-254 lub 0-100\ntrąbka",
-				"uk": "Фіксований розрахунок кольору та додано ct-reverse режим ([#96] [#89])\nДодано яскравість перетворення. Тепер ви можете використовувати стани з вагою 0-254 або 0-100\nдеякі маленькі fixes",
-				"zh-cn": "九. 定量计算和增加微量反弹([第96][第89]号决议)\n改变光明。 如今,你可以使用0.-254或0-100的超级州。\n一些小的配件"
 			}
 		},
 		"titleLang": {
