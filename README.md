@@ -59,7 +59,7 @@ iobroker add lightcontrol
 
 ### **WORK IN PROGRESS**
 
--   (Schmakus) Fix switching off with brightness state
+-   (Schmakus) Fix switch on/off
 -   (Schmakus) Some code improvements
 
 ### 0.2.7 (2023-04-20)
