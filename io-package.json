@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.8",
+		"version": "0.2.9",
 		"news": {
+			"0.2.9": {
+				"en": "Important Update! Dev-mode was activated in v0.2.8",
+				"de": "Wichtiges Update! Dev-Mode war in v0.2.8 aktiviert",
+				"ru": "Важное обновление! Dev-mode был активирован в v0.2.8",
+				"pt": "Atualização importante! Dev-mode foi ativado em v0.2.8",
+				"nl": "Belangrijke Update! Dev-mode werd geactiveerd in V0.2.8",
+				"fr": "Importante mise à jour ! Dev-mode a été activé dans v0.2.8",
+				"it": "Aggiornamento importante! Dev-mode è stato attivato in v0.2.8",
+				"es": "Importante actualización! Dev-mode fue activado en v0.2.8",
+				"pl": "Important Update (ang.). Dev-mode został uruchomiony w v0.2.8",
+				"uk": "Головна Dev-mode був активований в v0.2.8",
+				"zh-cn": "重要消息 Dev-mode于0.2.8起被动。"
+			},
 			"0.2.8": {
 				"en": "Fix switch on/off\nSome code improvements",
 				"de": "Fehler beim Ein-/Ausschalten behoben\nEinige Code Verbesserungen",
@@ -80,19 +93,6 @@
 				"pl": "Żadne ze specjalnych znaków nie pozwalało na nazwy grup, z wyjątkiem dashów i podlin/>>. Pozwoliło się na zmianę nazw grup, jeśli będą potrzebne!",
 				"uk": "Немає спеціальних символів, дозволених в групових іменах, крім дашів і underlines => Будь ласка, змініть імена груп, якщо це необхідно!",
 				"zh-cn": "除达什和格罗维斯以外的集团名称上不允许的特殊性=> 请在必要时修改你的集团名称。!"
-			},
-			"0.2.2": {
-				"en": "Fix: Create Groups without any global lux-sensor or individial lux-sensor\nUpdate dependencies\nEnhancements for better debugging",
-				"de": "Fix: Gruppen erstellen ohne globalen Lux-Sensor oder individuellen Lux-Sensor\nAbhängigkeiten aktualisiert\nVerbesserungen für besseres Debugging",
-				"ru": "Fix: Создание групп без любого глобального цензуры или индивидуального цензуры\nОбновить зависимости\nУлучшения для лучшего отладки",
-				"pt": "Fix: Criar grupos sem qualquer lux-sensor global ou lux-sensor individial\nDependências de atualização\nMelhorias para melhor depuração",
-				"nl": "Create Groups zonder enige lux-sensor of individvidviduele lux-sensor\nUpdate afhankelijkheid\nVerbeteringen voor beter ontbreken",
-				"fr": "Fix: Créer des groupes sans lex-senseur global ou individial lux-senseur\nMettre à jour les dépendances\nEnhancements for better debugging",
-				"it": "Fix: Crea gruppi senza alcun sensore lux globale o lux-sensore individiale\nDipendenze di aggiornamento\nMiglioramenti per una migliore debug",
-				"es": "Fijación: Crear grupos sin ningún lux-sensor global o lux-sensor individial\nActualizar las dependencias\nMejoras para una mejor depuración",
-				"pl": "Fix: Grupy Kreatywne bez żadnego czujnika globalnego lub niepodzielnego czujnika luksusowego\nZależności aktualnej\nZalecenia dla lepszej debugowania",
-				"uk": "Виправлення: Створення груп без будь-якого глобального люкс-сенсора або невидимого люкс-сенсора\nОновлення залежності\nПокращення для кращого знеболювання",
-				"zh-cn": "Fix:在没有任何全球声音或不可分割的声音下设立集团\n最新依赖\nB. 增强工作力度"
 			}
 		},
 		"titleLang": {

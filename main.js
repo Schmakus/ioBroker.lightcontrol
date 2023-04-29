@@ -54,7 +54,7 @@ class Lightcontrol extends utils.Adapter {
 		this.lat = "";
 		this.lng = "";
 
-		this.DevMode = true;
+		this.DevMode = false;
 		this.processing = false;
 	}
 
