@@ -56,8 +56,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.2.10 (2023-04-29)
 
 -   (Schmakus) Fix lux sensor handling
 
@@ -77,10 +76,6 @@ iobroker add lightcontrol
 ### 0.2.6 (2023-04-19)
 
 -   (Schmakus) Creating LightGroups is only possible if the group name does not contain any special characters other than \_ and -.
-
-### 0.2.5 (2023-04-19)
-
--   (Schmakus) Fix: set brightness although no brightness state is available (blink)
 
 ## License
 

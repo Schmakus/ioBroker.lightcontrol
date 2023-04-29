@@ -1,180 +1,189 @@
 {
-	"common": {
-		"name": "lightcontrol",
-		"version": "0.2.9",
-		"news": {
-			"0.2.9": {
-				"en": "Important Update! Dev-mode was activated in v0.2.8",
-				"de": "Wichtiges Update! Dev-Mode war in v0.2.8 aktiviert",
-				"ru": "Важное обновление! Dev-mode был активирован в v0.2.8",
-				"pt": "Atualização importante! Dev-mode foi ativado em v0.2.8",
-				"nl": "Belangrijke Update! Dev-mode werd geactiveerd in V0.2.8",
-				"fr": "Importante mise à jour ! Dev-mode a été activé dans v0.2.8",
-				"it": "Aggiornamento importante! Dev-mode è stato attivato in v0.2.8",
-				"es": "Importante actualización! Dev-mode fue activado en v0.2.8",
-				"pl": "Important Update (ang.). Dev-mode został uruchomiony w v0.2.8",
-				"uk": "Головна Dev-mode був активований в v0.2.8",
-				"zh-cn": "重要消息 Dev-mode于0.2.8起被动。"
-			},
-			"0.2.8": {
-				"en": "Fix switch on/off\nSome code improvements",
-				"de": "Fehler beim Ein-/Ausschalten behoben\nEinige Code Verbesserungen",
-				"ru": "Fix переключатель on/off\nНекоторые улучшения кода",
-				"pt": "Fix interruptor ligar/desligar\nAlgumas melhorias de código",
-				"nl": "Vertaling:\nSommige code verbetering",
-				"fr": "Interrupteur fixe/arrêt\nQuelques améliorations de code",
-				"it": "Accendere/disattivare l'interruttore\nAlcuni miglioramenti del codice",
-				"es": "Interruptor de fijación/desactivado\nAlgunas mejoras de código",
-				"pl": "Fix przełącza się/off\nNiektóre poprawy kodu",
-				"uk": "Фіксація перемикача / вимкнення\nДеякі покращення коду",
-				"zh-cn": "Fix 转换/弃权\n有些守则的改进"
-			},
-			"0.2.7": {
-				"en": "Fix simple switching on/off",
-				"de": "Fix einfaches Einschalten/Ausschalten",
-				"ru": "Fix переключение на/выключение",
-				"pt": "Fix de ligar/desligar",
-				"nl": "Vertaling:",
-				"fr": "Interrupteur fixe/arrêt",
-				"it": "Correggere l'accensione/spegnimento",
-				"es": "Activación/desactivación",
-				"pl": "Fix zmienia się na/off",
-				"uk": "Фіксація перемикача / вимкнення",
-				"zh-cn": "九. 固定转换/弃权"
-			},
-			"0.2.6": {
-				"en": "Creating LightGroups is only possible if the group name does not contain any special characters other than _ and -.",
-				"de": "Erstellen von LightGroups nur möglich, sofern der Gruppenname keine speziellen Zeichen außer _ und - enthält.",
-				"ru": "check-функция для создания LightGroups только если название группы не содержит специальных символов.",
-				"pt": "função de verificação para criar LightGroups apenas se o nome do grupo não contém caracteres especiais.",
-				"nl": "control-functie creëren Alleen als groepsnaam geen speciale kaarten bevat.",
-				"fr": "check-fonction pour créer LightGroups seulement si le nom de groupe ne contient pas de chars spéciaux.",
-				"it": "funzione di controllo per creare LightGroups solo se il nome del gruppo non contiene nessun char speciale.",
-				"es": "función de verificación para crear LightGroups sólo si el nombre del grupo no contiene chars especiales.",
-				"pl": "funkcja kontrolna do tworzenia LightGroups tylko wtedy, gdy nazwa grupy nie zawiera specjalnych charytatywnych.",
-				"uk": "контроль LightGroups тільки якщо назва групи не містить спеціальних chars.",
-				"zh-cn": "d. 建立检查职能 只有集团名称没有特殊的慈善机构,才有灯塔。."
-			},
-			"0.2.5": {
-				"en": "Fix: set brightness although no brightness state is available (blink)",
-				"de": "Fix: Helligkeit setzen, obwohl kein Helligkeits-Datenpunkt vorhanden ist (blink)",
-				"ru": "Исправление: установите яркость, хотя нет состояния яркости (blink)",
-				"pt": "Fix: brilho definido embora nenhum estado de brilho esteja disponível (blink)",
-				"nl": "Verlichting, hoewel er geen zonnige staat beschikbaar is",
-				"fr": "Fix: définir la luminosité bien qu'aucun état de luminosité n'est disponible (blink)",
-				"it": "Fisso: impostare la luminosità, anche se non è disponibile uno stato di luminosità (blink)",
-				"es": "Fijación: brillo de conjunto aunque no hay estado de brillo disponible (blink)",
-				"pl": "Fix: set brightness, choć nie ma jasnego stanu (blink)",
-				"uk": "Фіксація: встановити яскравість, хоча немає яскравості стану (посилання)",
-				"zh-cn": "九:建立光明,尽管没有光明国家(联系)"
-			},
-			"0.2.4": {
-				"en": "renew release. no changes. please use this release.",
-				"de": "Erneuerung. Keine Änderungen. Bitte nutze diese Veröffentlichung.",
-				"ru": "обновление релиза. никаких изменений. пожалуйста, используйте этот релиз.",
-				"pt": "renovar a liberação. sem alterações. por favor, use esta versão.",
-				"nl": "nieuwe vrijlating. geen veranderingen. gebruik deze vrijlating.",
-				"fr": "renouvellement. pas de changement. veuillez utiliser cette version.",
-				"it": "rinnovare il rilascio. nessun cambiamento. si prega di utilizzare questa release.",
-				"es": "renovar la liberación. sin cambios. por favor, usa esta versión.",
-				"pl": "renowacja. nie zmienia się. użycie tego wydania.",
-				"uk": "новий реліз. немає змін. будь ласка, використовуйте цей реліз.",
-				"zh-cn": "再次获释。 没有变化。 请使用这一释放。."
-			},
-			"0.2.3": {
-				"en": "No special characters allowed in group names except dashes and underlines => Please change your group names if needed!!!",
-				"de": "Keine Sonderzeichen erlaubt in Gruppennamen außer Bindestriche und Unterstriche => Bitte Gruppennamen bei Bedarf ändern!",
-				"ru": "Не допускаются специальные символы в именах групп, кроме dashes и underlines => Пожалуйста, измените названия вашей группы, если это необходимо!",
-				"pt": "Sem caracteres especiais permitidos em nomes de grupo exceto traços e sublinhados => Por favor, altere seus nomes de grupo se necessário!",
-				"nl": "Geen bijzondere personages toegestaan behalve Dashes en Underlines in Verander alsjeblieft je groepsnamen als het nodig is!",
-				"fr": "Pas de caractères spéciaux autorisés dans les noms de groupe sauf les tirets et les titres = Veuillez changer vos noms de groupe si nécessaire!",
-				"it": "Nessun carattere speciale consentito in nomi di gruppo tranne trattini e sottolineature = > Si prega di cambiare i nomi di gruppo se necessario!",
-				"es": "No se admiten caracteres especiales en los nombres de grupos, excepto dashes y underlines = Por favor, cambie sus nombres de grupo si es necesario!",
-				"pl": "Żadne ze specjalnych znaków nie pozwalało na nazwy grup, z wyjątkiem dashów i podlin/>>. Pozwoliło się na zmianę nazw grup, jeśli będą potrzebne!",
-				"uk": "Немає спеціальних символів, дозволених в групових іменах, крім дашів і underlines => Будь ласка, змініть імена груп, якщо це необхідно!",
-				"zh-cn": "除达什和格罗维斯以外的集团名称上不允许的特殊性=> 请在必要时修改你的集团名称。!"
-			}
-		},
-		"titleLang": {
-			"en": "LightControl",
-			"de": "LightControl",
-			"ru": "LightControl",
-			"pt": "LightControl",
-			"nl": "LightControl",
-			"fr": "LightControl",
-			"it": "LightControl",
-			"es": "LightControl",
-			"pl": "LightControl",
-			"uk": "Управління",
-			"zh-cn": "A. 灯 律"
-		},
-		"desc": {
-			"en": "Light control of lamps from various manufacturers",
-			"de": "Lichtsteuerung von Lampen verschiedener Hersteller",
-			"ru": "Управление светом светильников различных производителей",
-			"pt": "Controle de luz de lâmpadas de vários fabricantes",
-			"nl": "Lichtregeling van lampen van diverse fabrikanten",
-			"fr": "Contrôle de la lumière des lampes de différents fabricants",
-			"it": "Controllo della luce di lampade di vari produttori",
-			"es": "Control de luz de lámparas de varios fabricantes.",
-			"pl": "Sterowanie oświetleniem lamp różnych producentów",
-			"zh-cn": "各厂家灯具的光控",
-			"uk": "Контроль світла ламп різних виробників"
-		},
-		"authors": ["Schmakus <schmakus@gmail.com>"],
-		"keywords": ["light", "lightcontrol", "control", "motion", "motionsensor", "motiondetection"],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "lightcontrol.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
-		"readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "lighting",
-		"compact": true,
-		"messagebox": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"adminUI": {
-			"config": "json",
-			"custom": "json"
-		},
-		"plugins": {
-			"sentry": {
-				"dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229"
-			}
-		},
-		"supportCustoms": true,
-		"dependencies": [
-			{
-				"js-controller": ">=4.0.0"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=5.1.13"
-			}
-		]
-	},
-	"native": {
-		"_id": 0,
-		"deleteUnusedConfig": true,
-		"GlobalLuxSensor": "",
-		"minCt": 2700,
-		"maxCt": 6500,
-		"RampSteps": 10,
-		"minBri": 10,
-		"IsPresenceDp": "",
-		"PresenceCountDp": "",
-		"LightGroups": [
-			{
-				"Group": "Wohnzimmer",
-				"GroupLuxSensor": ""
-			}
-		]
-	},
-	"objects": [],
-	"instanceObjects": []
+  "common": {
+    "name": "lightcontrol",
+    "version": "0.2.10",
+    "news": {
+      "0.2.10": {
+        "en": "Fix lux sensor handling",
+        "de": "Fix Lux Sensorhandling",
+        "ru": "Fix регуляция датчика люкса",
+        "pt": "Manipulação do sensor de lux",
+        "nl": "Vertaling:",
+        "fr": "Manipulation du capteur Fix lux",
+        "it": "Gestione del sensore lux",
+        "es": "Control de sensores de lujo fijo",
+        "pl": "Czujnik luksusowy",
+        "uk": "Фіксація lux датчика",
+        "zh-cn": "Fix 塑料传感器"
+      },
+      "0.2.9": {
+        "en": "Important Update! Dev-mode was activated in v0.2.8",
+        "de": "Wichtiges Update! Dev-Mode war in v0.2.8 aktiviert",
+        "ru": "Важное обновление! Dev-mode был активирован в v0.2.8",
+        "pt": "Atualização importante! Dev-mode foi ativado em v0.2.8",
+        "nl": "Belangrijke Update! Dev-mode werd geactiveerd in V0.2.8",
+        "fr": "Importante mise à jour ! Dev-mode a été activé dans v0.2.8",
+        "it": "Aggiornamento importante! Dev-mode è stato attivato in v0.2.8",
+        "es": "Importante actualización! Dev-mode fue activado en v0.2.8",
+        "pl": "Important Update (ang.). Dev-mode został uruchomiony w v0.2.8",
+        "uk": "Головна Dev-mode був активований в v0.2.8",
+        "zh-cn": "重要消息 Dev-mode于0.2.8起被动。"
+      },
+      "0.2.8": {
+        "en": "Fix switch on/off\nSome code improvements",
+        "de": "Fehler beim Ein-/Ausschalten behoben\nEinige Code Verbesserungen",
+        "ru": "Fix переключатель on/off\nНекоторые улучшения кода",
+        "pt": "Fix interruptor ligar/desligar\nAlgumas melhorias de código",
+        "nl": "Vertaling:\nSommige code verbetering",
+        "fr": "Interrupteur fixe/arrêt\nQuelques améliorations de code",
+        "it": "Accendere/disattivare l'interruttore\nAlcuni miglioramenti del codice",
+        "es": "Interruptor de fijación/desactivado\nAlgunas mejoras de código",
+        "pl": "Fix przełącza się/off\nNiektóre poprawy kodu",
+        "uk": "Фіксація перемикача / вимкнення\nДеякі покращення коду",
+        "zh-cn": "Fix 转换/弃权\n有些守则的改进"
+      },
+      "0.2.7": {
+        "en": "Fix simple switching on/off",
+        "de": "Fix einfaches Einschalten/Ausschalten",
+        "ru": "Fix переключение на/выключение",
+        "pt": "Fix de ligar/desligar",
+        "nl": "Vertaling:",
+        "fr": "Interrupteur fixe/arrêt",
+        "it": "Correggere l'accensione/spegnimento",
+        "es": "Activación/desactivación",
+        "pl": "Fix zmienia się na/off",
+        "uk": "Фіксація перемикача / вимкнення",
+        "zh-cn": "九. 固定转换/弃权"
+      },
+      "0.2.6": {
+        "en": "Creating LightGroups is only possible if the group name does not contain any special characters other than _ and -.",
+        "de": "Erstellen von LightGroups nur möglich, sofern der Gruppenname keine speziellen Zeichen außer _ und - enthält.",
+        "ru": "check-функция для создания LightGroups только если название группы не содержит специальных символов.",
+        "pt": "função de verificação para criar LightGroups apenas se o nome do grupo não contém caracteres especiais.",
+        "nl": "control-functie creëren Alleen als groepsnaam geen speciale kaarten bevat.",
+        "fr": "check-fonction pour créer LightGroups seulement si le nom de groupe ne contient pas de chars spéciaux.",
+        "it": "funzione di controllo per creare LightGroups solo se il nome del gruppo non contiene nessun char speciale.",
+        "es": "función de verificación para crear LightGroups sólo si el nombre del grupo no contiene chars especiales.",
+        "pl": "funkcja kontrolna do tworzenia LightGroups tylko wtedy, gdy nazwa grupy nie zawiera specjalnych charytatywnych.",
+        "uk": "контроль LightGroups тільки якщо назва групи не містить спеціальних chars.",
+        "zh-cn": "d. 建立检查职能 只有集团名称没有特殊的慈善机构,才有灯塔。."
+      },
+      "0.2.5": {
+        "en": "Fix: set brightness although no brightness state is available (blink)",
+        "de": "Fix: Helligkeit setzen, obwohl kein Helligkeits-Datenpunkt vorhanden ist (blink)",
+        "ru": "Исправление: установите яркость, хотя нет состояния яркости (blink)",
+        "pt": "Fix: brilho definido embora nenhum estado de brilho esteja disponível (blink)",
+        "nl": "Verlichting, hoewel er geen zonnige staat beschikbaar is",
+        "fr": "Fix: définir la luminosité bien qu'aucun état de luminosité n'est disponible (blink)",
+        "it": "Fisso: impostare la luminosità, anche se non è disponibile uno stato di luminosità (blink)",
+        "es": "Fijación: brillo de conjunto aunque no hay estado de brillo disponible (blink)",
+        "pl": "Fix: set brightness, choć nie ma jasnego stanu (blink)",
+        "uk": "Фіксація: встановити яскравість, хоча немає яскравості стану (посилання)",
+        "zh-cn": "九:建立光明,尽管没有光明国家(联系)"
+      },
+      "0.2.4": {
+        "en": "renew release. no changes. please use this release.",
+        "de": "Erneuerung. Keine Änderungen. Bitte nutze diese Veröffentlichung.",
+        "ru": "обновление релиза. никаких изменений. пожалуйста, используйте этот релиз.",
+        "pt": "renovar a liberação. sem alterações. por favor, use esta versão.",
+        "nl": "nieuwe vrijlating. geen veranderingen. gebruik deze vrijlating.",
+        "fr": "renouvellement. pas de changement. veuillez utiliser cette version.",
+        "it": "rinnovare il rilascio. nessun cambiamento. si prega di utilizzare questa release.",
+        "es": "renovar la liberación. sin cambios. por favor, usa esta versión.",
+        "pl": "renowacja. nie zmienia się. użycie tego wydania.",
+        "uk": "новий реліз. немає змін. будь ласка, використовуйте цей реліз.",
+        "zh-cn": "再次获释。 没有变化。 请使用这一释放。."
+      }
+    },
+    "titleLang": {
+      "en": "LightControl",
+      "de": "LightControl",
+      "ru": "LightControl",
+      "pt": "LightControl",
+      "nl": "LightControl",
+      "fr": "LightControl",
+      "it": "LightControl",
+      "es": "LightControl",
+      "pl": "LightControl",
+      "uk": "Управління",
+      "zh-cn": "A. 灯 律"
+    },
+    "desc": {
+      "en": "Light control of lamps from various manufacturers",
+      "de": "Lichtsteuerung von Lampen verschiedener Hersteller",
+      "ru": "Управление светом светильников различных производителей",
+      "pt": "Controle de luz de lâmpadas de vários fabricantes",
+      "nl": "Lichtregeling van lampen van diverse fabrikanten",
+      "fr": "Contrôle de la lumière des lampes de différents fabricants",
+      "it": "Controllo della luce di lampade di vari produttori",
+      "es": "Control de luz de lámparas de varios fabricantes.",
+      "pl": "Sterowanie oświetleniem lamp różnych producentów",
+      "zh-cn": "各厂家灯具的光控",
+      "uk": "Контроль світла ламп різних виробників"
+    },
+    "authors": [
+      "Schmakus <schmakus@gmail.com>"
+    ],
+    "keywords": [
+      "light",
+      "lightcontrol",
+      "control",
+      "motion",
+      "motionsensor",
+      "motiondetection"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "lightcontrol.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
+    "readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "lighting",
+    "compact": true,
+    "messagebox": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json",
+      "custom": "json"
+    },
+    "plugins": {
+      "sentry": {
+        "dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229"
+      }
+    },
+    "supportCustoms": true,
+    "dependencies": [
+      {
+        "js-controller": ">=4.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.13"
+      }
+    ]
+  },
+  "native": {
+    "_id": 0,
+    "deleteUnusedConfig": true,
+    "GlobalLuxSensor": "",
+    "minCt": 2700,
+    "maxCt": 6500,
+    "RampSteps": 10,
+    "minBri": 10,
+    "IsPresenceDp": "",
+    "PresenceCountDp": "",
+    "LightGroups": [
+      {
+        "Group": "Wohnzimmer",
+        "GroupLuxSensor": ""
+      }
+    ]
+  },
+  "objects": [],
+  "instanceObjects": []
 }

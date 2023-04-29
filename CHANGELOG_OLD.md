@@ -1,4 +1,8 @@
 # Older changes
+## 0.2.5 (2023-04-19)
+
+-   (Schmakus) Fix: set brightness although no brightness state is available (blink)
+
 ## 0.2.4 (2023-04-17)
 
 -   (Schmakus) renew release. no changes. please use this release.
