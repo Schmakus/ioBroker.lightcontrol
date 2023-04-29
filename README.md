@@ -56,6 +56,11 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Important Update! Dev-mode was activated in v0.2.8
+
 ### 0.2.8 (2023-04-28)
 
 -   (Schmakus) Fix switch on/off
