@@ -56,6 +56,11 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Fix lux sensor handling
+
 ### 0.2.9 (2023-04-29)
 
 -   (Schmakus) Important Update! Dev-mode was activated in v0.2.8

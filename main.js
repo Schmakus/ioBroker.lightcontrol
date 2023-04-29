@@ -360,16 +360,22 @@ class Lightcontrol extends utils.Adapter {
 						//Check if it's a LuxSensor
 						if (this.LuxSensors.includes(id)) {
 							const groupsWithLuxSensor = Object.values(this.LightGroups).filter(
-								(group) => group.LuxSensor === id,
+								(Group) => Group.LuxSensor === id,
 							);
 
-							for (const group of groupsWithLuxSensor) {
-								if (state.val !== group.actualLux) {
+							for (const Group of groupsWithLuxSensor) {
+								if (state.val !== Group.actualLux) {
 									this.writeLog(
-										`[ onStateChange ] It's a LuxSensor in following Group: ${group.name}`,
+										`[ onStateChange ] It's a LuxSensor in following Group: ${Group.description} with value = ${state.val} (old value = ${Group.actualLux})`,
 									);
-									group.actualLux = state.val;
-									await this.Controller(group.name, "actualLux", state.val, group.actualLux, "");
+									Group.actualLux = state.val;
+									await this.Controller(
+										Group.description,
+										"actualLux",
+										state.val,
+										Group.actualLux,
+										"",
+									);
 								}
 							}
 
