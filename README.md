@@ -56,8 +56,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.2.11 (2023-05-02)
 
 -   (Schmakus) Fix error in switching on/off
 -   (Schmakus) Ready for a stable release
@@ -79,10 +78,6 @@ iobroker add lightcontrol
 ### 0.2.7 (2023-04-20)
 
 -   (Schmakus) Fix switching on/off
-
-### 0.2.6 (2023-04-19)
-
--   (Schmakus) Creating LightGroups is only possible if the group name does not contain any special characters other than \_ and -.
 
 ## License
 
