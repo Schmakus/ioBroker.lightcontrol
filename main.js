@@ -54,7 +54,7 @@ class Lightcontrol extends utils.Adapter {
 		this.lat = "";
 		this.lng = "";
 
-		this.DevMode = false;
+		this.DevMode = true;
 		this.processing = false;
 	}
 
@@ -68,6 +68,7 @@ class Lightcontrol extends utils.Adapter {
 
 		//Create LightGroups Object from GroupNames
 		await init.CreateLightGroupsObject(this);
+		await this.log.debug(JSON.stringify(this.LightGroups));
 
 		//Create all States, Devices and Channels
 		if (Object.keys(this.LightGroups).length !== 0) {
@@ -539,9 +540,8 @@ class Lightcontrol extends utils.Adapter {
 			let stateInfo;
 			try {
 				// Load configuration as provided in object
-				stateInfo = await this.getForeignObjectAsync(stateID);
-
 				/** @type {ioBroker.StateObject} */
+				stateInfo = await this.getForeignObjectAsync(stateID);
 
 				if (!stateInfo) {
 					this.writeLog(
