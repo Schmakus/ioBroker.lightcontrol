@@ -56,6 +56,11 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Fix [#101] PowerCleaningLight
+
 ### 0.2.11 (2023-05-02)
 
 -   (Schmakus) Fix error in switching on/off
