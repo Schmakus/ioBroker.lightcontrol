@@ -1,4 +1,8 @@
 # Older changes
+## 0.2.6 (2023-04-19)
+
+-   (Schmakus) Creating LightGroups is only possible if the group name does not contain any special characters other than \_ and -.
+
 ## 0.2.5 (2023-04-19)
 
 -   (Schmakus) Fix: set brightness although no brightness state is available (blink)
