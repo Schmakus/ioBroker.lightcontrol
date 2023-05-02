@@ -126,7 +126,7 @@
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
 		"main": "main.js",
-		"icon": "/admin/lightcontrol.png",
+		"icon": "admin/lightcontrol.png",
 		"enabled": true,
 		"extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
 		"readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
