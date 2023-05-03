@@ -1017,17 +1017,21 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async SetLightState(from = "noFunction") {
 		try {
-			const groupLength = Object.keys(this.LightGroups).length - 1;
 			const countGroups = await this.countGroups();
+			const groupLength = Object.keys(this.LightGroups).length - 1;
 
-			// @ts-ignore
-			await helper.SetValueToObject(this.LightGroups, "All.anyOn", countGroups > 0 ? true : false);
-			await helper.SetValueToObject(this.LightGroups, "All.power", countGroups === groupLength ? true : false);
-			await this.setStateAsync("All.anyOn", this.LightGroups.All.anyOn, true);
+			await Promise.all([
+				helper.SetValueToObject(this.LightGroups, "All.anyOn", countGroups > 0),
+				helper.SetValueToObject(this.LightGroups, "All.power", countGroups === groupLength),
+			]);
+
+			await Promise.all([
+				this.setStateAsync("All.anyOn", this.LightGroups.All.anyOn, true),
+				this.setStateAsync("All.power", this.LightGroups.All.power, true),
+			]);
 			this.writeLog(
 				`[ SetLightState ] Set State "All.anyOn" to ${this.LightGroups.All.anyOn} from function="${from}"`,
 			);
-			await this.setStateAsync("All.power", this.LightGroups.All.power, true);
 		} catch (error) {
 			this.errorHandling(error, "SetLightState");
 		}
@@ -1035,6 +1039,9 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * Helper: count Power in Groups
+	 * @async
+	 * @function
+	 * @returns {Promise<number>}
 	 */
 	async countGroups() {
 		try {
@@ -1049,6 +1056,7 @@ class Lightcontrol extends utils.Adapter {
 			return i;
 		} catch (error) {
 			this.errorHandling(error, "countGroups");
+			return 0;
 		}
 	}
 
