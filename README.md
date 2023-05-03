@@ -59,7 +59,8 @@ iobroker add lightcontrol
 
 ### **WORK IN PROGRESS**
 
--   (Schmakus) Fix [#101] PowerCleaningLight
+-   (Schmakus) Fixed [#101] PowerCleaningLight
+-   (Schmakus) Code improvements
 
 ### 0.2.11 (2023-05-02)
 
