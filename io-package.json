@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.11",
+		"version": "0.2.12",
 		"news": {
+			"0.2.12": {
+				"en": "Fix [#101] PowerCleaningLight\nCode improvements",
+				"de": "Fix #[101] PowerCleaingLight\nVerbesserungen des Codes",
+				"ru": "Фиксированный #[101] PowerCleaningСвет\nУлучшения кода",
+				"pt": "Corrigido #[101] Luz de limpeza de energia\nMelhorias de código",
+				"nl": "Gerepareerd. PowerCleaningLight\nCode verbetering",
+				"fr": "Fixed #[101] PowerCleaningLight\nAmélioration des codes",
+				"it": "Corretto #[101] La luce del potere\nMiglioramento del codice",
+				"es": "Fijo #[101] PowerCleaningLight\nMejoras del Código",
+				"pl": "#101 (ang.). PowerClight\nPoprawa kodu",
+				"uk": "Виправлено #[101] PowerCleaningЛайт\nПоліпшення коду",
+				"zh-cn": "九. 固定编号[101] A. 权力\nA. 守则的改进"
+			},
 			"0.2.11": {
 				"en": "Fix error in switching on/off\nReady for a stable release\nupdate dependencies",
 				"de": "Fehler beim Ein-/Ausschalten behoben\nBereit für ein Stable Release\nAktualisierung der Abhängigkeiten",
@@ -80,19 +93,6 @@
 				"pl": "funkcja kontrolna do tworzenia LightGroups tylko wtedy, gdy nazwa grupy nie zawiera specjalnych charytatywnych.",
 				"uk": "контроль LightGroups тільки якщо назва групи не містить спеціальних chars.",
 				"zh-cn": "d. 建立检查职能 只有集团名称没有特殊的慈善机构,才有灯塔。."
-			},
-			"0.2.5": {
-				"en": "Fix: set brightness although no brightness state is available (blink)",
-				"de": "Fix: Helligkeit setzen, obwohl kein Helligkeits-Datenpunkt vorhanden ist (blink)",
-				"ru": "Исправление: установите яркость, хотя нет состояния яркости (blink)",
-				"pt": "Fix: brilho definido embora nenhum estado de brilho esteja disponível (blink)",
-				"nl": "Verlichting, hoewel er geen zonnige staat beschikbaar is",
-				"fr": "Fix: définir la luminosité bien qu'aucun état de luminosité n'est disponible (blink)",
-				"it": "Fisso: impostare la luminosità, anche se non è disponibile uno stato di luminosità (blink)",
-				"es": "Fijación: brillo de conjunto aunque no hay estado de brillo disponible (blink)",
-				"pl": "Fix: set brightness, choć nie ma jasnego stanu (blink)",
-				"uk": "Фіксація: встановити яскравість, хоча немає яскравості стану (посилання)",
-				"zh-cn": "九:建立光明,尽管没有光明国家(联系)"
 			}
 		},
 		"titleLang": {
