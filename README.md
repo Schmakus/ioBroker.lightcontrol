@@ -57,9 +57,9 @@ iobroker add lightcontrol
 	### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS**
+### 0.2.12 (2023-05-03)
 
--   (Schmakus) Fixed [#101] PowerCleaningLight
+-   (Schmakus) Fix [#101] PowerCleaningLight
 -   (Schmakus) Code improvements
 
 ### 0.2.11 (2023-05-02)
@@ -80,10 +80,6 @@ iobroker add lightcontrol
 
 -   (Schmakus) Fix switch on/off
 -   (Schmakus) Some code improvements
-
-### 0.2.7 (2023-04-20)
-
--   (Schmakus) Fix switching on/off
 
 ## License
 
