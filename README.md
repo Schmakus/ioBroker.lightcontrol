@@ -56,8 +56,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.2.13 (2023-05-06)
 
 -   (Schmakus) Fix missing native part in states
 
@@ -79,11 +78,6 @@ iobroker add lightcontrol
 ### 0.2.9 (2023-04-29)
 
 -   (Schmakus) Important Update! Dev-mode was activated in v0.2.8
-
-### 0.2.8 (2023-04-28)
-
--   (Schmakus) Fix switch on/off
--   (Schmakus) Some code improvements
 
 ## License
 

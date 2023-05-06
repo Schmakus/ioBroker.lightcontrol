@@ -1,4 +1,9 @@
 # Older changes
+## 0.2.8 (2023-04-28)
+
+-   (Schmakus) Fix switch on/off
+-   (Schmakus) Some code improvements
+
 ## 0.2.7 (2023-04-20)
 
 -   (Schmakus) Fix switching on/off

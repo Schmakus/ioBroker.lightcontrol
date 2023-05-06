@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.12",
+		"version": "0.2.13",
 		"news": {
+			"0.2.13": {
+				"en": "Fix missing native part in states",
+				"de": "Fehlender native part in States behoben",
+				"ru": "Исправление отсутствующей родной части в государствах",
+				"pt": "Corrigir parte nativa desaparecida em estados",
+				"nl": "Vertaling:",
+				"fr": "Correction de la partie indigène manquante dans les états",
+				"it": "Fissare la parte nativa mancante negli stati",
+				"es": "Arreglar la parte nativa desaparecida en los estados",
+				"pl": "Fix zaginął w stanach niezamieszkanych",
+				"uk": "Виправлення відсутніх рідних частин в штатах",
+				"zh-cn": "Fix 留在各州的土著部分"
+			},
 			"0.2.12": {
 				"en": "Fix [#101] PowerCleaningLight\nCode improvements",
 				"de": "Fix #[101] PowerCleaingLight\nVerbesserungen des Codes",
@@ -80,19 +93,6 @@
 				"pl": "Fix zmienia się na/off",
 				"uk": "Фіксація перемикача / вимкнення",
 				"zh-cn": "九. 固定转换/弃权"
-			},
-			"0.2.6": {
-				"en": "Creating LightGroups is only possible if the group name does not contain any special characters other than _ and -.",
-				"de": "Erstellen von LightGroups nur möglich, sofern der Gruppenname keine speziellen Zeichen außer _ und - enthält.",
-				"ru": "check-функция для создания LightGroups только если название группы не содержит специальных символов.",
-				"pt": "função de verificação para criar LightGroups apenas se o nome do grupo não contém caracteres especiais.",
-				"nl": "control-functie creëren Alleen als groepsnaam geen speciale kaarten bevat.",
-				"fr": "check-fonction pour créer LightGroups seulement si le nom de groupe ne contient pas de chars spéciaux.",
-				"it": "funzione di controllo per creare LightGroups solo se il nome del gruppo non contiene nessun char speciale.",
-				"es": "función de verificación para crear LightGroups sólo si el nombre del grupo no contiene chars especiales.",
-				"pl": "funkcja kontrolna do tworzenia LightGroups tylko wtedy, gdy nazwa grupy nie zawiera specjalnych charytatywnych.",
-				"uk": "контроль LightGroups тільки якщо назва групи не містить спеціальних chars.",
-				"zh-cn": "d. 建立检查职能 只有集团名称没有特殊的慈善机构,才有灯塔。."
 			}
 		},
 		"titleLang": {
