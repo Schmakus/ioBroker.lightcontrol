@@ -57,6 +57,10 @@ iobroker add lightcontrol
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Fix missing native part in states
+
 ### 0.2.12 (2023-05-03)
 
 -   (Schmakus) Fix [#101] PowerCleaningLight
