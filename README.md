@@ -56,9 +56,10 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
 ### 0.2.14 (2023-05-07)
 
--   (Schmakus) Hotfix Create States
+-   (Schmakus) Hotfix Create States [#124]
 
 ### 0.2.13 (2023-05-06)
 
