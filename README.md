@@ -56,6 +56,11 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Hotfix Create States
+
 ### 0.2.13 (2023-05-06)
 
 -   (Schmakus) Fix missing native part in states
