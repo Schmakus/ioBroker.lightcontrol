@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.13",
+		"version": "0.2.14",
 		"news": {
+			"0.2.14": {
+				"en": "Hotfix Create States",
+				"de": "Hotfix States erstellen",
+				"ru": "Hotfix Создать государства",
+				"pt": "Hotfix Criar Estados",
+				"nl": "Hotfix Create",
+				"fr": "Hotfix Créer des Etats",
+				"it": "Creare Stati",
+				"es": "Hotfix Crear Estados",
+				"pl": "Hotfix Creation State (ang.)",
+				"uk": "Hotfix Створити штати",
+				"zh-cn": "九. 创建国家"
+			},
 			"0.2.13": {
 				"en": "Fix missing native part in states",
 				"de": "Fehlender native part in States behoben",
@@ -80,19 +93,6 @@
 				"pl": "Fix przełącza się/off\nNiektóre poprawy kodu",
 				"uk": "Фіксація перемикача / вимкнення\nДеякі покращення коду",
 				"zh-cn": "Fix 转换/弃权\n有些守则的改进"
-			},
-			"0.2.7": {
-				"en": "Fix simple switching on/off",
-				"de": "Fix einfaches Einschalten/Ausschalten",
-				"ru": "Fix переключение на/выключение",
-				"pt": "Fix de ligar/desligar",
-				"nl": "Vertaling:",
-				"fr": "Interrupteur fixe/arrêt",
-				"it": "Correggere l'accensione/spegnimento",
-				"es": "Activación/desactivación",
-				"pl": "Fix zmienia się na/off",
-				"uk": "Фіксація перемикача / вимкнення",
-				"zh-cn": "九. 固定转换/弃权"
 			}
 		},
 		"titleLang": {

@@ -1,4 +1,8 @@
 # Older changes
+## 0.2.9 (2023-04-29)
+
+-   (Schmakus) Important Update! Dev-mode was activated in v0.2.8
+
 ## 0.2.8 (2023-04-28)
 
 -   (Schmakus) Fix switch on/off
