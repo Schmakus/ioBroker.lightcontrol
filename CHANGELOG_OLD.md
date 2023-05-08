@@ -1,4 +1,8 @@
 # Older changes
+## 0.2.10 (2023-04-29)
+
+-   (Schmakus) Fix lux sensor handling
+
 ## 0.2.9 (2023-04-29)
 
 -   (Schmakus) Important Update! Dev-mode was activated in v0.2.8

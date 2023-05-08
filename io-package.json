@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.14",
+		"version": "0.2.15",
 		"news": {
+			"0.2.15": {
+				"en": "Allow smaller and larger Kelvin values in the settings",
+				"de": "Erlauben von kleineren und größeren Kelvin-Werten in den Einstellungen",
+				"ru": "Разрешить меньше и больше значения Kelvin в настройках",
+				"pt": "Permitir valores menores e maiores Kelvin nas configurações",
+				"nl": "Vertaling:",
+				"fr": "Permettre des valeurs Kelvin plus petites et plus grandes dans les paramètres",
+				"it": "Consentire valori Kelvin più piccoli e più grandi nelle impostazioni",
+				"es": "Permitir valores Kelvin más pequeños y grandes en la configuración",
+				"pl": "Allow mniejsze i większe wartości Kelvina w ustawieniach",
+				"uk": "Дозволити менші і більші значення Келвін в налаштуваннях",
+				"zh-cn": "允许在环境中的小和较大的Kelvin价值观"
+			},
 			"0.2.14": {
 				"en": "Hotfix Create States",
 				"de": "Hotfix States erstellen",
@@ -80,19 +93,6 @@
 				"pl": "Important Update (ang.). Dev-mode został uruchomiony w v0.2.8",
 				"uk": "Головна Dev-mode був активований в v0.2.8",
 				"zh-cn": "重要消息 Dev-mode于0.2.8起被动。"
-			},
-			"0.2.8": {
-				"en": "Fix switch on/off\nSome code improvements",
-				"de": "Fehler beim Ein-/Ausschalten behoben\nEinige Code Verbesserungen",
-				"ru": "Fix переключатель on/off\nНекоторые улучшения кода",
-				"pt": "Fix interruptor ligar/desligar\nAlgumas melhorias de código",
-				"nl": "Vertaling:\nSommige code verbetering",
-				"fr": "Interrupteur fixe/arrêt\nQuelques améliorations de code",
-				"it": "Accendere/disattivare l'interruttore\nAlcuni miglioramenti del codice",
-				"es": "Interruptor de fijación/desactivado\nAlgunas mejoras de código",
-				"pl": "Fix przełącza się/off\nNiektóre poprawy kodu",
-				"uk": "Фіксація перемикача / вимкнення\nДеякі покращення коду",
-				"zh-cn": "Fix 转换/弃权\n有些守则的改进"
 			}
 		},
 		"titleLang": {
