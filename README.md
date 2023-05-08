@@ -57,6 +57,10 @@ iobroker add lightcontrol
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Allow smaller and larger Kelvin values in the settings
+
 ### 0.2.14 (2023-05-07)
 
 -   (Schmakus) Hotfix Create States [#124]
