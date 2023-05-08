@@ -56,6 +56,11 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schnakus) Allow smaller and larger Kelvin values in the settings
+
 ### 0.2.14 (2023-05-07)
 
 -   (Schmakus) Hotfix Create States
