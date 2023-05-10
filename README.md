@@ -56,8 +56,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.2.16 (2023-05-10)
 
 -   (Schmakus) Fix AdaptiveCt - StartYoureDay Interpolated
 -   (Schmakus) Update docs
@@ -78,12 +77,6 @@ iobroker add lightcontrol
 
 -   (Schmakus) Fix [#101] PowerCleaningLight
 -   (Schmakus) Code improvements
-
-### 0.2.11 (2023-05-02)
-
--   (Schmakus) Fix error in switching on/off
--   (Schmakus) Ready for a stable release
--   (Schmakus) update dependencies
 
 ## License
 
