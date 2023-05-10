@@ -887,8 +887,8 @@ class Lightcontrol extends utils.Adapter {
 					handeled = true;
 					break;
 				case "adaptiveCt":
-					await lightHandling.SetCt(this, Group, LightGroups[Group].ct);
-					handeled = true;
+					//await lightHandling.SetCt(this, Group, LightGroups[Group].ct);
+					//handeled = true;
 					break;
 				case "adaptiveCtMode":
 					break;
