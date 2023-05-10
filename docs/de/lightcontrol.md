@@ -152,7 +152,7 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
 
         -   Value for minimum Brightness - _Wert die geringste Helligkeit. z.B. 0_
         -   Value for maximum Brightnes - _Wert für die maximalste Helligkeit. z.B. 100_
-        -   Value/Offset for Brightness - _Wert in Prozent für die Anpassung der Helligkeit gegenüber den anderen Lampen innerhalb der Gruppe. 100 = keine Anpassung // 50 = Halb so hell_
+        -   Value/Offset for Brightness - _Korrekturwert/Max-Wert für die Anpassung der Helligkeit gegenüber den anderen Lampen innerhalb der Gruppe._
         -   Use Brightness for Switching - _Verwendet den Helligkeits Datenpunkt der Lampe, um diese zu schalten, anstatt den Power Datenpunkt_
 
     -   **Color-Temperature**

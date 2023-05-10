@@ -152,7 +152,7 @@ After opening the settings, the configuration must be activated:
 
         -   Value for minimum brightness - _value the lowest brightness.eg0_
         -   Value for maximum Brightnes - _value for maximum brightness.eg100_
-        -   Value/Offset for Brightness - _value in percent for adjusting the brightness against the other lamps within the group. 100 = no adjustment // 50 = half as hell_
+        -   Value/Offset for Brightness - _max-value for adjusting the brightness against the other lamps within the group._
         -   Use Brightness for Switching - _Use the brightness state of the lamp to switch it on/off instead the power state_
 
     -   **Color-Temperature**
