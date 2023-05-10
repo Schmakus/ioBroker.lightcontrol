@@ -59,6 +59,7 @@ iobroker add lightcontrol
 
 ### **WORK IN PROGRESS**
 
+-   (Schmakus) Fix AdaptiveCt - StartYoureDay Interpolated
 -   (Schmakus) Update docs
 
 ### 0.2.15 (2023-05-08)
