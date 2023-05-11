@@ -56,6 +56,13 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) RampOn and RampDown now only with transition_time
+-   (Schmakus) Added posibillity for default transition_time
+-   (Schmakus) Changed structure of some object ids
+
 ### 0.2.16 (2023-05-10)
 
 -   (Schmakus) Fix AdaptiveCt - StartYoureDay Interpolated

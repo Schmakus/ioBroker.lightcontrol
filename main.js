@@ -13,6 +13,7 @@ const init = require("./lib/init");
 const timers = require("./lib/timers");
 const switchingOnOff = require("./lib/switchingOnOff");
 const lightHandling = require("./lib/lightHandling");
+//const { objects } = require("./lib/objects");
 
 // Sentry error reporting, disable when testing alpha source code locally!
 const disableSentry = false;
