@@ -59,6 +59,10 @@
 					"value": "bri"
 				},
 				{
+					"label": "Transmission Time",
+					"value": "tt"
+				},
+				{
 					"label": "Color-Temperature",
 					"value": "ct"
 				},
@@ -75,7 +79,7 @@
 					"value": "modeswitch"
 				}
 			],
-			"defaultFunc": "!customObj.common.role ? 'power' : (customObj.common.role === 'color.level.temperature' ? 'ct' : customObj.common.role === 'level.color.saturation' ? 'sat' : customObj.common.role === 'level.dimmer' ? 'bri' : customObj.common.role === 'level.color.temperature' ? 'ct' : customObj.common.role === 'level.color.rgb' ? 'color' : customObj.common.role === 'switch.mode.color' ? 'modeswitch' : customObj.common.role === 'switch' ? 'power' : customObj.common.role === 'switch.light' ? 'power' : customObj.common.role === 'state' ? 'power' : 'power')",
+			"defaultFunc": "!customObj.common?.role ? 'power' : (customObj.common.role === 'color.level.temperature' ? 'ct' : customObj.common.role === 'level.color.saturation' ? 'sat' : customObj.common.role === 'level.dimmer' ? 'bri' : customObj.common.role === 'level.color.temperature' ? 'ct' : customObj.common.role === 'level.color.rgb' ? 'color' : customObj.common.role === 'switch.mode.color' ? 'modeswitch' : customObj.common.role === 'switch' ? 'power' : customObj.common.role === 'switch.light' ? 'power' : customObj.common.role === 'state' ? 'tt' : 'power')",
 			"hidden": "data.type === 'sensor'",
 			"help": "Function of the Object",
 			"newLine": true
@@ -87,7 +91,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.func !== 'power' || data.type === 'sensor'",
-			"defaultFunc": "!customObj.common.role ? true : (customObj.common.type === 'boolean' ? true : customObj.common.type === 'number' ? 1 : customObj.common.type === 'string' ? 'On' : true)"
+			"defaultFunc": "!customObj.common?.role ? true : (customObj.common.type === 'boolean' ? true : customObj.common.type === 'number' ? 1 : customObj.common.type === 'string' ? 'On' : true)"
 		},
 		"offVal": {
 			"type": "text",
@@ -96,7 +100,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.func !== 'power' || data.type === 'sensor'",
-			"defaultFunc": "!customObj.common.role ? false : (customObj.common.type === 'boolean' ? false : customObj.common.type === 'number' ? 0 : customObj.common.type === 'string' ? 'Off' : false)"
+			"defaultFunc": "!customObj.common?.role ? false : (customObj.common.type === 'boolean' ? false : customObj.common.type === 'number' ? 0 : customObj.common.type === 'string' ? 'Off' : false)"
 		},
 		"minVal": {
 			"type": "number",
@@ -104,8 +108,8 @@
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"hidden": "!['bri', 'ct', 'sat'].includes(data.func) || data.type === 'sensor'",
-			"defaultFunc": "!customObj.common.min ? 0 : customObj.common.min ? customObj.common.min : 0"
+			"hidden": "!['bri', 'ct', 'sat', 'tt'].includes(data.func) || data.type === 'sensor'",
+			"defaultFunc": "!customObj.common ? 0 : customObj.common.min ? customObj.common.min : 0"
 		},
 		"maxVal": {
 			"type": "number",
@@ -113,8 +117,28 @@
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"hidden": "!['bri', 'ct', 'sat'].includes(data.func) || data.type === 'sensor'",
-			"defaultFunc": "!customObj.common.max ? 100 : customObj.common.max ? customObj.common.max : 100"
+			"hidden": "!['bri', 'ct', 'sat', 'tt'].includes(data.func) || data.type === 'sensor'",
+			"defaultFunc": "!customObj.common ? 100 : customObj.common.max ? customObj.common.max : 100"
+		},
+		"unit": {
+			"type": "select",
+			"label": "Unit",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"options": [
+				{
+					"label": "Seconds",
+					"value": "s"
+				},
+				{
+					"label": "Milliseconds",
+					"value": "ms"
+				}
+			],
+			"defaultFunc": "!customObj.common ? 's' : customObj.common.unit ? customObj.common.unit === 'ms' ? 'ms' : 's'",
+			"hidden": "!['tt'].includes(data.func) || data.type === 'sensor'",
+			"help": "Unit of the state"
 		},
 		"CtReverse": {
 			"type": "select",
@@ -237,7 +261,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.type !== 'sensor'",
-			"defaultFunc": "!customObj.common.type ? false : (customObj.common.type === 'boolean' ? false : 'Off')"
+			"defaultFunc": "!customObj.common?.type ? false : (customObj.common.type === 'boolean' ? false : 'Off')"
 		},
 		"sendCt": {
 			"type": "checkbox",
