@@ -28,7 +28,7 @@
 	"Groups": "Gruppen",
 	"HEX Value for DayLight Color": "HEX-Wert für Tageslicht",
 	"HEX Value for WarmWhite Color": "HEX-Wert für Warmweiß",
-	"If some lights are brighter than others, you can set a correction of the maximum value that is interpreted as 100% brightness.": "Wenn einige Lichter heller sind als andere, können Sie eine Korrektur des Maximalwertes festlegen der als 100% Helligkeit interpretiert wird.",
+	"If some lights are brighter than others, you can set a correction of the maximum value that is interpreted as 100% brightness.": "Wenn einige Lichter heller sind als andere, kann man eine Korrektur des Maximalwertes festlegen der als 100% Helligkeit interpretiert wird.",
 	"Individual Lux Sensor (optional)": "Individueller Luxsensor (optional)",
 	"IsPresenceDp": "Objekt-ID für Anwesenheit",
 	"LightGroup": "Licht Gruppe",
