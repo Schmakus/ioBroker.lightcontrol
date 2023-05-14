@@ -140,12 +140,12 @@
 		"defaultBri": {
 			"type": "number",
 			"label": "Value for Brightness Correction",
-			"help": "If some Lights brighter than other, than you can set a correction in Percent.",
+			"help": "If some lights are brighter than others, you can set a correction of the maximum value that is interpreted as 100% brightness.",
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.func !== 'bri' || data.type === 'sensor'",
-			"default": "100"
+			"defaultFunc": "!customObj.common.max ? 100 : customObj.common.max ? customObj.common.max : 100"
 		},
 		"whiteModeVal": {
 			"type": "text",
