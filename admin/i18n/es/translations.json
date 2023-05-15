@@ -28,7 +28,7 @@
     "Groups": "Grupos",
     "HEX Value for DayLight Color": "Valor hexadecimal para el color de la luz diurna",
     "HEX Value for WarmWhite Color": "Valor hexadecimal para color blanco cálido",
-    "If some Lights brighter than other, than you can set a correction in Percent.": "Si algunas luces son más brillantes que otras, puede establecer una corrección en porcentaje.",
+    "If some lights are brighter than others, you can set a correction of the maximum value that is interpreted as 100% brightness.": "Si algunas luces son más brillantes que otras, puedes establecer una corrección del valor máximo que se interpreta como un brillo del 100%.",
     "Individual Lux Sensor (optional)": "Sensor de lux individual (opcional)",
     "IsPresenceDp": "ID de objeto para presencia",
     "LightGroup": "Grupo de luz",

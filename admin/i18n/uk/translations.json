@@ -28,7 +28,7 @@
     "Groups": "Групи",
     "HEX Value for DayLight Color": "Шістнадцяткове значення для кольору денного світла",
     "HEX Value for WarmWhite Color": "Шістнадцяткове значення для теплого білого кольору",
-    "If some Lights brighter than other, than you can set a correction in Percent.": "Якщо одні джерела світла яскравіші за інші, ви можете встановити поправку у відсотках.",
+    "If some lights are brighter than others, you can set a correction of the maximum value that is interpreted as 100% brightness.": "Якщо деякі джерела світла яскравіші за інші, ви можете встановити поправку максимального значення, яке інтерпретується як 100% яскравість.",
     "Individual Lux Sensor (optional)": "Individueller Lux Sensor (опціонально)",
     "IsPresenceDp": "Ідентифікатор об’єкта для присутності",
     "LightGroup": "Легка група",
