@@ -63,6 +63,7 @@ iobroker add lightcontrol
 -   (Schmakus) Added posibillity for default transition_time
 -   (Schmakus) Changed structure of some object ids
 -   (Schmakus) Fix AdaptiveCt - StartYoureDay Interpolated
+-   (Schmakus) Some code improvements
 
 ### 0.2.16 (2023-05-10)
 
