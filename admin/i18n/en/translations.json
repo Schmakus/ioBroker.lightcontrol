@@ -28,7 +28,7 @@
 	"Groups": "Groups",
 	"HEX Value for DayLight Color": "HEX Value for DayLight Color",
 	"HEX Value for WarmWhite Color": "HEX Value for WarmWhite Color",
-	"If some Lights brighter than other, than you can set a correction in Percent.": "If some Lights brighter than other, than you can set a correction in Percent.",
+	"If some lights are brighter than others, you can set a correction of the maximum value that is interpreted as 100% brightness.": "If some lights are brighter than others, you can set a correction of the maximum value that is interpreted as 100% brightness.",
 	"Individual Lux Sensor (optional)": "Individueller Lux Sensor (optional)",
 	"IsPresenceDp": "Object ID for Presence",
 	"LightGroup": "Light Group",
@@ -108,6 +108,5 @@
 	"labelDuplicateGroup": "Group name must not exist more than once!!!",
 	"lightcontrol adapter settings": "Adapter settings for LightControl",
 	"option1": "option1",
-	"option2": "option2",
-	"Unit": "Unit"
+	"option2": "option2"
 }
