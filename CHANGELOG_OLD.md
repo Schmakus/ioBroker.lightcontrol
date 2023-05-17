@@ -1,4 +1,9 @@
 # Older changes
+## 0.2.12 (2023-05-03)
+
+-   (Schmakus) Fix [#101] PowerCleaningLight
+-   (Schmakus) Code improvements
+
 ## 0.2.11 (2023-05-02)
 
 -   (Schmakus) Fix error in switching on/off
