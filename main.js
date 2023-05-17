@@ -13,6 +13,8 @@ const init = require("./lib/init");
 const timers = require("./lib/timers");
 const switchingOnOff = require("./lib/switchingOnOff");
 const lightHandling = require("./lib/lightHandling");
+const { params } = require("./lib/params");
+//const { objects } = require("./lib/objects");
 
 // Sentry error reporting, disable when testing alpha source code locally!
 const disableSentry = false;
@@ -625,15 +627,6 @@ class Lightcontrol extends utils.Adapter {
 
 				//Add Id to custom data
 				customData.oid = stateID;
-				const params = {
-					bri: ["oid", "minVal", "maxVal", "defaultBri", "useBri"],
-					power: ["oid", "onVal", "offVal"],
-					ct: ["oid", "minVal", "maxVal", "sendCt"],
-					sat: ["oid", "minVal", "maxVal", "sendCt"],
-					modeswitch: ["oid", "whiteModeVal", "colorModeVal", "sendModeswitch"],
-					color: ["oid", "colorType", "defaultColor", "sendColor"],
-				};
-
 				/*
 				CustomData Example
 				{
@@ -654,6 +647,7 @@ class Lightcontrol extends utils.Adapter {
 					"offVal": 0,
 					"minVal": 0,
 					"maxVal": 100,
+					"unit": "s",
 					"motionVal": "On",
 					"noMotionVal": "Off",
 					"group": "Wohnzimmer",
@@ -674,30 +668,52 @@ class Lightcontrol extends utils.Adapter {
 							);
 							return;
 						}
-						const Lights = LightGroup.lights;
 
-						//Find index in Lights Array if description available
-						const index = Lights.findIndex((x) => x.description === customData.description);
+						if (LightGroup.lights && Array.isArray(LightGroup.lights)) {
+							const Lights = LightGroup.lights;
 
-						let Light;
+							// Überprüfen, ob jedes Objekt eine description-Eigenschaft hat
+							const allObjectsHaveDescription = Lights.every(
+								(x) => x && typeof x.description === "string",
+							);
 
-						if (await helper.isNegative(index)) {
-							Light = Lights.length === 0 ? (Lights[0] = {}) : (Lights[Lights.length] = {});
+							if (allObjectsHaveDescription) {
+								///Find index in Lights Array if description available
+								const index = Lights.findIndex((x) => x.description === customData.description);
+
+								let Light;
+
+								if (await helper.isNegative(index)) {
+									Light = Lights.length === 0 ? (Lights[0] = {}) : (Lights[Lights.length] = {});
+								} else {
+									Light = Lights[index];
+								}
+
+								// Add parameters to Light
+								Light.description = customData.description;
+								Light[customData.func] = getSubset(customData, ...params[customData.func]);
+
+								this.writeLog(
+									`[ buildStateDetailsArray ] Type: Light, in Group: ${
+										LightGroup.description
+									} with Lights: ${JSON.stringify(Lights)} and Light: ${JSON.stringify(
+										Light,
+									)} with Index: ${index}`,
+								);
+							} else {
+								this.writeLog(
+									`[ buildStateDetailsArray ] Any Light of Group=${LightGroup.description} has no own description. Init aborted`,
+									"warn",
+								);
+							}
 						} else {
-							Light = Lights[index];
+							this.errorHandling(
+								`Any Light has no description. Init aborted. No Index found`,
+								"buildStateDetailsArray",
+								JSON.stringify(LightGroup.lights),
+							);
+							return;
 						}
-
-						// Add parameters to Light
-						Light.description = customData.description;
-						Light[customData.func] = getSubset(customData, ...params[customData.func]);
-
-						this.writeLog(
-							`[ buildStateDetailsArray ] Type: Light, in Group: ${
-								LightGroup.description
-							} with Lights: ${JSON.stringify(Lights)} and Light: ${JSON.stringify(
-								Light,
-							)} with Index: ${index}`,
-						);
 
 						break;
 					}
@@ -887,8 +903,8 @@ class Lightcontrol extends utils.Adapter {
 					handeled = true;
 					break;
 				case "adaptiveCt":
-					await lightHandling.SetCt(this, Group, LightGroups[Group].ct);
-					handeled = true;
+					//await lightHandling.SetCt(this, Group, LightGroups[Group].ct);
+					//handeled = true;
 					break;
 				case "adaptiveCtMode":
 					break;

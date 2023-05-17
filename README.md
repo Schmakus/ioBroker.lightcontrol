@@ -56,6 +56,13 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Fix error by init of customConfig, if no light description is available
+-   (Schmakus) Fix error by set Ct, Color,... if no lights or groups defined
+-   (Schmakus) Some code improvements
+
 ### 0.2.16 (2023-05-10)
 
 -   (Schmakus) Fix AdaptiveCt - StartYoureDay Interpolated
