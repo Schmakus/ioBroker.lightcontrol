@@ -668,30 +668,52 @@ class Lightcontrol extends utils.Adapter {
 							);
 							return;
 						}
-						const Lights = LightGroup.lights;
 
-						//Find index in Lights Array if description available
-						const index = Lights.findIndex((x) => x.description === customData.description);
+						if (LightGroup.lights && Array.isArray(LightGroup.lights)) {
+							const Lights = LightGroup.lights;
 
-						let Light;
+							// Überprüfen, ob jedes Objekt eine description-Eigenschaft hat
+							const allObjectsHaveDescription = Lights.every(
+								(x) => x && typeof x.description === "string",
+							);
 
-						if (await helper.isNegative(index)) {
-							Light = Lights.length === 0 ? (Lights[0] = {}) : (Lights[Lights.length] = {});
+							if (allObjectsHaveDescription) {
+								///Find index in Lights Array if description available
+								const index = Lights.findIndex((x) => x.description === customData.description);
+
+								let Light;
+
+								if (await helper.isNegative(index)) {
+									Light = Lights.length === 0 ? (Lights[0] = {}) : (Lights[Lights.length] = {});
+								} else {
+									Light = Lights[index];
+								}
+
+								// Add parameters to Light
+								Light.description = customData.description;
+								Light[customData.func] = getSubset(customData, ...params[customData.func]);
+
+								this.writeLog(
+									`[ buildStateDetailsArray ] Type: Light, in Group: ${
+										LightGroup.description
+									} with Lights: ${JSON.stringify(Lights)} and Light: ${JSON.stringify(
+										Light,
+									)} with Index: ${index}`,
+								);
+							} else {
+								this.writeLog(
+									`[ buildStateDetailsArray ] Any Light of Group=${LightGroup.description} has no own description. Init aborted`,
+									"warn",
+								);
+							}
 						} else {
-							Light = Lights[index];
+							this.errorHandling(
+								`Any Light has no description. Init aborted. No Index found`,
+								"buildStateDetailsArray",
+								JSON.stringify(LightGroup.lights),
+							);
+							return;
 						}
-
-						// Add parameters to Light
-						Light.description = customData.description;
-						Light[customData.func] = getSubset(customData, ...params[customData.func]);
-
-						this.writeLog(
-							`[ buildStateDetailsArray ] Type: Light, in Group: ${
-								LightGroup.description
-							} with Lights: ${JSON.stringify(Lights)} and Light: ${JSON.stringify(
-								Light,
-							)} with Index: ${index}`,
-						);
 
 						break;
 					}

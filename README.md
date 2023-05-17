@@ -59,11 +59,8 @@ iobroker add lightcontrol
 
 ### **WORK IN PROGRESS**
 
--   (Schmakus) RampOn and RampDown now only with rampTime / transition_time
--   (Schmakus) Added posibillity for default transition_time
--   (Schmakus) Changed structure of some object ids
--   (Schmakus) Fix AdaptiveCt - StartYoureDay Interpolated
--   (Schmakus) Some code improvements
+-   (Schmakus) Fix error by init of customConfig, if no light description is available
+-   (Schmakus) Fix error by set Ct, Color,... if no lights or groups defined
 
 ### 0.2.16 (2023-05-10)
 
