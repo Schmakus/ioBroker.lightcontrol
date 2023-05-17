@@ -56,6 +56,12 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Set Color-Temperature over HUE (Hue, Saturation & Brightness states are necessary)
+-   (Schmakus) Add Color-type HUE (Saturation & Brightness states are necessary)
+
 ### 0.2.17 (2023-05-17)
 
 -   (Schmakus) Fix error by init of customConfig, if no light description is available

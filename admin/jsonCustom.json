@@ -204,6 +204,10 @@
 				{
 					"label": "XY",
 					"value": "xy"
+				},
+				{
+					"label": "HUE",
+					"value": "hue"
 				}
 			],
 			"sm": 3,
@@ -243,6 +247,18 @@
 			"lg": 3,
 			"hidden": "data.func !== 'color' || data.setCtwithColor === false || data.type === 'sensor'",
 			"help": "Need only, if no Ct-State available"
+		},
+		"_infoColor": {
+			"type": "staticText",
+			"text": "if HUE is used, a brightness and saturation state is necessary!",
+			"style": {
+				"color": "orange"
+			},
+			"sm": 12,
+			"lg": 12,
+			"md": 12,
+			"hidden": "data.func !== 'color' && data.colorType !== 'hue",
+			"newLine": true
 		},
 		"motionVal": {
 			"type": "text",
