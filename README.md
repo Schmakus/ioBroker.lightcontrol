@@ -61,6 +61,7 @@ iobroker add lightcontrol
 
 -   (Schmakus) Set Color-Temperature over HUE (Hue, Saturation & Brightness states are necessary)
 -   (Schmakus) Add Color-type HUE (Saturation & Brightness states are necessary)
+-   (Schmakus) Update translations
 
 ### 0.2.17 (2023-05-17)
 

@@ -248,18 +248,6 @@
 			"hidden": "data.func !== 'color' || data.setCtwithColor === false || data.type === 'sensor'",
 			"help": "Need only, if no Ct-State available"
 		},
-		"_infoColor": {
-			"type": "staticText",
-			"text": "if HUE is used, a brightness and saturation state is necessary!",
-			"style": {
-				"color": "orange"
-			},
-			"sm": 12,
-			"lg": 12,
-			"md": 12,
-			"hidden": "data.func !== 'color' && data.colorType !== 'hue",
-			"newLine": true
-		},
 		"motionVal": {
 			"type": "text",
 			"label": "Value for Motion",
@@ -300,6 +288,18 @@
 			"help": "Send Color to Light if it's off",
 			"hidden": "data.func !== 'color'",
 			"default": true
+		},
+		"_infoColor": {
+			"type": "staticText",
+			"text": "if HUE is used, a brightness and saturation state is necessary!",
+			"style": {
+				"color": "orange"
+			},
+			"sm": 12,
+			"lg": 12,
+			"md": 12,
+			"hidden": "data.func !== 'color' && data.colorType !== 'hue",
+			"newLine": true
 		},
 		"sendModeswitch": {
 			"type": "checkbox",

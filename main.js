@@ -384,33 +384,33 @@ class Lightcontrol extends utils.Adapter {
 
 							//Check if it's a MotionSensor
 						} else if (this.MotionSensors.includes(id)) {
-							for (const Group in this.LightGroups) {
-								if (Group === "All") continue;
+							await Promise.all(
+								Object.keys(this.LightGroups)
+									.filter((Group) => Group !== "All")
+									.flatMap((Group) => {
+										const sensors = this.LightGroups[Group].sensors;
+										if (Array.isArray(sensors)) {
+											return sensors
+												.filter((sensor) => sensor.oid === id)
+												.map(async (sensor) => {
+													const motionValue = state.val === sensor.motionVal;
+													sensor.isMotion = motionValue;
 
-								for (const Sensor of this.LightGroups[Group].sensors) {
-									if (Sensor.oid === id) {
-										this.writeLog(
-											`[ onStateChange ] It's a MotionSensor in following Group: ${Group}`,
-										);
+													this.writeLog(
+														`[onStateChange] Sensor in Group="${Group}". This isMotion="${motionValue}"`,
+													);
 
-										if (state.val === Sensor.motionVal) {
-											//Inhalt lesen und neues Property anlegen und füllen
-											Sensor.isMotion = true;
-											this.writeLog(
-												`[ onStateChange ] Sensor in Group="${Group}". This isMotion="true"`,
-											);
+													await this.SummarizeSensors(Group);
+												});
 										} else {
-											Sensor.isMotion = false;
 											this.writeLog(
-												`[ onStateChange ] Sensor in Group="${Group}". This isMotion="false"`,
+												`[onStateChange] Sensors in Group="${Group}" is not iterable. Please check your config!`,
+												"warn",
 											);
+											return [];
 										}
-
-										await this.SummarizeSensors(Group).catch((e) => this.log.error(e));
-										break;
-									}
-								}
-							}
+									}),
+							);
 
 							//Check if it's Presence
 						} else if (this.Settings.IsPresenceDp === id) {
