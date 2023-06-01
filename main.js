@@ -123,15 +123,7 @@ class Lightcontrol extends utils.Adapter {
 					) {
 						//Check if its an own Lightcontrol State
 						if (stateID.includes(this.namespace)) {
-							this.writeLog(
-								`[ onObjectChange ] This Object-ID: "${stateID}" is not allowed, because it's an LightControl State! The settings will be deaktivated automatically!`,
-								"warn",
-							);
-							const stateInfo = await this.getForeignObjectAsync(stateID);
-							if (stateInfo?.common?.custom) {
-								stateInfo.common.custom[this.namespace].enabled = false;
-								await this.setForeignObjectAsync(stateID, stateInfo);
-							}
+							await this.deaktivateOwnId(stateID);
 						} else {
 							this.writeLog(
 								`[ onObjectChange ] Object array of LightControl activated state changed : ${JSON.stringify(
@@ -248,29 +240,6 @@ class Lightcontrol extends utils.Adapter {
 						this.sendTo(msg.from, msg.command, lights, msg.callback);
 					} catch (error) {
 						this.errorHandling(error, "onMessage // case LightName");
-					}
-					break;
-				}
-
-				case "id": {
-					try {
-						const value = msg.message.value;
-						this.writeLog(`[ onMessage ] id => Set new ID. Value = ${value}.`);
-						if (msg.message.value !== null) {
-							this.sendTo(msg.from, msg.command, value, msg.callback);
-						} else {
-							const oldID = this.config._id;
-							const newID = oldID + 1;
-
-							await this.extendForeignObjectAsync("system.adapter." + this.namespace, {
-								native: { _id: newID },
-							});
-
-							this.writeLog(`[ onMessage ] id => Set new ID. OldID = ${oldID}, NewID = ${newID}`);
-							this.sendTo(msg.from, msg.command, newID.toString(), msg.callback);
-						}
-					} catch (error) {
-						this.errorHandling(error, "onMessage // case id");
 					}
 					break;
 				}
@@ -470,6 +439,12 @@ class Lightcontrol extends utils.Adapter {
 
 							// Simplify stateID
 							const stateID = customStateArray.rows[index].id;
+
+							//Check if its an own Lightcontrol State
+							if (stateID.includes(this.namespace)) {
+								await this.deaktivateOwnId(stateID);
+								continue;
+							}
 
 							// Check if custom object is enabled for LightControl
 							// @ts-ignore
@@ -857,6 +832,14 @@ class Lightcontrol extends utils.Adapter {
 					await switchingOnOff.AutoOnPresenceIncrease(this);
 					handeled = true;
 					break;
+				case "adaptiveCt.enabled":
+					//await lightHandling.SetCt(this, Group, LightGroups[Group].ct);
+					//handeled = true;
+					break;
+				case "adaptiveCt.adaptiveCtMode":
+					break;
+				case "adaptiveCt.adaptiveCtTime":
+					break;
 				case "bri":
 					await lightHandling.SetBrightness(this, Group, LightGroups[Group].bri);
 					handeled = true;
@@ -876,6 +859,10 @@ class Lightcontrol extends utils.Adapter {
 							await lightHandling.SetWhiteSubstituteColor(this, Group);
 						await lightHandling.SetColorMode(this, Group);
 					}
+					handeled = true;
+					break;
+				case "transitionTime":
+					await lightHandling.SetTt(this, Group, NewVal, prop1);
 					handeled = true;
 					break;
 				case "power":
@@ -901,14 +888,6 @@ class Lightcontrol extends utils.Adapter {
 				case "adaptiveBri":
 					await lightHandling.SetBrightness(this, Group, await lightHandling.AdaptiveBri(this, Group));
 					handeled = true;
-					break;
-				case "adaptiveCt":
-					//await lightHandling.SetCt(this, Group, LightGroups[Group].ct);
-					//handeled = true;
-					break;
-				case "adaptiveCtMode":
-					break;
-				case "adaptiveCtTime":
 					break;
 				case "dimmUp":
 					await this.setStateAsync(
@@ -1073,6 +1052,30 @@ class Lightcontrol extends utils.Adapter {
 		} catch (error) {
 			this.errorHandling(error, "countGroups");
 			return 0;
+		}
+	}
+
+	/**
+	 * deaktivate state id because it's an own lightcontrol id
+	 * @async
+	 * @param {string} stateID ID of the Object
+	 * @returns {Promise<boolean>}
+	 */
+	async deaktivateOwnId(stateID) {
+		this.writeLog(
+			`[ InitCustomStates ] This Object-ID: "${stateID}" is not allowed, because it's an LightControl State! The settings will be deaktivated automatically!`,
+			"warn",
+		);
+		try {
+			const stateInfo = await this.getForeignObjectAsync(stateID);
+			if (stateInfo?.common?.custom) {
+				stateInfo.common.custom[this.namespace].enabled = false;
+				await this.setForeignObjectAsync(stateID, stateInfo);
+			}
+			return true;
+		} catch (error) {
+			this.errorHandling(error, "deaktivateOwnId", stateID);
+			return false;
 		}
 	}
 

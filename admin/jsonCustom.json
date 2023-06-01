@@ -59,11 +59,11 @@
 					"value": "bri"
 				},
 				{
-					"label": "Transmission Time",
+					"label": "Transition Time",
 					"value": "tt"
 				},
 				{
-					"label": "Color-Temperature",
+					"label": "Color Temperature",
 					"value": "ct"
 				},
 				{
@@ -75,7 +75,7 @@
 					"value": "color"
 				},
 				{
-					"label": "Mode-Switch",
+					"label": "Mode Switch",
 					"value": "modeswitch"
 				}
 			],
@@ -134,9 +134,13 @@
 				{
 					"label": "Milliseconds",
 					"value": "ms"
+				},
+				{
+					"label": "Deciseconds",
+					"value": "ds"
 				}
 			],
-			"defaultFunc": "!customObj.common ? 's' : customObj.common.unit ? customObj.common.unit === 'ms' ? 'ms' : 's'",
+			"defaultFunc": "!customObj.common ? 's' : !customObj.common.unit ? 's' : customObj.common.unit === 'ms' ? 'ms' : 's'",
 			"hidden": "!['tt'].includes(data.func) || data.type === 'sensor'",
 			"help": "Unit of the state"
 		},
@@ -158,7 +162,7 @@
 			],
 			"help": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite'",
 			"default": false,
-			"hidden": "data.func !== 'ct'",
+			"hidden": "data.func !== 'ct' || data.type === 'sensor'",
 			"newLine": true
 		},
 		"defaultBri": {
@@ -225,10 +229,24 @@
 			"hidden": "data.func !== 'color' || data.type === 'sensor'",
 			"default": "#FFFFFF"
 		},
+		"_infoColor": {
+			"type": "staticText",
+			"text": "if HUE is used, a brightness and saturation state is necessary!",
+			"style": {
+				"color": "orange"
+			},
+			"sm": 12,
+			"lg": 12,
+			"md": 12,
+			"hidden": "!['color'].includes(data.func) || data.colorType !== 'hue' || data.type === 'sensor'",
+			"newLine": true
+		},
 		"setCtwithColor": {
 			"type": "checkbox",
 			"label": "Set Color-Temperature with Color",
-			"hidden": "data.func !== 'color' || data.type === 'sensor'"
+			"hidden": "data.func !== 'color' || data.type === 'sensor'",
+			"default": false,
+			"newLine": true
 		},
 		"warmWhiteColor": {
 			"type": "text",
@@ -236,7 +254,7 @@
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"hidden": "data.func !== 'color' || data.setCtwithColor === false || data.type === 'sensor'",
+			"hidden": "!data.setCtwithColor || ['hue', 'rgb', 'xy'].includes(data.colorType) || data.func !== 'color' || data.type === 'sensor'",
 			"help": "Need only, if no Ct-State available"
 		},
 		"dayLightColor": {
@@ -245,7 +263,7 @@
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"hidden": "data.func !== 'color' || data.setCtwithColor === false || data.type === 'sensor'",
+			"hidden": "!data.setCtwithColor || ['hue', 'rgb', 'xy'].includes(data.colorType) || data.func !== 'color' || data.type === 'sensor'",
 			"help": "Need only, if no Ct-State available"
 		},
 		"motionVal": {
@@ -288,18 +306,6 @@
 			"help": "Send Color to Light if it's off",
 			"hidden": "data.func !== 'color'",
 			"default": true
-		},
-		"_infoColor": {
-			"type": "staticText",
-			"text": "if HUE is used, a brightness and saturation state is necessary!",
-			"style": {
-				"color": "orange"
-			},
-			"sm": 12,
-			"lg": 12,
-			"md": 12,
-			"hidden": "data.func !== 'color' && data.colorType !== 'hue",
-			"newLine": true
 		},
 		"sendModeswitch": {
 			"type": "checkbox",
