@@ -862,7 +862,7 @@ class Lightcontrol extends utils.Adapter {
 					handeled = true;
 					break;
 				case "transitionTime":
-					await lightHandling.SetTt(this, Group, NewVal, prop1);
+					await lightHandling.SetTt(this, Group, await helper.limitNumber(NewVal, 0, 64000), prop1);
 					handeled = true;
 					break;
 				case "power":
