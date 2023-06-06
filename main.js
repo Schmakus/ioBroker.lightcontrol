@@ -898,8 +898,8 @@ class Lightcontrol extends utils.Adapter {
 					common: common,
 					native: {},
 				};
-				await (foreign ? this.setForeignObjectAsync(dp, obj) : this.setObjectAsync(dp, obj));
 
+				await (foreign ? this.setForeignObjectAsync(dp, obj) : this.setObjectAsync(dp, obj));
 				this.writeLog(`[ CreateStates ] State: ${dp} created.`);
 			} else {
 				if (JSON.stringify(obj.common) !== JSON.stringify(common) || !("native" in obj)) {
@@ -1241,7 +1241,7 @@ class Lightcontrol extends utils.Adapter {
 							noMotionVal: customData.noMotionVal,
 						});
 
-						await init.DoAllTheMotionSensorThings(this, customData.group);
+						await this.DoAllTheMotionSensorThings(customData.group);
 
 						break;
 					}
