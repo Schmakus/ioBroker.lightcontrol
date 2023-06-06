@@ -9,11 +9,17 @@ const utils = require("@iobroker/adapter-core");
 
 // eslint-disable-next-line no-unused-vars
 const helper = require("./lib/helper");
-const init = require("./lib/init");
 const timers = require("./lib/timers");
 const switchingOnOff = require("./lib/switchingOnOff");
 const lightHandling = require("./lib/lightHandling");
 const { params } = require("./lib/params");
+const { DeviceTemplate, DeviceAllTemplate } = require(`./lib/groupTemplates`);
+const {
+	TestTemplateLamps,
+	TestTemplateMotionSensors,
+	TestTemplateLuxSensors,
+	TestTemplatePresence,
+} = require(`./lib/testTemplates`);
 //const { objects } = require("./lib/objects");
 
 // Sentry error reporting, disable when testing alpha source code locally!
@@ -45,8 +51,8 @@ class Lightcontrol extends utils.Adapter {
 		this.ActualPresence = true;
 		this.ActualPresenceCount = { newVal: 1, oldVal: 1 };
 
-		this.RampOnIntervalObject = {};
-		this.RampOffIntervalObject = {};
+		this.RampIntervalObject = {};
+		this.TransitionTimeoutObject = {};
 		this.AutoOffTimeoutObject = {};
 		this.AutoOffNoticeTimeoutObject = {};
 
@@ -69,12 +75,12 @@ class Lightcontrol extends utils.Adapter {
 		this.writeLog(`[ onReady ] LightGroups from Settings: ${JSON.stringify(this.Settings.LightGroups)}`);
 
 		//Create LightGroups Object from GroupNames
-		await init.CreateLightGroupsObject(this);
-		await this.log.debug(JSON.stringify(this.LightGroups));
+		await this.CreateLightGroupsObject();
+		await this.writeLog(JSON.stringify(this.LightGroups));
 
 		//Create all States, Devices and Channels
 		if (Object.keys(this.LightGroups).length !== 0) {
-			await init.Init(this);
+			await this.Init();
 			await this.InitCustomStates();
 			await this.SetLightState();
 		} else {
@@ -88,8 +94,8 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	onUnload(callback) {
 		try {
-			timers.clearRampOnIntervals(this, null);
-			timers.clearRampOffIntervals(this, null);
+			timers.clearRampIntervals(this, null);
+			timers.clearTransitionTimeout(this, null);
 			timers.clearBlinkIntervals(this, null);
 			timers.clearAutoOffTimeouts(this, null);
 			this.clearTimeout(this.TickerIntervall);
@@ -414,6 +420,540 @@ class Lightcontrol extends utils.Adapter {
 	}
 
 	/**
+	 * State create, extend objects and subscribe states
+	 */
+	async Init() {
+		this.writeLog(`Init is starting...`, "info");
+		if (this.DevMode) await this.TestStatesCreate;
+		await this.GlobalLuxHandling();
+		await this.GlobalPresenceHandling();
+		await this.StatesCreate();
+		const latlng = await this.GetSystemData();
+		if (latlng) lightHandling.AdaptiveCt(this);
+		this.writeLog(`Init finished.`, "info");
+	}
+
+	/**
+	 * Create LightGroups Object
+	 * @description Creates Object LightGroups from system.config array
+	 */
+	async CreateLightGroupsObject() {
+		try {
+			const { Settings } = this;
+			const { LightGroups } = Settings;
+
+			if (LightGroups && LightGroups.length) {
+				const regex = /^[a-zA-Z0-9_-]*$/; // Regulärer Ausdruck zur Überprüfung von erlaubten Zeichen
+				LightGroups.forEach(({ Group, GroupLuxSensor }) => {
+					if (!regex.test(Group)) {
+						// Überprüfen, ob "Group" nur erlaubte Zeichen enthält
+						this.writeLog(
+							`[ CreateLightGroupsObject ] Group "${Group}" contains invalid characters. Please update the group name in instance setting. Skipping...`,
+							"warn",
+						);
+						return; // Überspringen des Loops, wenn "Group" ungültige Zeichen enthält
+					}
+					this.LightGroups[Group] = {
+						description: Group,
+						LuxSensor: GroupLuxSensor,
+						lights: [],
+						sensors: [],
+					};
+				});
+				this.writeLog(`[ CreateLightGroupsObject ] LightGroups: ${JSON.stringify(this.LightGroups)}`);
+			} else {
+				this.writeLog(`[ CreateLightGroupsObject ] No LightGroups defined in instance settings!`, "warn");
+			}
+		} catch (error) {
+			this.errorHandling(error, "CreateLightGroupsObject");
+		}
+	}
+
+	/**
+	 * GlobalLuxHandling
+	 * @description If a global lux sensor has been defined, its value is written to the global variable and the state is subscribed.
+	 */
+	async GlobalLuxHandling() {
+		try {
+			const { Settings } = this;
+			const { GlobalLuxSensor } = Settings;
+			this.ActualGenericLux = 0;
+
+			if (!GlobalLuxSensor) {
+				return;
+			}
+
+			const actualGenericLux = await this.getForeignStateAsync(GlobalLuxSensor);
+			const _actualGenericLux = await helper.checkObjectNumber(actualGenericLux);
+
+			if (_actualGenericLux !== null) {
+				this.log.warn(
+					`[ GlobalLuxHandling ] state value of id="${GlobalLuxSensor}" is empty, null, undefined, or not a valid number!`,
+				);
+				return;
+			}
+
+			this.ActualGenericLux = _actualGenericLux;
+			await this.subscribeForeignStatesAsync(GlobalLuxSensor);
+			this.LuxSensors.push(GlobalLuxSensor);
+		} catch (error) {
+			this.errorHandling(error, "GlobalLuxHandling");
+		}
+	}
+
+	/**
+	 * DoAllTheSensorThings
+	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
+	 */
+	async DoAllTheMotionSensorThings(Group) {
+		try {
+			this.writeLog(`[ DoAllTheMotionSensorThings ] Reaching, Group = "${Group}`);
+
+			for (const sensor of this.LightGroups[Group].sensors) {
+				const _motionState = await this.getForeignStateAsync(sensor.oid);
+				if (_motionState) {
+					sensor.isMotion = _motionState.val == sensor.motionVal;
+					this.log.debug(
+						`[ DoAllTheMotionSensorThings ] Group="${Group}" SensorID="${sensor.oid}" MotionVal="${sensor.isMotion}"`,
+					);
+					await this.subscribeForeignStatesAsync(sensor.oid);
+					this.MotionSensors.push(sensor.oid);
+				} else {
+					this.log.debug(
+						`[ DoAllTheMotionSensorThings ] Group="${Group}" ${sensor.oid} has no data, skipping subscribe`,
+					);
+				}
+			}
+		} catch (error) {
+			this.errorHandling(error, "DoAllTheMotionSensorThings");
+		}
+	}
+
+	/**
+	 * DoAllTheLuxSensorThings
+	 * @description Read the current lux value per group. However, if no individual lux sensor has been defined, a global lux sensor is assigned to the group.
+	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
+	 */
+	async DoAllTheLuxSensorThings(Group) {
+		try {
+			const luxSensor = this.LightGroups[Group].LuxSensor || this.Settings.GlobalLuxSensor;
+			this.LightGroups[Group].actualLux = 0;
+
+			if (!luxSensor) {
+				this.writeLog(
+					`[ DoAllTheLuxSensorThings ] No Luxsensor for Group="${Group}" defined, set actualLux = 0, skip handling`,
+				);
+				return;
+			}
+
+			if (luxSensor === this.Settings.GlobalLuxSensor) {
+				this.LightGroups[Group].actualLux = this.ActualGenericLux ?? null;
+				this.LightGroups[Group].LuxSensor = luxSensor;
+				this.writeLog(`[ DoAllTheLuxSensorThings ] Group "${Group}" using global luxsensor.`);
+				return;
+			}
+
+			const individualLux = await this.getForeignStateAsync(luxSensor);
+			const _individualLux = await helper.checkObjectNumber(individualLux);
+
+			if (_individualLux !== null) {
+				this.log.warn(
+					`[ DoAllTheLuxSensorThings ] state value of id="${luxSensor}" of Group="${Group}" is empty, null or undefined!`,
+				);
+				return;
+			}
+
+			this.LightGroups[Group].actualLux = _individualLux;
+			await this.subscribeForeignStatesAsync(luxSensor);
+			this.LuxSensors.push(luxSensor);
+			this.writeLog(
+				`[ DoAllTheLuxSensorThings ] Group="${Group}" using individual luxsensor "${luxSensor}", value is: ${this.LightGroups[Group].actualLux}`,
+			);
+		} catch (error) {
+			this.errorHandling(error, "DoAllTheLuxSensorThings");
+		}
+	}
+
+	/**
+	 * GlobalPresenceHandling
+	 */
+	async GlobalPresenceHandling() {
+		try {
+			if (this.Settings.PresenceCountDp) {
+				this.writeLog(`[ GlobalPresenceHandling ] PresenceCounteDp=${this.Settings.PresenceCountDp}`);
+				this.ActualPresenceCount = { newVal: 0, oldVal: 0 };
+
+				const ActualPresenceCount = await this.getForeignStateAsync(this.Settings.PresenceCountDp);
+				const _ActualPresenceCount = await helper.checkObjectNumber(ActualPresenceCount);
+
+				if (_ActualPresenceCount !== null) {
+					this.log.warn(
+						`[ GlobalPresenceHandling ] state value of id="${this.Settings.PresenceCountDp}" is empty, null or undefined!`,
+					);
+					return;
+				}
+
+				this.ActualPresenceCount = { newVal: _ActualPresenceCount, oldVal: 0 };
+				this.ActualPresence = this.ActualPresenceCount.newVal === 0 ? false : true;
+				await this.subscribeForeignStatesAsync(this.Settings.PresenceCountDp);
+			}
+
+			if (this.Settings.IsPresenceDp) {
+				this.writeLog(`[ GlobalPresenceHandling ] IsPresenceDp=${this.Settings.IsPresenceDp}`);
+				this.ActualPresence = false;
+
+				const ActualPresence = await this.getForeignStateAsync(this.Settings.IsPresenceDp);
+				const _ActualPresence = await helper.checkObjectBoolean(ActualPresence);
+
+				if (_ActualPresence === null) {
+					this.writeLog(
+						`[ GlobalPresenceHandling ] isPresenceDp=${this.Settings.IsPresenceDp} is not type="boolean"!`,
+						"warn",
+					);
+					return;
+				}
+
+				this.ActualPresence = _ActualPresence;
+				await this.subscribeForeignStatesAsync(this.Settings.IsPresenceDp);
+			}
+		} catch (error) {
+			this.errorHandling(error, "GlobalPresenceHandling");
+		}
+	}
+
+	/**
+	 * State create, extend objects and subscribe states
+	 */
+	async StatesCreate() {
+		const keepStates = [];
+		const keepChannels = [];
+		const keepDevices = [];
+
+		keepStates.push("info.connection");
+		keepChannels.push("info");
+
+		//Loop LightGroups and create devices
+		for (const Group in this.LightGroups) {
+			if (Group === "All") continue;
+			//Create device if not exist
+			await this.CreateDevice(Group, Group);
+			keepDevices.push(Group);
+
+			await this.DoAllTheMotionSensorThings(Group);
+			await this.DoAllTheLuxSensorThings(Group);
+
+			for (const prop1 in DeviceTemplate) {
+				const dp = Group + "." + prop1;
+				// Check for second layer
+				if (typeof DeviceTemplate[prop1].name == "undefined") {
+					//Create channel if not exist
+					await this.CreateChannel(dp, Group + " " + prop1);
+					keepChannels.push(dp);
+
+					for (const key in DeviceTemplate[prop1]) {
+						const dp = Group + "." + prop1 + "." + key;
+						const common = DeviceTemplate[prop1][key];
+
+						await this.CreateStates(dp, common);
+						keepStates.push(dp);
+
+						try {
+							const state = await this.getStateAsync(dp);
+
+							if (!state) {
+								this.writeLog(
+									`[ StatesCreate ] State: "${dp}" is NULL or undefined! Init aborted!`,
+									"warn",
+								);
+								return;
+							}
+
+							await this.SetValueToObject(Group, prop1, state.val);
+							common.write && (await this.subscribeStatesAsync(dp));
+						} catch (error) {
+							this.writeLog(
+								`[ StatesCreate ] not able to getState of id="${dp}". Please check your config! Init aborted! Error: ${error}`,
+								"warn",
+							);
+							return;
+						}
+					}
+				} else {
+					const common = DeviceTemplate[prop1];
+					await this.CreateStates(dp, common);
+					keepStates.push(dp);
+
+					try {
+						const state = await this.getStateAsync(dp);
+
+						if (!state) {
+							this.writeLog(
+								`[ StatesCreate ] State: "${dp}" is NULL or undefined! Init aborted!`,
+								"warn",
+							);
+							return;
+						}
+
+						if (prop1 === "power") {
+							this.writeLog(
+								`[ StatesCreate ] Group="${Group}", Prop1="${prop1}", powerNewVal="${state.val}"`,
+							);
+							await this.SetValueToObject(Group, "powerNewVal", state.val);
+						}
+
+						if (state) {
+							await this.SetValueToObject(Group, prop1, state.val);
+						}
+
+						common.write && (await this.subscribeStatesAsync(dp));
+					} catch (error) {
+						this.writeLog(
+							`[ StatesCreate ] not able to getState of id="${dp}". Please check your config! Init aborted! Error: ${error}`,
+							"warn",
+						);
+						return;
+					}
+				}
+			}
+			await this.SetValueToObject(Group, ["autoOnLux.dailyLockCounter", "autoOffLux.dailyLockCounter"], 0);
+		}
+
+		//Create All-Channel if not exists
+		await this.CreateDevice("All", "Controll all groups together");
+		keepDevices.push("All");
+
+		for (const prop1 in DeviceAllTemplate) {
+			const dp = "All." + prop1;
+			const common = DeviceAllTemplate[prop1];
+
+			await this.CreateStates(dp, common);
+			keepStates.push(dp);
+
+			try {
+				const state = await this.getStateAsync(dp);
+
+				if (!state) {
+					this.writeLog(`[ StateCreate ] State: "${dp}" is NULL or undefined! Init aborted`, "warn");
+					return;
+				}
+
+				if (prop1 === "power") {
+					this.writeLog(`[ StateCreate ] Group="All", Prop1="${prop1}", powerNewVal="${state.val}"`);
+					await this.SetValueToObject("All", "powerNewVal", state.val);
+				}
+
+				await this.SetValueToObject("All", dp, state.val);
+
+				common.write && (await this.subscribeStatesAsync(dp));
+			} catch (error) {
+				this.writeLog(
+					`[ StatesCreate ] not able to getState of id="${dp}". Please check your config! Init aborted! Error: ${error}`,
+					"warn",
+				);
+				return;
+			}
+		}
+
+		// Delete non existent states, channels and devices
+		const allStates = [];
+		const allChannels = [];
+		const allDevices = [];
+
+		try {
+			const objects = await this.getAdapterObjectsAsync();
+			for (const o in objects) {
+				const parts = o.split(".");
+				if (parts[2] != "info") {
+					const id = await helper.removeNamespace(this, objects[o]._id);
+
+					if (objects[o].type == "state") {
+						allStates.push(id);
+					} else if (objects[o].type == "channel") {
+						allChannels.push(id);
+					} else if (objects[o].type == "device") {
+						allDevices.push(id);
+					}
+				}
+			}
+		} catch (error) {
+			this.writeLog(`[ StatesCreate ] not able to getObjects! Init aborted! Error: ${error}`, "warn");
+			return;
+		}
+
+		for (let i = 0; i < allStates.length; i++) {
+			const id = allStates[i];
+			if (keepStates.indexOf(id) === -1) {
+				try {
+					await this.delObjectAsync(id, { recursive: true });
+					this.writeLog("[ StateCreate ] State deleted " + id);
+				} catch (error) {
+					this.writeLog(`[ StateCreate ] Not able to delete state="${id}". Error: ${error}`, "warn");
+				}
+			}
+		}
+		for (let i = 0; i < allChannels.length; i++) {
+			const id = allChannels[i];
+			if (keepChannels.indexOf(id) === -1) {
+				try {
+					await this.delObjectAsync(id, { recursive: true });
+					this.writeLog("[ StateCreate ] Channel deleted " + id);
+				} catch (error) {
+					this.writeLog(`[ StateCreate ] Not able to delete channel="${id}". Error: ${error}`, "warn");
+				}
+			}
+		}
+		for (let i = 0; i < allDevices.length; i++) {
+			const id = allDevices[i];
+			if (keepDevices.indexOf(id) === -1) {
+				try {
+					await this.delObjectAsync(id, { recursive: true });
+					this.writeLog("[ StateCreate ] Device deleted " + id);
+				} catch (error) {
+					this.writeLog(`[ StateCreate ] Not able to delete device="${id}". Error: ${error}`, "warn");
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * clean Dev_Mode userdata
+	 */
+	async CleanUserData() {
+		const id = "0_userdata.0.lightcontrol_DEV.";
+		try {
+			await this.delObjectAsync(id, { recursive: true });
+			this.writeLog("[ CleanUserData ] Testdata deleted " + id);
+		} catch (error) {
+			this.writeLog(`[ CleanUserData ] Not able to delete testdata. Error: ${error}`, "warn");
+		}
+	}
+
+	/**
+	 * State create, extend objects and subscribe states
+	 */
+	async TestStatesCreate() {
+		this.writeLog("[ TestStatesCreate ]Creating Test devices...");
+
+		const userdata = "0_userdata.0.lightcontrol_DEV.";
+
+		//Loop TestLamps and create datapoints to 0_userdata.0
+		for (const Lamp in TestTemplateLamps) {
+			//Create Lamp if not exist
+			try {
+				await this.setForeignObjectNotExistsAsync(userdata + "Lamps." + Lamp, {
+					type: "channel",
+					common: { name: Lamp },
+					native: {},
+				});
+			} catch (error) {
+				this.writeLog(`[ TestStatesCreate ] Not able create lamps of testdata. Error: ${error}`, "warn");
+			}
+
+			for (const prop1 in TestTemplateLamps[Lamp]) {
+				const common = TestTemplateLamps[Lamp][prop1];
+				const dp = userdata + "Lamps." + Lamp + "." + prop1;
+				await this.CreateStates(dp, common, true);
+			}
+		}
+
+		//Loop Test Motion Sensors and create datapoints to 0_userdata.0
+		for (const MotionSensor in TestTemplateMotionSensors) {
+			const common = TestTemplateMotionSensors[MotionSensor];
+			const dp = userdata + "MotionSensors." + MotionSensor;
+			await this.CreateStates(dp, common, true);
+		}
+
+		//Loop Test Lux Sensors and create datapoints to 0_userdata.0
+		for (const LuxSensor in TestTemplateLuxSensors) {
+			const common = TestTemplateLuxSensors[LuxSensor];
+			const dp = userdata + "LuxSensors." + LuxSensor;
+			await this.CreateStates(dp, common, true);
+		}
+
+		//Loop Test Presence and create datapoints to 0_userdata.0
+		for (const Presence in TestTemplatePresence) {
+			const common = TestTemplatePresence[Presence];
+			const dp = userdata + "Presence." + Presence;
+			await this.CreateStates(dp, common, true);
+		}
+	}
+
+	/**
+	 * Create datapoint and extend datapoints
+	 * @author Schmakus
+	 * @async
+	 * @param {string} dp path to datapoint
+	 * @param {ioBroker.StateCommon} common type of datapoint, e.g. string, number, boolean, ...
+	 * @param {boolean} [foreign = false] set adapter states = false; set foreign states = true
+	 */
+	async CreateStates(dp, common, foreign) {
+		try {
+			const obj = !foreign ? await this.getObjectAsync(dp) : await this.getForeignObjectAsync(dp);
+
+			if (!obj) {
+				const obj = {
+					type: "state",
+					common: common,
+					native: {},
+				};
+				await (foreign ? this.setForeignObjectAsync(dp, obj) : this.setObjectAsync(dp, obj));
+
+				this.writeLog(`[ CreateStates ] State: ${dp} created.`);
+			} else {
+				if (JSON.stringify(obj.common) !== JSON.stringify(common) || !("native" in obj)) {
+					obj.common = common;
+					obj.native = obj.native ?? {};
+					await (foreign ? this.setForeignObjectAsync(dp, obj) : this.setObjectAsync(dp, obj));
+				}
+			}
+		} catch (error) {
+			this.writeLog(`[ CreateStates ] Not able create state or getObject (${dp}). Error: ${error}`, "warn");
+		}
+	}
+	/**
+	 * Create channel and extend
+	 * @author Schmakus
+	 * @async
+	 * @param {string} dp path to datapoint
+	 * @param {string} name name of the channel
+	 */
+	async CreateChannel(dp, name) {
+		try {
+			await this.extendObjectAsync(dp, {
+				type: "channel",
+				common: {
+					name: name,
+				},
+				native: {},
+			});
+		} catch (error) {
+			this.writeLog(`[ CreateChannel ] Not able create channel (${dp}). Error: ${error}`, "warn");
+		}
+	}
+	/**
+	 * Create device and extend
+	 * @author Schmakus
+	 * @async
+	 * @param {string} dp path to datapoint
+	 * @param {string} name name of the channel
+	 */
+	async CreateDevice(dp, name) {
+		try {
+			await this.extendObjectAsync(dp, {
+				type: "device",
+				common: {
+					name: name,
+				},
+				native: {},
+			});
+		} catch (error) {
+			this.writeLog(`[ CreateDevice ] Not able create device (${dp}). Error: ${error}`, "warn");
+		}
+	}
+
+	/**
 	 * Init all Custom states
 	 * @description Init all Custom states
 	 */
@@ -722,6 +1262,7 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * Is called from onStateChange
+	 * @async
 	 * @param {string} Group Any Group of Lightgroups
 	 * @param {string} prop1 Which State has changed
 	 * @param {any} NewVal New Value of Datapoint
@@ -939,8 +1480,10 @@ class Lightcontrol extends utils.Adapter {
 					await this.setStateAsync(id, NewVal, true);
 				}
 			}
+			return true;
 		} catch (error) {
 			this.errorHandling(error, "Controller");
+			return false;
 		}
 	}
 
@@ -1135,6 +1678,61 @@ class Lightcontrol extends utils.Adapter {
 			}
 		} catch (error) {
 			this.errorHandling(error, "deleteStateIdFromLightGroups");
+		}
+	}
+
+	/**
+	 * Set Values and Keys to Object
+	 * @async
+	 * @function SetValueToObject
+	 * @description Fügt Schlüssel-Wert-Paare zu den Lichtgruppen hinzu.
+	 * @param {string} Group - Der Name der Lichtgruppe.
+	 * @param {string|string[]} key - Der Schlüssel oder ein Array von Schlüsseln.
+	 * @param {*} value - Der Wert, der den Schlüsseln zugeordnet wird.
+	 * @example
+	 * await helper.SetValueToObject(LightGroups[Group], ["blink.stop", "blink.infinite"], false);
+	 * await helper.SetValueToObject(LightGroups[Group], prop1, false);
+	 */
+
+	async SetValueToObject(Group, key, value) {
+		if (Object.prototype.hasOwnProperty.call(this.LightGroups, Group)) {
+			this.log.warn(`[ SetValueToObject ] Group="${Group}" is not in LightGroups object!`);
+			return;
+		}
+
+		const group = this.LightGroups[Group];
+		if (Array.isArray(key)) {
+			if (Array.isArray(value) && key.length === value.length) {
+				key.forEach((k, index) => {
+					const keys = k.split(".");
+					let currentObj = group;
+					for (let i = 0; i < keys.length - 1; i++) {
+						const keyPart = keys[i];
+						if (!Object.prototype.hasOwnProperty.call(currentObj, keyPart)) {
+							currentObj[keyPart] = {};
+						}
+						currentObj = currentObj[keyPart];
+					}
+					const lastKey = keys[keys.length - 1];
+					currentObj[lastKey] = value[index];
+				});
+			} else {
+				this.log.warn(
+					`[ SetValueToObject ] Error: The length of the value array does not match the length of the key array."`,
+				);
+			}
+		} else {
+			const keys = key.split(".");
+			let currentObj = group;
+			for (let i = 0; i < keys.length - 1; i++) {
+				const keyPart = keys[i];
+				if (!Object.prototype.hasOwnProperty.call(currentObj, keyPart)) {
+					currentObj[keyPart] = {};
+				}
+				currentObj = currentObj[keyPart];
+			}
+			const lastKey = keys[keys.length - 1];
+			currentObj[lastKey] = value;
 		}
 	}
 
