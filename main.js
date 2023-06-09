@@ -1940,7 +1940,7 @@ class Lightcontrol extends utils.Adapter {
 						(this.LightGroups[Group].power || Light?.color?.sendColor),
 				)
 				.map(async (Light) => {
-					const colorValue = await colorConv.ConvertKelvinToHue(this.LightGroups[Group].ct);
+					const colorValue = colorConv.ConvertKelvinToHue(this.LightGroups[Group].ct);
 					await Promise.all([
 						this.setForeignStateAsync(Light.color.oid, colorValue.hue, false),
 						this.setForeignStateAsync(Light.sat.oid, colorValue.saturation, false),
@@ -1958,7 +1958,7 @@ class Lightcontrol extends utils.Adapter {
 						(this.LightGroups[Group].power || Light?.color?.sendColor),
 				)
 				.map(async (Light) => {
-					const colorValue = await colorConv.convertKelvinToRGB(this.LightGroups[Group].ct);
+					const colorValue = colorConv.convertKelvinToRGB(this.LightGroups[Group].ct);
 					await this.setForeignStateAsync(Light.color.oid, { val: JSON.stringify(colorValue), ack: false });
 				});
 
@@ -1972,8 +1972,8 @@ class Lightcontrol extends utils.Adapter {
 						(this.LightGroups[Group].power || Light?.color?.sendColor),
 				)
 				.map(async (Light) => {
-					const rgb = await colorConv.convertKelvinToRGB(this.LightGroups[Group].ct);
-					const colorValue = await colorConv.ConvertRgbToXy(rgb);
+					const rgb = colorConv.convertKelvinToRGB(this.LightGroups[Group].ct);
+					const colorValue = colorConv.ConvertRgbToXy(rgb);
 					await this.setForeignStateAsync(Light.color.oid, { val: JSON.stringify(colorValue), ack: false });
 				});
 
@@ -2064,7 +2064,7 @@ class Lightcontrol extends utils.Adapter {
 								await this.setForeignStateAsync(Light.color.oid, Color, false);
 								break;
 							case "rgb": {
-								const rgbTemp = await colorConv.ConvertHexToRgb(Color);
+								const rgbTemp = colorConv.ConvertHexToRgb(Color);
 								await this.setForeignStateAsync(Light.color.oid, {
 									val: JSON.stringify(rgbTemp),
 									ack: false,
@@ -2072,8 +2072,8 @@ class Lightcontrol extends utils.Adapter {
 								break;
 							}
 							case "xy": {
-								const rgbTemp = await colorConv.ConvertHexToRgb(Color);
-								const XyTemp = await colorConv.ConvertRgbToXy(rgbTemp);
+								const rgbTemp = colorConv.ConvertHexToRgb(Color);
+								const XyTemp = colorConv.ConvertRgbToXy(rgbTemp);
 								await this.setForeignStateAsync(Light.color.oid, {
 									val: JSON.stringify(XyTemp),
 									ack: false,
@@ -2082,7 +2082,7 @@ class Lightcontrol extends utils.Adapter {
 							}
 							case "hue": {
 								if (Light.bri?.oid && Light.sat?.oid) {
-									const colorValue = await colorConv.ConvertHexToHue(Color);
+									const colorValue = colorConv.ConvertHexToHue(Color);
 									await Promise.all([
 										this.setForeignStateAsync(Light.color.oid, colorValue.hue, false),
 										this.setForeignStateAsync(Light.sat.oid, colorValue.saturation, false),
