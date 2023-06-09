@@ -1091,112 +1091,112 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 */
 	async AutoOnLux(Group) {
-		try {
-			this.writeLog(
-				`[ AutoOnLux ] Group="${Group} enabled="${this.LightGroups[Group].autoOnLux.enabled}", actuallux="${this.LightGroups[Group].actualLux}", minLux="${this.LightGroups[Group].autoOnLux.minLux}" LightGroups[Group].autoOnLux.dailyLock="${this.LightGroups[Group].autoOnLux.dailyLock}"`,
-			);
+		const LightGroup = this.LightGroups[Group];
 
-			let tempBri = 0;
-			let tempColor = "";
+		if (!LightGroup) {
+			return;
+		}
 
-			if (this.LightGroups[Group].autoOnLux.operator == "<") {
+		const { enabled, actualLux, autoOnLux, power, bri, color, ct } = LightGroup;
+
+		this.writeLog(
+			`[ AutoOnLux ] Group="${Group} enabled="${this.LightGroups[Group].autoOnLux.enabled}", actuallux="${this.LightGroups[Group].actualLux}", minLux="${this.LightGroups[Group].autoOnLux.minLux}" LightGroups[Group].autoOnLux.dailyLock="${this.LightGroups[Group].autoOnLux.dailyLock}"`,
+		);
+
+		let tempBri = 0;
+		let tempColor = "";
+
+		if (this.LightGroups[Group].autoOnLux.operator == "<") {
+			if (
+				this.LightGroups[Group].autoOnLux.enabled &&
+				!this.LightGroups[Group].power &&
+				!this.LightGroups[Group].autoOnLux.dailyLock &&
+				this.LightGroups[Group].actualLux <= this.LightGroups[Group].autoOnLux.minLux
+			) {
+				this.log.info(`AutoOn_Lux() activated Group="${Group}"`);
+
 				if (
-					this.LightGroups[Group].autoOnLux.enabled &&
-					!this.LightGroups[Group].power &&
-					!this.LightGroups[Group].autoOnLux.dailyLock &&
-					this.LightGroups[Group].actualLux <= this.LightGroups[Group].autoOnLux.minLux
+					(this.LightGroups[Group].autoOnLux.switchOnlyWhenPresence && this.ActualPresence) ||
+					(this.LightGroups[Group].autoOnLux.switchOnlyWhenNoPresence && !this.ActualPresence)
 				) {
-					this.log.info(`AutoOn_Lux() activated Group="${Group}"`);
-
-					if (
-						(this.LightGroups[Group].autoOnLux.switchOnlyWhenPresence && this.ActualPresence) ||
-						(this.LightGroups[Group].autoOnLux.switchOnlyWhenNoPresence && !this.ActualPresence)
-					) {
-						await this.GroupPowerOnOff(Group, true);
-						tempBri =
-							this.LightGroups[Group].autoOnLux.bri !== 0
-								? this.LightGroups[Group].autoOnLux.bri
-								: (tempBri = this.LightGroups[Group].bri);
-						await this.SetWhiteSubstituteColor(Group);
-						tempColor =
-							this.LightGroups[Group].autoOnLux.color !== ""
-								? this.LightGroups[Group].autoOnLux.color
-								: (tempColor = this.LightGroups[Group].color);
-						await this.PowerOnAftercare(Group, tempBri, this.LightGroups[Group].ct, tempColor);
-					}
-
-					this.LightGroups[Group].autoOnLux.dailyLock = true;
-
-					await this.setStateAsync(Group + ".autoOnLux.dailyLock", true, true);
-				} else if (
-					this.LightGroups[Group].autoOnLux.dailyLock &&
-					this.LightGroups[Group].actualLux > this.LightGroups[Group].autoOnLux.minLux
-				) {
-					//DailyLock zurücksetzen
-
-					this.LightGroups[Group].autoOnLux.dailyLockCounter++;
-
-					if (this.LightGroups[Group].autoOnLux.dailyLockCounter >= 5) {
-						//5 Werte abwarten = Ausreisserschutz wenns am morgen kurz mal dunkler wird
-
-						this.LightGroups[Group].autoOnLux.dailyLockCounter = 0;
-						this.LightGroups[Group].autoOnLux.dailyLock = false;
-						await this.setStateAsync(Group + ".autoOnLux.dailyLock", false, true);
-						this.log.info(
-							`AutoOn_Lux() setting DailyLock to ${this.LightGroups[Group].autoOnLux.dailyLock}`,
-						);
-					}
+					await this.GroupPowerOnOff(Group, true);
+					tempBri =
+						this.LightGroups[Group].autoOnLux.bri !== 0
+							? this.LightGroups[Group].autoOnLux.bri
+							: (tempBri = this.LightGroups[Group].bri);
+					await this.SetWhiteSubstituteColor(Group);
+					tempColor =
+						this.LightGroups[Group].autoOnLux.color !== ""
+							? this.LightGroups[Group].autoOnLux.color
+							: (tempColor = this.LightGroups[Group].color);
+					await this.PowerOnAftercare(Group, tempBri, this.LightGroups[Group].ct, tempColor);
 				}
-			} else if (this.LightGroups[Group].autoOnLux.operator == ">") {
-				if (
-					this.LightGroups[Group].autoOnLux.enabled &&
-					!this.LightGroups[Group].power &&
-					!this.LightGroups[Group].autoOnLux.dailyLock &&
-					this.LightGroups[Group].actualLux >= this.LightGroups[Group].autoOnLux.minLux
-				) {
-					this.log.info(`AutoOn_Lux() activated Group="${Group}"`);
 
-					if (
-						(this.LightGroups[Group].autoOnLux.switchOnlyWhenPresence && this.ActualPresence) ||
-						(this.LightGroups[Group].autoOnLux.switchOnlyWhenNoPresence && !this.ActualPresence)
-					) {
-						await this.GroupPowerOnOff(Group, true);
-						tempBri =
-							this.LightGroups[Group].autoOnLux.bri !== 0
-								? this.LightGroups[Group].autoOnLux.bri
-								: (tempBri = this.LightGroups[Group].bri);
-						await this.SetWhiteSubstituteColor(Group);
-						tempColor =
-							this.LightGroups[Group].autoOnLux.color !== ""
-								? this.LightGroups[Group].autoOnLux.color
-								: this.LightGroups[Group].color;
-						await this.PowerOnAftercare(Group, tempBri, this.LightGroups[Group].ct, tempColor);
-					}
+				this.LightGroups[Group].autoOnLux.dailyLock = true;
 
-					this.LightGroups[Group].autoOnLux.dailyLock = true;
-					await this.setStateAsync(Group + ".autoOnLux.dailyLock", true, true);
-				} else if (
-					this.LightGroups[Group].autoOnLux.dailyLock &&
-					this.LightGroups[Group].actualLux < this.LightGroups[Group].autoOnLux.minLux
-				) {
-					//DailyLock zurücksetzen
+				await this.setStateAsync(Group + ".autoOnLux.dailyLock", true, true);
+			} else if (
+				this.LightGroups[Group].autoOnLux.dailyLock &&
+				this.LightGroups[Group].actualLux > this.LightGroups[Group].autoOnLux.minLux
+			) {
+				//DailyLock zurücksetzen
 
-					this.LightGroups[Group].autoOnLux.dailyLockCounter++;
+				this.LightGroups[Group].autoOnLux.dailyLockCounter++;
 
-					if (this.LightGroups[Group].autoOnLux.dailyLockCounter >= 5) {
-						//5 Werte abwarten = Ausreisserschutz wenns am morgen kurz mal dunkler wird
+				if (this.LightGroups[Group].autoOnLux.dailyLockCounter >= 5) {
+					//5 Werte abwarten = Ausreisserschutz wenns am morgen kurz mal dunkler wird
 
-						this.LightGroups[Group].autoOnLux.dailyLockCounter = 0;
-						this.LightGroups[Group].autoOnLux.dailyLock = false;
-						await this.setStateAsync(Group + ".autoOnLux.dailyLock", false, true);
-						this.log.info(
-							`AutoOn_Lux => setting DailyLock to ${this.LightGroups[Group].autoOnLux.dailyLock}`,
-						);
-					}
+					this.LightGroups[Group].autoOnLux.dailyLockCounter = 0;
+					this.LightGroups[Group].autoOnLux.dailyLock = false;
+					await this.setStateAsync(Group + ".autoOnLux.dailyLock", false, true);
+					this.log.info(`AutoOn_Lux() setting DailyLock to ${this.LightGroups[Group].autoOnLux.dailyLock}`);
 				}
 			}
-		} catch (error) {
-			this.errorHandling(error, "AutoOnLux", JSON.stringify(this.LightGroups[Group].autoOnLux));
+		} else if (this.LightGroups[Group].autoOnLux.operator == ">") {
+			if (
+				this.LightGroups[Group].autoOnLux.enabled &&
+				!this.LightGroups[Group].power &&
+				!this.LightGroups[Group].autoOnLux.dailyLock &&
+				this.LightGroups[Group].actualLux >= this.LightGroups[Group].autoOnLux.minLux
+			) {
+				this.log.info(`AutoOn_Lux() activated Group="${Group}"`);
+
+				if (
+					(this.LightGroups[Group].autoOnLux.switchOnlyWhenPresence && this.ActualPresence) ||
+					(this.LightGroups[Group].autoOnLux.switchOnlyWhenNoPresence && !this.ActualPresence)
+				) {
+					await this.GroupPowerOnOff(Group, true);
+					tempBri =
+						this.LightGroups[Group].autoOnLux.bri !== 0
+							? this.LightGroups[Group].autoOnLux.bri
+							: (tempBri = this.LightGroups[Group].bri);
+					await this.SetWhiteSubstituteColor(Group);
+					tempColor =
+						this.LightGroups[Group].autoOnLux.color !== ""
+							? this.LightGroups[Group].autoOnLux.color
+							: this.LightGroups[Group].color;
+					await this.PowerOnAftercare(Group, tempBri, this.LightGroups[Group].ct, tempColor);
+				}
+
+				this.LightGroups[Group].autoOnLux.dailyLock = true;
+				await this.setStateAsync(Group + ".autoOnLux.dailyLock", true, true);
+			} else if (
+				this.LightGroups[Group].autoOnLux.dailyLock &&
+				this.LightGroups[Group].actualLux < this.LightGroups[Group].autoOnLux.minLux
+			) {
+				//DailyLock zurücksetzen
+
+				this.LightGroups[Group].autoOnLux.dailyLockCounter++;
+
+				if (this.LightGroups[Group].autoOnLux.dailyLockCounter >= 5) {
+					//5 Werte abwarten = Ausreisserschutz wenns am morgen kurz mal dunkler wird
+
+					this.LightGroups[Group].autoOnLux.dailyLockCounter = 0;
+					this.LightGroups[Group].autoOnLux.dailyLock = false;
+					await this.setStateAsync(Group + ".autoOnLux.dailyLock", false, true);
+					this.log.info(`AutoOn_Lux => setting DailyLock to ${this.LightGroups[Group].autoOnLux.dailyLock}`);
+				}
+			}
 		}
 	}
 
@@ -1205,35 +1205,36 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 */
 	async AutoOnMotion(Group) {
-		try {
-			let tempBri = 0;
-			let tempColor = "";
+		let tempBri = 0;
+		let tempColor = "";
 
+		if (
+			!this.LightGroups[Group] ||
+			!this.LightGroups[Group]?.autoOnMotion ||
+			!this.LightGroups[Group]?.autoOnMotion?.enabled ||
+			!this.LightGroups[Group]?.autoOnMotion?.minLux
+		) {
 			this.writeLog(
-				`Reaching AutoOnMotion for Group:"${Group}, enabled="${this.LightGroups[Group].autoOnMotion.enabled}", actuallux="${this.LightGroups[Group].actualLux}", minLux="${this.LightGroups[Group].autoOnMotion.minLux}"`,
+				`[ AutoOnMotion ] Not able to auto on for Group: "${Group}". Please check your config! Aborted`,
 			);
+			return;
+		}
 
-			if (
-				this.LightGroups[Group].autoOnMotion?.enabled &&
-				this.LightGroups[Group].actualLux < this.LightGroups[Group].autoOnMotion?.minLux &&
-				this.LightGroups[Group].isMotion
-			) {
-				this.writeLog(`Motion for Group="${Group} detected, switching on`, "info");
-				await this.GroupPowerOnOff(Group, true);
+		this.writeLog(
+			`[ AutoOnMotion ] Reaching for Group: "${Group}", enabled: ${this.LightGroups[Group]?.autoOnMotion?.enabled}, actualLux: ${this.LightGroups[Group]?.actualLux}, minLux: ${this.LightGroups[Group]?.autoOnMotion?.minLux}`,
+		);
 
-				tempBri =
-					this.LightGroups[Group].autoOnMotion?.bri !== 0
-						? this.LightGroups[Group].autoOnMotion?.bri
-						: (tempBri = this.LightGroups[Group].bri);
-				await this.SetWhiteSubstituteColor(Group);
-				tempColor =
-					this.LightGroups[Group].autoOnMotion?.color !== ""
-						? this.LightGroups[Group].autoOnMotion?.color
-						: (tempColor = this.LightGroups[Group].color);
-				await this.PowerOnAftercare(Group, tempBri, this.LightGroups[Group].ct, tempColor);
-			}
-		} catch (error) {
-			this.errorHandling(error, "AutoOnMotion", JSON.stringify(this.LightGroups[Group].autoOnMotion));
+		const { autoOnMotion, actualLux, isMotion, bri, color, ct } = this.LightGroups[Group] || {};
+
+		if (autoOnMotion?.enabled && actualLux < autoOnMotion?.minLux && isMotion) {
+			this.writeLog(`Motion for Group="${Group}" detected, switching on`, "info");
+			await this.GroupPowerOnOff(Group, true);
+
+			tempBri = autoOnMotion?.bri !== 0 ? autoOnMotion?.bri : bri || tempBri;
+			await this.SetWhiteSubstituteColor(Group);
+
+			tempColor = !autoOnMotion?.color ? autoOnMotion?.color : color || tempColor;
+			await this.PowerOnAftercare(Group, tempBri, ct, tempColor);
 		}
 	}
 
@@ -2127,7 +2128,7 @@ class Lightcontrol extends utils.Adapter {
 		try {
 			if (!this.LightGroups[Group] || !this.LightGroups[Group].lights || !this.LightGroups[Group].lights.length) {
 				this.writeLog(
-					`[ SetWhiteSubstituteColor ] Not able to set transition time for Group = "${Group}". No lights are defined!!`,
+					`[ SetTt] Not able to set transition time for Group = "${Group}". No lights are defined!!`,
 					"warn",
 				);
 				return;
