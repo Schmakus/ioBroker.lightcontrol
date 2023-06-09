@@ -62,14 +62,13 @@ class Lightcontrol extends utils.Adapter {
 		this.lng = "";
 
 		this.DevMode = false;
-		this.processing = false;
 	}
 
 	/**
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-		this.GlobalSettings = this.config;
+		//this.GlobalSettings = this.config;
 		this.Settings = this.config;
 		this.writeLog(`[ onReady ] LightGroups from Settings: ${JSON.stringify(this.Settings?.LightGroups)}`);
 
@@ -449,77 +448,71 @@ class Lightcontrol extends utils.Adapter {
 	async onObjectChange(id, obj) {
 		//ToDo : Verify with test-results if debounce on object change must be implemented
 		try {
-			if (!this.processing) {
-				this.processing = true;
-				const stateID = id;
+			const stateID = id;
 
-				// Check if object is activated for LightControl
-				if (obj && obj.common) {
-					// Verify if custom information is available regarding LightControl
-					if (
-						obj.common.custom &&
-						obj.common.custom[this.namespace] &&
-						obj.common.custom[this.namespace].enabled
-					) {
-						//Check if its an own Lightcontrol State
-						if (stateID.includes(this.namespace)) {
-							await this.deaktivateOwnId(stateID);
-						} else {
-							this.writeLog(
-								`[ onObjectChange ] Object array of LightControl activated state changed : ${JSON.stringify(
-									obj,
-								)} stored Objects : ${JSON.stringify(this.activeStates)}`,
-							);
+			// Check if object is activated for LightControl
+			if (obj && obj.common) {
+				// Verify if custom information is available regarding LightControl
+				if (
+					obj.common.custom &&
+					obj.common.custom[this.namespace] &&
+					obj.common.custom[this.namespace].enabled
+				) {
+					//Check if its an own Lightcontrol State
+					if (stateID.includes(this.namespace)) {
+						await this.deaktivateOwnId(stateID);
+					} else {
+						this.writeLog(
+							`[ onObjectChange ] Object array of LightControl activated state changed : ${JSON.stringify(
+								obj,
+							)} stored Objects : ${JSON.stringify(this.activeStates)}`,
+						);
 
-							// Verify if the object was already activated, if not initialize new parameter
+						// Verify if the object was already activated, if not initialize new parameter
+						if (!this.activeStates.includes(stateID)) {
+							this.writeLog(`[ onObjectChange ] Enable LightControl for : ${stateID}`, "info");
+							await this.buildLightGroupParameter(stateID);
+
 							if (!this.activeStates.includes(stateID)) {
-								this.writeLog(`[ onObjectChange ] Enable LightControl for : ${stateID}`, "info");
-								await this.buildLightGroupParameter(stateID);
-
-								if (!this.activeStates.includes(stateID)) {
-									this.writeLog(
-										`[ onObjectChange ] Cannot enable LightControl for ${stateID}, check settings and error messages`,
-										"warn",
-									);
-								}
-							} else {
 								this.writeLog(
-									`[ onObjectChange ] Updating LightControl configuration for : ${stateID}`,
+									`[ onObjectChange ] Cannot enable LightControl for ${stateID}, check settings and error messages`,
+									"warn",
 								);
-								//Cleaning LightGroups from ID and set it new
-								await this.deleteStateIdFromLightGroups(stateID);
-								await this.buildLightGroupParameter(stateID);
+							}
+						} else {
+							this.writeLog(`[ onObjectChange ] Updating LightControl configuration for : ${stateID}`);
+							//Cleaning LightGroups from ID and set it new
+							await this.deleteStateIdFromLightGroups(stateID);
+							await this.buildLightGroupParameter(stateID);
 
-								if (!this.activeStates.includes(stateID)) {
-									this.writeLog(
-										`[ onObjectChange ] Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
-										"warn",
-									);
-								}
+							if (!this.activeStates.includes(stateID)) {
+								this.writeLog(
+									`[ onObjectChange ] Cannot update LightControl configuration for ${stateID}, check settings and error messages`,
+									"warn",
+								);
 							}
 						}
-					} else if (this.activeStates.includes(stateID)) {
-						this.activeStates = await helper.removeValue(this.activeStates, stateID);
-						this.writeLog(`[ onObjectChange ] Disabled LightControl for : ${stateID}`, "info");
-
-						await this.deleteStateIdFromLightGroups(stateID);
-
-						this.writeLog(
-							`[ onObjectChange ] Active state array after deactivation of ${stateID} : ${
-								this.activeStates.length === 0 ? "empty" : JSON.stringify(this.activeStates)
-							}`,
-						);
-						this.writeLog(
-							`[ onObjectChange ] LightGroups after deactivation of ${stateID} : ${JSON.stringify(
-								this.LightGroups,
-							)}`,
-						);
-						this.unsubscribeForeignStates(stateID);
 					}
-					this.processing = false;
-				} else {
-					// Object change not related to this adapter, ignoring
+				} else if (this.activeStates.includes(stateID)) {
+					this.activeStates = await helper.removeValue(this.activeStates, stateID);
+					this.writeLog(`[ onObjectChange ] Disabled LightControl for : ${stateID}`, "info");
+
+					await this.deleteStateIdFromLightGroups(stateID);
+
+					this.writeLog(
+						`[ onObjectChange ] Active state array after deactivation of ${stateID} : ${
+							this.activeStates.length === 0 ? "empty" : JSON.stringify(this.activeStates)
+						}`,
+					);
+					this.writeLog(
+						`[ onObjectChange ] LightGroups after deactivation of ${stateID} : ${JSON.stringify(
+							this.LightGroups,
+						)}`,
+					);
+					this.unsubscribeForeignStates(stateID);
 				}
+			} else {
+				// Object change not related to this adapter, ignoring
 			}
 		} catch (error) {
 			this.errorHandling(error, "onObjectChange");
@@ -858,14 +851,14 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async RampWithInterval(Group, rampUp = true) {
 		const Lights = this.LightGroups[Group]?.lights || [];
-		if (!this.GlobalSettings?.RampSteps) {
+		if (!this.Settings?.RampSteps) {
 			this.writeLog(
 				`[ RampWithInterval ] No RampSteps defined. Please check your config! RampWithInterval aborted!`,
 				"warn",
 			);
 			return;
 		}
-		const RampSteps = this.GlobalSettings.RampSteps;
+		const RampSteps = this.Settings.RampSteps;
 		const RampTime = await helper.limitNumber(this.LightGroups[Group].rampOn.time, 10);
 		let LoopCount = 0;
 
@@ -906,14 +899,14 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async TurnOnWithRamping(Group) {
 		const funcName = "TurnOnWithRamping";
-		if (!this.GlobalSettings?.RampSteps) {
+		if (!this.Settings?.RampSteps) {
 			this.writeLog(
 				`[ ${funcName} ] No RampSteps defined. Please check your config! RampWithInterval aborted!`,
 				"warn",
 			);
 			return;
 		}
-		const RampSteps = this.GlobalSettings.RampSteps;
+		const RampSteps = this.Settings.RampSteps;
 		let LoopCount = 0;
 		//
 		// ******* Anschalten mit ramping * //
@@ -969,14 +962,14 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async TurnOffWithRamping(Group) {
 		const funcName = "TurnOffWithRamping";
-		if (!this.GlobalSettings?.RampSteps) {
+		if (!this.Settings?.RampSteps) {
 			this.writeLog(
 				`[ ${funcName} ] No RampSteps defined. Please check your config! RampWithInterval aborted!`,
 				"warn",
 			);
 			return;
 		}
-		const RampSteps = this.GlobalSettings.RampSteps;
+		const RampSteps = this.Settings.RampSteps;
 		let LoopCount = 0;
 		//
 		//******* Ausschalten mit Ramping */
@@ -1966,7 +1959,7 @@ class Lightcontrol extends utils.Adapter {
 				)
 				.map(async (Light) => {
 					const colorValue = await colorConv.convertKelvinToRGB(this.LightGroups[Group].ct);
-					await this.setForeignStateAsync(Light.color.oid, { val: colorValue, ack: false });
+					await this.setForeignStateAsync(Light.color.oid, { val: JSON.stringify(colorValue), ack: false });
 				});
 
 			const promisesKelvinWithXY = this.LightGroups[Group].lights
@@ -1981,7 +1974,7 @@ class Lightcontrol extends utils.Adapter {
 				.map(async (Light) => {
 					const rgb = await colorConv.convertKelvinToRGB(this.LightGroups[Group].ct);
 					const colorValue = await colorConv.ConvertRgbToXy(rgb);
-					await this.setForeignStateAsync(Light.color.oid, colorValue, false);
+					await this.setForeignStateAsync(Light.color.oid, { val: JSON.stringify(colorValue), ack: false });
 				});
 
 			await Promise.all([
@@ -2072,13 +2065,19 @@ class Lightcontrol extends utils.Adapter {
 								break;
 							case "rgb": {
 								const rgbTemp = await colorConv.ConvertHexToRgb(Color);
-								await this.setForeignStateAsync(Light.color.oid, rgbTemp, false);
+								await this.setForeignStateAsync(Light.color.oid, {
+									val: JSON.stringify(rgbTemp),
+									ack: false,
+								});
 								break;
 							}
 							case "xy": {
 								const rgbTemp = await colorConv.ConvertHexToRgb(Color);
 								const XyTemp = await colorConv.ConvertRgbToXy(rgbTemp);
-								await this.setForeignStateAsync(Light.color.oid, XyTemp, false);
+								await this.setForeignStateAsync(Light.color.oid, {
+									val: JSON.stringify(XyTemp),
+									ack: false,
+								});
 								break;
 							}
 							case "hue": {
