@@ -61,7 +61,8 @@ iobroker add lightcontrol
 
 -   (Schmakus) Fixed CtReverse [#149]
 -   (Schmakus) Fixed translation for light [#136]
--   (Schmakus) Fixes warning min/max of ct-state [#148]
+-   (Schmakus) Fixed warning min/max of ct-state [#148]
+-   (Schmakus) Fixed Set Color-Temperature (set null value)
 
 ### 0.2.17 (2023-05-17)
 
