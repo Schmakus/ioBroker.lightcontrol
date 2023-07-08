@@ -1643,7 +1643,9 @@ class Lightcontrol extends utils.Adapter {
 				return;
 			}
 
-			this.writeLog(`Reaching SetCt, Group="${Group}" Ct="${this.LightGroups[Group].ct}"`);
+			const ctValue = ct || this.LightGroups[Group].ct;
+
+			this.writeLog(`Reaching SetCt, Group="${Group}" Ct="${ctValue}"`);
 
 			await Promise.all(
 				this.LightGroups[Group].lights.map(async (Light) => {
@@ -1654,17 +1656,17 @@ class Lightcontrol extends utils.Adapter {
 						const CtReverse = ct?.CtReverse ?? false;
 						await this.setForeignStateAsync(
 							ct.oid,
-							await this.KelvinToRange(outMinCt, outMaxCt, ct, CtReverse),
+							await this.KelvinToRange(outMinCt, outMaxCt, ctValue, CtReverse),
 							false,
 						);
 					}
-					if ((this.LightGroups[Group].power || color?.sendCt) && color?.oid && color?.setCtwithColor) {
+					if ((this.LightGroups[Group].power || ct?.sendCt) && color?.oid && color?.setCtwithColor) {
 						await this.SetWhiteSubstituteColor(Group);
 					}
 				}),
 			);
 
-			await this.setStateAsync(Group + ".ct", ct, true);
+			await this.setStateAsync(Group + ".ct", ctValue, true);
 
 			return true;
 		} catch (error) {
