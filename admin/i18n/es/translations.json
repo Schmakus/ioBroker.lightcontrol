@@ -32,6 +32,7 @@
     "If some lights are brighter than others, you can set a correction of the maximum value that is interpreted as 100% brightness.": "Si algunas luces son más brillantes que otras, puedes establecer una corrección del valor máximo que se interpreta como un brillo del 100%.",
     "Individual Lux Sensor (optional)": "Sensor de lux individual (opcional)",
     "IsPresenceDp": "ID de objeto para presencia",
+    "Light": "Luz",
     "LightGroup": "Grupo de luz",
     "LightGroups": "Licht Gruppen",
     "LightGroups are defined at instance settings": "LightGroups se definen en la configuración de la instancia",

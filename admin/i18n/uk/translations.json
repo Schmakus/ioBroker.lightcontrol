@@ -32,6 +32,7 @@
     "If some lights are brighter than others, you can set a correction of the maximum value that is interpreted as 100% brightness.": "Якщо деякі джерела світла яскравіші за інші, ви можете встановити поправку максимального значення, яке інтерпретується як 100% яскравість.",
     "Individual Lux Sensor (optional)": "Individueller Lux Sensor (опціонально)",
     "IsPresenceDp": "Ідентифікатор об’єкта для присутності",
+    "Light": "світло",
     "LightGroup": "Легка група",
     "LightGroups": "Licht Gruppen",
     "LightGroups are defined at instance settings": "LightGroups визначаються в налаштуваннях екземпляра",

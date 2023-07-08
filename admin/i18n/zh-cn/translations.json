@@ -32,6 +32,7 @@
     "If some lights are brighter than others, you can set a correction of the maximum value that is interpreted as 100% brightness.": "如果某些灯比其他灯更亮，您可以设置一个校正最大值，将其解释为100%的亮度。",
     "Individual Lux Sensor (optional)": "Individueller 照度传感器（可选）",
     "IsPresenceDp": "存在的对象 ID",
+    "Light": "光",
     "LightGroup": "灯组",
     "LightGroups": "轻型集团",
     "LightGroups are defined at instance settings": "LightGroups 在实例设置中定义",
