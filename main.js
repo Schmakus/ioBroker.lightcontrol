@@ -77,9 +77,9 @@ class Lightcontrol extends utils.Adapter {
 
 		//Create all States, Devices and Channels
 		if (Object.keys(this.LightGroups).length !== 0) {
-			await this.Init();
-			await this.InitCustomStates();
-			await this.SetLightState();
+			await this.InitAsync();
+			await this.InitCustomStatesAsync();
+			await this.SetLightStateAsync();
 		} else {
 			this.writeLog(`[ onReady ] No Init because no LightGroups defined in settings`);
 		}
@@ -180,7 +180,7 @@ class Lightcontrol extends utils.Adapter {
 														`[onStateChange] Sensor in Group="${Group}". This isMotion="${motionValue}"`,
 													);
 
-													await this.SummarizeSensors(Group);
+													await this.SummarizeSensorsAync(Group);
 												});
 										} else {
 											this.writeLog(
@@ -245,7 +245,7 @@ class Lightcontrol extends utils.Adapter {
 				"info",
 			);
 
-			if (prop1 !== "power") await helper.SetValueToObject(this.LightGroups[Group], prop1, NewVal);
+			if (prop1 !== "power") await this.SetValueToObjectAsync(this.LightGroups[Group], prop1, NewVal);
 
 			switch (prop1) {
 				case "actualLux":
@@ -412,15 +412,15 @@ class Lightcontrol extends utils.Adapter {
 					break;
 				case "blink.enabled":
 					if (NewVal && NewVal !== OldVal) {
-						await this.SetValueToObject(Group, ["blink.infinite", "blink.stop"], [true, false]);
+						await this.SetValueToObjectAsync(Group, ["blink.infinite", "blink.stop"], [true, false]);
 						await this.blink(Group);
 					} else if (!NewVal) {
-						await this.SetValueToObject(Group, "blink.stop", true);
+						await this.SetValueToObjectAsync(Group, "blink.stop", true);
 					}
 					handeled = true;
 					break;
 				case "blink.start":
-					await this.SetValueToObject(Group, ["blink.stop", "blink.infinite"], false);
+					await this.SetValueToObjectAsync(Group, ["blink.stop", "blink.infinite"], false);
 					await this.blink(Group);
 					break;
 				default:
@@ -460,7 +460,7 @@ class Lightcontrol extends utils.Adapter {
 				) {
 					//Check if its an own Lightcontrol State
 					if (stateID.includes(this.namespace)) {
-						await this.deaktivateOwnId(stateID);
+						await this.deaktivateOwnIdAsync(stateID);
 					} else {
 						this.writeLog(
 							`[ onObjectChange ] Object array of LightControl activated state changed : ${JSON.stringify(
@@ -694,7 +694,10 @@ class Lightcontrol extends utils.Adapter {
 			}
 		}
 
-		await Promise.all([this.setStateAsync(Group + ".power", OnOff, true), this.SetLightState("GroupPowerOnOff")]);
+		await Promise.all([
+			this.setStateAsync(Group + ".power", OnOff, true),
+			this.SetLightStateAsync("GroupPowerOnOff"),
+		]);
 		return true;
 	}
 
@@ -1091,13 +1094,9 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 */
 	async AutoOnLux(Group) {
-		const LightGroup = this.LightGroups[Group];
-
-		if (!LightGroup) {
+		if (!this.LightGroups[Group]) {
 			return;
 		}
-
-		const { enabled, actualLux, autoOnLux, power, bri, color, ct } = LightGroup;
 
 		this.writeLog(
 			`[ AutoOnLux ] Group="${Group} enabled="${this.LightGroups[Group].autoOnLux.enabled}", actuallux="${this.LightGroups[Group].actualLux}", minLux="${this.LightGroups[Group].autoOnLux.minLux}" LightGroups[Group].autoOnLux.dailyLock="${this.LightGroups[Group].autoOnLux.dailyLock}"`,
@@ -1284,7 +1283,7 @@ class Lightcontrol extends utils.Adapter {
 			let loopcount = 0;
 
 			//Save actual power state
-			await this.SetValueToObject(Group, "blink.actual_power", this.LightGroups[Group].power);
+			await this.SetValueToObjectAsync(Group, "blink.actual_power", this.LightGroups[Group].power);
 
 			if (!this.LightGroups[Group].power) {
 				//Wenn Gruppe aus, anschalten und ggfs. Helligkeit und Farbe setzen
@@ -2313,7 +2312,7 @@ class Lightcontrol extends utils.Adapter {
 	/**
 	 * State create, extend objects and subscribe states
 	 */
-	async Init() {
+	async InitAsync() {
 		this.writeLog(`Init is starting...`, "info");
 		if (this.DevMode) await this.TestStatesCreate;
 		await this.GlobalLuxHandling();
@@ -2571,7 +2570,7 @@ class Lightcontrol extends utils.Adapter {
 								return;
 							}
 
-							await this.SetValueToObject(Group, prop1, state.val);
+							await this.SetValueToObjectAsync(Group, prop1, state.val);
 							common.write && (await this.subscribeStatesAsync(dp));
 						} catch (error) {
 							this.writeLog(
@@ -2601,11 +2600,11 @@ class Lightcontrol extends utils.Adapter {
 							this.writeLog(
 								`[ StatesCreate ] Group="${Group}", Prop1="${prop1}", powerNewVal="${state.val}"`,
 							);
-							await this.SetValueToObject(Group, "powerNewVal", state.val);
+							await this.SetValueToObjectAsync(Group, "powerNewVal", state.val);
 						}
 
 						if (state) {
-							await this.SetValueToObject(Group, prop1, state.val);
+							await this.SetValueToObjectAsync(Group, prop1, state.val);
 						}
 
 						common.write && (await this.subscribeStatesAsync(dp));
@@ -2618,7 +2617,7 @@ class Lightcontrol extends utils.Adapter {
 					}
 				}
 			}
-			await this.SetValueToObject(Group, ["autoOnLux.dailyLockCounter", "autoOffLux.dailyLockCounter"], 0);
+			await this.SetValueToObjectAsync(Group, ["autoOnLux.dailyLockCounter", "autoOffLux.dailyLockCounter"], 0);
 		}
 
 		//Create All-Channel if not exists
@@ -2642,10 +2641,10 @@ class Lightcontrol extends utils.Adapter {
 
 				if (prop1 === "power") {
 					this.writeLog(`[ StateCreate ] Group="All", Prop1="${prop1}", powerNewVal="${state.val}"`);
-					await this.SetValueToObject("All", "powerNewVal", state.val);
+					await this.SetValueToObjectAsync("All", "powerNewVal", state.val);
 				}
 
-				await this.SetValueToObject("All", dp, state.val);
+				await this.SetValueToObjectAsync("All", dp, state.val);
 
 				common.write && (await this.subscribeStatesAsync(dp));
 			} catch (error) {
@@ -2861,11 +2860,13 @@ class Lightcontrol extends utils.Adapter {
 	 * Init all Custom states
 	 * @description Init all Custom states
 	 */
-	async InitCustomStates() {
+	async InitCustomStatesAsync() {
 		try {
 			// Get all objects with custom configuration items
 			const customStateArray = await this.getObjectViewAsync("system", "custom", {});
-			this.writeLog(`[ InitCustomStates ] All states with custom items : ${JSON.stringify(customStateArray)}`);
+			this.writeLog(
+				`[ InitCustomStatesAsync ] All states with custom items : ${JSON.stringify(customStateArray)}`,
+			);
 
 			// List all states with custom configuration
 			if (customStateArray && customStateArray.rows) {
@@ -2879,14 +2880,14 @@ class Lightcontrol extends utils.Adapter {
 						// Check if custom object contains data for LightControl
 						// @ts-ignore
 						if (customStateArray.rows[index].value[this.namespace]) {
-							this.writeLog(`[ InitCustomStates ] LightControl configuration found`);
+							this.writeLog(`[ InitCustomStatesAsync ] LightControl configuration found`);
 
 							// Simplify stateID
 							const stateID = customStateArray.rows[index].id;
 
 							//Check if its an own Lightcontrol State
 							if (stateID.includes(this.namespace)) {
-								await this.deaktivateOwnId(stateID);
+								await this.deaktivateOwnIdAsync(stateID);
 								continue;
 							}
 
@@ -2894,10 +2895,10 @@ class Lightcontrol extends utils.Adapter {
 							// @ts-ignore
 							if (customStateArray.rows[index].value[this.namespace].enabled) {
 								if (!this.activeStates.includes(stateID)) this.activeStates.push(stateID);
-								this.writeLog(`[ InitCustomStates ] LightControl enabled state found ${stateID}`);
+								this.writeLog(`[ InitCustomStatesAsync ] LightControl enabled state found ${stateID}`);
 							} else {
 								this.writeLog(
-									`[ InitCustomStates ] LightControl configuration found but not Enabled, skipping ${stateID}`,
+									`[ InitCustomStatesAsync ] LightControl configuration found but not Enabled, skipping ${stateID}`,
 								);
 							}
 						}
@@ -2913,7 +2914,9 @@ class Lightcontrol extends utils.Adapter {
 			// Initialize all discovered states
 			let count = 1;
 			for (const stateID of this.activeStates) {
-				this.writeLog(`[ InitCustomStates ] Initialising (${count} of ${totalEnabledStates}) "${stateID}"`);
+				this.writeLog(
+					`[ InitCustomStatesAsync ] Initialising (${count} of ${totalEnabledStates}) "${stateID}"`,
+				);
 				await this.buildLightGroupParameter(stateID);
 
 				if (this.activeStates.includes(stateID)) {
@@ -2921,7 +2924,7 @@ class Lightcontrol extends utils.Adapter {
 					this.writeLog(`Initialization of ${stateID} successfully`, "info");
 				} else {
 					this.writeLog(
-						`[ InitCustomStates ] Initialization of ${stateID} failed, check warn messages !`,
+						`[ InitCustomStatesAsync ] Initialization of ${stateID} failed, check warn messages !`,
 						"warn",
 					);
 					totalFailedStates = totalFailedStates + 1;
@@ -2932,12 +2935,12 @@ class Lightcontrol extends utils.Adapter {
 			// Subscribe on all foreign objects to detect (de)activation of LightControl enabled states
 			await this.subscribeForeignObjectsAsync("*");
 			this.writeLog(
-				`[ InitCustomStates ] subscribed all foreign objects to detect (de)activation of LightControl enabled states`,
+				`[ InitCustomStatesAsync ] subscribed all foreign objects to detect (de)activation of LightControl enabled states`,
 			);
 
 			if (totalFailedStates > 0) {
 				this.writeLog(
-					`[ InitCustomStates ] Cannot handle calculations for ${totalFailedStates} of ${totalEnabledStates} enabled states, check error messages`,
+					`[ InitCustomStatesAsync ] Cannot handle calculations for ${totalFailedStates} of ${totalEnabledStates} enabled states, check error messages`,
 					"warn",
 				);
 			}
@@ -2947,7 +2950,7 @@ class Lightcontrol extends utils.Adapter {
 				"info",
 			);
 		} catch (error) {
-			this.errorHandling(error, "InitCustomStates");
+			this.errorHandling(error, "InitCustomStatesAsync");
 		}
 	}
 
@@ -2969,7 +2972,7 @@ class Lightcontrol extends utils.Adapter {
 						`[ buildStateDetailsArray ] Can't get information for ${stateID}, state will be ignored`,
 						"warn",
 					);
-					this.activeStates = await helper.removeValue(this.activeStates, stateID);
+					this.activeStates = helper.removeValue(this.activeStates, stateID);
 					this.unsubscribeForeignStates(stateID);
 					return;
 				}
@@ -2980,7 +2983,7 @@ class Lightcontrol extends utils.Adapter {
 					)}`,
 					"error",
 				);
-				this.activeStates = await helper.removeValue(this.activeStates, stateID);
+				this.activeStates = helper.removeValue(this.activeStates, stateID);
 				this.unsubscribeForeignStates(stateID);
 				return;
 			}
@@ -3166,9 +3169,10 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * SummarizeSensors
+	 * @async
 	 * @param {string} Group
 	 */
-	async SummarizeSensors(Group) {
+	async SummarizeSensorsAync(Group) {
 		try {
 			this.writeLog(`[ SummarizeSensors ] Reaching, Group="${Group}"`);
 
@@ -3195,8 +3199,10 @@ class Lightcontrol extends utils.Adapter {
 					`[ SummarizeSensors ] Motionstate="${Group}" = ${Motionstate}, nothing changed -> nothin to do`,
 				);
 			}
+			return true;
 		} catch (error) {
 			this.errorHandling(error, "SummarizeSensors");
+			return false;
 		}
 	}
 
@@ -3230,14 +3236,14 @@ class Lightcontrol extends utils.Adapter {
 	 * Set anyOn and Masterswitch Light State
 	 * @param {string} from From which Function?
 	 */
-	async SetLightState(from = "noFunction") {
+	async SetLightStateAsync(from = "noFunction") {
 		try {
 			const countGroups = await this.countGroups();
 			const groupLength = Object.keys(this.LightGroups).length - 1;
 
 			await Promise.all([
-				helper.SetValueToObject(this.LightGroups, "All.anyOn", countGroups > 0),
-				helper.SetValueToObject(this.LightGroups, "All.power", countGroups === groupLength),
+				this.SetValueToObjectAsync("All", ".anyOn", countGroups > 0),
+				this.SetValueToObjectAsync("All", ".power", countGroups === groupLength),
 			]);
 
 			await Promise.all([
@@ -3254,11 +3260,9 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * Helper: count Power in Groups
-	 * @async
 	 * @function
-	 * @returns {Promise<number>}
 	 */
-	async countGroups() {
+	countGroups() {
 		try {
 			let i = 0;
 			for (const Group in this.LightGroups) {
@@ -3281,7 +3285,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} stateID ID of the Object
 	 * @returns {Promise<boolean>}
 	 */
-	async deaktivateOwnId(stateID) {
+	async deaktivateOwnIdAsync(stateID) {
 		this.writeLog(
 			`[ InitCustomStates ] This Object-ID: "${stateID}" is not allowed, because it's an LightControl State! The settings will be deaktivated automatically!`,
 			"warn",
@@ -3303,7 +3307,7 @@ class Lightcontrol extends utils.Adapter {
 	 * deleteStateIdFromLightGroups
 	 * @param {string} stateID ID of the Object
 	 */
-	async deleteStateIdFromLightGroups(stateID) {
+	deleteStateIdFromLightGroups(stateID) {
 		try {
 			// Loop trough LighGroups and delete Object by oid value
 			const keys = ["power", "bri", "ct", "sat", "color", "modeswitch"];
@@ -3371,9 +3375,9 @@ class Lightcontrol extends utils.Adapter {
 	 * await helper.SetValueToObject(LightGroups[Group], prop1, false);
 	 */
 
-	async SetValueToObject(Group, key, value) {
+	async SetValueToObjectAsync(Group, key, value) {
 		if (Object.prototype.hasOwnProperty.call(this.LightGroups, Group)) {
-			this.log.warn(`[ SetValueToObject ] Group="${Group}" is not in LightGroups object!`);
+			this.log.warn(`[ SetValueToObjectAsync ] Group="${Group}" is not in LightGroups object!`);
 			return;
 		}
 
@@ -3395,7 +3399,7 @@ class Lightcontrol extends utils.Adapter {
 				});
 			} else {
 				this.log.warn(
-					`[ SetValueToObject ] Error: The length of the value array does not match the length of the key array."`,
+					`[ SetValueToObjectAsync ] Error: The length of the value array does not match the length of the key array."`,
 				);
 			}
 		} else {
@@ -3411,18 +3415,17 @@ class Lightcontrol extends utils.Adapter {
 			const lastKey = keys[keys.length - 1];
 			currentObj[lastKey] = value;
 		}
+		return true;
 	}
 
 	/**
 	 * a function for log output
-	 * @async
 	 * @function
 	 * @param {string} logtext
 	 * @param {string} logtype ("silly" | "info" | "debug" | "warn" | "error")
 	 * @param {string} funcName Extended info. Example the name of the function
-	 * @return {Promise<void>}
 	 */
-	async writeLog(logtext, logtype = "debug", funcName = "") {
+	writeLog(logtext, logtype = "debug", funcName = "") {
 		try {
 			const logFunctions = {
 				silly: this.log.silly,
