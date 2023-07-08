@@ -56,6 +56,13 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Fixed CtReverse [#149]
+-   (Schmakus) Fixed translation for light [#136]
+-   (Schmakus) Fixes warning min/max of ct-state [#148]
+
 ### 0.2.17 (2023-05-17)
 
 -   (Schmakus) Fix error by init of customConfig, if no light description is available
