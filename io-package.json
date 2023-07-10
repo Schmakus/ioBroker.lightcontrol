@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.17",
+		"version": "0.2.18",
 		"news": {
+			"0.2.18": {
+				"en": "Fixed CtReverse [#149]\nFixed translation for light [#136]\nFixed warning min/max of ct-state [#148]\nFixed Set Color-Temperature (set null value)",
+				"de": "Fixed CtReverse #[149]\nFixed Übersetzungen #[136]\nFixed Warnung min/max ct-state #[148]\nFixed Set Color-Temperatur (setzen von NULL)",
+				"ru": "Фиксированный CtReverse #[149]\nФиксированный перевод на свет #[136]\nФиксированное предупреждение мин/макс ct-государства #[148]\nФиксированный набор Color-Temperature (set null value)",
+				"pt": "Corrigido CtReverse #[149]\nTradução fixa para luz #[136]\nAviso fixo min/max do estado ct #[148]\nConjunto fixo Color-Temperature (valor nulo definido)",
+				"nl": "Gerepareerd CtReverse 49\nGereserveerde vertaling voor licht 36\nGevestigde waarschuwing min/max van ct-state 48:\nQuality over Quantity (QoQ) Releases Vertaling:",
+				"fr": "CtReverse fixe #[149]\nTraduction fixe pour la lumière #[136]\nAvertissement fixe min/max de l'état ct[148]\nFixed Set Color-Temperature (set null value)",
+				"it": "Corretto CtReverse #[149]\nTraduzione fissa per la luce #[136]\nAvvertenza fissa min/max di ct-state #[148]\nSet fisso temperatura colore (set valore null)",
+				"es": "CtReverse fijo #[149]\nTraducción fija para la luz #[136]\nAdvertencia fija min/max de ct-state #[148]\nConjunto fijo Color-Temperatura (valor nulo fijo)",
+				"pl": "Fixed CtReverse (ang.)\nTłumaczenie na światło (136)\nInformacje o minucie/max ct-state #148\nFixed Set Color-Temperature (set null value) (ang.)",
+				"uk": "Фіксований CtReverse #[149]\nФіксований переклад для світла #[136]\nВиправлено попередження min/max ct-state #[148]\nФіксований набір Колір-Температура (задня значення null)",
+				"zh-cn": "第[149]条\n第[136]号照明翻译\n第[148]号指示的预警/国税\n固定的特色(无效)"
+			},
 			"0.2.17": {
 				"en": "Fix error by init of customConfig, if no light description is available\nFix error by set Ct, Color,... if no lights or groups defined\nSome code improvements",
 				"de": "Fehler durch Init von customConfig behoben, wenn keine Lichtbeschreibung verfügbar ist\nFehler durch setzen von Ct, Farbe,... behoben, wenn keine Lichter oder Gruppen definiert waren\nEinige Code Verbesserungen",
