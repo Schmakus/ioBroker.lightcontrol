@@ -59,12 +59,20 @@ iobroker add lightcontrol
 
 ### **WORK IN PROGRESS**
 
+-   (Schmakus) re-new code
 -   (Schmakus) Set Color-Temperature over HUE (Hue, Saturation & Brightness states are necessary), RGB and XY
 -   (Schmakus) Add Color-type HUE (Saturation & Brightness states are necessary)
 -   (Schmakus) Support trasition time or ramp time
 -   (Schmakus) Fix error in SetBrightness
 -   (Schmakus) Changed folder-structure of adaptiveCt
 -   (Schmakus) Update translations
+
+### 0.2.18 (2023-07-08)
+
+-   (Schmakus) Fixed CtReverse [#149]
+-   (Schmakus) Fixed translation for light [#136]
+-   (Schmakus) Fixed warning min/max of ct-state [#148]
+-   (Schmakus) Fixed Set Color-Temperature (set null value)
 
 ### 0.2.17 (2023-05-17)
 
