@@ -3228,12 +3228,12 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async SetLightStateAsync(from = "noFunction") {
 		try {
-			const countGroups = await this.countGroups();
+			const countGroups = this.countGroups();
 			const groupLength = Object.keys(this.LightGroups).length - 1;
 
 			await Promise.all([
-				this.SetValueToObjectAsync("All", ".anyOn", countGroups > 0),
-				this.SetValueToObjectAsync("All", ".power", countGroups === groupLength),
+				this.SetValueToObjectAsync("All", "anyOn", countGroups > 0),
+				this.SetValueToObjectAsync("All", "power", countGroups === groupLength),
 			]);
 
 			await Promise.all([
