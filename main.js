@@ -81,7 +81,7 @@ class Lightcontrol extends utils.Adapter {
 			await this.InitCustomStatesAsync();
 			await this.SetLightStateAsync();
 		} else {
-			this.writeLog(`[ onReady ] No Init because no LightGroups defined in settings`);
+			this.writeLog(`[ onReady ] No Init because no LightGroups defined in settings`, "warn");
 		}
 	}
 
@@ -110,117 +110,116 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {ioBroker.State | null | undefined} state
 	 */
 	async onStateChange(id, state) {
-		try {
-			const ids = id.split(".");
+		if (!id || !state) {
+			return;
+		}
+		const ids = id.split(".");
 
-			if (state && state.val !== null) {
-				this.writeLog(`[ onStateChange ] state ${id} changed: ${state.val} (ack = ${state.ack})`);
+		if (state.val !== null) {
+			this.writeLog(`[ onStateChange ] state ${id} changed: ${state.val} (ack = ${state.ack})`);
 
-				if (ids[0] == "lightcontrol") {
-					if (!state.ack) {
-						const NewVal = state.val;
-						let OldVal;
+			if (ids[0] == "lightcontrol" && state.ack) {
+				if (!state.ack) {
+					const NewVal = state.val;
+					let OldVal;
 
-						const OwnId = await helper.removeNamespace(this.namespace, id);
-						const { Group, Prop } = await helper.ExtractGroupAndProp(OwnId);
+					const OwnId = helper.removeNamespace(this.namespace, id);
+					const { Group, Prop } = helper.ExtractGroupAndProp(OwnId);
 
-						if (Prop === "power" && Group !== "All") {
-							OldVal = this.LightGroups[Group].powerOldVal = this.LightGroups[Group].powerNewVal;
-							this.LightGroups[Group].powerNewVal = NewVal;
-						}
-
-						if (Group === "All") {
-							await this.SetMasterPower(NewVal);
-						} else {
-							await this.Controller(Group, Prop, NewVal, OldVal, OwnId);
-						}
+					if (Object.prototype.hasOwnProperty.call(this.LightGroups, Group)) {
+						this.writeLog(
+							`Group "${Group}" not defined in LightGroups! Please check your settings!`,
+							"warn",
+						);
+						return;
 					}
-				} else {
-					//Handle External States
-					if (state.ack || !state.ack) {
-						this.writeLog(`[ onStateChange ] ExternalState`);
 
-						//Check if it's a LuxSensor
-						if (this.LuxSensors.includes(id)) {
-							const groupsWithLuxSensor = Object.values(this.LightGroups).filter(
-								(Group) => Group.LuxSensor === id,
-							);
+					if (Prop === "power" && Group !== "All") {
+						OldVal = this.LightGroups[Group].powerOldVal = this.LightGroups[Group].powerNewVal;
+						this.LightGroups[Group].powerNewVal = NewVal;
+					}
 
-							for (const Group of groupsWithLuxSensor) {
-								if (state.val !== Group.actualLux) {
-									this.writeLog(
-										`[ onStateChange ] It's a LuxSensor in following Group: ${Group.description} with value = ${state.val} (old value = ${Group.actualLux})`,
-									);
-									Group.actualLux = state.val;
-									await this.Controller(
-										Group.description,
-										"actualLux",
-										state.val,
-										Group.actualLux,
-										"",
-									);
-								}
-							}
-
-							//Check if it's a MotionSensor
-						} else if (this.MotionSensors.includes(id)) {
-							await Promise.all(
-								Object.keys(this.LightGroups)
-									.filter((Group) => Group !== "All")
-									.flatMap((Group) => {
-										const sensors = this.LightGroups[Group].sensors;
-										if (Array.isArray(sensors)) {
-											return sensors
-												.filter((sensor) => sensor.oid === id)
-												.map(async (sensor) => {
-													const motionValue = state.val === sensor.motionVal;
-													sensor.isMotion = motionValue;
-
-													this.writeLog(
-														`[onStateChange] Sensor in Group="${Group}". This isMotion="${motionValue}"`,
-													);
-
-													await this.SummarizeSensorsAync(Group);
-												});
-										} else {
-											this.writeLog(
-												`[onStateChange] Sensors in Group="${Group}" is not iterable. Please check your config!`,
-												"warn",
-											);
-											return [];
-										}
-									}),
-							);
-
-							//Check if it's Presence
-						} else if (this.Settings.IsPresenceDp === id) {
-							this.writeLog(`[ onStateChange ] It's IsPresenceDp: ${id}`);
-
-							this.ActualPresence = typeof state.val === "boolean" ? state.val : false;
-							await this.AutoOnPresenceIncrease();
-
-							//Check if it's Presence Counter
-						} else if (this.Settings.PresenceCountDp === id) {
-							this.writeLog(`[ onStateChange ] It's PresenceCountDp: ${id}`);
-
-							this.ActualPresenceCount.oldVal = this.ActualPresenceCount.newVal;
-							this.ActualPresenceCount.newVal = typeof state.val === "number" ? state.val : 0;
-
-							if (this.ActualPresenceCount.newVal > this.ActualPresenceCount.oldVal) {
-								this.writeLog(
-									`[ onStateChange ] PresenceCountDp value is greater than old value: ${state.val}`,
-								);
-								await this.AutoOnPresenceIncrease();
-							}
-						}
+					if (Group === "All") {
+						await this.SetMasterPower(NewVal);
+					} else {
+						await this.Controller(Group, Prop, NewVal, OldVal, OwnId);
 					}
 				}
-			} else {
-				// The state was deleted
-				this.writeLog(`[ onStateChange ] state ${id} deleted`);
+			} else if (!state.ack) {
+				//Handle External States
+				this.writeLog(`[ onStateChange ] ExternalState, id="${id}"`);
+
+				//Check if it's a LuxSensor
+				if (this.LuxSensors.includes(id)) {
+					const groupsWithLuxSensor = Object.values(this.LightGroups).filter(
+						(Group) => Group.LuxSensor === id,
+					);
+
+					for (const Group of groupsWithLuxSensor) {
+						if (state.val !== Group.actualLux) {
+							this.writeLog(
+								`[ onStateChange ] It's a LuxSensor in following Group: ${Group.description} with value = ${state.val} (old value = ${Group.actualLux})`,
+							);
+							Group.actualLux = state.val;
+							await this.Controller(Group.description, "actualLux", state.val, Group.actualLux, "");
+						}
+					}
+
+					//Check if it's a MotionSensor
+				} else if (this.MotionSensors.includes(id)) {
+					await Promise.all(
+						Object.keys(this.LightGroups)
+							.filter((Group) => Group !== "All")
+							.flatMap((Group) => {
+								const sensors = this.LightGroups[Group].sensors;
+								if (Array.isArray(sensors)) {
+									return sensors
+										.filter((sensor) => sensor.oid === id)
+										.map(async (sensor) => {
+											const motionValue = state.val === sensor.motionVal;
+											sensor.isMotion = motionValue;
+
+											this.writeLog(
+												`[onStateChange] Sensor in Group="${Group}". This isMotion="${motionValue}"`,
+											);
+
+											await this.SummarizeSensorsAync(Group);
+										});
+								} else {
+									this.writeLog(
+										`[onStateChange] Sensors in Group="${Group}" is not iterable. Please check your config!`,
+										"warn",
+									);
+									return [];
+								}
+							}),
+					);
+
+					//Check if it's Presence
+				} else if (this.Settings.IsPresenceDp === id) {
+					this.writeLog(`[ onStateChange ] It's IsPresenceDp: ${id}`);
+
+					this.ActualPresence = typeof state.val === "boolean" ? state.val : false;
+					await this.AutoOnPresenceIncrease();
+
+					//Check if it's Presence Counter
+				} else if (this.Settings.PresenceCountDp === id) {
+					this.writeLog(`[ onStateChange ] It's PresenceCountDp: ${id}`);
+
+					this.ActualPresenceCount.oldVal = this.ActualPresenceCount.newVal;
+					this.ActualPresenceCount.newVal = typeof state.val === "number" ? state.val : 0;
+
+					if (this.ActualPresenceCount.newVal > this.ActualPresenceCount.oldVal) {
+						this.writeLog(
+							`[ onStateChange ] PresenceCountDp value is greater than old value: ${state.val}`,
+						);
+						await this.AutoOnPresenceIncrease();
+					}
+				}
 			}
-		} catch (error) {
-			this.errorHandling(error, "onStateChange");
+		} else {
+			// The state was deleted
+			this.writeLog(`[ onStateChange ] state ${id} deleted`);
 		}
 	}
 
@@ -234,7 +233,6 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} id Object-ID
 	 */
 	async Controller(Group, prop1, NewVal, OldVal, id = "") {
-		//Used by all
 		try {
 			let handeled = false;
 
@@ -637,19 +635,15 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {boolean} OnOff true/false from power state
 	 */
 	async GroupPowerOnOff(Group, OnOff) {
-		if (!this.LightGroups[Group]) {
-			this.writeLog(`[ GroupPowerOnOff ] Group="${Group}" not defined. Please check your config !`, "warn");
-			return;
-		}
 		if (!this.LightGroups[Group].rampOn?.enabled || !this.LightGroups[Group].rampOff?.enabled) {
 			this.writeLog(
-				`[ GroupPowerOnOff ] No rampOn or rampOff states available for group="${Group}". Please check your config and restart the this!!`,
+				`[ GroupPowerOnOff ] No rampOn or rampOff states available for group="${Group}". Please check your config and restart the adapter!!`,
 				"warn",
 			);
 			return;
 		}
 		if (!this.LightGroups[Group].lights.some((Light) => Light.power?.oid || Light.bri?.oid)) {
-			await this.writeLog(
+			this.writeLog(
 				`[ SimpleGroupPowerOnOff ] Not able to switching ${OnOff} for group="${Group}". No lights defined or no power or brightness states are defined!!`,
 				"warn",
 			);
@@ -708,11 +702,7 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async SimpleGroupPowerOnOff(Group, OnOff) {
 		const operation = OnOff ? "on" : "off";
-		if (!this.LightGroups[Group]) {
-			this.writeLog(`[ SimpleGroupPowerOnOff ] Group="${Group}" not defined. Please check your config!`, "warn");
-			return;
-		}
-		if (!this.LightGroups[Group].lights || !this.LightGroups[Group].lights.length) {
+		if (!this.LightGroups[Group].lights || !this.LightGroups[Group].lights?.length) {
 			this.writeLog(
 				`[ SimpleGroupPowerOnOff ] Not able to switching Group = "${Group}". No lights are defined!!`,
 				"warn",
@@ -748,24 +738,18 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {boolean} OnOff true/false from power state
 	 */
 	async DeviceSwitch(Group, OnOff) {
-		try {
-			this.writeLog(`[ DeviceSwitch ] Reaching for Group="${Group}, OnOff="${OnOff}"`);
+		this.writeLog(`[ DeviceSwitch ] Reaching for Group="${Group}, OnOff="${OnOff}"`);
 
-			const promises = this.LightGroups[Group].lights
-				.filter((Light) => !Light.bri?.oid && Light.power?.oid)
-				.map(async (Light) => {
-					await Promise.all([
-						this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal),
-						this.writeLog(
-							`[ DeviceSwitch ] Switching ${Light.description} (${Light.power.oid}) to: ${OnOff}`,
-						),
-					]);
-				});
+		const promises = this.LightGroups[Group].lights
+			.filter((Light) => !Light.bri?.oid && Light.power?.oid)
+			.map(async (Light) => {
+				await Promise.all([
+					this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal),
+					this.writeLog(`[ DeviceSwitch ] Switching ${Light.description} (${Light.power.oid}) to: ${OnOff}`),
+				]);
+			});
 
-			await Promise.all(promises);
-		} catch (error) {
-			this.errorHandling(error, "DeviceSwitch");
-		}
+		await Promise.all(promises);
 	}
 
 	/**
@@ -775,18 +759,14 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {boolean} OnOff true/false from power state
 	 */
 	async DeviceSwitchForRamping(Group, OnOff) {
-		try {
-			this.writeLog(`[ DeviceSwitchForRamping ] Reaching for Group="${Group}, OnOff="${OnOff}"`);
+		this.writeLog(`[ DeviceSwitchForRamping ] Reaching for Group="${Group}, OnOff="${OnOff}"`);
 
-			const promises = this.LightGroups[Group].lights
-				.filter((Light) => Light?.bri?.oid && !Light?.bri?.useBri && Light?.power?.oid)
-				.map((Light) => {
-					this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
-				});
-			await Promise.all(promises);
-		} catch (error) {
-			this.errorHandling(error, "DeviceSwitchForRamping");
-		}
+		const promises = this.LightGroups[Group].lights
+			.filter((Light) => Light?.bri?.oid && !Light?.bri?.useBri && Light?.power?.oid)
+			.map((Light) => {
+				this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
+			});
+		await Promise.all(promises);
 	}
 
 	/**
@@ -850,6 +830,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @description RampUp / RampDown with Interval and not with transission time
 	 * @async
 	 * @function
+	 * @param {string} Group Name oft the Lightgroup
 	 * @param {boolean} rampUp RampUp = true; RampDown = false
 	 */
 	async RampWithInterval(Group, rampUp = true) {
@@ -1094,10 +1075,18 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 */
 	async AutoOnLux(Group) {
-		if (!this.LightGroups[Group]) {
+		if (
+			!this.LightGroups[Group]?.autoOnLux ||
+			!this.LightGroups[Group]?.autoOnLux?.enabled ||
+			!this.LightGroups[Group]?.autoOnLux?.minLux ||
+			!this.LightGroups[Group]?.autoOnLux.dailyLock ||
+			!this.LightGroups[Group]?.autoOnLux.switchOnlyWhenPresence
+		) {
+			this.writeLog(
+				`[ AutoOnMotion ] Not able to auto on for Group: "${Group}". Please check your config! Aborted`,
+			);
 			return;
 		}
-
 		this.writeLog(
 			`[ AutoOnLux ] Group="${Group} enabled="${this.LightGroups[Group].autoOnLux.enabled}", actuallux="${this.LightGroups[Group].actualLux}", minLux="${this.LightGroups[Group].autoOnLux.minLux}" LightGroups[Group].autoOnLux.dailyLock="${this.LightGroups[Group].autoOnLux.dailyLock}"`,
 		);
@@ -1208,7 +1197,6 @@ class Lightcontrol extends utils.Adapter {
 		let tempColor = "";
 
 		if (
-			!this.LightGroups[Group] ||
 			!this.LightGroups[Group]?.autoOnMotion ||
 			!this.LightGroups[Group]?.autoOnMotion?.enabled ||
 			!this.LightGroups[Group]?.autoOnMotion?.minLux
@@ -2668,7 +2656,7 @@ class Lightcontrol extends utils.Adapter {
 			for (const o in objects) {
 				const parts = o.split(".");
 				if (parts[2] != "info") {
-					const id = await helper.removeNamespace(this.namespace, objects[o]._id);
+					const id = helper.removeNamespace(this.namespace, objects[o]._id);
 
 					if (objects[o].type == "state") {
 						allStates.push(id);
