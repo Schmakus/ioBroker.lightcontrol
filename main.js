@@ -21,6 +21,7 @@ const {
 	TestTemplateLuxSensors,
 	TestTemplatePresence,
 } = require(`./lib/testTemplates`);
+
 //const { objects } = require("./lib/objects");
 
 // Sentry error reporting, disable when testing alpha source code locally!
@@ -41,7 +42,6 @@ class Lightcontrol extends utils.Adapter {
 		this.on("objectChange", this.onObjectChange.bind(this));
 		this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
-		this.Settings = {};
 		this.LightGroups = {};
 		this.LuxSensors = [];
 		this.MotionSensors = [];
@@ -68,9 +68,7 @@ class Lightcontrol extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-		//this.GlobalSettings = this.config;
-		this.Settings = this.config;
-		this.writeLog(`[ onReady ] LightGroups from Settings: ${JSON.stringify(this.Settings?.LightGroups)}`);
+		this.writeLog(`[ onReady ] LightGroups from Settings: ${JSON.stringify(this.config?.LightGroups)}`);
 
 		//Create LightGroups Object from GroupNames
 		await this.CreateLightGroupsObject();
@@ -78,8 +76,6 @@ class Lightcontrol extends utils.Adapter {
 		//Create all States, Devices and Channels
 		if (Object.keys(this.LightGroups).length !== 0) {
 			await this.InitAsync();
-			await this.InitCustomStatesAsync();
-			await this.SetLightStateAsync();
 		} else {
 			this.writeLog(`[ onReady ] No Init because no LightGroups defined in settings`, "warn");
 		}
@@ -110,7 +106,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {ioBroker.State | null | undefined} state
 	 */
 	async onStateChange(id, state) {
-		if (!id || !state) {
+		if (!id || !state || this.isInit) {
 			return;
 		}
 		const ids = id.split(".");
@@ -196,14 +192,14 @@ class Lightcontrol extends utils.Adapter {
 					);
 
 					//Check if it's Presence
-				} else if (this.Settings.IsPresenceDp === id) {
+				} else if (this.config.IsPresenceDp === id) {
 					this.writeLog(`[ onStateChange ] It's IsPresenceDp: ${id}`);
 
 					this.ActualPresence = typeof state.val === "boolean" ? state.val : false;
 					await this.AutoOnPresenceIncrease();
 
 					//Check if it's Presence Counter
-				} else if (this.Settings.PresenceCountDp === id) {
+				} else if (this.config.PresenceCountDp === id) {
 					this.writeLog(`[ onStateChange ] It's PresenceCountDp: ${id}`);
 
 					this.ActualPresenceCount.oldVal = this.ActualPresenceCount.newVal;
@@ -330,7 +326,7 @@ class Lightcontrol extends utils.Adapter {
 					await this.AutoOnPresenceIncrease();
 					handeled = true;
 					break;
-				case "adaptiveCt.enabled":
+				case "AdaptiveCt.enabled":
 					break;
 				case "adaptiveCt.adaptiveCtMode":
 					break;
@@ -444,7 +440,9 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {ioBroker.Object | null | undefined} obj
 	 */
 	async onObjectChange(id, obj) {
-		//ToDo : Verify with test-results if debounce on object change must be implemented
+		if (!id || !obj || this.isInit) {
+			return;
+		}
 		try {
 			const stateID = id;
 
@@ -521,6 +519,9 @@ class Lightcontrol extends utils.Adapter {
 	 * Is called if a message is comming
 	 */
 	async onMessage(msg) {
+		if (this.isInit) {
+			return;
+		}
 		this.writeLog(`[ onMessage ] Incomming Message from: ${JSON.stringify(msg)}`);
 		if (msg.callback) {
 			switch (msg.command) {
@@ -690,7 +691,7 @@ class Lightcontrol extends utils.Adapter {
 
 		await Promise.all([
 			this.setStateAsync(Group + ".power", OnOff, true),
-			this.SetLightStateAsync("GroupPowerOnOff"),
+			//this.SetLightStateAsync("GroupPowerOnOff"),
 		]);
 		return true;
 	}
@@ -835,14 +836,14 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async RampWithInterval(Group, rampUp = true) {
 		const Lights = this.LightGroups[Group]?.lights || [];
-		if (!this.Settings?.RampSteps) {
+		if (!this.config?.RampSteps) {
 			this.writeLog(
 				`[ RampWithInterval ] No RampSteps defined. Please check your config! RampWithInterval aborted!`,
 				"warn",
 			);
 			return;
 		}
-		const RampSteps = this.Settings.RampSteps;
+		const RampSteps = this.config.RampSteps;
 		const RampTime = await helper.limitNumber(this.LightGroups[Group].rampOn.time, 10);
 		let LoopCount = 0;
 
@@ -883,14 +884,14 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async TurnOnWithRamping(Group) {
 		const funcName = "TurnOnWithRamping";
-		if (!this.Settings?.RampSteps) {
+		if (!this.config?.RampSteps) {
 			this.writeLog(
 				`[ ${funcName} ] No RampSteps defined. Please check your config! RampWithInterval aborted!`,
 				"warn",
 			);
 			return;
 		}
-		const RampSteps = this.Settings.RampSteps;
+		const RampSteps = this.config.RampSteps;
 		let LoopCount = 0;
 		//
 		// ******* Anschalten mit ramping * //
@@ -946,14 +947,14 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async TurnOffWithRamping(Group) {
 		const funcName = "TurnOffWithRamping";
-		if (!this.Settings?.RampSteps) {
+		if (!this.config?.RampSteps) {
 			this.writeLog(
 				`[ ${funcName} ] No RampSteps defined. Please check your config! RampWithInterval aborted!`,
 				"warn",
 			);
 			return;
 		}
-		const RampSteps = this.Settings.RampSteps;
+		const RampSteps = this.config.RampSteps;
 		let LoopCount = 0;
 		//
 		//******* Ausschalten mit Ramping */
@@ -1526,16 +1527,17 @@ class Lightcontrol extends utils.Adapter {
 			);
 
 			let TempBri = 0;
+			const minBri = typeof this.config.minBri === "string" ? parseInt(this.config.minBri) : this.config.minBri;
 
 			if (this.LightGroups[Group].adaptiveBri) {
 				if (this.LightGroups[Group].actualLux === 0) {
-					TempBri = parseInt(this.Settings.minBri);
+					TempBri = minBri;
 				} else if (this.LightGroups[Group].actualLux >= 10000) {
 					TempBri = 100;
 				} else if (this.LightGroups[Group].actualLux > 0 && this.LightGroups[Group].actualLux < 10000) {
 					TempBri = this.LightGroups[Group].actualLux / 100;
 
-					if (TempBri < this.Settings.minBri) TempBri = parseInt(this.Settings.minBri);
+					if (TempBri < this.config.minBri) TempBri = minBri;
 				}
 			}
 			return Math.round(TempBri);
@@ -1672,8 +1674,8 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async KelvinToRange(outMinCt, outMaxCt, kelvin, CtReverse = false) {
 		try {
-			const minCt = this.Settings.minCt || 2700;
-			const maxCt = this.Settings.maxCt || 6500;
+			const minCt = this.config.minCt || 2700;
+			const maxCt = this.config.maxCt || 6500;
 			let rangeValue;
 
 			kelvin = Math.min(Math.max(kelvin, minCt), maxCt); // constrain kelvin to minCt and maxCt
@@ -1697,16 +1699,16 @@ class Lightcontrol extends utils.Adapter {
 	/**
 	 * AdapticeCt
 	 */
-	async AdaptiveCt() {
+	async AdaptiveCtAsync() {
 		try {
 			const now = new Date();
 			const ActualTime = now.getTime();
 
-			const minCt = this.Settings.minCt;
-			const maxCt = this.Settings.maxCt;
+			const minCt = this.config.minCt;
+			const maxCt = this.config.maxCt;
 			const CtRange = maxCt - minCt;
 
-			this.writeLog(`[ AdaptiveCt ] minCT="${minCt}", maxCt="${maxCt}", CtRange="${CtRange}"`);
+			this.writeLog(`[ AdaptiveCtAsync ] minCT="${minCt}", maxCt="${maxCt}", CtRange="${CtRange}"`);
 
 			let adaptiveCtLinear = 0;
 			let adaptiveCtSolar = 0;
@@ -1724,7 +1726,7 @@ class Lightcontrol extends utils.Adapter {
 			]);
 
 			this.writeLog(
-				`[ AdaptiveCt // getAstroDate] sunsetDate="${sunsetDate}", sunriseDate="${sunriseDate}", solarNoonDate="${solarNoonDate}"`,
+				`[ AdaptiveCtAsync // getAstroDate] sunsetDate="${sunsetDate}", sunriseDate="${sunriseDate}", solarNoonDate="${solarNoonDate}"`,
 			);
 
 			if (sunsetDate instanceof Date && sunriseDate instanceof Date && solarNoonDate instanceof Date) {
@@ -1732,12 +1734,15 @@ class Lightcontrol extends utils.Adapter {
 				sunrise = sunriseDate.getTime(); //Sonnenaufgang
 				solarNoon = solarNoonDate.getTime(); //Höchster Sonnenstand (Mittag)
 			} else {
-				this.writeLog(`[ AdaptiveCt ] sunsetDate, sunriseDate or solarNoonDate are no Date Objects"`, "warn");
+				this.writeLog(
+					`[ AdaptiveCtAsync ] sunsetDate, sunriseDate or solarNoonDate are no Date Objects"`,
+					"warn",
+				);
 				return;
 			}
 
 			this.writeLog(
-				`[ AdaptiveCt ] minCT="${minCt}", maxCt="${maxCt}", sunset="${sunset}", sunrise="${sunrise}", solarNoon="${solarNoon}"`,
+				`[ AdaptiveCtAsync ] minCT="${minCt}", maxCt="${maxCt}", sunset="${sunset}", sunrise="${sunrise}", solarNoon="${solarNoon}"`,
 			);
 
 			let morningTime = 0;
@@ -1763,7 +1768,9 @@ class Lightcontrol extends utils.Adapter {
 				); // SolarInterpolated = Wie Solar, jedoch wird der Wert so hochgerechnet dass immer zum Sonnenmittag maxCt gesetzt wird, unabhängig der Jahreszeit
 			}
 
-			this.writeLog(`[ AdaptiveCt ] adaptiveCtLinear="${adaptiveCtLinear}" adaptiveCtSolar="${adaptiveCtSolar}"`);
+			this.writeLog(
+				`[ AdaptiveCtAsync ] adaptiveCtLinear="${adaptiveCtLinear}" adaptiveCtSolar="${adaptiveCtSolar}"`,
+			);
 
 			for (const Group in this.LightGroups) {
 				if (Group === "All") continue;
@@ -1797,7 +1804,7 @@ class Lightcontrol extends utils.Adapter {
 						break;
 					case "timed":
 						if (
-							this.LightGroups[Group].adaptiveCt?.enabled &&
+							this.LightGroups[Group].AdaptiveCt?.enabled &&
 							this.LightGroups[Group].ct !== adaptiveCtTimed
 						) {
 							morningTime = (
@@ -1812,7 +1819,7 @@ class Lightcontrol extends utils.Adapter {
 							}
 
 							this.writeLog(
-								`[ AdaptiveCt // timed ] morningTime="${this.LightGroups[Group].adaptiveCt?.adaptiveCtTime}" => "${morningTime}", ActualTime="${ActualTime}", sunset="${sunset}", adativeCtTimed="${adaptiveCtTimed}"`,
+								`[ AdaptiveCtAsync // timed ] morningTime="${this.LightGroups[Group].adaptiveCt?.adaptiveCtTime}" => "${morningTime}", ActualTime="${ActualTime}", sunset="${sunset}", adativeCtTimed="${adaptiveCtTimed}"`,
 							);
 
 							await this.setStateAsync(Group + ".ct", adaptiveCtTimed, false);
@@ -1839,7 +1846,7 @@ class Lightcontrol extends utils.Adapter {
 							}
 
 							this.writeLog(
-								`[ AdaptiveCt // timedInterpolated ] morningTime="${this.LightGroups[Group].adaptiveCt?.adaptiveCtTime}" => "${morningTime}", ActualTime="${ActualTime}", sunset="${sunset}", adativeCtTimed="${adaptiveCtTimedInterpolated}"`,
+								`[ AdaptiveCtAsync // timedInterpolated ] morningTime="${this.LightGroups[Group].adaptiveCt?.adaptiveCtTime}" => "${morningTime}", ActualTime="${ActualTime}", sunset="${sunset}", adativeCtTimed="${adaptiveCtTimedInterpolated}"`,
 							);
 
 							await this.setStateAsync(Group + ".ct", adaptiveCtTimedInterpolated, false);
@@ -1852,10 +1859,10 @@ class Lightcontrol extends utils.Adapter {
 			if (this.TickerIntervall) clearTimeout(this.TickerIntervall);
 
 			this.TickerIntervall = setTimeout(() => {
-				this.AdaptiveCt();
+				this.AdaptiveCtAsync();
 			}, 60000);
 		} catch (error) {
-			this.errorHandling(error, "AdaptiveCt");
+			this.errorHandling(error, "AdaptiveCtAsync");
 		}
 	}
 
@@ -1887,8 +1894,8 @@ class Lightcontrol extends utils.Adapter {
 				return;
 			}
 
-			const minCt = this.Settings.minCt;
-			const maxCt = this.Settings.maxCt;
+			const minCt = this.config.minCt;
+			const maxCt = this.config.maxCt;
 
 			this.writeLog(
 				`[ SetWhiteSubstituteColor ] Reaching for Group="${Group}" = "${this.LightGroups[Group].description}" LightGroups[Group].power="${this.LightGroups[Group].power}" LightGroups[Group].color="${this.LightGroups[Group].color}`,
@@ -2304,13 +2311,31 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async InitAsync() {
 		this.writeLog(`Init is starting...`, "info");
-		if (this.DevMode) await this.TestStatesCreate;
-		await this.GlobalLuxHandling();
-		await this.GlobalPresenceHandling();
-		await this.StatesCreate();
-		const latlng = await this.GetSystemData();
-		if (latlng) await this.AdaptiveCt();
+		this.isInit = true;
+		if (this.DevMode) await this.TestStatesCreateAsync();
+		await this.GlobalLuxHandlingAsync();
+		await this.GlobalPresenceHandlingAsync();
+		await this.StatesCreateAsync();
+		const latlng = await this.GetSystemDataAsync();
+		if (latlng) await this.AdaptiveCtAsync();
+		await this.InitCustomStatesAsync();
+		await this.SetLightStateAsync();
+		const objA = await this.getAdapterObjectsAsync();
+		if (!objA) {
+			this.writeLog(`Cannot read objects from instance! Init Aborted!`, "warn");
+			return false;
+		} else {
+			for (const key of Object.keys(objA)) {
+				const newString = key.replace(new RegExp(`${this.namespace}.`, "g"), "");
+				//this.log.warn(newString);
+			}
+			//const result = helper.compareAndFormatObjects(objA, this.LightGroups);
+			//this.writeLog(`${JSON.stringify(result)}`);
+		}
+
 		this.writeLog(`Init finished.`, "info");
+		this.isInit = false;
+		return true;
 	}
 
 	/**
@@ -2318,45 +2343,49 @@ class Lightcontrol extends utils.Adapter {
 	 * @description Creates Object LightGroups from system.config array
 	 */
 	async CreateLightGroupsObject() {
-		try {
-			const { Settings } = this;
-			const { LightGroups } = Settings;
+		const { config } = this;
+		const { LightGroups } = config;
 
-			if (LightGroups && LightGroups.length) {
-				const regex = /^[a-zA-Z0-9_-]*$/; // Regulärer Ausdruck zur Überprüfung von erlaubten Zeichen
-				LightGroups.forEach(({ Group, GroupLuxSensor }) => {
-					if (!regex.test(Group)) {
-						// Überprüfen, ob "Group" nur erlaubte Zeichen enthält
-						this.writeLog(
-							`[ CreateLightGroupsObject ] Group "${Group}" contains invalid characters. Please update the group name in instance setting. Skipping...`,
-							"warn",
-						);
-						return; // Überspringen des Loops, wenn "Group" ungültige Zeichen enthält
-					}
-					this.LightGroups[Group] = {
-						description: Group,
-						LuxSensor: GroupLuxSensor,
-						lights: [],
-						sensors: [],
-					};
-				});
-				this.writeLog(`[ CreateLightGroupsObject ] LightGroups: ${JSON.stringify(this.LightGroups)}`);
-			} else {
-				this.writeLog(`[ CreateLightGroupsObject ] No LightGroups defined in instance settings!`, "warn");
-			}
-		} catch (error) {
-			this.errorHandling(error, "CreateLightGroupsObject");
+		if (LightGroups && LightGroups.length) {
+			const regex = /^[a-zA-Z0-9_-]*$/; // Regulärer Ausdruck zur Überprüfung von erlaubten Zeichen
+			LightGroups.forEach(({ Group, GroupLuxSensor }) => {
+				if (!regex.test(Group)) {
+					// Überprüfen, ob "Group" nur erlaubte Zeichen enthält
+					this.writeLog(
+						`[ CreateLightGroupsObject ] Group "${Group}" contains invalid characters. Please update the group name in instance setting. Skipping...`,
+						"warn",
+					);
+					return; // Überspringen des Loops, wenn "Group" ungültige Zeichen enthält
+				}
+				this.LightGroups[Group] = {
+					description: Group,
+					LuxSensor: GroupLuxSensor,
+					lights: [],
+					sensors: [],
+				};
+			});
+
+			// Füge den Schlüssel "All" hinzu
+			this.LightGroups.All = {
+				description: "All",
+				power: false,
+				anyOn: false,
+			};
+
+			this.writeLog(`[ CreateLightGroupsObject ] LightGroups: ${JSON.stringify(this.LightGroups)}`);
+		} else {
+			this.writeLog(`[ CreateLightGroupsObject ] No LightGroups defined in instance settings!`, "warn");
 		}
 	}
 
 	/**
-	 * GlobalLuxHandling
+	 * GlobalLuxHandlingAsync
 	 * @description If a global lux sensor has been defined, its value is written to the global variable and the state is subscribed.
 	 */
-	async GlobalLuxHandling() {
+	async GlobalLuxHandlingAsync() {
 		try {
-			const { Settings } = this;
-			const { GlobalLuxSensor } = Settings;
+			const { config } = this;
+			const { GlobalLuxSensor } = config;
 			this.ActualGenericLux = 0;
 
 			if (!GlobalLuxSensor) {
@@ -2366,9 +2395,9 @@ class Lightcontrol extends utils.Adapter {
 			const actualGenericLux = await this.getForeignStateAsync(GlobalLuxSensor);
 			const _actualGenericLux = await helper.checkObjectNumber(actualGenericLux);
 
-			if (_actualGenericLux !== null) {
+			if (_actualGenericLux === null) {
 				this.log.warn(
-					`[ GlobalLuxHandling ] state value of id="${GlobalLuxSensor}" is empty, null, undefined, or not a valid number!`,
+					`[ GlobalLuxHandlingAsync ] state value of id="${GlobalLuxSensor}" is empty, null, undefined, or not a valid number!`,
 				);
 				return;
 			}
@@ -2377,7 +2406,7 @@ class Lightcontrol extends utils.Adapter {
 			await this.subscribeForeignStatesAsync(GlobalLuxSensor);
 			this.LuxSensors.push(GlobalLuxSensor);
 		} catch (error) {
-			this.errorHandling(error, "GlobalLuxHandling");
+			this.errorHandling(error, "GlobalLuxHandlingAsync");
 		}
 	}
 
@@ -2428,7 +2457,7 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async DoAllTheLuxSensorThings(Group) {
 		try {
-			const luxSensor = this.LightGroups[Group].LuxSensor || this.Settings.GlobalLuxSensor;
+			const luxSensor = this.LightGroups[Group].LuxSensor || this.config.GlobalLuxSensor;
 			this.LightGroups[Group].actualLux = 0;
 
 			if (!luxSensor) {
@@ -2438,7 +2467,7 @@ class Lightcontrol extends utils.Adapter {
 				return;
 			}
 
-			if (luxSensor === this.Settings.GlobalLuxSensor) {
+			if (luxSensor === this.config.GlobalLuxSensor) {
 				this.LightGroups[Group].actualLux = this.ActualGenericLux ?? null;
 				this.LightGroups[Group].LuxSensor = luxSensor;
 				this.writeLog(`[ DoAllTheLuxSensorThings ] Group "${Group}" using global luxsensor.`);
@@ -2448,7 +2477,7 @@ class Lightcontrol extends utils.Adapter {
 			const individualLux = await this.getForeignStateAsync(luxSensor);
 			const _individualLux = await helper.checkObjectNumber(individualLux);
 
-			if (_individualLux !== null) {
+			if (_individualLux === null) {
 				this.log.warn(
 					`[ DoAllTheLuxSensorThings ] state value of id="${luxSensor}" of Group="${Group}" is empty, null or undefined!`,
 				);
@@ -2467,56 +2496,56 @@ class Lightcontrol extends utils.Adapter {
 	}
 
 	/**
-	 * GlobalPresenceHandling
+	 * GlobalPresenceHandlingAsync
 	 */
-	async GlobalPresenceHandling() {
+	async GlobalPresenceHandlingAsync() {
 		try {
-			if (this.Settings.PresenceCountDp) {
-				this.writeLog(`[ GlobalPresenceHandling ] PresenceCounteDp=${this.Settings.PresenceCountDp}`);
+			if (this.config.PresenceCountDp) {
+				this.writeLog(`[ GlobalPresenceHandlingAsync ] PresenceCounteDp=${this.config.PresenceCountDp}`);
 				this.ActualPresenceCount = { newVal: 0, oldVal: 0 };
 
-				const ActualPresenceCount = await this.getForeignStateAsync(this.Settings.PresenceCountDp);
+				const ActualPresenceCount = await this.getForeignStateAsync(this.config.PresenceCountDp);
 				const _ActualPresenceCount = await helper.checkObjectNumber(ActualPresenceCount);
 
-				if (_ActualPresenceCount !== null) {
+				if (_ActualPresenceCount === null) {
 					this.log.warn(
-						`[ GlobalPresenceHandling ] state value of id="${this.Settings.PresenceCountDp}" is empty, null or undefined!`,
+						`[ GlobalPresenceHandlingAsync ] state value of id="${this.config.PresenceCountDp}" is empty, null or undefined!`,
 					);
 					return;
 				}
 
 				this.ActualPresenceCount = { newVal: _ActualPresenceCount, oldVal: 0 };
 				this.ActualPresence = this.ActualPresenceCount.newVal === 0 ? false : true;
-				await this.subscribeForeignStatesAsync(this.Settings.PresenceCountDp);
+				await this.subscribeForeignStatesAsync(this.config.PresenceCountDp);
 			}
 
-			if (this.Settings.IsPresenceDp) {
-				this.writeLog(`[ GlobalPresenceHandling ] IsPresenceDp=${this.Settings.IsPresenceDp}`);
+			if (this.config.IsPresenceDp) {
+				this.writeLog(`[ GlobalPresenceHandlingAsync ] IsPresenceDp=${this.config.IsPresenceDp}`);
 				this.ActualPresence = false;
 
-				const ActualPresence = await this.getForeignStateAsync(this.Settings.IsPresenceDp);
+				const ActualPresence = await this.getForeignStateAsync(this.config.IsPresenceDp);
 				const _ActualPresence = await helper.checkObjectBoolean(ActualPresence);
 
 				if (_ActualPresence === null) {
 					this.writeLog(
-						`[ GlobalPresenceHandling ] isPresenceDp=${this.Settings.IsPresenceDp} is not type="boolean"!`,
+						`[ GlobalPresenceHandlingAsync ] isPresenceDp=${this.config.IsPresenceDp} is not type="boolean"!`,
 						"warn",
 					);
 					return;
 				}
 
 				this.ActualPresence = _ActualPresence;
-				await this.subscribeForeignStatesAsync(this.Settings.IsPresenceDp);
+				await this.subscribeForeignStatesAsync(this.config.IsPresenceDp);
 			}
 		} catch (error) {
-			this.errorHandling(error, "GlobalPresenceHandling");
+			this.errorHandling(error, "GlobalPresenceHandlingAsync");
 		}
 	}
 
 	/**
 	 * State create, extend objects and subscribe states
 	 */
-	async StatesCreate() {
+	async StatesCreateAsync() {
 		const keepStates = [];
 		const keepChannels = [];
 		const keepDevices = [];
@@ -2543,10 +2572,10 @@ class Lightcontrol extends utils.Adapter {
 					keepChannels.push(dp);
 
 					for (const key in DeviceTemplate[prop1]) {
-						const dp = Group + "." + prop1 + "." + key;
+						const dp = `${Group}.${prop1}.${key}`;
 						const common = DeviceTemplate[prop1][key];
 
-						await this.CreateStates(dp, common);
+						await this.CreateStatesAsync(dp, common);
 						keepStates.push(dp);
 
 						try {
@@ -2554,17 +2583,16 @@ class Lightcontrol extends utils.Adapter {
 
 							if (!state) {
 								this.writeLog(
-									`[ StatesCreate ] State: "${dp}" is NULL or undefined! Init aborted!`,
+									`[ StatesCreateAsync ] State: "${dp}" is NULL or undefined! Init aborted!`,
 									"warn",
 								);
 								return;
 							}
-
-							await this.SetValueToObjectAsync(Group, prop1, state.val);
+							await this.SetValueToObjectAsync(Group, `${prop1}.${key}`, state.val);
 							common.write && (await this.subscribeStatesAsync(dp));
 						} catch (error) {
 							this.writeLog(
-								`[ StatesCreate ] not able to getState of id="${dp}". Please check your config! Init aborted! Error: ${error}`,
+								`[ StatesCreateAsync ] not able to getState of id="${dp}". Please check your config! Init aborted! Error: ${error}`,
 								"warn",
 							);
 							return;
@@ -2572,7 +2600,7 @@ class Lightcontrol extends utils.Adapter {
 					}
 				} else {
 					const common = DeviceTemplate[prop1];
-					await this.CreateStates(dp, common);
+					await this.CreateStatesAsync(dp, common);
 					keepStates.push(dp);
 
 					try {
@@ -2580,7 +2608,7 @@ class Lightcontrol extends utils.Adapter {
 
 						if (!state) {
 							this.writeLog(
-								`[ StatesCreate ] State: "${dp}" is NULL or undefined! Init aborted!`,
+								`[ StatesCreateAsync ] State: "${dp}" is NULL or undefined! Init aborted!`,
 								"warn",
 							);
 							return;
@@ -2588,7 +2616,7 @@ class Lightcontrol extends utils.Adapter {
 
 						if (prop1 === "power") {
 							this.writeLog(
-								`[ StatesCreate ] Group="${Group}", Prop1="${prop1}", powerNewVal="${state.val}"`,
+								`[ StatesCreateAsync ] Group="${Group}", Prop1="${prop1}", powerNewVal="${state.val}"`,
 							);
 							await this.SetValueToObjectAsync(Group, "powerNewVal", state.val);
 						}
@@ -2600,13 +2628,14 @@ class Lightcontrol extends utils.Adapter {
 						common.write && (await this.subscribeStatesAsync(dp));
 					} catch (error) {
 						this.writeLog(
-							`[ StatesCreate ] not able to getState of id="${dp}". Please check your config! Init aborted! Error: ${error}`,
+							`[ StatesCreateAsync ] not able to getState of id="${dp}". Please check your config! Init aborted! Error: ${error}`,
 							"warn",
 						);
 						return;
 					}
 				}
 			}
+
 			await this.SetValueToObjectAsync(Group, ["autoOnLux.dailyLockCounter", "autoOffLux.dailyLockCounter"], 0);
 		}
 
@@ -2618,7 +2647,7 @@ class Lightcontrol extends utils.Adapter {
 			const dp = "All." + prop1;
 			const common = DeviceAllTemplate[prop1];
 
-			await this.CreateStates(dp, common);
+			await this.CreateStatesAsync(dp, common);
 			keepStates.push(dp);
 
 			try {
@@ -2639,7 +2668,7 @@ class Lightcontrol extends utils.Adapter {
 				common.write && (await this.subscribeStatesAsync(dp));
 			} catch (error) {
 				this.writeLog(
-					`[ StatesCreate ] not able to getState of id="${dp}". Please check your config! Init aborted! Error: ${error}`,
+					`[ StatesCreateAsync ] not able to getState of id="${dp}". Please check your config! Init aborted! Error: ${error}`,
 					"warn",
 				);
 				return;
@@ -2668,7 +2697,7 @@ class Lightcontrol extends utils.Adapter {
 				}
 			}
 		} catch (error) {
-			this.writeLog(`[ StatesCreate ] not able to getObjects! Init aborted! Error: ${error}`, "warn");
+			this.writeLog(`[ StatesCreateAsync ] not able to getObjects! Init aborted! Error: ${error}`, "warn");
 			return;
 		}
 
@@ -2725,51 +2754,61 @@ class Lightcontrol extends utils.Adapter {
 	/**
 	 * State create, extend objects and subscribe states
 	 */
-	async TestStatesCreate() {
+	async TestStatesCreateAsync() {
 		this.writeLog("[ TestStatesCreate ]Creating Test devices...");
 
 		const userdata = "0_userdata.0.lightcontrol_DEV.";
 
 		//Loop TestLamps and create datapoints to 0_userdata.0
-		for (const Lamp in TestTemplateLamps) {
-			//Create Lamp if not exist
-			try {
-				await this.setForeignObjectNotExistsAsync(userdata + "Lamps." + Lamp, {
-					type: "channel",
-					common: { name: Lamp },
-					native: {},
-				});
-			} catch (error) {
-				this.writeLog(`[ TestStatesCreate ] Not able create lamps of testdata. Error: ${error}`, "warn");
-			}
+		await Promise.all(
+			Object.keys(TestTemplateLamps).map(async (Lamp) => {
+				//Create Lamp if not exist
+				try {
+					await this.setForeignObjectNotExistsAsync(userdata + "Lamps." + Lamp, {
+						type: "channel",
+						common: { name: Lamp },
+						native: {},
+					});
+				} catch (error) {
+					this.writeLog(`[ TestStatesCreate ] Not able create lamps of testdata. Error: ${error}`, "warn");
+				}
 
-			for (const prop1 in TestTemplateLamps[Lamp]) {
-				const common = TestTemplateLamps[Lamp][prop1];
-				const dp = userdata + "Lamps." + Lamp + "." + prop1;
-				await this.CreateStates(dp, common, true);
-			}
-		}
+				await Promise.all(
+					Object.keys(TestTemplateLamps[Lamp]).map(async (prop1) => {
+						const common = TestTemplateLamps[Lamp][prop1];
+						const dp = userdata + "Lamps." + Lamp + "." + prop1;
+						await this.CreateStatesAsync(dp, common, true);
+					}),
+				);
+			}),
+		);
 
 		//Loop Test Motion Sensors and create datapoints to 0_userdata.0
-		for (const MotionSensor in TestTemplateMotionSensors) {
-			const common = TestTemplateMotionSensors[MotionSensor];
-			const dp = userdata + "MotionSensors." + MotionSensor;
-			await this.CreateStates(dp, common, true);
-		}
+		await Promise.all(
+			Object.keys(TestTemplateMotionSensors).map(async (MotionSensor) => {
+				const common = TestTemplateMotionSensors[MotionSensor];
+				const dp = userdata + "MotionSensors." + MotionSensor;
+				await this.CreateStatesAsync(dp, common, true);
+			}),
+		);
 
 		//Loop Test Lux Sensors and create datapoints to 0_userdata.0
-		for (const LuxSensor in TestTemplateLuxSensors) {
-			const common = TestTemplateLuxSensors[LuxSensor];
-			const dp = userdata + "LuxSensors." + LuxSensor;
-			await this.CreateStates(dp, common, true);
-		}
+		await Promise.all(
+			Object.keys(TestTemplateLuxSensors).map(async (LuxSensor) => {
+				const common = TestTemplateLuxSensors[LuxSensor];
+				const dp = userdata + "LuxSensors." + LuxSensor;
+				await this.CreateStatesAsync(dp, common, true);
+			}),
+		);
 
 		//Loop Test Presence and create datapoints to 0_userdata.0
-		for (const Presence in TestTemplatePresence) {
-			const common = TestTemplatePresence[Presence];
-			const dp = userdata + "Presence." + Presence;
-			await this.CreateStates(dp, common, true);
-		}
+		await Promise.all(
+			Object.keys(TestTemplatePresence).map(async (Presence) => {
+				const common = TestTemplatePresence[Presence];
+				const dp = userdata + "Presence." + Presence;
+				await this.CreateStatesAsync(dp, common, true);
+			}),
+		);
 	}
 
 	/**
@@ -2780,7 +2819,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {ioBroker.StateCommon} common type of datapoint, e.g. string, number, boolean, ...
 	 * @param {boolean} [foreign = false] set adapter states = false; set foreign states = true
 	 */
-	async CreateStates(dp, common, foreign) {
+	async CreateStatesAsync(dp, common, foreign) {
 		try {
 			const obj = !foreign ? await this.getObjectAsync(dp) : await this.getForeignObjectAsync(dp);
 
@@ -2793,7 +2832,7 @@ class Lightcontrol extends utils.Adapter {
 				};
 
 				await (foreign ? this.setForeignObjectAsync(dp, obj) : this.setObjectAsync(dp, obj));
-				this.writeLog(`[ CreateStates ] State: ${dp} created.`);
+				this.writeLog(`[ CreateStatesAsync ] State: ${dp} created.`);
 			} else {
 				if (JSON.stringify(obj.common) !== JSON.stringify(common) || !("native" in obj)) {
 					obj.common = common;
@@ -2802,7 +2841,7 @@ class Lightcontrol extends utils.Adapter {
 				}
 			}
 		} catch (error) {
-			this.writeLog(`[ CreateStates ] Not able create state or getObject (${dp}). Error: ${error}`, "warn");
+			this.writeLog(`[ CreateStatesAsync ] Not able create state or getObject (${dp}). Error: ${error}`, "warn");
 		}
 	}
 	/**
@@ -2996,7 +3035,7 @@ class Lightcontrol extends utils.Adapter {
 				//Check if a Group in LightGroups is available or deleted by user
 				if (!LightGroup) {
 					//If checkbox for removing lights and sensor setting is acitaved in instance settings
-					if (this.Settings.deleteUnusedConfig) {
+					if (this.config.deleteUnusedConfig) {
 						this.writeLog(
 							`[ buildStateDetailsArray ] Light group "${customData.group}" was deleted by the user in the instance settings! LightControl settings will be deactivated for this StateID: ${stateID})`,
 							"warn",
@@ -3199,7 +3238,7 @@ class Lightcontrol extends utils.Adapter {
 	/**
 	 * Get System Longitude and Latitute
 	 */
-	async GetSystemData() {
+	async GetSystemDataAsync() {
 		try {
 			const obj = await this.getForeignObjectAsync("system.config");
 
@@ -3207,7 +3246,7 @@ class Lightcontrol extends utils.Adapter {
 				this.lng = obj.common.longitude;
 				this.lat = obj.common.latitude;
 
-				this.writeLog(`[ GetSystemData ] longitude: ${this.lng} | latitude: ${this.lat}`);
+				this.writeLog(`[ GetSystemDataAsync ] longitude: ${this.lng} | latitude: ${this.lat}`);
 			} else {
 				this.writeLog(
 					"system settings cannot be called up (Longitute, Latitude). Please check your ioBroker configuration!",
@@ -3216,7 +3255,7 @@ class Lightcontrol extends utils.Adapter {
 			}
 			return true;
 		} catch (error) {
-			this.errorHandling(error, "GetSystemData");
+			this.errorHandling(error, "GetSystemDataAsync");
 			return false;
 		}
 		//}
@@ -3364,16 +3403,27 @@ class Lightcontrol extends utils.Adapter {
 	 * await helper.SetValueToObject(LightGroups[Group], ["blink.stop", "blink.infinite"], false);
 	 * await helper.SetValueToObject(LightGroups[Group], prop1, false);
 	 */
-
 	async SetValueToObjectAsync(Group, key, value) {
-		if (Object.prototype.hasOwnProperty.call(this.LightGroups, Group)) {
-			this.log.warn(`[ SetValueToObjectAsync ] Group="${Group}" is not in LightGroups object!`);
+		if (!Object.prototype.hasOwnProperty.call(this.LightGroups, Group)) {
+			this.log.warn(`[ SetValueToObjectAsync ] Group="${Group}" not exist in LightGroups-Object!`);
+			return;
+		}
+
+		if (value === null || value === undefined) {
+			this.log.error(
+				`[ SetValueToObjectAsync ] Value="${value}" is undefined or null. check your config and restart adapter!`,
+			);
 			return;
 		}
 
 		const group = this.LightGroups[Group];
 		if (Array.isArray(key)) {
-			if (Array.isArray(value) && key.length === value.length) {
+			if (
+				typeof value === "string" ||
+				typeof value === "boolean" ||
+				typeof value === "number" ||
+				(Array.isArray(value) && value.length === key.length)
+			) {
 				key.forEach((k, index) => {
 					const keys = k.split(".");
 					let currentObj = group;
@@ -3385,11 +3435,11 @@ class Lightcontrol extends utils.Adapter {
 						currentObj = currentObj[keyPart];
 					}
 					const lastKey = keys[keys.length - 1];
-					currentObj[lastKey] = value[index];
+					currentObj[lastKey] = Array.isArray(value) ? value[index] : value;
 				});
 			} else {
 				this.log.warn(
-					`[ SetValueToObjectAsync ] Error: The length of the value array does not match the length of the key array."`,
+					`[ SetValueToObjectAsync ] Fehler: Die Länge des Wertearrays stimmt nicht mit der Länge des Key-Arrays überein.`,
 				);
 			}
 		} else {
