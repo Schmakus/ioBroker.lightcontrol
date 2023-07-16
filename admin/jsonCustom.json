@@ -123,20 +123,20 @@
 		"minValKelvin": {
 			"newLine": true,
 			"type": "number",
-			"label": "Min Color temperature in Kelvin",
+			"label": "Min Color-Temperature in Kelvin",
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"hidden": "!['ct'].includes(data.func)",
+			"hidden": "!['ct'].includes(data.func) || data.type === 'sensor'",
 			"defaultFunc": "!customObj.common ? 2000 : customObj.common.min ? customObj.common.min : 9000"
 		},
 		"maxValKelvin": {
 			"type": "number",
-			"label": "Max Color temperature in Kelvin",
+			"label": "Max Color-Temperature in Kelvin",
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"hidden": "!['ct'].includes(data.func)",
+			"hidden": "!['ct'].includes(data.func) || data.type === 'sensor'",
 			"defaultFunc": "!customObj.common ? 2000 : customObj.common.max ? customObj.common.max : 9000"
 		},
 		"unit": {
@@ -180,7 +180,7 @@
 					"value": "mired"
 				}
 			],
-			"help": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite', for e.g. HomeKit = Mired",
+			"help": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite', for e.g. HomeKit = 'Mired'",
 			"default": false,
 			"hidden": "data.func !== 'ct'",
 			"newLine": true

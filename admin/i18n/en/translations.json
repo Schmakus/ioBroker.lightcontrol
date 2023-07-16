@@ -106,10 +106,12 @@
     "WarmWhite to DayLight": "WarmWhite to DayLight",
     "Warning: If you change a Groupname, then you have to change the Name in all used Object-IDs (Custom Config)!!!": "Warning: If you change a Groupname, then you have to change the Name in all used Object-IDs (Custom Config)!!!",
     "Yes": "Yes",
-    "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite'": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite'",
+    "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite', for e.g. HomeKit = 'Mired'": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite', for e.g. HomeKit = 'Mired'",
     "e.g. FloorSpots, Spotlights, Wallpanel, ...": "e.g. FloorSpots, Spotlights, Wallpanel, ...",
     "labelDuplicateGroup": "Group name must not exist more than once!!!",
     "lightcontrol adapter settings": "Adapter settings for LightControl",
     "option1": "option1",
     "option2": "option2"
+	"Min Color-Temperature in Kelvin" : "Min Color-temperature in Kelvin",
+	"Max Color-Temperature in Kelvin" : "Max Color-temperature in Kelvin"
 }
