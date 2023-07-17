@@ -56,8 +56,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.3.0 (2023-07-17)
 
 -   (Schmakus) (thoml95) Changed conversion of color-temperature (edit of ct-states required)
 -   (Schmakus) (thoml95) fixed some bugs related to powerCleaningLight
@@ -85,10 +84,6 @@ iobroker add lightcontrol
 ### 0.2.15 (2023-05-08)
 
 -   (Schmakus) Allow smaller and larger Kelvin values in the settings
-
-### 0.2.14 (2023-05-07)
-
--   (Schmakus) Hotfix Create States [#124]
 
 ## License
 

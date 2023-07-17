@@ -1,250 +1,271 @@
 {
-	"common": {
-		"name": "lightcontrol",
-		"version": "0.2.18",
-		"news": {
-			"0.2.18": {
-				"en": "Fixed CtReverse [#149]\nFixed translation for light [#136]\nFixed warning min/max of ct-state [#148]\nFixed Set Color-Temperature (set null value)",
-				"de": "Fixed CtReverse #[149]\nFixed Übersetzungen #[136]\nFixed Warnung min/max ct-state #[148]\nFixed Set Color-Temperatur (setzen von NULL)",
-				"ru": "Фиксированный CtReverse #[149]\nФиксированный перевод на свет #[136]\nФиксированное предупреждение мин/макс ct-государства #[148]\nФиксированный набор Color-Temperature (set null value)",
-				"pt": "Corrigido CtReverse #[149]\nTradução fixa para luz #[136]\nAviso fixo min/max do estado ct #[148]\nConjunto fixo Color-Temperature (valor nulo definido)",
-				"nl": "Gerepareerd CtReverse 49\nGereserveerde vertaling voor licht 36\nGevestigde waarschuwing min/max van ct-state 48:\nQuality over Quantity (QoQ) Releases Vertaling:",
-				"fr": "CtReverse fixe #[149]\nTraduction fixe pour la lumière #[136]\nAvertissement fixe min/max de l'état ct[148]\nFixed Set Color-Temperature (set null value)",
-				"it": "Corretto CtReverse #[149]\nTraduzione fissa per la luce #[136]\nAvvertenza fissa min/max di ct-state #[148]\nSet fisso temperatura colore (set valore null)",
-				"es": "CtReverse fijo #[149]\nTraducción fija para la luz #[136]\nAdvertencia fija min/max de ct-state #[148]\nConjunto fijo Color-Temperatura (valor nulo fijo)",
-				"pl": "Fixed CtReverse (ang.)\nTłumaczenie na światło (136)\nInformacje o minucie/max ct-state #148\nFixed Set Color-Temperature (set null value) (ang.)",
-				"uk": "Фіксований CtReverse #[149]\nФіксований переклад для світла #[136]\nВиправлено попередження min/max ct-state #[148]\nФіксований набір Колір-Температура (задня значення null)",
-				"zh-cn": "第[149]条\n第[136]号照明翻译\n第[148]号指示的预警/国税\n固定的特色(无效)"
-			},
-			"0.2.17": {
-				"en": "Fix error by init of customConfig, if no light description is available\nFix error by set Ct, Color,... if no lights or groups defined\nSome code improvements",
-				"de": "Fehler durch Init von customConfig behoben, wenn keine Lichtbeschreibung verfügbar ist\nFehler durch setzen von Ct, Farbe,... behoben, wenn keine Lichter oder Gruppen definiert waren\nEinige Code Verbesserungen",
-				"ru": "Исправить ошибку с помощью init of custom Config, если нет описания света доступны\nИсправьте ошибку, установив Ct, Color,. если не определены огни или группы\nНекоторые улучшения кода",
-				"pt": "Corrigir erro por init de personalizado Config, se nenhuma descrição da luz estiver disponível\nCorrigir erro pelo conjunto Ct, Cor,. se não houver luzes ou grupos definidos\nAlgumas melhorias de código",
-				"nl": "Vergissing door Config, als er geen lichtomschrijving beschikbaar is\nEen fout door Ct, Color, als er geen lichten of groepen gedefinieerd zijn\nSommige code verbetering",
-				"fr": "Correction d'erreur par init de coutume Config, si aucune description lumineuse n'est disponible\nCorrection d'erreur par set Ct, Couleur,. si aucune lumière ou groupe défini\nQuelques améliorations de code",
-				"it": "Fissare l'errore da init di personalizzato Config, se non è disponibile nessuna descrizione della luce\nFissare l'errore per set Ct, Color,. se non luci o gruppi definiti\nAlcuni miglioramenti del codice",
-				"es": "Corregir error por init of custom Config, si no hay descripción de la luz disponible\nCorregir error por conjunto Ct, Color,. si no hay luces o grupos definidos\nAlgunas mejoras de código",
-				"pl": "Błędy powodowane przez inicjację zwyczajową Wyznanie, jeśli nie jest dostępne żaden opis światła\nBłędne błędy Ct, Color. jeśli nie ma światła ani grup zdefiniowanych\nNiektóre poprawy kodu",
-				"uk": "Виправлення помилки в налаштуванні Конфігурація, якщо не доступний опис світла\nВиправлення помилки за встановленим Ct, кольором, якщо не встановлено вогні або групи\nДеякі покращення коду",
-				"zh-cn": "按习俗划分的固定错误 无说明\n固定的Ct, Color,如果没有界定的照灯或团体,则有固定错误。\n有些守则的改进"
-			},
-			"0.2.16": {
-				"en": "Fix AdaptiveCt - StartYoureDay Interpolated\nUpdate docs",
-				"de": "Fix AdaptionCt - StartYoureDay Interpoliert\nUpdate docs",
-				"ru": "Fix Адаптивный Ct - StartYoureDay Интерполированный\nОбновление docs",
-				"pt": "Fix Adaptive Ct - StartYoureDay Interpolated\nAtualizar documentos",
-				"nl": "Vertaling: Quality over Quantity (QoQ) Releases Vertaling:\nUpdate doc",
-				"fr": "Adaptateur fixe Ct - StartYoureDay Interpolated\nMettre à jour les docs",
-				"it": "Fissare Adaptive Ct - StartYoureDay Interpolated\nDocumenti di aggiornamento",
-				"es": "Adaptador fijo Ct - StartYoureDay Interpolated\nActualizar los documentos",
-				"pl": "Fix Ct – StartYoureDay Interpolated (ang.)\nAktualny doc",
-				"uk": "Виправлення адаптивності Ct - StartYoureDay Інтерполований\nОновлення Docs",
-				"zh-cn": "九. 资格 Ct - 启动Youre Day刑警组织\n纽约"
-			},
-			"0.2.15": {
-				"en": "Allow smaller and larger Kelvin values in the settings",
-				"de": "Erlauben von kleineren und größeren Kelvin-Werten in den Einstellungen",
-				"ru": "Разрешить меньше и больше значения Kelvin в настройках",
-				"pt": "Permitir valores menores e maiores Kelvin nas configurações",
-				"nl": "Vertaling:",
-				"fr": "Permettre des valeurs Kelvin plus petites et plus grandes dans les paramètres",
-				"it": "Consentire valori Kelvin più piccoli e più grandi nelle impostazioni",
-				"es": "Permitir valores Kelvin más pequeños y grandes en la configuración",
-				"pl": "Allow mniejsze i większe wartości Kelvina w ustawieniach",
-				"uk": "Дозволити менші і більші значення Келвін в налаштуваннях",
-				"zh-cn": "允许在环境中的小和较大的Kelvin价值观"
-			},
-			"0.2.14": {
-				"en": "Hotfix Create States",
-				"de": "Hotfix States erstellen",
-				"ru": "Hotfix Создать государства",
-				"pt": "Hotfix Criar Estados",
-				"nl": "Hotfix Create",
-				"fr": "Hotfix Créer des Etats",
-				"it": "Creare Stati",
-				"es": "Hotfix Crear Estados",
-				"pl": "Hotfix Creation State (ang.)",
-				"uk": "Hotfix Створити штати",
-				"zh-cn": "九. 创建国家"
-			},
-			"0.2.13": {
-				"en": "Fix missing native part in states",
-				"de": "Fehlender native part in States behoben",
-				"ru": "Исправление отсутствующей родной части в государствах",
-				"pt": "Corrigir parte nativa desaparecida em estados",
-				"nl": "Vertaling:",
-				"fr": "Correction de la partie indigène manquante dans les états",
-				"it": "Fissare la parte nativa mancante negli stati",
-				"es": "Arreglar la parte nativa desaparecida en los estados",
-				"pl": "Fix zaginął w stanach niezamieszkanych",
-				"uk": "Виправлення відсутніх рідних частин в штатах",
-				"zh-cn": "Fix 留在各州的土著部分"
-			},
-			"0.2.12": {
-				"en": "Fix [#101] PowerCleaningLight\nCode improvements",
-				"de": "Fix #[101] PowerCleaingLight\nVerbesserungen des Codes",
-				"ru": "Фиксированный #[101] PowerCleaningСвет\nУлучшения кода",
-				"pt": "Corrigido #[101] Luz de limpeza de energia\nMelhorias de código",
-				"nl": "Gerepareerd. PowerCleaningLight\nCode verbetering",
-				"fr": "Fixed #[101] PowerCleaningLight\nAmélioration des codes",
-				"it": "Corretto #[101] La luce del potere\nMiglioramento del codice",
-				"es": "Fijo #[101] PowerCleaningLight\nMejoras del Código",
-				"pl": "#101 (ang.). PowerClight\nPoprawa kodu",
-				"uk": "Виправлено #[101] PowerCleaningЛайт\nПоліпшення коду",
-				"zh-cn": "九. 固定编号[101] A. 权力\nA. 守则的改进"
-			}
-		},
-		"titleLang": {
-			"en": "LightControl",
-			"de": "LightControl",
-			"ru": "LightControl",
-			"pt": "LightControl",
-			"nl": "LightControl",
-			"fr": "LightControl",
-			"it": "LightControl",
-			"es": "LightControl",
-			"pl": "LightControl",
-			"uk": "Управління",
-			"zh-cn": "A. 灯 律"
-		},
-		"desc": {
-			"en": "Light control of lamps from various manufacturers",
-			"de": "Lichtsteuerung von Lampen verschiedener Hersteller",
-			"ru": "Управление светом светильников различных производителей",
-			"pt": "Controle de luz de lâmpadas de vários fabricantes",
-			"nl": "Lichtregeling van lampen van diverse fabrikanten",
-			"fr": "Contrôle de la lumière des lampes de différents fabricants",
-			"it": "Controllo della luce di lampade di vari produttori",
-			"es": "Control de luz de lámparas de varios fabricantes.",
-			"pl": "Sterowanie oświetleniem lamp różnych producentów",
-			"zh-cn": "各厂家灯具的光控",
-			"uk": "Контроль світла ламп різних виробників"
-		},
-		"authors": ["Schmakus <schmakus@gmail.com>"],
-		"keywords": ["light", "lightcontrol", "control", "motion", "motionsensor", "motiondetection"],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "lightcontrol.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
-		"readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "lighting",
-		"compact": true,
-		"messagebox": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"messages": [
-			{
-				"condition": {
-					"operand": "and",
-					"rules": ["oldVersion<0.4.0", "newVersion>=0.4.0"]
-				},
-				"title": {
-					"en": "Breaking change by usage of ramping and adaptiveCt",
-					"de": "Wichtige Änderung bei Verwendung von Rampen und adaptiveCt",
-					"ru": "Переломка изменений с помощью ramping и адаптивных Кт",
-					"pt": "Alteração de ruptura pelo uso de ramping e Adaptive Ct",
-					"nl": "Verandering door razend en aaptief CT",
-					"fr": "Changement de rupture par utilisation de rampe et adaptative Ct",
-					"it": "Cambiamento di rottura mediante l'utilizzo di rampe e Adaptive C",
-					"es": "Cambio de ruptura mediante el uso de rampas y Adaptación Ct",
-					"pl": "Zmiennienie zmiany poprzez przechylenie i adaptowanie. C",
-					"uk": "Зміна розривів за допомогою ramping та адаптивного Кошик",
-					"zh-cn": "D. 通过使用降水和疏浚来减少变化 Ct"
-				},
-				"text": {
-					"en": "All adaptiveCt data points have been moved to an extra subfolder. Datapoint for activating AdaptiveCt now says 'enabled'!\nRampUp and RampDown from now on only via the ramp time/transmission time of the respective device/lamp!",
-					"de": "Alles adaptivCt-Datenpunkte wurden in einen extra Unterordner verschoben. Datenpunkt zur Aktivierung von adaptiveCt lautet nun 'enabled'!\n RampUp und RampDown ab sofort nur über die Rampenzeit/Transmissionszeit des jeweiligen Gerätes/Lampe!",
-					"ru": "Все адаптивно Точки данных Ct были перенесены на дополнительный подпаплер. Datapoint for activating AdapterCt теперь говорит включено'!\n RampUp и RampDown отныне только через время / время передачи ramp соответствующего устройства / amp!",
-					"pt": "Todos adaptáveis Os pontos de dados do Ct foram movidos para uma subpasta extra. Datapoint para ativar AdaptiveCt agora diz habilitado!\n RampUp e RampDown de agora em apenas através do tempo de rampa / tempo de transmissão do respectivo dispositivo / rampa!",
-					"nl": "Allemaal aanpassen. Ct gegevens zijn verplaatst naar een extra subfolder. Datapoint voor activating AdaptiveCt zegt nu in staat! Rampup en RampDown van nu af aan alleen via de tijd/transmissie tijd van het respectieve apparaat/lamp!",
-					"fr": "Tout adaptatif Les points de données Ct ont été déplacés vers un sous-dossier supplémentaire. Datapoint pour activer AdaptiveCt dit désormais activé!\n RampUp et RampDown à partir de maintenant seulement via le temps de rampe/transmission de l'appareil/lampe respective!",
-					"it": "Tutti gli adattamenti I punti di dati Ct sono stati spostati in una sottocartella supplementare. Datapoint per l'attivazione di AdaptiveCt ora dice abilitato!\n RampUp e RampDown da ora in poi solo tramite il tempo di trasmissione/tempo di rampa del rispettivo dispositivo/lamp!",
-					"es": "Todo adaptador Los puntos de datos de Ct se han trasladado a un subcarpeta adicional. Datapoint para activar AdaptiveCt ahora dice habilitado'!\n RampUp y RampDown a partir de ahora sólo a través del tiempo de transmisión/tiempo de la rampa del dispositivo/lamp respectivo!",
-					"pl": "Wszystkie adaptacyjne Punkty danych Ct zostały przeniesione do dodatkowego subfoldera. Odbiór danych do aktualizacji AdaptiveCt mówi teraz o ulepszeniu! RampUp i RampDown od nowa tylko poprzez czas przesunięcia odpowiedniego urządzenia/lamp!",
-					"uk": "Всі адаптивні З точки зору даних Ct було переміщено до додаткового підпалювача. Datapoint для активації АдаптиваціяCt тепер говорить ввімкнено!\n RampUp і RampDown тепер тільки через час перепуску / час передачі відповідного пристрою / підсилювач!",
-					"zh-cn": "所有适应措施 数据点已移到一倍。 现已说,启动“快车道”的数据库使人! RampUp和RampD所有人现在只通过各自装置/车辆的大小时间/时间!"
-				},
-				"level": "warn",
-				"buttons": ["agree", "cancel"]
-			},
-			{
-				"condition": {
-					"operand": "and",
-					"rules": ["oldVersion<0.3.0", "newVersion>=0.3.0"]
-				},
-				"title": {
-					"en": "Breaking change by usage of color-temperature",
-					"de": "Wichtige Veränderung bei Nutzung der Farbtemperatur",
-					"ru": "Критическое изменение за счет использования цветовой температуры",
-					"pt": "Mudança de quebra pelo uso de temperatura de cor",
-					"nl": "Brekende verandering door gebruik van kleurtemperatuur",
-					"fr": "Changement de rupture par l'utilisation de la température de couleur",
-					"it": "Rompere il cambiamento mediante l'uso della temperatura del colore",
-					"es": "Rompiendo el cambio por el uso de la temperatura de color",
-					"pl": "Łamanie zmiany za pomocą temperatury barwowej",
-					"uk": "Розривна зміна за допомогою колірної температури",
-					"zh-cn": "通过使用色温进行重大改变"
-				},
-				"text": {
-					"en": "Conversion of color-temperature has changed! All settings of ct-datapoints have to be checked and adjusted. (look documentation)",
-					"de": "Umrechnung der Farbtemperatur hat sich geändert! Alle Einstellungen der ct-Datenpunkte müssen überprüft und angepasst werden. (siehe Dokumentation)",
-					"ru": "Преобразование цветовой температуры изменилось! Все настройки точек данных ct должны быть проверены и скорректированы. (смотри документацию)",
-					"pt": "A conversão da temperatura da cor mudou! Todas as configurações de ct-datapoints devem ser verificadas e ajustadas. (veja a documentação)",
-					"nl": "Conversie van kleurtemperatuur is gewijzigd! Alle instellingen van ct-datapunten moeten gecontroleerd en aangepast worden. (kijk documentatie)",
-					"fr": "La conversion de la température de couleur a changé ! Tous les paramètres des points de données ct doivent être vérifiés et ajustés. (regardez la documentation)",
-					"it": "La conversione della temperatura del colore è cambiata! Tutte le impostazioni di ct-datapoints devono essere controllate e regolate. (vedi documentazione)",
-					"es": "¡La conversión de temperatura de color ha cambiado! Todas las configuraciones de ct-datapoints deben verificarse y ajustarse. (ver documentación)",
-					"pl": "Zmieniła się konwersja temperatury barwowej! Wszystkie ustawienia punktów danych ct muszą być sprawdzone i wyregulowane. (patrz dokumentacja)",
-					"uk": "Перетворення колірної температури змінено! Усі параметри ct-datapoints необхідно перевірити та налаштувати. (див. документацію)",
-					"zh-cn": "色温转换已更改！必须检查和调整 ct 数据点的所有设置。 （查看文档）"
-				},
-				"level": "warn",
-				"buttons": ["agree", "cancel"]
-			}
-		],
-		"adminUI": {
-			"config": "json",
-			"custom": "json"
-		},
-		"plugins": {
-			"sentry": {
-				"dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229"
-			}
-		},
-		"supportCustoms": true,
-		"dependencies": [
-			{
-				"js-controller": ">=4.0.0"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=5.1.13"
-			}
-		]
-	},
-	"native": {
-		"_id": 0,
-		"deleteUnusedConfig": true,
-		"GlobalLuxSensor": "",
-		"minCt": 2700,
-		"maxCt": 6500,
-		"RampSteps": 10,
-		"minBri": 10,
-		"IsPresenceDp": "",
-		"PresenceCountDp": "",
-		"LightGroups": [
-			{
-				"Group": "Wohnzimmer",
-				"GroupLuxSensor": ""
-			}
-		]
-	},
-	"objects": [],
-	"instanceObjects": []
+  "common": {
+    "name": "lightcontrol",
+    "version": "0.3.0",
+    "news": {
+      "0.3.0": {
+        "en": "(thoml95) Changed conversion of color-temperature (edit of ct-states required)\n(thoml95) fixed some bugs related to powerCleaningLight\nSome code improvements\nUpdate Docu",
+        "de": "(thoml95) Geänderte Umwandlung der Farbtemperatur (Bezug der ct-Zustände erforderlich)\n(thoml95) einige Fehler im Zusammenhang mit Strom behoben ReinigungLight\nEinige Code Verbesserungen\nUpdate Docu",
+        "ru": "(thoml95) Изменено преобразование цвет-температуры (требуется редактирование ct-государств)\n(thoml95) исправили некоторые ошибки, связанные с властью ОчисткаLight\nНекоторые улучшения кода\nОбновление Docu",
+        "pt": "(thoml95) Conversão alterada de temperatura de cor (edição de ct-estados necessários)\n(thoml95) corrigiu alguns bugs relacionados ao poder Luz de limpeza\nAlgumas melhorias de código\nAtualização Docu",
+        "nl": "Veranderde conversie van kleurtemperatuur (edit of ct-states vereist)\n(Doml95) Repareerde wat insecten met macht Schoonmaak\nSommige code verbetering\nUpdate Docu",
+        "fr": "(thoml95) Transformation de température de couleur (edit of ct-states required)\n(thoml95) a corrigé quelques bugs liés à la puissance NettoyageLight\nQuelques améliorations de code\nMettre à jour Docu",
+        "it": "(thoml95) Cambiata conversione della temperatura del colore (edit di ct-states richiesto)\n(thoml95) fissi alcuni bug relativi alla potenza Pulizia della luce\nAlcuni miglioramenti del codice\nAggiornamento Docu",
+        "es": "(thoml95) Cambio de la conversión de la temperatura de color (editación de los estados ct requeridos)\n(thoml95) solucionó algunos errores relacionados con el poder LimpiezaLight\nAlgunas mejoras de código\nActualización Docu",
+        "pl": "(Toml95) Zmienił konwersję temperatury (edycję wymaganych c-stanów)\n(tymczas 95) ustalono pewne błędy związane z mocą. CleaningLight\nNiektóre poprawy kodu\nUpdate Data",
+        "uk": "(thoml95) Змінено перетворення кольору-температури (редагування ct-states)\n(thoml95) зафіксував деякі помилки, пов'язані з живленням Прибирання\nДеякі покращення коду\nОновлення Docu",
+        "zh-cn": "(第oml95号决议)修改了白色制(需要的国名)\n(第oml95号决议)规定与权力有关的某些桶 清洁服务\n有些守则的改进\n最新资料"
+      },
+      "0.2.18": {
+        "en": "Fixed CtReverse [#149]\nFixed translation for light [#136]\nFixed warning min/max of ct-state [#148]\nFixed Set Color-Temperature (set null value)",
+        "de": "Fixed CtReverse #[149]\nFixed Übersetzungen #[136]\nFixed Warnung min/max ct-state #[148]\nFixed Set Color-Temperatur (setzen von NULL)",
+        "ru": "Фиксированный CtReverse #[149]\nФиксированный перевод на свет #[136]\nФиксированное предупреждение мин/макс ct-государства #[148]\nФиксированный набор Color-Temperature (set null value)",
+        "pt": "Corrigido CtReverse #[149]\nTradução fixa para luz #[136]\nAviso fixo min/max do estado ct #[148]\nConjunto fixo Color-Temperature (valor nulo definido)",
+        "nl": "Gerepareerd CtReverse 49\nGereserveerde vertaling voor licht 36\nGevestigde waarschuwing min/max van ct-state 48:\nQuality over Quantity (QoQ) Releases Vertaling:",
+        "fr": "CtReverse fixe #[149]\nTraduction fixe pour la lumière #[136]\nAvertissement fixe min/max de l'état ct[148]\nFixed Set Color-Temperature (set null value)",
+        "it": "Corretto CtReverse #[149]\nTraduzione fissa per la luce #[136]\nAvvertenza fissa min/max di ct-state #[148]\nSet fisso temperatura colore (set valore null)",
+        "es": "CtReverse fijo #[149]\nTraducción fija para la luz #[136]\nAdvertencia fija min/max de ct-state #[148]\nConjunto fijo Color-Temperatura (valor nulo fijo)",
+        "pl": "Fixed CtReverse (ang.)\nTłumaczenie na światło (136)\nInformacje o minucie/max ct-state #148\nFixed Set Color-Temperature (set null value) (ang.)",
+        "uk": "Фіксований CtReverse #[149]\nФіксований переклад для світла #[136]\nВиправлено попередження min/max ct-state #[148]\nФіксований набір Колір-Температура (задня значення null)",
+        "zh-cn": "第[149]条\n第[136]号照明翻译\n第[148]号指示的预警/国税\n固定的特色(无效)"
+      },
+      "0.2.17": {
+        "en": "Fix error by init of customConfig, if no light description is available\nFix error by set Ct, Color,... if no lights or groups defined\nSome code improvements",
+        "de": "Fehler durch Init von customConfig behoben, wenn keine Lichtbeschreibung verfügbar ist\nFehler durch setzen von Ct, Farbe,... behoben, wenn keine Lichter oder Gruppen definiert waren\nEinige Code Verbesserungen",
+        "ru": "Исправить ошибку с помощью init of custom Config, если нет описания света доступны\nИсправьте ошибку, установив Ct, Color,. если не определены огни или группы\nНекоторые улучшения кода",
+        "pt": "Corrigir erro por init de personalizado Config, se nenhuma descrição da luz estiver disponível\nCorrigir erro pelo conjunto Ct, Cor,. se não houver luzes ou grupos definidos\nAlgumas melhorias de código",
+        "nl": "Vergissing door Config, als er geen lichtomschrijving beschikbaar is\nEen fout door Ct, Color, als er geen lichten of groepen gedefinieerd zijn\nSommige code verbetering",
+        "fr": "Correction d'erreur par init de coutume Config, si aucune description lumineuse n'est disponible\nCorrection d'erreur par set Ct, Couleur,. si aucune lumière ou groupe défini\nQuelques améliorations de code",
+        "it": "Fissare l'errore da init di personalizzato Config, se non è disponibile nessuna descrizione della luce\nFissare l'errore per set Ct, Color,. se non luci o gruppi definiti\nAlcuni miglioramenti del codice",
+        "es": "Corregir error por init of custom Config, si no hay descripción de la luz disponible\nCorregir error por conjunto Ct, Color,. si no hay luces o grupos definidos\nAlgunas mejoras de código",
+        "pl": "Błędy powodowane przez inicjację zwyczajową Wyznanie, jeśli nie jest dostępne żaden opis światła\nBłędne błędy Ct, Color. jeśli nie ma światła ani grup zdefiniowanych\nNiektóre poprawy kodu",
+        "uk": "Виправлення помилки в налаштуванні Конфігурація, якщо не доступний опис світла\nВиправлення помилки за встановленим Ct, кольором, якщо не встановлено вогні або групи\nДеякі покращення коду",
+        "zh-cn": "按习俗划分的固定错误 无说明\n固定的Ct, Color,如果没有界定的照灯或团体,则有固定错误。\n有些守则的改进"
+      },
+      "0.2.16": {
+        "en": "Fix AdaptiveCt - StartYoureDay Interpolated\nUpdate docs",
+        "de": "Fix AdaptionCt - StartYoureDay Interpoliert\nUpdate docs",
+        "ru": "Fix Адаптивный Ct - StartYoureDay Интерполированный\nОбновление docs",
+        "pt": "Fix Adaptive Ct - StartYoureDay Interpolated\nAtualizar documentos",
+        "nl": "Vertaling: Quality over Quantity (QoQ) Releases Vertaling:\nUpdate doc",
+        "fr": "Adaptateur fixe Ct - StartYoureDay Interpolated\nMettre à jour les docs",
+        "it": "Fissare Adaptive Ct - StartYoureDay Interpolated\nDocumenti di aggiornamento",
+        "es": "Adaptador fijo Ct - StartYoureDay Interpolated\nActualizar los documentos",
+        "pl": "Fix Ct – StartYoureDay Interpolated (ang.)\nAktualny doc",
+        "uk": "Виправлення адаптивності Ct - StartYoureDay Інтерполований\nОновлення Docs",
+        "zh-cn": "九. 资格 Ct - 启动Youre Day刑警组织\n纽约"
+      },
+      "0.2.15": {
+        "en": "Allow smaller and larger Kelvin values in the settings",
+        "de": "Erlauben von kleineren und größeren Kelvin-Werten in den Einstellungen",
+        "ru": "Разрешить меньше и больше значения Kelvin в настройках",
+        "pt": "Permitir valores menores e maiores Kelvin nas configurações",
+        "nl": "Vertaling:",
+        "fr": "Permettre des valeurs Kelvin plus petites et plus grandes dans les paramètres",
+        "it": "Consentire valori Kelvin più piccoli e più grandi nelle impostazioni",
+        "es": "Permitir valores Kelvin más pequeños y grandes en la configuración",
+        "pl": "Allow mniejsze i większe wartości Kelvina w ustawieniach",
+        "uk": "Дозволити менші і більші значення Келвін в налаштуваннях",
+        "zh-cn": "允许在环境中的小和较大的Kelvin价值观"
+      },
+      "0.2.14": {
+        "en": "Hotfix Create States",
+        "de": "Hotfix States erstellen",
+        "ru": "Hotfix Создать государства",
+        "pt": "Hotfix Criar Estados",
+        "nl": "Hotfix Create",
+        "fr": "Hotfix Créer des Etats",
+        "it": "Creare Stati",
+        "es": "Hotfix Crear Estados",
+        "pl": "Hotfix Creation State (ang.)",
+        "uk": "Hotfix Створити штати",
+        "zh-cn": "九. 创建国家"
+      },
+      "0.2.13": {
+        "en": "Fix missing native part in states",
+        "de": "Fehlender native part in States behoben",
+        "ru": "Исправление отсутствующей родной части в государствах",
+        "pt": "Corrigir parte nativa desaparecida em estados",
+        "nl": "Vertaling:",
+        "fr": "Correction de la partie indigène manquante dans les états",
+        "it": "Fissare la parte nativa mancante negli stati",
+        "es": "Arreglar la parte nativa desaparecida en los estados",
+        "pl": "Fix zaginął w stanach niezamieszkanych",
+        "uk": "Виправлення відсутніх рідних частин в штатах",
+        "zh-cn": "Fix 留在各州的土著部分"
+      }
+    },
+    "titleLang": {
+      "en": "LightControl",
+      "de": "LightControl",
+      "ru": "LightControl",
+      "pt": "LightControl",
+      "nl": "LightControl",
+      "fr": "LightControl",
+      "it": "LightControl",
+      "es": "LightControl",
+      "pl": "LightControl",
+      "uk": "Управління",
+      "zh-cn": "A. 灯 律"
+    },
+    "desc": {
+      "en": "Light control of lamps from various manufacturers",
+      "de": "Lichtsteuerung von Lampen verschiedener Hersteller",
+      "ru": "Управление светом светильников различных производителей",
+      "pt": "Controle de luz de lâmpadas de vários fabricantes",
+      "nl": "Lichtregeling van lampen van diverse fabrikanten",
+      "fr": "Contrôle de la lumière des lampes de différents fabricants",
+      "it": "Controllo della luce di lampade di vari produttori",
+      "es": "Control de luz de lámparas de varios fabricantes.",
+      "pl": "Sterowanie oświetleniem lamp różnych producentów",
+      "zh-cn": "各厂家灯具的光控",
+      "uk": "Контроль світла ламп різних виробників"
+    },
+    "authors": [
+      "Schmakus <schmakus@gmail.com>"
+    ],
+    "keywords": [
+      "light",
+      "lightcontrol",
+      "control",
+      "motion",
+      "motionsensor",
+      "motiondetection"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "lightcontrol.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
+    "readme": "https://github.com/Schmakus/ioBroker.lightcontrol/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "lighting",
+    "compact": true,
+    "messagebox": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "messages": [
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<0.4.0",
+            "newVersion>=0.4.0"
+          ]
+        },
+        "title": {
+          "en": "Breaking change by usage of ramping and adaptiveCt",
+          "de": "Wichtige Änderung bei Verwendung von Rampen und adaptiveCt",
+          "ru": "Переломка изменений с помощью ramping и адаптивных Кт",
+          "pt": "Alteração de ruptura pelo uso de ramping e Adaptive Ct",
+          "nl": "Verandering door razend en aaptief CT",
+          "fr": "Changement de rupture par utilisation de rampe et adaptative Ct",
+          "it": "Cambiamento di rottura mediante l'utilizzo di rampe e Adaptive C",
+          "es": "Cambio de ruptura mediante el uso de rampas y Adaptación Ct",
+          "pl": "Zmiennienie zmiany poprzez przechylenie i adaptowanie. C",
+          "uk": "Зміна розривів за допомогою ramping та адаптивного Кошик",
+          "zh-cn": "D. 通过使用降水和疏浚来减少变化 Ct"
+        },
+        "text": {
+          "en": "All adaptiveCt data points have been moved to an extra subfolder. Datapoint for activating AdaptiveCt now says 'enabled'!\nRampUp and RampDown from now on only via the ramp time/transmission time of the respective device/lamp!",
+          "de": "Alles adaptivCt-Datenpunkte wurden in einen extra Unterordner verschoben. Datenpunkt zur Aktivierung von adaptiveCt lautet nun 'enabled'!\n RampUp und RampDown ab sofort nur über die Rampenzeit/Transmissionszeit des jeweiligen Gerätes/Lampe!",
+          "ru": "Все адаптивно Точки данных Ct были перенесены на дополнительный подпаплер. Datapoint for activating AdapterCt теперь говорит включено'!\n RampUp и RampDown отныне только через время / время передачи ramp соответствующего устройства / amp!",
+          "pt": "Todos adaptáveis Os pontos de dados do Ct foram movidos para uma subpasta extra. Datapoint para ativar AdaptiveCt agora diz habilitado!\n RampUp e RampDown de agora em apenas através do tempo de rampa / tempo de transmissão do respectivo dispositivo / rampa!",
+          "nl": "Allemaal aanpassen. Ct gegevens zijn verplaatst naar een extra subfolder. Datapoint voor activating AdaptiveCt zegt nu in staat! Rampup en RampDown van nu af aan alleen via de tijd/transmissie tijd van het respectieve apparaat/lamp!",
+          "fr": "Tout adaptatif Les points de données Ct ont été déplacés vers un sous-dossier supplémentaire. Datapoint pour activer AdaptiveCt dit désormais activé!\n RampUp et RampDown à partir de maintenant seulement via le temps de rampe/transmission de l'appareil/lampe respective!",
+          "it": "Tutti gli adattamenti I punti di dati Ct sono stati spostati in una sottocartella supplementare. Datapoint per l'attivazione di AdaptiveCt ora dice abilitato!\n RampUp e RampDown da ora in poi solo tramite il tempo di trasmissione/tempo di rampa del rispettivo dispositivo/lamp!",
+          "es": "Todo adaptador Los puntos de datos de Ct se han trasladado a un subcarpeta adicional. Datapoint para activar AdaptiveCt ahora dice habilitado'!\n RampUp y RampDown a partir de ahora sólo a través del tiempo de transmisión/tiempo de la rampa del dispositivo/lamp respectivo!",
+          "pl": "Wszystkie adaptacyjne Punkty danych Ct zostały przeniesione do dodatkowego subfoldera. Odbiór danych do aktualizacji AdaptiveCt mówi teraz o ulepszeniu! RampUp i RampDown od nowa tylko poprzez czas przesunięcia odpowiedniego urządzenia/lamp!",
+          "uk": "Всі адаптивні З точки зору даних Ct було переміщено до додаткового підпалювача. Datapoint для активації АдаптиваціяCt тепер говорить ввімкнено!\n RampUp і RampDown тепер тільки через час перепуску / час передачі відповідного пристрою / підсилювач!",
+          "zh-cn": "所有适应措施 数据点已移到一倍。 现已说,启动“快车道”的数据库使人! RampUp和RampD所有人现在只通过各自装置/车辆的大小时间/时间!"
+        },
+        "level": "warn",
+        "buttons": [
+          "agree",
+          "cancel"
+        ]
+      },
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<0.3.0",
+            "newVersion>=0.3.0"
+          ]
+        },
+        "title": {
+          "en": "Breaking change by usage of color-temperature",
+          "de": "Wichtige Veränderung bei Nutzung der Farbtemperatur",
+          "ru": "Критическое изменение за счет использования цветовой температуры",
+          "pt": "Mudança de quebra pelo uso de temperatura de cor",
+          "nl": "Brekende verandering door gebruik van kleurtemperatuur",
+          "fr": "Changement de rupture par l'utilisation de la température de couleur",
+          "it": "Rompere il cambiamento mediante l'uso della temperatura del colore",
+          "es": "Rompiendo el cambio por el uso de la temperatura de color",
+          "pl": "Łamanie zmiany za pomocą temperatury barwowej",
+          "uk": "Розривна зміна за допомогою колірної температури",
+          "zh-cn": "通过使用色温进行重大改变"
+        },
+        "text": {
+          "en": "Conversion of color-temperature has changed! All settings of ct-datapoints have to be checked and adjusted. (look documentation)",
+          "de": "Umrechnung der Farbtemperatur hat sich geändert! Alle Einstellungen der ct-Datenpunkte müssen überprüft und angepasst werden. (siehe Dokumentation)",
+          "ru": "Преобразование цветовой температуры изменилось! Все настройки точек данных ct должны быть проверены и скорректированы. (смотри документацию)",
+          "pt": "A conversão da temperatura da cor mudou! Todas as configurações de ct-datapoints devem ser verificadas e ajustadas. (veja a documentação)",
+          "nl": "Conversie van kleurtemperatuur is gewijzigd! Alle instellingen van ct-datapunten moeten gecontroleerd en aangepast worden. (kijk documentatie)",
+          "fr": "La conversion de la température de couleur a changé ! Tous les paramètres des points de données ct doivent être vérifiés et ajustés. (regardez la documentation)",
+          "it": "La conversione della temperatura del colore è cambiata! Tutte le impostazioni di ct-datapoints devono essere controllate e regolate. (vedi documentazione)",
+          "es": "¡La conversión de temperatura de color ha cambiado! Todas las configuraciones de ct-datapoints deben verificarse y ajustarse. (ver documentación)",
+          "pl": "Zmieniła się konwersja temperatury barwowej! Wszystkie ustawienia punktów danych ct muszą być sprawdzone i wyregulowane. (patrz dokumentacja)",
+          "uk": "Перетворення колірної температури змінено! Усі параметри ct-datapoints необхідно перевірити та налаштувати. (див. документацію)",
+          "zh-cn": "色温转换已更改！必须检查和调整 ct 数据点的所有设置。 （查看文档）"
+        },
+        "level": "warn",
+        "buttons": [
+          "agree",
+          "cancel"
+        ]
+      }
+    ],
+    "adminUI": {
+      "config": "json",
+      "custom": "json"
+    },
+    "plugins": {
+      "sentry": {
+        "dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229"
+      }
+    },
+    "supportCustoms": true,
+    "dependencies": [
+      {
+        "js-controller": ">=4.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.13"
+      }
+    ]
+  },
+  "native": {
+    "_id": 0,
+    "deleteUnusedConfig": true,
+    "GlobalLuxSensor": "",
+    "minCt": 2700,
+    "maxCt": 6500,
+    "RampSteps": 10,
+    "minBri": 10,
+    "IsPresenceDp": "",
+    "PresenceCountDp": "",
+    "LightGroups": [
+      {
+        "Group": "Wohnzimmer",
+        "GroupLuxSensor": ""
+      }
+    ]
+  },
+  "objects": [],
+  "instanceObjects": []
 }
