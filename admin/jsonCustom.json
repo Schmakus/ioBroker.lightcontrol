@@ -120,42 +120,6 @@
 			"hidden": "!['bri', 'ct', 'sat', 'tt'].includes(data.func) || data.type === 'sensor'",
 			"defaultFunc": "!customObj.common ? 100 : customObj.common.max ? customObj.common.max : 100"
 		},
-		"minValKelvin": {
-			"type": "number",
-			"label": "Minimum value in Kelvin",
-			"sm": 3,
-			"md": 3,
-			"lg": 3,
-			"hidden": "!['ct'].includes(data.func) || data.type === 'sensor'"
-		},
-		"maxValKelvin": {
-			"type": "number",
-			"label": "Maximum value in Kelvin",
-			"sm": 3,
-			"md": 3,
-			"lg": 3,
-			"hidden": "!['ct'].includes(data.func) || data.type === 'sensor'"
-		},
-		"unit": {
-			"type": "select",
-			"label": "Unit",
-			"sm": 3,
-			"md": 3,
-			"lg": 3,
-			"options": [
-				{
-					"label": "Seconds",
-					"value": "s"
-				},
-				{
-					"label": "Milliseconds",
-					"value": "ms"
-				}
-			],
-			"defaultFunc": "!customObj.common ? 's' : customObj.common.unit ? customObj.common.unit === 'ms' ? 'ms' : 's'",
-			"hidden": "!['tt'].includes(data.func) || data.type === 'sensor'",
-			"help": "Unit of the state"
-		},
 		"ctConversion": {
 			"type": "select",
 			"label": "Behavior of Color-Temperature",
@@ -177,9 +141,47 @@
 				}
 			],
 			"help": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite', or 'Mired' if you want to use Mired",
-			"default": false,
-			"hidden": "data.func !== 'ct'",
+			"default": "warmToCool",
+			"hidden": "data.func !== 'ct' || data.type === 'sensor'",
 			"newLine": true
+		},
+		"minKelvin": {
+			"type": "number",
+			"label": "Minimum Value for Color-Temperature (Kelvin)",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "!['ct'].includes(data.func) || data.type === 'sensor'",
+			"default": "2100"
+		},
+		"maxKelvin": {
+			"type": "number",
+			"label": "Maximum Value for Color-Temperature (Kelvin)",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "!['ct'].includes(data.func) || data.type === 'sensor'",
+			"default": "6500"
+		},
+		"unit": {
+			"type": "select",
+			"label": "Unit",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"options": [
+				{
+					"label": "Seconds",
+					"value": "s"
+				},
+				{
+					"label": "Milliseconds",
+					"value": "ms"
+				}
+			],
+			"defaultFunc": "!customObj.common ? 's' : customObj.common.unit ? customObj.common.unit === 'ms' ? 'ms' : 's'",
+			"hidden": "!['tt'].includes(data.func) || data.type === 'sensor'",
+			"help": "Unit of the state"
 		},
 		"defaultBri": {
 			"type": "number",

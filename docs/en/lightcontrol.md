@@ -157,9 +157,11 @@ After opening the settings, the configuration must be activated:
 
     -   **Color-Temperature**
 
-        -   Value for minimum Color-Temperature - _Value warm white.eg250_
-        -   Value for maximum Color-Temperature - _value for cold white, for example452_
-        -   Behavior of Color-Temperature - _WarmWhite to DayLight or DayLight to WarmwWhite_
+        -   Value for minimum color-temperature - _Min value of the datapoint. e.g. 0_
+        -   Value for maximum color temperature - _Max value of the datapoint. e.g. 100_
+        -   Behavior of the color-temperature - _Determining the progression of the color temperature (warm to cold white, cold to warm white or Mired)_
+        -   Value for minimum Kelvin - \_Corresponds to the Kelvin of the minimum value of the datapoint. e.g. 2700
+        -   Value for maximum Kelvin - \_Corresponds to the Kelvin of the maximum value of the datapoint. e.g. 6500
         -   Send Color-Temperatur - _Set value of color-temperature also if the lamp is switched of_
 
     -   **Saturation**
