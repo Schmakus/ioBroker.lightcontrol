@@ -120,6 +120,22 @@
 			"hidden": "!['bri', 'ct', 'sat', 'tt'].includes(data.func) || data.type === 'sensor'",
 			"defaultFunc": "!customObj.common ? 100 : customObj.common.max ? customObj.common.max : 100"
 		},
+		"minValKelvin": {
+			"type": "number",
+			"label": "Minimum value in Kelvin",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "!['ct'].includes(data.func) || data.type === 'sensor'"
+		},
+		"maxValKelvin": {
+			"type": "number",
+			"label": "Maximum value in Kelvin",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "!['ct'].includes(data.func) || data.type === 'sensor'"
+		},
 		"unit": {
 			"type": "select",
 			"label": "Unit",
@@ -140,7 +156,7 @@
 			"hidden": "!['tt'].includes(data.func) || data.type === 'sensor'",
 			"help": "Unit of the state"
 		},
-		"CtReverse": {
+		"ctConversion": {
 			"type": "select",
 			"label": "Behavior of Color-Temperature",
 			"sm": 6,
@@ -149,14 +165,18 @@
 			"options": [
 				{
 					"label": "WarmWhite to DayLight",
-					"value": false
+					"value": "warmToCool"
 				},
 				{
 					"label": "DayLight to WarmWhite",
-					"value": true
+					"value": "coolToWarm"
+				},
+				{
+					"label": "Mired",
+					"value": "mired"
 				}
 			],
-			"help": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite'",
+			"help": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite', or 'Mired' if you want to use Mired",
 			"default": false,
 			"hidden": "data.func !== 'ct'",
 			"newLine": true
