@@ -157,9 +157,11 @@ Nach Öffnen der Einstellungen muss die Konfiguration aktiviert werden:
 
     -   **Color-Temperature**
 
-        -   Value for minimum Color-Temperature - _Wert Warmweiß. z.B. 250_
-        -   Value for maximum Color-Temperature - _Wert für Kaltweiß. z.B. 452_
-        -   Verhalten der Farbtemperatur - _Festlegen des Verlaufs der Farbtemperatur (Warm- zu Kaltweiß oder Kalt- zu Warmweiß)_
+        -   Wert für minimum Farbemperatur - _Min-Wert des Datenpunkts. z.B. 0_
+        -   Wert für maximum Farbemperatur - _Max-Wert des Datenpunkts. z.B. 100_
+        -   Verhalten der Farbtemperatur - _Festlegen des Verlaufs der Farbtemperatur (Warm- zu Kaltweiß, Kalt- zu Warmweiß oder Mired)_
+        -   Wert für minimum Kelvin - \_Entspricht dem Kelvin des Min-Werts vom Datenpunkt. z.B. 2700
+        -   Wert für maximum Kelvin - \_Entspicht dem Kelvin des Max-Werts vom Datenpunkt. z.B. 6500
         -   Send Color-Temperatur - _Sende die Farbtemperatur an die Lampe, auch wenn diese ausgeschaltet ist_
 
     -   **Saturation**

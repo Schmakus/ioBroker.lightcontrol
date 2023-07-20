@@ -120,6 +120,49 @@
 			"hidden": "!['bri', 'ct', 'sat', 'tt'].includes(data.func) || data.type === 'sensor'",
 			"defaultFunc": "!customObj.common ? 100 : customObj.common.max ? customObj.common.max : 100"
 		},
+		"ctConversion": {
+			"type": "select",
+			"label": "Behavior of Color-Temperature",
+			"sm": 6,
+			"md": 6,
+			"lg": 6,
+			"options": [
+				{
+					"label": "WarmWhite to DayLight",
+					"value": "warmToCool"
+				},
+				{
+					"label": "DayLight to WarmWhite",
+					"value": "coolToWarm"
+				},
+				{
+					"label": "Mired",
+					"value": "mired"
+				}
+			],
+			"help": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite', or 'Mired' if you want to use Mired",
+			"default": "warmToCool",
+			"hidden": "data.func !== 'ct' || data.type === 'sensor'",
+			"newLine": true
+		},
+		"minKelvin": {
+			"type": "number",
+			"label": "Minimum Value for Color-Temperature (Kelvin)",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "!['ct'].includes(data.func) || data.type === 'sensor'",
+			"default": "2100"
+		},
+		"maxKelvin": {
+			"type": "number",
+			"label": "Maximum Value for Color-Temperature (Kelvin)",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"hidden": "!['ct'].includes(data.func) || data.type === 'sensor'",
+			"default": "6500"
+		},
 		"unit": {
 			"type": "select",
 			"label": "Unit",
@@ -143,27 +186,6 @@
 			"defaultFunc": "!customObj.common ? 's' : !customObj.common.unit ? 's' : customObj.common.unit === 'ms' ? 'ms' : 's'",
 			"hidden": "!['tt'].includes(data.func) || data.type === 'sensor'",
 			"help": "Unit of the state"
-		},
-		"CtReverse": {
-			"type": "select",
-			"label": "Behavior of Color-Temperature",
-			"sm": 6,
-			"md": 6,
-			"lg": 6,
-			"options": [
-				{
-					"label": "WarmWhite to DayLight",
-					"value": false
-				},
-				{
-					"label": "DayLight to WarmWhite",
-					"value": true
-				}
-			],
-			"help": "e.g. 0 = DayLight and 100 = WarmWhite, then choose 'DayLight to WarmWhite'",
-			"default": false,
-			"hidden": "data.func !== 'ct' || data.type === 'sensor'",
-			"newLine": true
 		},
 		"defaultBri": {
 			"type": "number",

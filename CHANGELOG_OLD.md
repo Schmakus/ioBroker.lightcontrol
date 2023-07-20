@@ -1,4 +1,12 @@
 # Older changes
+## 0.2.14 (2023-05-07)
+
+-   (Schmakus) Hotfix Create States [#124]
+
+## 0.2.13 (2023-05-06)
+
+-   (Schmakus) Fix missing native part in states
+
 ## 0.2.12 (2023-05-03)
 
 -   (Schmakus) Fix [#101] PowerCleaningLight

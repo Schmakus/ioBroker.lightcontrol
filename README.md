@@ -67,6 +67,13 @@ iobroker add lightcontrol
 -   (Schmakus) Changed folder-structure of adaptiveCt
 -   (Schmakus) Update translations
 
+### 0.3.0 (2023-07-17)
+
+-   (Schmakus) (thoml95) Changed conversion of color-temperature (edit of ct-states required)
+-   (Schmakus) (thoml95) fixed some bugs related to powerCleaningLight
+-   (Schmakus) Some code improvements
+-   (Schmakus) Update Docu
+
 ### 0.2.18 (2023-07-08)
 
 -   (Schmakus) Fixed CtReverse [#149]
@@ -88,14 +95,6 @@ iobroker add lightcontrol
 ### 0.2.15 (2023-05-08)
 
 -   (Schmakus) Allow smaller and larger Kelvin values in the settings
-
-### 0.2.14 (2023-05-07)
-
--   (Schmakus) Hotfix Create States [#124]
-
-### 0.2.13 (2023-05-06)
-
--   (Schmakus) Fix missing native part in states
 
 ## License
 

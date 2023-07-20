@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.2.18",
+		"version": "0.3.0",
 		"news": {
+			"0.3.0": {
+				"en": "(Schmakus / thoml95) Changed conversion of color-temperature (edit of ct-states required)\n(Schmakus / thoml95) fixed some bugs related to powerCleaningLight\nSome code improvements\nUpdate Docu",
+				"de": "(Schmakus / thoml95) Geänderte Umwandlung der Farbtemperatur (Bezug der ct-Zustände erforderlich)\n(Schmakus / thoml95) einige Fehler im Zusammenhang mit Strom behoben ReinigungLight\nEinige Code Verbesserungen\nUpdate Docu",
+				"ru": "(Schmakus / thoml95) Изменено преобразование цвет-температуры (требуется редактирование ct-государств)\n(Schmakus / thoml95) исправили некоторые ошибки, связанные с властью ОчисткаLight\nНекоторые улучшения кода\nОбновление Docu",
+				"pt": "(Schmakus / thoml95) Conversão alterada de temperatura de cor (edição de ct-estados necessários)\n(Schmakus / thoml95) corrigiu alguns bugs relacionados ao poder Luz de limpeza\nAlgumas melhorias de código\nAtualização Docu",
+				"nl": "Veranderde conversie van kleurtemperatuur (edit of ct-states vereist)\n(Doml95) Repareerde wat insecten met macht Schoonmaak\nSommige code verbetering\nUpdate Docu",
+				"fr": "(Schmakus / thoml95) Transformation de température de couleur (edit of ct-states required)\n(Schmakus / thoml95) a corrigé quelques bugs liés à la puissance NettoyageLight\nQuelques améliorations de code\nMettre à jour Docu",
+				"it": "(Schmakus / thoml95) Cambiata conversione della temperatura del colore (edit di ct-states richiesto)\n(Schmakus / thoml95) fissi alcuni bug relativi alla potenza Pulizia della luce\nAlcuni miglioramenti del codice\nAggiornamento Docu",
+				"es": "(Schmakus / thoml95) Cambio de la conversión de la temperatura de color (editación de los estados ct requeridos)\n(Schmakus / thoml95) solucionó algunos errores relacionados con el poder LimpiezaLight\nAlgunas mejoras de código\nActualización Docu",
+				"pl": "(Schmakus / Toml95) Zmienił konwersję temperatury (edycję wymaganych c-stanów)\n(tymczas 95) ustalono pewne błędy związane z mocą. CleaningLight\nNiektóre poprawy kodu\nUpdate Data",
+				"uk": "(Schmakus / thoml95) Змінено перетворення кольору-температури (редагування ct-states)\n(thoml95) зафіксував деякі помилки, пов'язані з живленням Прибирання\nДеякі покращення коду\nОновлення Docu",
+				"zh-cn": "(第oml95号决议)修改了白色制(需要的国名)\n(第oml95号决议)规定与权力有关的某些桶 清洁服务\n有些守则的改进\n最新资料"
+			},
 			"0.2.18": {
 				"en": "Fixed CtReverse [#149]\nFixed translation for light [#136]\nFixed warning min/max of ct-state [#148]\nFixed Set Color-Temperature (set null value)",
 				"de": "Fixed CtReverse #[149]\nFixed Übersetzungen #[136]\nFixed Warnung min/max ct-state #[148]\nFixed Set Color-Temperatur (setzen von NULL)",
@@ -80,32 +93,6 @@
 				"pl": "Fix zaginął w stanach niezamieszkanych",
 				"uk": "Виправлення відсутніх рідних частин в штатах",
 				"zh-cn": "Fix 留在各州的土著部分"
-			},
-			"0.2.12": {
-				"en": "Fix [#101] PowerCleaningLight\nCode improvements",
-				"de": "Fix #[101] PowerCleaingLight\nVerbesserungen des Codes",
-				"ru": "Фиксированный #[101] PowerCleaningСвет\nУлучшения кода",
-				"pt": "Corrigido #[101] Luz de limpeza de energia\nMelhorias de código",
-				"nl": "Gerepareerd. PowerCleaningLight\nCode verbetering",
-				"fr": "Fixed #[101] PowerCleaningLight\nAmélioration des codes",
-				"it": "Corretto #[101] La luce del potere\nMiglioramento del codice",
-				"es": "Fijo #[101] PowerCleaningLight\nMejoras del Código",
-				"pl": "#101 (ang.). PowerClight\nPoprawa kodu",
-				"uk": "Виправлено #[101] PowerCleaningЛайт\nПоліпшення коду",
-				"zh-cn": "九. 固定编号[101] A. 权力\nA. 守则的改进"
-			},
-			"0.2.11": {
-				"en": "Fix error in switching on/off\nReady for a stable release\nupdate dependencies",
-				"de": "Fehler beim Ein-/Ausschalten behoben\nBereit für ein Stable Release\nAktualisierung der Abhängigkeiten",
-				"ru": "Исправление ошибки при переключении/выключении\nГотов к стабильному релизу\nобновление зависимостей",
-				"pt": "Corrigir erro ao ligar/desligar\nPronto para uma versão estável\ndependências",
-				"nl": "De fout van het wisselen van\nKlaar voor een stabiele vrijlating\nvertaling:",
-				"fr": "Correction d ' une erreur lors du commutation\nPrêt pour une sortie stable\nmettre à jour les dépendances",
-				"it": "Risolvere l'errore nell'accensione/spegnimento\nPronto per un rilascio stabile\naggiornamento dipendenze",
-				"es": "Corregir error en encendido/desactivado\nListo para una liberación estable\ndependencias de actualización",
-				"pl": "Błąd w przełączeniu na/off\nReady for the stable release (ang.)\nzależności",
-				"uk": "Виправлення помилок при переході / вимкненні\nГотовий для стабільного релізу\nоновлення залежності",
-				"zh-cn": "转换/抵消的固定错误\n稳定释放的阅读\na. 最新受扶养人"
 			}
 		},
 		"titleLang": {
@@ -154,7 +141,7 @@
 			{
 				"condition": {
 					"operand": "and",
-					"rules": ["oldVersion<0.3.0", "newVersion>=0.3.0"]
+					"rules": ["oldVersion<0.4.0", "newVersion>=0.4.0"]
 				},
 				"title": {
 					"en": "Breaking change by usage of adaptiveCt",
@@ -181,6 +168,40 @@
 					"pl": "Wszystkie adaptacyjne Punkty danych Ct zostały przeniesione do dodatkowego subfoldera. Odbiór danych do aktualizacji AdaptiveCt jest obecnie używany!",
 					"uk": "Всі адаптивні З точки зору даних Ct було переміщено до додаткового підпалювача. Datapoint для активації АдаптиваціяCt тепер говорить включений!",
 					"zh-cn": "所有适应措施 数据点已移到一倍。 现已说,采取免疫接种行动的数据使!"
+				},
+				"level": "warn",
+				"buttons": ["agree", "cancel"]
+			},
+			{
+				"condition": {
+					"operand": "and",
+					"rules": ["oldVersion<0.3.0", "newVersion>=0.3.0"]
+				},
+				"title": {
+					"en": "Breaking change by usage of color-temperature",
+					"de": "Wichtige Veränderung bei Nutzung der Farbtemperatur",
+					"ru": "Критическое изменение за счет использования цветовой температуры",
+					"pt": "Mudança de quebra pelo uso de temperatura de cor",
+					"nl": "Brekende verandering door gebruik van kleurtemperatuur",
+					"fr": "Changement de rupture par l'utilisation de la température de couleur",
+					"it": "Rompere il cambiamento mediante l'uso della temperatura del colore",
+					"es": "Rompiendo el cambio por el uso de la temperatura de color",
+					"pl": "Łamanie zmiany za pomocą temperatury barwowej",
+					"uk": "Розривна зміна за допомогою колірної температури",
+					"zh-cn": "通过使用色温进行重大改变"
+				},
+				"text": {
+					"en": "Conversion of color-temperature has changed! All settings of ct-datapoints have to be checked and adjusted. (look documentation)",
+					"de": "Umrechnung der Farbtemperatur hat sich geändert! Alle Einstellungen der ct-Datenpunkte müssen überprüft und angepasst werden. (siehe Dokumentation)",
+					"ru": "Преобразование цветовой температуры изменилось! Все настройки точек данных ct должны быть проверены и скорректированы. (смотри документацию)",
+					"pt": "A conversão da temperatura da cor mudou! Todas as configurações de ct-datapoints devem ser verificadas e ajustadas. (veja a documentação)",
+					"nl": "Conversie van kleurtemperatuur is gewijzigd! Alle instellingen van ct-datapunten moeten gecontroleerd en aangepast worden. (kijk documentatie)",
+					"fr": "La conversion de la température de couleur a changé ! Tous les paramètres des points de données ct doivent être vérifiés et ajustés. (regardez la documentation)",
+					"it": "La conversione della temperatura del colore è cambiata! Tutte le impostazioni di ct-datapoints devono essere controllate e regolate. (vedi documentazione)",
+					"es": "¡La conversión de temperatura de color ha cambiado! Todas las configuraciones de ct-datapoints deben verificarse y ajustarse. (ver documentación)",
+					"pl": "Zmieniła się konwersja temperatury barwowej! Wszystkie ustawienia punktów danych ct muszą być sprawdzone i wyregulowane. (patrz dokumentacja)",
+					"uk": "Перетворення колірної температури змінено! Усі параметри ct-datapoints необхідно перевірити та налаштувати. (див. документацію)",
+					"zh-cn": "色温转换已更改！必须检查和调整 ct 数据点的所有设置。 （查看文档）"
 				},
 				"level": "warn",
 				"buttons": ["agree", "cancel"]
