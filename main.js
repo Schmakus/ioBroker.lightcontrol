@@ -1039,15 +1039,17 @@ class Lightcontrol extends utils.Adapter {
 
 			if (OnOff) {
 				if (this.LightGroups[Group].power) {
-					await Promise.all([this.SetBrightness(Group, 100), this.SetCt(Group, 6500)]);
+					await Promise.all([this.SetBrightness(Group, 100), this.SetCt(Group, this.config.maxCt || 6700)]);
 					this.LightGroups[Group].lastPower = true;
 				} else {
-					this.LightGroups[Group] = {
-						power: true,
-						lastPower: false,
-					};
+					this.LightGroups[Group].power = true;
+					this.LightGroups[Group].lastPower = false;
 					await this.SimpleGroupPowerOnOff(Group, true);
-					await Promise.all([this.SetBrightness(Group, 100), this.SetCt(Group, 6500)]);
+					await Promise.all([
+						this.SetBrightness(Group, 100),
+						this.SetCt(Group, this.config.maxCt || 6700),
+						this.setStateAsync(Group + ".power", true, true),
+					]);
 				}
 			} else {
 				const brightness = this.LightGroups[Group].adaptiveBri
@@ -1061,7 +1063,10 @@ class Lightcontrol extends utils.Adapter {
 
 				if (!this.LightGroups[Group].lastPower) {
 					this.LightGroups[Group].power = false;
-					await this.SimpleGroupPowerOnOff(Group, false);
+					await Promise.all([
+						this.SimpleGroupPowerOnOff(Group, false),
+						this.setStateAsync(Group + ".power", false, true),
+					]);
 				}
 			}
 
@@ -1625,7 +1630,7 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async SetCt(Group, ct = this.LightGroups[Group].ct) {
 		try {
-			if (!this.LightGroups[Group] || !this.LightGroups[Group].lights || !this.LightGroups[Group].lights.length) {
+			if (!this.LightGroups[Group].lights?.length) {
 				this.writeLog(
 					`[ SetCt ] Not able to set Color-Temperature for Group = "${Group}". No lights are defined!!`,
 					"warn",
@@ -1639,19 +1644,32 @@ class Lightcontrol extends utils.Adapter {
 
 			await Promise.all(
 				this.LightGroups[Group].lights.map(async (Light) => {
-					const { ct, color } = Light ?? {};
+					const { ct } = Light ?? {};
 					if ((this.LightGroups[Group].power || ct?.sendCt) && ct?.oid) {
-						const outMinCt = ct?.minVal ?? 0;
-						const outMaxCt = ct?.maxVal ?? 100;
-						const CtReverse = ct?.CtReverse ?? false;
-						await this.setForeignStateAsync(
-							ct.oid,
-							await this.KelvinToRange(outMinCt, outMaxCt, ctValue, CtReverse),
-							false,
+						const oid = ct?.oid;
+						const outMinVal = ct?.minVal || 0;
+						const outMaxVal = ct?.maxVal || 100;
+						const minKelvin = ct?.minKelvin || 2700;
+						const maxKelvin = ct?.maxKelvin || 6500;
+						const ctConversion = ct?.ctConversion ?? "default";
+						const value = await helper.KelvinToRange(
+							this,
+							outMinVal,
+							outMaxVal,
+							minKelvin,
+							maxKelvin,
+							ctValue,
+							ctConversion,
 						);
-					}
-					if ((this.LightGroups[Group].power || ct?.sendCt) && color?.oid && color?.setCtwithColor) {
-						await this.SetWhiteSubstituteColor(Group);
+						if (value < 0) {
+							this.writeLog(
+								`[ SetCt ] Not able to set Color-Temperature for Light="${oid}" in Group ="${Group}". No conversion defined!!`,
+								"warn",
+							);
+							return;
+						} else if (value >= 0) {
+							await this.setForeignStateAsync(oid, value, false);
+						}
 					}
 				}),
 			);
@@ -1661,38 +1679,6 @@ class Lightcontrol extends utils.Adapter {
 			return true;
 		} catch (error) {
 			this.errorHandling(error, "SetCt");
-		}
-	}
-
-	/**
-	 * KelvinToRange
-	 * @param {number} outMinCt	minimum Ct-Value of target state
-	 * @param {number} outMaxCt	maximum Ct-Value of target state
-	 * @param {number} kelvin	kelvin value of group (e.g. 2700)
-	 * @param {boolean} CtReverse	switch if lower ct-value is cold
-	 * @returns {Promise<number>} return the Ct-Value of the target state
-	 */
-	async KelvinToRange(outMinCt, outMaxCt, kelvin, CtReverse = false) {
-		try {
-			const minCt = this.config.minCt || 2700;
-			const maxCt = this.config.maxCt || 6500;
-			let rangeValue;
-
-			kelvin = Math.min(Math.max(kelvin, minCt), maxCt); // constrain kelvin to minCt and maxCt
-
-			if (CtReverse) {
-				rangeValue = ((maxCt - kelvin) / (maxCt - minCt)) * (outMaxCt - outMinCt) + outMinCt;
-			} else {
-				rangeValue = ((kelvin - minCt) / (maxCt - minCt)) * (outMaxCt - outMinCt) + outMinCt;
-			}
-			return Math.round(Math.min(Math.max(rangeValue, outMinCt), outMaxCt)); // constrain the range to outMinCt and outMaxCt
-		} catch (error) {
-			this.errorHandling(
-				error,
-				"KelvinToRange",
-				`kelvin: ${kelvin}, outMaxCt: ${outMaxCt}, outMinCt: ${outMinCt}`,
-			);
-			return -1;
 		}
 	}
 
@@ -2316,22 +2302,30 @@ class Lightcontrol extends utils.Adapter {
 		await this.GlobalLuxHandlingAsync();
 		await this.GlobalPresenceHandlingAsync();
 		await this.StatesCreateAsync();
+
+		//Check internal memory and objects of instance
+		const objMemory = await this.getAdapterObjectsAsync();
+		if (!objMemory) {
+			this.writeLog(`Cannot read objects from instance! Init Aborted!`, "warn");
+			return false;
+		} else {
+			const objInstance = helper.createNestedObject(this.namespace, objMemory);
+			//this.writeLog(`objA: ${JSON.stringify(nestedObject)}`);
+			const result = helper.compareAndFormatObjects(objInstance, this.LightGroups);
+			if (result.length === 0) {
+				this.writeLog(
+					`Internal memory and objects of instance not are the same. Please restart adapter or contact developer.`,
+					"warn",
+				);
+				this.writeLog(`${JSON.stringify(result)}`, "warn");
+				return false;
+			}
+		}
+
 		const latlng = await this.GetSystemDataAsync();
 		if (latlng) await this.AdaptiveCtAsync();
 		await this.InitCustomStatesAsync();
 		await this.SetLightStateAsync();
-		const objA = await this.getAdapterObjectsAsync();
-		if (!objA) {
-			this.writeLog(`Cannot read objects from instance! Init Aborted!`, "warn");
-			return false;
-		} else {
-			for (const key of Object.keys(objA)) {
-				const newString = key.replace(new RegExp(`${this.namespace}.`, "g"), "");
-				//this.log.warn(newString);
-			}
-			//const result = helper.compareAndFormatObjects(objA, this.LightGroups);
-			//this.writeLog(`${JSON.stringify(result)}`);
-		}
 
 		this.writeLog(`Init finished.`, "info");
 		this.isInit = false;
