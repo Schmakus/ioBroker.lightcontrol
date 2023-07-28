@@ -114,34 +114,29 @@ class Lightcontrol extends utils.Adapter {
 		if (state.val !== null) {
 			this.writeLog(`[ onStateChange ] state ${id} changed: ${state.val} (ack = ${state.ack})`);
 
-			if (ids[0] == "lightcontrol" && state.ack) {
-				if (!state.ack) {
-					const NewVal = state.val;
-					let OldVal;
+			if (ids[0] == "lightcontrol" && !state.ack) {
+				const NewVal = state.val;
+				let OldVal;
 
-					const OwnId = helper.removeNamespace(this.namespace, id);
-					const { Group, Prop } = helper.ExtractGroupAndProp(OwnId);
+				const OwnId = helper.removeNamespace(this.namespace, id);
+				const { Group, Prop } = helper.ExtractGroupAndProp(OwnId);
 
-					if (Object.prototype.hasOwnProperty.call(this.LightGroups, Group)) {
-						this.writeLog(
-							`Group "${Group}" not defined in LightGroups! Please check your settings!`,
-							"warn",
-						);
-						return;
-					}
-
-					if (Prop === "power" && Group !== "All") {
-						OldVal = this.LightGroups[Group].powerOldVal = this.LightGroups[Group].powerNewVal;
-						this.LightGroups[Group].powerNewVal = NewVal;
-					}
-
-					if (Group === "All") {
-						await this.SetMasterPower(NewVal);
-					} else {
-						await this.Controller(Group, Prop, NewVal, OldVal, OwnId);
-					}
+				if (Object.prototype.hasOwnProperty.call(this.LightGroups, Group)) {
+					this.writeLog(`Group "${Group}" not defined in LightGroups! Please check your settings!`, "warn");
+					return;
 				}
-			} else if (!state.ack) {
+
+				if (Prop === "power" && Group !== "All") {
+					OldVal = this.LightGroups[Group].powerOldVal = this.LightGroups[Group].powerNewVal;
+					this.LightGroups[Group].powerNewVal = NewVal;
+				}
+
+				if (Group === "All") {
+					await this.SetMasterPower(NewVal);
+				} else {
+					await this.Controller(Group, Prop, NewVal, OldVal, OwnId);
+				}
+			} else if (state.ack) {
 				//Handle External States
 				this.writeLog(`[ onStateChange ] ExternalState, id="${id}"`);
 
@@ -326,7 +321,7 @@ class Lightcontrol extends utils.Adapter {
 					await this.AutoOnPresenceIncrease();
 					handeled = true;
 					break;
-				case "AdaptiveCt.enabled":
+				case "adaptiveCt.enabled":
 					break;
 				case "adaptiveCt.adaptiveCtMode":
 					break;
@@ -2298,7 +2293,7 @@ class Lightcontrol extends utils.Adapter {
 			const objInstance = helper.createNestedObject(this.namespace, objMemory);
 			//this.writeLog(`objA: ${JSON.stringify(nestedObject)}`);
 			const result = helper.compareAndFormatObjects(objInstance, this.LightGroups);
-			if (result.length === 0) {
+			if (result.length > 0) {
 				this.writeLog(
 					`Internal memory and objects of instance not are the same. Please restart adapter or contact developer.`,
 					"warn",
