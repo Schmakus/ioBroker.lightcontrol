@@ -12,7 +12,7 @@ const helper = require("./lib/helper");
 
 const SunCalc = require("suncalc2");
 const { compareTime, getDateObject, convertTime, getAstroDate } = require("./lib/helper");
-const colorConv = require("./lib/colorCoversation");
+const converters = require("./lib/converters");
 const { params } = require("./lib/params");
 const { DeviceTemplate, DeviceAllTemplate } = require(`./lib/groupTemplates`);
 const {
@@ -1825,7 +1825,7 @@ class Lightcontrol extends utils.Adapter {
 								const timeFraction = (ActualTime - morningTime) / (sunset - morningTime);
 								const exponentialValue = Math.pow(base, timeFraction);
 								adaptiveCtTimedInterpolated = Math.round(
-									await this.mapping(exponentialValue, 1, base, maxCt, minCt),
+									helper.rangeMapping(exponentialValue, 1, base, maxCt, minCt),
 								);
 							} else {
 								adaptiveCtTimedInterpolated = minCt;
@@ -1850,20 +1850,6 @@ class Lightcontrol extends utils.Adapter {
 		} catch (error) {
 			this.errorHandling(error, "AdaptiveCtAsync");
 		}
-	}
-
-	/**
-	 * Maps a value from one range to another range.
-	 * @param {number} value - The value to map to the new range.
-	 * @param {number} minInput - The minimum value of the input range.
-	 * @param {number} maxInput - The maximum value of the input range.
-	 * @param {number} minOutput - The minimum value of the output range.
-	 * @param {number} maxOutput - The maximum value of the output range.
-	 * @returns {Promise<number>} - The mapped value.
-	 */
-
-	async mapping(value, minInput, maxInput, minOutput, maxOutput) {
-		return ((value - minInput) * (maxOutput - minOutput)) / (maxInput - minInput) + minOutput;
 	}
 
 	/**
@@ -1923,7 +1909,7 @@ class Lightcontrol extends utils.Adapter {
 						(this.LightGroups[Group].power || Light?.color?.sendColor),
 				)
 				.map(async (Light) => {
-					const colorValue = colorConv.ConvertKelvinToHue(this.LightGroups[Group].ct);
+					const colorValue = converters.ConvertKelvinToHue(this.LightGroups[Group].ct);
 					await Promise.all([
 						this.setForeignStateAsync(Light.color.oid, colorValue.hue, false),
 						this.setForeignStateAsync(Light.sat.oid, colorValue.saturation, false),
@@ -1941,7 +1927,7 @@ class Lightcontrol extends utils.Adapter {
 						(this.LightGroups[Group].power || Light?.color?.sendColor),
 				)
 				.map(async (Light) => {
-					const colorValue = colorConv.convertKelvinToRGB(this.LightGroups[Group].ct);
+					const colorValue = converters.convertKelvinToRGB(this.LightGroups[Group].ct);
 					await this.setForeignStateAsync(Light.color.oid, { val: JSON.stringify(colorValue), ack: false });
 				});
 
@@ -1955,8 +1941,8 @@ class Lightcontrol extends utils.Adapter {
 						(this.LightGroups[Group].power || Light?.color?.sendColor),
 				)
 				.map(async (Light) => {
-					const rgb = colorConv.convertKelvinToRGB(this.LightGroups[Group].ct);
-					const colorValue = colorConv.ConvertRgbToXy(rgb);
+					const rgb = converters.convertKelvinToRGB(this.LightGroups[Group].ct);
+					const colorValue = converters.ConvertRgbToXy(rgb);
 					await this.setForeignStateAsync(Light.color.oid, { val: JSON.stringify(colorValue), ack: false });
 				});
 
@@ -2047,7 +2033,7 @@ class Lightcontrol extends utils.Adapter {
 								await this.setForeignStateAsync(Light.color.oid, Color, false);
 								break;
 							case "rgb": {
-								const rgbTemp = colorConv.ConvertHexToRgb(Color);
+								const rgbTemp = converters.ConvertHexToRgb(Color);
 								await this.setForeignStateAsync(Light.color.oid, {
 									val: JSON.stringify(rgbTemp),
 									ack: false,
@@ -2055,8 +2041,8 @@ class Lightcontrol extends utils.Adapter {
 								break;
 							}
 							case "xy": {
-								const rgbTemp = colorConv.ConvertHexToRgb(Color);
-								const XyTemp = colorConv.ConvertRgbToXy(rgbTemp);
+								const rgbTemp = converters.ConvertHexToRgb(Color);
+								const XyTemp = converters.ConvertRgbToXy(rgbTemp);
 								await this.setForeignStateAsync(Light.color.oid, {
 									val: JSON.stringify(XyTemp),
 									ack: false,
@@ -2065,7 +2051,7 @@ class Lightcontrol extends utils.Adapter {
 							}
 							case "hue": {
 								if (Light.bri?.oid && Light.sat?.oid) {
-									const colorValue = colorConv.ConvertHexToHue(Color);
+									const colorValue = converters.ConvertHexToHue(Color);
 									await Promise.all([
 										this.setForeignStateAsync(Light.color.oid, colorValue.hue, false),
 										this.setForeignStateAsync(Light.sat.oid, colorValue.saturation, false),
@@ -3233,26 +3219,21 @@ class Lightcontrol extends utils.Adapter {
 	 * Get System Longitude and Latitute
 	 */
 	async GetSystemDataAsync() {
-		try {
-			const obj = await this.getForeignObjectAsync("system.config");
+		const obj = await this.getForeignObjectAsync("system.config");
 
-			if (obj && obj.common && obj.common.longitude && obj.common.latitude) {
-				this.lng = obj.common.longitude;
-				this.lat = obj.common.latitude;
+		if (obj && obj.common && obj.common.longitude && obj.common.latitude) {
+			this.lng = obj.common.longitude;
+			this.lat = obj.common.latitude;
 
-				this.writeLog(`[ GetSystemDataAsync ] longitude: ${this.lng} | latitude: ${this.lat}`);
-			} else {
-				this.writeLog(
-					"system settings cannot be called up (Longitute, Latitude). Please check your ioBroker configuration!",
-					"warn",
-				);
-			}
+			this.writeLog(`[ GetSystemDataAsync ] longitude: ${this.lng} | latitude: ${this.lat}`);
 			return true;
-		} catch (error) {
-			this.errorHandling(error, "GetSystemDataAsync");
+		} else {
+			this.writeLog(
+				"system settings cannot be called up (Longitute, Latitude). Please check your ioBroker configuration!",
+				"warn",
+			);
 			return false;
 		}
-		//}
 	}
 
 	/**
@@ -3283,7 +3264,6 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * Helper: count Power in Groups
-	 * @function
 	 */
 	countGroups() {
 		try {
