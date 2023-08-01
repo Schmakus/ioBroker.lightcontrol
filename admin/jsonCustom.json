@@ -2,6 +2,10 @@
 	"i18n": true,
 	"type": "panel",
 	"items": {
+		"_alive": {
+			"type": "alive",
+			"textNotAlive": "Adapter instance not running! No configuration possible, please start Adapter!"
+		},
 		"type": {
 			"type": "select",
 			"label": "Type of Object",
@@ -19,17 +23,18 @@
 				}
 			],
 			"help": "Choose if this datapoint is for an sensor or a light",
-			"defaultFunc": "(!customObj.common || !customObj.common.write) ? 'sensor' : 'light'"
+			"defaultFunc": "(!customObj.common || !customObj.common.write) ? 'sensor' : 'light'",
+			"newLine": true
 		},
 		"group": {
 			"type": "selectSendTo",
 			"label": "LightGroup",
 			"command": "LightGroup",
-			"onChange": { "alsoDependsOn": ["data.description"], "ignoreOwnChanges": false },
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"help": "LightGroups are defined at instance settings"
+			"help": "LightGroups are defined at instance settings",
+			"multiple": true
 		},
 		"description": {
 			"type": "autocompleteSendTo",
@@ -41,7 +46,8 @@
 			"sm": 3,
 			"md": 3,
 			"lg": 3,
-			"hidden": "data.type === 'sensor'"
+			"hidden": "data.type === 'sensor'",
+			"alsoDependsOn": ["group"]
 		},
 		"func": {
 			"type": "select",
