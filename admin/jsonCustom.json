@@ -189,7 +189,7 @@
 					"value": "ds"
 				}
 			],
-			"defaultFunc": "!customObj.common ? 's' : !customObj.common.unit ? 's' : customObj.common.unit === 'ms' ? 'ms' : 's'",
+			"defaultFunc": "!customObj.common ? 's' : customObj.common.unit === 'ms' ? 'ms' : customObj.common.unit === 's' ? 's' : 'ds'",
 			"hidden": "!['tt'].includes(data.func) || data.type === 'sensor'",
 			"help": "Unit of the state"
 		},

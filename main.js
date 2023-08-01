@@ -2087,7 +2087,9 @@ class Lightcontrol extends utils.Adapter {
 				const tt = convertTime(Light.tt.unit, RampTime);
 				await Promise.all([
 					this.setForeignStateAsync(Light.tt.oid, { val: tt, ack: false }),
-					this.writeLog(`[ SetTt ] Set ${Light.description} (${Light.tt.oid}) to: ${tt}${Light.tt.unit}`),
+					this.writeLog(
+						`[ SetTtAsync ] Set ${Light.description} (${Light.tt.oid}) to: ${tt}${Light.tt.unit}`,
+					),
 				]);
 			});
 
