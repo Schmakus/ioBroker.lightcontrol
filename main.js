@@ -805,6 +805,8 @@ class Lightcontrol extends utils.Adapter {
 					break;
 				case "rampOff.switchOutletsLast":
 					break;
+				case "rampOff.time":
+					break;
 				case "autoOffTimed.enabled":
 					break;
 				case "autoOffTimed.autoOffTime":

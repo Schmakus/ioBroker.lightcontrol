@@ -56,6 +56,12 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) fixed rampOff.time
+-   (Schmakus) update dependencies
+
 ### 0.3.0 (2023-07-17)
 
 -   (Schmakus) (thoml95) Changed conversion of color-temperature (edit of ct-states required)
