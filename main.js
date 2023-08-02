@@ -255,11 +255,15 @@ class Lightcontrol extends utils.Adapter {
 				}
 				handeled = true;
 				break;
+			case "rampOn.time":
+				handeled = true;
+				break;
 			case "rampOn.enabled":
 				break;
 			case "rampOn.switchOutletsLast":
 				break;
-			case "rampOn.time":
+			case "rampOff.time":
+				handeled = true;
 				break;
 			case "rampOff.enabled":
 				break;
@@ -926,7 +930,7 @@ class Lightcontrol extends utils.Adapter {
 				//Wenn Zeitabschaltung aktiv und Anschaltung, AutoOff aktivieren
 				await this.AutoOffTimedAsync(Group);
 			}
-		} else if (this.LightGroups[Group].rampOn.enabled && !this.LightGroups[Group].rampOn.switchOutletsLast) {
+		} else if (this.LightGroups[Group].rampOn?.enabled && !this.LightGroups[Group].rampOn?.switchOutletsLast) {
 			//Anschalten mit Ramping und einfache Lampen zuerst
 
 			this.writeLog(`[ ${funcName} ] Anschalten mit Ramping und einfache Lampen zuerst für Group="${Group}`);
