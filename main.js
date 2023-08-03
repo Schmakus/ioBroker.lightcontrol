@@ -75,6 +75,7 @@ class Lightcontrol extends utils.Adapter {
 			await this.InitAsync();
 		} else {
 			this.writeLog(`[ onReady ] No Init because no LightGroups defined in settings`, "warn");
+			this.stop;
 		}
 	}
 
@@ -346,7 +347,7 @@ class Lightcontrol extends utils.Adapter {
 				handeled = true;
 				break;
 			case "transitionTime":
-				await this.SetTtAsync(Group, helper.limitNumber(NewVal, 0, 64000), prop1);
+				await this.SetTtAsync(Group, helper.limitNumber(NewVal, 0, 64000));
 				handeled = true;
 				break;
 			case "power":
@@ -540,10 +541,10 @@ class Lightcontrol extends utils.Adapter {
 						const lightsSet = new Set();
 
 						if (!lightGroups) {
-							return;
+							lights.push(DEFAULT_LIGHT);
 						}
 
-						if (Array.isArray(lightGroups)) {
+						if (lightGroups && Array.isArray(lightGroups)) {
 							for (const key of lightGroups) {
 								if (Object.prototype.hasOwnProperty.call(this.LightGroups, key)) {
 									const group = this.LightGroups[key];
@@ -560,7 +561,7 @@ class Lightcontrol extends utils.Adapter {
 									}
 								}
 							}
-						} else if (Object.prototype.hasOwnProperty.call(this.LightGroups, lightGroups)) {
+						} else if (lightGroups && Object.prototype.hasOwnProperty.call(this.LightGroups, lightGroups)) {
 							// Prüfe, ob lightGroups ein einzelner Schlüssel ist
 							const group = this.LightGroups[lightGroups];
 							if (group && group.lights) {
@@ -768,7 +769,7 @@ class Lightcontrol extends utils.Adapter {
 	}
 
 	/**
-	 * DeviceSwitch lights before ramping (if brightness state available and not use Bri for ramping)
+	 * DeviceSwitch lights before ramping (if brightness state available and not use Bri for ramping or transition time)
 	 * @description Ausgelagert von GroupOnOff da im Interval kein await möglich
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 * @param {boolean} OnOff true/false from power state
@@ -777,7 +778,7 @@ class Lightcontrol extends utils.Adapter {
 		this.writeLog(`[ DeviceSwitchForRamping ] Reaching for Group="${Group}, OnOff="${OnOff}"`);
 
 		const promises = this.LightGroups[Group].lights
-			.filter((Light) => Light?.bri?.oid && !Light?.bri?.useBri && Light?.power?.oid)
+			.filter((Light) => Light?.bri?.oid && !Light?.bri?.useBri && Light?.power?.oid && Light?.tt?.oid)
 			.map((Light) => {
 				this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
 			});
@@ -807,25 +808,27 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * BrightnessDevicesSwitchPower
-	 * @description Switch lights before ramping (if brightness state available and not useBri for ramping)
+	 * @description Switch lights before ramping (if brightness state available and not useBri for ramping or transition time)
 	 * @async
 	 * @function
 	 * @param {array} Lights Group of Lightgroups eg. LivingRoom, Children1,...
 	 * @param {boolean} OnOff true/false from power state
 	 */
 	async BrightnessDevicesSwitchPowerAsync(Lights, OnOff) {
-		return Lights.filter((Light) => Light.power?.oid && Light.bri?.oid && !Light.bri?.useBri).map(async (Light) => {
-			await Promise.all([
-				this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal),
-				this.writeLog(
-					`[ BrightnessDevicesSwitchPower ] Switching ${Light.description} (${Light.bri.oid}) to: ${OnOff}`,
-				),
-			]);
-		});
+		return Lights.filter((Light) => Light.power?.oid && Light.bri?.oid && !Light.bri?.useBri && !Light.tt?.oid).map(
+			async (Light) => {
+				await Promise.all([
+					this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal),
+					this.writeLog(
+						`[ BrightnessDevicesSwitchPower ] Switching ${Light.description} (${Light.bri.oid}) to: ${OnOff}`,
+					),
+				]);
+			},
+		);
 	}
 
 	/**
-	 * BrightnessDevicesWithRampTime
+	 * BrightnessDevicesWithTransitionTimeAsync
 	 * @description Set Brighness to Lights with transission time
 	 * @async
 	 * @function
@@ -833,14 +836,36 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {boolean} Brightness true/false from power state
 	 * @param {number} RampTime Information about the RampTime
 	 */
-	async BrightnessDevicesWithRampTimeAsync(Lights, Brightness, RampTime) {
-		return Lights.filter((Light) => Light.bri?.oid && Light.bri?.useBri && Light.tt?.useTt).map(async (Light) => {
-			await Promise.all([
-				this.setForeignStateAsync(Light.bri.oid, Brightness),
-				this.writeLog(
-					`[ BrightnessDevicesWithRampTime ] Set ${Light.description} (${Light.bri.oid}) to: ${Brightness} in: ${RampTime}`,
-				),
-			]);
+	async BrightnessDevicesWithTransitionTimeAsync(Lights, Brightness, RampTime) {
+		const promises = Lights.filter((Light) => Light.bri?.oid && Light.bri?.useBri && Light.tt?.oid).map(
+			async (Light) => {
+				await Promise.all([
+					this.setForeignStateAsync(Light.bri.oid, Brightness),
+					this.writeLog(
+						`[ BrightnessDevicesWithTransitionTimeAsync ] Set ${Light.description} (${Light.bri.oid}) to: ${Brightness} in: ${RampTime}`,
+					),
+				]);
+			},
+		);
+		return promises;
+	}
+
+	/**
+	 * Timeout for transition ending
+	 * @async
+	 * @param {string} Group
+	 * @param {number} seconds time in seconds
+
+	 */
+	async waitForTransition(Group, seconds) {
+		if (this.TransitionTimeoutObject[Group]) {
+			this.clearTimeout(this.TransitionTimeoutObject[Group]);
+		}
+
+		return new Promise((resolve) => {
+			this.TransitionTimeoutObject[Group] = this.setTimeout(() => {
+				resolve(true);
+			}, seconds * 1000);
 		});
 	}
 
@@ -856,19 +881,24 @@ class Lightcontrol extends utils.Adapter {
 		const Lights = this.LightGroups[Group]?.lights || [];
 		if (!this.config?.RampSteps) {
 			this.writeLog(
-				`[ RampWithInterval ] No RampSteps defined. Please check your config! RampWithInterval aborted!`,
+				`[ RampWithInterval ] No RampSteps defined. Please check your config! We use 10 steps as default!`,
 				"warn",
 			);
-			return;
 		}
-		const RampSteps = this.config.RampSteps ?? 10;
-		const RampTime = helper.limitNumber(this.LightGroups[Group].rampOn?.time, 10);
+		const RampSteps = this.config.RampSteps || 10;
+		const RampTime = helper.limitNumber(this.LightGroups[Group].rampOn?.time, 5);
+		if (this.LightGroups[Group].rampOn?.time < 5) {
+			this.writeLog(
+				`[ RampWithInterval ] Ramp time is lower than 5s. We use minimum 5s as default for ramping`,
+				"warn",
+			);
+		}
 		let LoopCount = 0;
 
 		this.RampIntervalObject[Group] = this.setInterval(async () => {
 			LoopCount++;
 
-			const promises = Lights.filter((Light) => Light.bri?.oid && Light.bri?.useBri && !Light.tt?.useTt).map(
+			const promises = Lights.filter((Light) => Light.bri?.oid && Light.bri?.useBri && !Light.tt?.oid).map(
 				async (Light) => {
 					try {
 						await this.setForeignStateAsync(
@@ -898,7 +928,6 @@ class Lightcontrol extends utils.Adapter {
 				return true;
 			}
 		}, Math.round(RampTime / RampSteps) * 1000);
-		return true;
 	}
 
 	/**
@@ -923,8 +952,19 @@ class Lightcontrol extends utils.Adapter {
 		if (this.LightGroups[Group]?.rampOn?.enabled && this.LightGroups[Group].rampOn?.switchOutletsLast) {
 			this.writeLog(`[ ${funcName} ] Switch off with ramping and simple lamps last for Group="${Group}"`);
 
+			await this.SetTtAsync(Group, this.LightGroups[Group].rampOn.time, "ramping");
 			await this.BrightnessDevicesSwitchPowerAsync(this.LightGroups[Group].lights, true); // Turn on lights for ramping is no use Bri is used
-			await this.RampWithIntervalAsync(Group, true); // Returns true if finished or no lights with ramping without transition time
+			await Promise.all([
+				this.RampWithIntervalAsync(Group, true),
+				this.BrightnessDevicesWithTransitionTimeAsync(
+					this.LightGroups[Group].lights,
+					this.LightGroups[Group].bri,
+					this.LightGroups[Group].rampOn?.time,
+				),
+				this.waitForTransition(Group, this.LightGroups[Group].rampOn.time),
+			]);
+
+			await this.OutlastDevicesAsync(this.LightGroups[Group].lights, true);
 
 			if (this.LightGroups[Group].autoOffTimed.enabled) {
 				//Wenn Zeitabschaltung aktiv und Anschaltung, AutoOff aktivieren
@@ -2075,7 +2115,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {number} RampTime Information about the RampTime in milliseconds
 	 * @param {string} prop rampUp, rampDown or standard
 	 */
-	async SetTtAsync(Group, RampTime, prop) {
+	async SetTtAsync(Group, RampTime, prop = "default") {
 		if (!this.LightGroups[Group].lights || !this.LightGroups[Group].lights.length) {
 			this.writeLog(
 				`[ SetTtAsync ] Not able to set transition time for Group = "${Group}". No lights are defined!!`,
@@ -2083,7 +2123,7 @@ class Lightcontrol extends utils.Adapter {
 			);
 			return;
 		}
-		this.writeLog(`[ SetTtAsync ] Reaching for Group="${Group}", TransitionTime="${RampTime}ms"`);
+		this.writeLog(`[ SetTtAsync ] Reaching for Group="${Group}", TransitionTime="${RampTime}s"`);
 
 		const promises = this.LightGroups[Group].lights
 			.filter((Light) => Light.tt?.oid)
@@ -2101,7 +2141,7 @@ class Lightcontrol extends utils.Adapter {
 			this.writeLog(error, "error", "SetTtAsync");
 		});
 
-		await this.setStateAsync(Group + "." + prop, RampTime, true);
+		if (prop === "default") await this.setStateAsync(`${Group}.transitionTime`, { val: RampTime, ack: true });
 		return true;
 	}
 

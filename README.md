@@ -67,6 +67,7 @@ iobroker add lightcontrol
 -   (Schmakus) Changed folder-structure of adaptiveCt (important!)
 -   (schmakus) support to choose multiple groups for one light
 -   (Schmakus) Update translations
+-   (Schmakus) Update dependencies
 
 ### 0.3.0 (2023-07-17)
 
