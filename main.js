@@ -329,10 +329,12 @@ class Lightcontrol extends utils.Adapter {
 			case "adaptiveCt.adaptiveCtTime":
 				break;
 			case "bri":
+				await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "bri");
 				await this.SetBrightnessAsync(Group, LightGroups[Group].bri);
 				handeled = true;
 				break;
 			case "ct":
+				await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "bri");
 				await this.SetCtAsync(Group, LightGroups[Group].ct);
 				await this.SetWhiteSubstituteColorAsync(Group);
 				handeled = true;
@@ -340,6 +342,7 @@ class Lightcontrol extends utils.Adapter {
 			case "color":
 				if (helper.CheckHex(NewVal)) {
 					LightGroups[Group].color = NewVal.toUpperCase();
+					await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "bri");
 					await this.SetColorAsync(Group, LightGroups[Group].color);
 					if (LightGroups[Group].color == "#FFFFFF") await this.SetWhiteSubstituteColorAsync(Group);
 					await this.SetColorModeAsync(Group);
