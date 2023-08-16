@@ -1710,8 +1710,7 @@ class Lightcontrol extends utils.Adapter {
 					const minKelvin = ct?.minKelvin || 2700;
 					const maxKelvin = ct?.maxKelvin || 6500;
 					const ctConversion = ct?.ctConversion ?? "default";
-					const value = await helper.KelvinToRange(
-						this,
+					const value = helper.KelvinToRange(
 						outMinVal,
 						outMaxVal,
 						minKelvin,
@@ -1726,7 +1725,7 @@ class Lightcontrol extends utils.Adapter {
 						);
 						return;
 					} else if (value >= 0) {
-						await this.setForeignStateAsync(oid, value, false);
+						this.setForeignStateAsync(oid, value, false);
 					}
 				}
 			}),
