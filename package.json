@@ -23,7 +23,8 @@
     "url": "https://github.com/Schmakus/ioBroker.lightcontrol.git"
   },
   "engines": {
-    "node": ">= 14.14"
+    "node": ">= 16",
+    "npm": ">=7"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.0.3",

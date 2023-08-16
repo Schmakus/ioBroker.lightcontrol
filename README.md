@@ -59,6 +59,7 @@ iobroker add lightcontrol
 
 ### **WORK IN PROGRESS**
 
+-   (Schmakus) Node >=16 and NPM >=7 necessary!
 -   (Schmakus) fixed rampOff.time
 -   (Schmakus) update dependencies
 
