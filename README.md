@@ -56,8 +56,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.4.0 (2023-08-16)
 
 -   (Schmakus) Node >=16 and NPM >=7 necessary!
 -   (Schmakus) fixed rampOff.time
@@ -87,10 +86,6 @@ iobroker add lightcontrol
 
 -   (Schmakus) Fix AdaptiveCt - StartYoureDay Interpolated
 -   (Schmakus) Update docs
-
-### 0.2.15 (2023-05-08)
-
--   (Schmakus) Allow smaller and larger Kelvin values in the settings
 
 ## License
 
