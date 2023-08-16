@@ -3,6 +3,19 @@
 		"name": "lightcontrol",
 		"version": "0.3.0",
 		"news": {
+			"0.4.0": {
+				"en": "Node >=16 and NPM >=7 necessary!\nfixed rampOff.time\nupdate dependencies",
+				"de": "Node =>16 und NPM =>7 notwendig!\nfixed RampeOff.time\nAktualisierung der Abhängigkeiten",
+				"ru": "Node =>16 и NPM =>7 необходимо!\nфиксированный rampOff.time\nобновление зависимостей",
+				"pt": "Node =>16 e NPM =>7 necessários!\nrampOff fixo.time\ndependências",
+				"nl": "Node 16 en NPM noodzakelijk!\nvertaling:\nvertaling:",
+				"fr": "Node = Physique16 et NPM = Physique7 nécessaire!\nrampe fixeOff.time\nmettre à jour les dépendances",
+				"it": "Nodo =>16 e NPM =>7 necessario!\nrampa fissaOff.time\naggiornamento dipendenze",
+				"es": "Nodo = ratio16 y NPM = ratio7 necesario!\nrampa fijaOff.time\ndependencias de actualización",
+				"pl": "Node =>16 and NPM =>7 (ang.)!\nstabilna wieża czasowa\nzależności",
+				"uk": "Node =>16 і NPM =>7 необхідно!\nфіксована rampOff.time\nоновлення залежності",
+				"zh-cn": "页:1!\na. 固定配件\na. 最新受扶养人"
+			},
 			"0.3.0": {
 				"en": "(Schmakus / thoml95) Changed conversion of color-temperature (edit of ct-states required)\n(Schmakus / thoml95) fixed some bugs related to powerCleaningLight\nSome code improvements\nUpdate Docu",
 				"de": "(Schmakus / thoml95) Geänderte Umwandlung der Farbtemperatur (Bezug der ct-Zustände erforderlich)\n(Schmakus / thoml95) einige Fehler im Zusammenhang mit Strom behoben ReinigungLight\nEinige Code Verbesserungen\nUpdate Docu",
