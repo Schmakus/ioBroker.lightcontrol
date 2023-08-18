@@ -63,7 +63,7 @@ class Lightcontrol extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-		await this.adapterReady(false);
+		await this.instanceReady(false);
 		this.writeLog(`[ onReady ] LightGroups from Settings: ${JSON.stringify(this.config?.LightGroups)}`);
 
 		//Create LightGroups Object from GroupNames
@@ -73,11 +73,11 @@ class Lightcontrol extends utils.Adapter {
 		if (Object.keys(LightGroups).length !== 0) {
 			const init = await this.InitAsync();
 			if (init) {
-				this.adapterReady(true);
+				await this.instanceReady(true);
 			}
 		} else {
 			this.writeLog(`[ onReady ] No Init because no LightGroups defined in settings`, "warn");
-			this.adapterReady(false);
+			await this.instanceReady(false);
 		}
 	}
 
@@ -85,8 +85,8 @@ class Lightcontrol extends utils.Adapter {
 	 *
 	 * @param {boolean} value
 	 */
-	async adapterReady(value) {
-		await this.setStateAsync("info.connection", value, true);
+	async instanceReady(value) {
+		await this.setStateAsync("info.connection", { val: value, ack: true });
 		this.connection = value;
 		return true;
 	}
@@ -653,7 +653,7 @@ class Lightcontrol extends utils.Adapter {
 	async GroupPowerOnOffAsync(Group, OnOff) {
 		if (!LightGroups[Group].lights.some((Light) => Light.power?.oid || Light.bri?.oid)) {
 			this.writeLog(
-				`[ SimpleGroupPowerOnOff ] Not able to switching ${OnOff} for group="${Group}". No lights defined or no power or brightness states are defined!!`,
+				`[ GroupPowerOnOffAsync ] Not able to switching ${OnOff} for group="${Group}". No lights defined or no power or brightness states are defined!!`,
 				"warn",
 			);
 			return;
@@ -919,7 +919,7 @@ class Lightcontrol extends utils.Adapter {
 			this.writeLog(`[ ${funcName} ] Switch on with ramping and simple lamps last for Group="${Group}"`);
 
 			await this.BrightnessDevicesSwitchPowerAsync(LightGroups[Group].lights, true); // Turn on lights for ramping is no use Bri is used
-			await this.SetTtAsync(Group, LightGroups[Group].rampOn.time, "ramping");
+			await this.SetTtAsync(Group, LightGroups[Group].rampOn.time * 1000, "ramping");
 
 			const promises = [
 				this.RampWithIntervalAsync(Group, true),
@@ -960,7 +960,7 @@ class Lightcontrol extends utils.Adapter {
 				this.DeviceSwitchForRampingAsync(Group, true),
 			]);
 
-			await this.SetTtAsync(Group, LightGroups[Group].rampOn.time, "ramping");
+			await this.SetTtAsync(Group, LightGroups[Group].rampOn.time * 1000, "ramping");
 
 			const promises = [
 				this.RampWithIntervalAsync(Group, true),
@@ -2263,6 +2263,7 @@ class Lightcontrol extends utils.Adapter {
 			return false;
 		}
 
+		/*
 		// Check internal memory and objects of instance
 		const objMemory = await this.getAdapterObjectsAsync();
 		if (!objMemory) {
@@ -2280,7 +2281,7 @@ class Lightcontrol extends utils.Adapter {
 				return false;
 			}
 		}
-
+		*/
 		const latlng = await this.GetSystemDataAsync();
 		if (latlng) {
 			await this.AdaptiveCtAsync();
@@ -3443,7 +3444,7 @@ class Lightcontrol extends utils.Adapter {
 		if (logFn) {
 			logFn(`${funcName ? `[ ${funcName} ] ` : ""} ${logtext}`);
 		}
-		if (logtype === "error") this.adapterReady(false);
+		if (logtype === "error") this.instanceReady(false);
 	}
 }
 
