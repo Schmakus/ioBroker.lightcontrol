@@ -188,7 +188,7 @@ class Lightcontrol extends utils.Adapter {
 					);
 
 					//Check if it's Presence
-				} else if (this.config.IsPresenceDp === id) {
+				} else if (this.config?.IsPresenceDp === id) {
 					this.writeLog(`[ onStateChange ] It's IsPresenceDp: ${id}`);
 
 					this.ActualPresence = typeof state.val === "boolean" ? state.val : false;
@@ -2592,7 +2592,7 @@ class Lightcontrol extends utils.Adapter {
 		}
 
 		//Create All-Channel if not exists
-		await this.CreateDevice("All", "Controll all groups together");
+		//await this.CreateDevice("All", "Controll all groups together");
 		keepDevices.push("All");
 
 		for (const prop1 of Object.keys(DeviceAllTemplate)) {
