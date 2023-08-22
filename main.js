@@ -9,12 +9,6 @@ const { compareTime, getDateObject, convertTime, getAstroDate } = require("./lib
 const converters = require("./lib/converters");
 const { params } = require("./lib/params");
 const { DeviceTemplate, DeviceAllTemplate } = require(`./lib/groupTemplates`);
-const {
-	TestTemplateLamps,
-	TestTemplateMotionSensors,
-	TestTemplateLuxSensors,
-	TestTemplatePresence,
-} = require(`./lib/testTemplates`);
 const { getLights } = require("./lib/lights");
 
 const LightGroups = {};
@@ -55,8 +49,6 @@ class Lightcontrol extends utils.Adapter {
 
 		this.lat = "";
 		this.lng = "";
-
-		this.DevMode = false;
 	}
 
 	/**
@@ -2251,10 +2243,6 @@ class Lightcontrol extends utils.Adapter {
 	async InitAsync() {
 		this.writeLog(`Init is starting...`, "info");
 
-		if (this.DevMode) {
-			await this.TestStatesCreateAsync();
-		}
-
 		await this.GlobalLuxHandlingAsync();
 		await this.GlobalPresenceHandlingAsync();
 
@@ -2700,66 +2688,6 @@ class Lightcontrol extends utils.Adapter {
 		} catch (error) {
 			this.writeLog(`[ CleanUserData ] Not able to delete testdata. Error: ${error}`, "error");
 		}
-	}
-
-	/**
-	 * State create, extend objects and subscribe states
-	 */
-	async TestStatesCreateAsync() {
-		this.writeLog("[ TestStatesCreate ]Creating Test devices...");
-
-		const userdata = "0_userdata.0.lightcontrol_DEV.";
-
-		//Loop TestLamps and create datapoints to 0_userdata.0
-		await Promise.all(
-			Object.keys(TestTemplateLamps).map(async (Lamp) => {
-				//Create Lamp if not exist
-				try {
-					await this.setForeignObjectNotExistsAsync(userdata + "Lamps." + Lamp, {
-						type: "channel",
-						common: { name: Lamp },
-						native: {},
-					});
-				} catch (error) {
-					this.writeLog(`[ TestStatesCreate ] Not able create lamps of testdata. Error: ${error}`, "warn");
-				}
-
-				await Promise.all(
-					Object.keys(TestTemplateLamps[Lamp]).map(async (prop1) => {
-						const common = TestTemplateLamps[Lamp][prop1];
-						const dp = userdata + "Lamps." + Lamp + "." + prop1;
-						await this.CreateStatesAsync(dp, common, true);
-					}),
-				);
-			}),
-		);
-
-		//Loop Test Motion Sensors and create datapoints to 0_userdata.0
-		await Promise.all(
-			Object.keys(TestTemplateMotionSensors).map(async (MotionSensor) => {
-				const common = TestTemplateMotionSensors[MotionSensor];
-				const dp = userdata + "MotionSensors." + MotionSensor;
-				await this.CreateStatesAsync(dp, common, true);
-			}),
-		);
-
-		//Loop Test Lux Sensors and create datapoints to 0_userdata.0
-		await Promise.all(
-			Object.keys(TestTemplateLuxSensors).map(async (LuxSensor) => {
-				const common = TestTemplateLuxSensors[LuxSensor];
-				const dp = userdata + "LuxSensors." + LuxSensor;
-				await this.CreateStatesAsync(dp, common, true);
-			}),
-		);
-
-		//Loop Test Presence and create datapoints to 0_userdata.0
-		await Promise.all(
-			Object.keys(TestTemplatePresence).map(async (Presence) => {
-				const common = TestTemplatePresence[Presence];
-				const dp = userdata + "Presence." + Presence;
-				await this.CreateStatesAsync(dp, common, true);
-			}),
-		);
 	}
 
 	/**
