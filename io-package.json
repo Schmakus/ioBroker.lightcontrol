@@ -157,7 +157,7 @@
 					"rules": ["oldVersion<1.0.0", "newVersion>=1.0.0"]
 				},
 				"title": {
-					"en": "Breaking change by usage of adaptiveCt",
+					"en": "Breaking change by usage of adaptiveCt and a lot of new features!",
 					"de": "Änderung bei Verwendung von adaptiveCt",
 					"ru": "Перерыв изменения при использовании адаптивных Кт",
 					"pt": "Alteração de ruptura pelo uso de adaptativo Ct",
@@ -272,6 +272,74 @@
 				"def": false
 			},
 			"native": {}
+		},
+		{
+			"_id": "All",
+			"type": "device",
+			"common": {
+				"name": {
+					"en": "Controll all groups together",
+					"de": "Alle Gruppen gemeinsam steuern",
+					"ru": "Контролировать все группы вместе",
+					"pt": "Controlar todos os grupos juntos",
+					"nl": "Controleer alle groepen samen",
+					"fr": "Contrôler tous les groupes ensemble",
+					"it": "Controllare tutti i gruppi insieme",
+					"es": "Controlar todos los grupos juntos",
+					"pl": "Kontrola wszystkich grup razem",
+					"uk": "Контроль усіх груп разом",
+					"zh-cn": "控制所有团体"
+				}
+			},
+			"native": {}
+		},
+		{
+			"_id": "All.power",
+			"type": "state",
+			"common": {
+				"read": true,
+				"write": true,
+				"name": {
+					"en": "Main Switch",
+					"de": "Hauptschalter",
+					"ru": "Главный переключатель",
+					"pt": "Interruptor principal",
+					"nl": "Hoofdzuster",
+					"fr": "Interrupteur principal",
+					"it": "Interruttore principale",
+					"es": "Interruptor principal",
+					"pl": "Strona oficjalna",
+					"uk": "Головний перемикач",
+					"zh-cn": "主要巫术"
+				},
+				"type": "boolean",
+				"role": "switch.power",
+				"def": false
+			}
+		},
+		{
+			"_id": "All.anyOn",
+			"type": "state",
+			"common": {
+				"read": true,
+				"write": false,
+				"name": {
+					"en": "Any group is switched on",
+					"de": "Beliebige Gruppe ist eingeschaltet",
+					"ru": "Любая группа включена",
+					"pt": "Qualquer grupo está ligado",
+					"nl": "Elke groep is verwisseld",
+					"fr": "Tout groupe est allumé",
+					"it": "Qualsiasi gruppo è acceso",
+					"es": "Cualquier grupo está encendido",
+					"pl": "Każda grupa przełącza się",
+					"uk": "Будь-яка група перемикається на",
+					"zh-cn": "任何集团都转用。"
+				},
+				"type": "boolean",
+				"role": "indicator.state",
+				"def": false
+			}
 		}
 	]
 }

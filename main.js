@@ -8,7 +8,7 @@ const SunCalc = require("suncalc2");
 const { compareTime, getDateObject, convertTime, getAstroDate } = require("./lib/helper");
 const converters = require("./lib/converters");
 const { params } = require("./lib/params");
-const { DeviceTemplate, DeviceAllTemplate } = require(`./lib/groupTemplates`);
+const { DeviceTemplate } = require(`./lib/groupTemplates`);
 const { getLights } = require("./lib/lights");
 
 const LightGroups = {};
@@ -44,7 +44,7 @@ class Lightcontrol extends utils.Adapter {
 		this.RampTimeoutObject = {};
 		this.TransitionTimeoutObject = {};
 		this.AutoOffTimeoutObject = {};
-		this.AutoOffNoticeTimeoutObject = {};
+		//this.AutoOffNoticeTimeoutObject = {};
 		this.BlinkIntervalObj = {};
 
 		this.lat = "";
@@ -107,7 +107,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {ioBroker.State | null | undefined} state
 	 */
 	async onStateChange(id, state) {
-		if (!id || !state || this.connection) {
+		if (!id || !state || !this.connection) {
 			return;
 		}
 		const ids = id.split(".");
@@ -263,6 +263,8 @@ class Lightcontrol extends utils.Adapter {
 				break;
 			case "autoOffTimed.autoOffTime":
 				break;
+			case "autoOffTimed.countdown":
+				break;
 			case "autoOffTimed.noAutoOffWhenMotion":
 				break;
 			case "autoOffTimed.noAutoOffWhenMotionMode":
@@ -348,10 +350,13 @@ class Lightcontrol extends utils.Adapter {
 
 				if (NewVal !== LightGroups[Group].powerOldVal) {
 					await this.GroupPowerOnOffAsync(Group, NewVal); //Alles schalten
-					if (NewVal) await this.PowerOnAftercareAsync(Group);
+					if (NewVal) {
+						await this.PowerOnAftercareAsync(Group);
+						await this.AutoOffTimedAsync(Group);
+					}
 					if (!NewVal && LightGroups[Group].autoOffTimed.enabled) {
 						//Wenn ausschalten und autoOffTimed ist aktiv, dieses löschen, da sonst erneute ausschaltung nach Ablauf der Zeit. Ist zusätzlich rampon aktiv, führt dieses zu einem einschalten mit sofort folgenden ausschalten
-						await this.clearAutoOffTimeouts(Group);
+						this.clearAutoOffTimeouts(Group);
 					}
 					if (!NewVal && LightGroups[Group].powerCleaningLight) {
 						//Wenn via Cleaninglight angeschaltet wurde, jetzt aber normal ausgeschaltet, powerCleaningLight synchen um Blockade der Autofunktionen zu vermeiden
@@ -430,7 +435,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {ioBroker.Object | null | undefined} obj
 	 */
 	async onObjectChange(id, obj) {
-		if (!id || !obj || this.connection) {
+		if (!id || !obj || !this.connection) {
 			return;
 		}
 		const stateID = id;
@@ -499,7 +504,7 @@ class Lightcontrol extends utils.Adapter {
 	 * Is called if a message is comming
 	 */
 	async onMessage(msg) {
-		if (this.connection) {
+		if (!this.connection) {
 			return;
 		}
 		this.writeLog(`[ onMessage ] Incomming Message from: ${JSON.stringify(msg)}`);
@@ -667,14 +672,10 @@ class Lightcontrol extends utils.Adapter {
 			if (!LightGroups[Group].rampOn.enabled) {
 				await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff");
 				await this.SimpleGroupPowerOnOffAsync(Group, OnOff);
-
-				if (LightGroups[Group].autoOffTimed.enabled) {
-					//Wenn Zeitabschaltung aktiv und Anschaltung, AutoOff aktivieren
-					await this.AutoOffTimedAsync(Group);
-				}
 			} else {
 				await this.TurnOnWithRampingAsync(Group);
 			}
+			await this.setStateAsync(Group + ".power", OnOff, true);
 		} else {
 			// Ausschalten ohne Ramping */
 			if (!LightGroups[Group].rampOff.enabled) {
@@ -688,12 +689,15 @@ class Lightcontrol extends utils.Adapter {
 				// Ausschalten mit Ramping */
 				await this.TurnOffWithRampingAsync(Group);
 			}
+			await this.setStateAsync(Group + ".power", OnOff, true);
 		}
 
+		/*
 		await Promise.all([
 			this.setStateAsync(Group + ".power", OnOff, true),
 			//this.SetLightStateAsync("GroupPowerOnOff"),
 		]);
+		*/
 		return true;
 	}
 
@@ -1480,32 +1484,53 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 */
 	async AutoOffTimedAsync(Group) {
-		this.writeLog(
-			`[ AutoOffTimedAsync ] Reaching for Group="${Group}" set time="${LightGroups[Group].autoOffTimed.autoOffTime}" LightGroups[${Group}].isMotion="${LightGroups[Group].isMotion}" LightGroups[${Group}].autoOffTimed.noAutoOffWhenMotion="${LightGroups[Group].autoOffTimed.noAutoOffWhenMotion}"`,
-		);
-
-		await this.clearAutoOffTimeouts(Group);
+		this.clearAutoOffTimeouts(Group);
+		this.AutoOffTimeoutObject[Group] = {};
 
 		if (LightGroups[Group].autoOffTimed.enabled) {
-			this.writeLog(`[ AutoOffTimedAsync ] Start Timeout`);
+			const timeoutPromise = new Promise((resolve) => {
+				this.writeLog(
+					`[ AutoOffTimedAsync ] Start Timeout with ${LightGroups[Group].autoOffTimed.autoOffTime}s`,
+				);
+				this.AutoOffTimeoutObject[Group].autoOff = this.setTimeout(async () => {
+					if (LightGroups[Group].autoOffTimed?.noAutoOffWhenMotion && LightGroups[Group].isMotion) {
+						//Wenn noAutoOffWhenmotion aktiv und Bewegung erkannt
+						this.writeLog(
+							`[ AutoOffTimedAsync ] Motion already detected, restarting Timeout for Group="${Group}"`,
+						);
+						await this.AutoOffTimedAsync(Group);
+					} else {
+						this.writeLog(
+							`[ AutoOffTimedAsync ] Group="${Group}" timed out, switching off. Motion="${LightGroups[Group].isMotion}"`,
+						);
+						//await this.GroupPowerOnOffAsync(Group, false);
+					}
 
-			this.AutoOffTimeoutObject[Group] = this.setTimeout(async () => {
-				// Interval starten
-				if (LightGroups[Group].autoOffTimed?.noAutoOffWhenMotion && LightGroups[Group].isMotion) {
-					//Wenn noAutoOffWhenmotion aktiv und Bewegung erkannt
-					this.writeLog(
-						`[ AutoOffTimedAsync ] Motion already detected, restarting Timeout for Group="${Group}" set time="${LightGroups[Group].autoOffTimed.autoOffTime}"`,
-					);
-					this.writeLog(`[ AutoOffTimedAsync ] Timer: ${JSON.stringify(this.AutoOffTimeoutObject[Group])}`);
-					await this.AutoOffTimedAsync(Group);
-				} else {
-					this.writeLog(
-						`[ AutoOffTimedAsync ] Group="${Group}" timed out, switching off. Motion="${LightGroups[Group].isMotion}"`,
-					);
-					await this.GroupPowerOnOffAsync(Group, false);
-				}
-			}, Math.round(LightGroups[Group].autoOffTimed.autoOffTime) * 1000);
+					resolve(true);
+				}, Math.round(LightGroups[Group].autoOffTimed.autoOffTime) * 1000);
+			});
+
+			const countdownPromise = new Promise((resolve) => {
+				const countdown = async (time) => {
+					await this.setStateAsync(`${Group}.autoOffTimed.countdown`, { val: time, ack: true });
+					if (time > 0) {
+						this.AutoOffTimeoutObject[Group].countdown = this.setTimeout(async () => {
+							await this.setStateAsync(`${Group}.autoOffTimed.countdown`, { val: time, ack: true });
+							countdown(time - 1);
+						}, 1000);
+					} else {
+						resolve(true);
+					}
+				};
+
+				countdown(LightGroups[Group].autoOffTimed.autoOffTime);
+			});
+
+			await Promise.all([timeoutPromise, countdownPromise]);
+			await this.setStateAsync(`${Group}.power`, { val: false, ack: false });
 		}
+
+		return Promise.resolve(true);
 	}
 
 	/**
@@ -1513,21 +1538,18 @@ class Lightcontrol extends utils.Adapter {
 	 * @param NewVal New Value of state
 	 */
 	async SetMasterPowerAsync(NewVal) {
-		const funcName = "SetMasterPower";
-
-		this.writeLog(`[ ${funcName} ] Reaching SetMasterPowerAsync`);
-
 		const promises = Object.keys(LightGroups)
 			.filter((Group) => !["All", "info"].includes(Group))
 			.map((Group) => {
-				this.writeLog(`[ ${funcName} ] Switching Group="${Group}" to ${NewVal}`);
 				return this.setStateAsync(Group + ".power", NewVal, false);
 			});
 
 		await Promise.all(promises).catch((error) => {
-			this.writeLog(`Not able to set master power. Error: ${error}`, "error", funcName);
+			this.writeLog(`Not able to set master power. Error: ${error}`, "error", "SetMasterPowerAsync");
 			return;
 		});
+
+		return Promise.resolve(true);
 	}
 	// *********************************************
 	// *                                           *
@@ -2145,44 +2167,58 @@ class Lightcontrol extends utils.Adapter {
 				this.clearTimeout(timeoutObject);
 			}
 		}
+		return true;
 	}
 
 	/**
 	 *
-	 * @param {*} Group Groupname
+	 * @param {string | null} Group Groupname
 	 */
 	clearAutoOffTimeouts(Group) {
+		const groupKeys = Object.keys(LightGroups).filter((groupKey) => !["All", "info"].includes(groupKey));
+
 		if (Group === null) {
-			for (const groupKey in LightGroups) {
-				if (["All", "info"].includes(groupKey)) continue;
+			for (const groupKey of groupKeys) {
+				const timeouts = this.AutoOffTimeoutObject[groupKey];
 
-				const timeoutObject = this.AutoOffTimeoutObject[groupKey];
-				const noticeTimeoutObject = this.AutoOffNoticeTimeoutObject[groupKey];
+				if (typeof timeouts === "object") {
+					if (timeouts.autoOff) {
+						clearTimeout(timeouts.autoOff);
+						timeouts.autoOff = null;
+					}
 
-				if (typeof timeoutObject === "object") {
-					this.writeLog(`[ clearAutoOffTimeout ] => Timeout for group="${groupKey}" deleted.`);
-					this.clearTimeout(timeoutObject);
-				}
+					if (timeouts.notice) {
+						clearTimeout(timeouts.notice);
+						timeouts.notice = null;
+					}
 
-				if (typeof noticeTimeoutObject === "object") {
-					this.writeLog(`[ clearAutoOffTimeout ] NoticeTimeout for group="${groupKey}" deleted.`);
-					this.clearTimeout(noticeTimeoutObject);
+					if (timeouts.countdown) {
+						clearTimeout(timeouts.countdown);
+						timeouts.countdown = null;
+					}
 				}
 			}
 		} else {
-			const timeoutObject = this.AutoOffTimeoutObject[Group];
-			const noticeTimeoutObject = this.AutoOffNoticeTimeoutObject[Group];
+			const timeouts = this.AutoOffTimeoutObject[Group];
 
-			if (typeof timeoutObject === "object") {
-				this.writeLog(`[ clearAutoOffTimeout ] Timeout for group="${Group}" deleted.`);
-				this.clearTimeout(timeoutObject);
-			}
+			if (typeof timeouts === "object") {
+				if (timeouts.autoOff) {
+					clearTimeout(timeouts.autoOff);
+					timeouts.autoOff = null;
+				}
 
-			if (typeof noticeTimeoutObject === "object") {
-				this.writeLog(`[ clearAutoOffTimeout ] NoticeTimeout for group="${Group}" deleted.`);
-				this.clearTimeout(noticeTimeoutObject);
+				if (timeouts.notice) {
+					clearTimeout(timeouts.notice);
+					timeouts.notice = null;
+				}
+
+				if (timeouts.countdown) {
+					clearTimeout(timeouts.countdown);
+					timeouts.countdown = null;
+				}
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -2209,6 +2245,7 @@ class Lightcontrol extends utils.Adapter {
 				this.clearInterval(intervalObject);
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -2229,6 +2266,7 @@ class Lightcontrol extends utils.Adapter {
 				delete this.TransitionTimeoutObject[Group];
 			}
 		}
+		return true;
 	}
 
 	// *********************************************
@@ -2480,6 +2518,39 @@ class Lightcontrol extends utils.Adapter {
 		}
 		return true;
 	}
+	/**
+	 *
+	 * @param {string[]} ids
+	 */
+	async DoTheAllChannelThings(ids) {
+		for (const id of ids) {
+			const obj = await this.getObjectAsync(id).catch((error) => {
+				this.writeLog(
+					`Not able to get object of id="${id}". Please check your config! Init aborted! Error: ${error}`,
+					"error",
+					"DoAllTheAllChannelThings",
+				);
+				return;
+			});
+
+			const state = await this.getStateAsync(id);
+
+			if (!state) {
+				this.writeLog(`State: "${id}" is NULL or undefined! Init aborted!`, "error", "StatesCreateAsync");
+				return;
+			}
+
+			if (id === "All.power") {
+				await this.SetValueToObjectAsync("All", "powerNewVal", state.val);
+			}
+
+			await this.SetValueToObjectAsync("All", id, state.val);
+
+			obj?.common.write && (await this.subscribeStatesAsync(id));
+		}
+
+		return true;
+	}
 
 	/**
 	 * State create, extend objects and subscribe states
@@ -2581,41 +2652,12 @@ class Lightcontrol extends utils.Adapter {
 			await this.SetValueToObjectAsync(Group, ["autoOnLux.dailyLockCounter", "autoOffLux.dailyLockCounter"], 0);
 		}
 
-		//Create All-Channel if not exists
-		await this.createDeviceAsync("All", { name: "Controll all groups together" });
+		//DoTheAllChannelThings
+		const ids = ["All.power", "All.anyOn"];
+		await this.DoTheAllChannelThings(ids);
+
 		keepDevices.push("All");
-
-		for (const prop1 of Object.keys(DeviceAllTemplate)) {
-			const dp = "All." + prop1;
-			const common = DeviceAllTemplate[prop1];
-			common.desc = "All";
-
-			await this.CreateStatesAsync(dp, common);
-			keepStates.push(dp);
-
-			const state = await this.getStateAsync(dp).catch((error) => {
-				this.writeLog(
-					`Not able to getState of id="${dp}". Please check your config! Init aborted! Error: ${error}`,
-					"error",
-					"StatesCreateAsync",
-				);
-				return;
-			});
-
-			if (!state) {
-				this.writeLog(`State: "${dp}" is NULL or undefined! Init aborted!`, "error", "StatesCreateAsync");
-				return;
-			}
-
-			if (prop1 === "power") {
-				this.writeLog(`[ StateCreate ] Group="All", Prop1="${prop1}", powerNewVal="${state.val}"`);
-				await this.SetValueToObjectAsync("All", "powerNewVal", state.val);
-			}
-
-			await this.SetValueToObjectAsync("All", dp, state.val);
-
-			common.write && (await this.subscribeStatesAsync(dp));
-		}
+		keepStates.push(...ids);
 
 		// Delete non existent states, channels and devices
 		const allStates = [];
@@ -2689,7 +2731,7 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async CreateStatesAsync(dp, common) {
 		try {
-			const common_old = (await this.getObjectAsync(dp)) || {};
+			const common_old = (await this.getObjectAsync(dp))?.common || {};
 
 			if (JSON.stringify(common_old) !== JSON.stringify(common)) {
 				this.writeLog(`[ CreateStatesAsync ] State: ${dp} created or updated.`);

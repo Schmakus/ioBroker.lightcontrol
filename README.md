@@ -65,7 +65,8 @@ iobroker add lightcontrol
 -   (Schmakus) Support transition time (as standard or for ramping)
 -   (Schmakus) Fix error in SetBrightness
 -   (Schmakus) Changed folder-structure of adaptiveCt (important!)
--   (schmakus) support to choose multiple groups for one light
+-   (Schmakus) support to choose multiple groups for one light
+-   (Schmakus) add countdown state for autoOffTimed
 -   (Schmakus) Update translations
 -   (Schmakus) Update dependencies
 
