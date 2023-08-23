@@ -2496,7 +2496,7 @@ class Lightcontrol extends utils.Adapter {
 		for (const Group of Object.keys(LightGroups)) {
 			if (["All", "info"].includes(Group)) continue;
 			//Create device if not exist
-			await this.CreateDevice(Group, Group);
+			await this.CreateDeviceAsync(Group, { name: Group });
 			keepDevices.push(Group);
 
 			await this.DoAllTheMotionSensorThings(Group);
@@ -2507,12 +2507,13 @@ class Lightcontrol extends utils.Adapter {
 				// Check for second layer
 				if (typeof DeviceTemplate[prop1].name == "undefined") {
 					//Create channel if not exist
-					await this.CreateChannel(dp, Group + " " + prop1);
+					await this.CreateChannelAsync(dp, { name: prop1, desc: Group });
 					keepChannels.push(dp);
 
 					for (const key of Object.keys(DeviceTemplate[prop1])) {
 						const dp = `${Group}.${prop1}.${key}`;
 						const common = DeviceTemplate[prop1][key];
+						common.desc = Group;
 
 						await this.CreateStatesAsync(dp, common);
 						keepStates.push(dp);
@@ -2540,6 +2541,7 @@ class Lightcontrol extends utils.Adapter {
 					}
 				} else {
 					const common = DeviceTemplate[prop1];
+					common.desc = Group;
 					await this.CreateStatesAsync(dp, common);
 					keepStates.push(dp);
 
@@ -2580,12 +2582,13 @@ class Lightcontrol extends utils.Adapter {
 		}
 
 		//Create All-Channel if not exists
-		//await this.CreateDevice("All", "Controll all groups together");
+		await this.createDeviceAsync("All", { name: "Controll all groups together" });
 		keepDevices.push("All");
 
 		for (const prop1 of Object.keys(DeviceAllTemplate)) {
 			const dp = "All." + prop1;
 			const common = DeviceAllTemplate[prop1];
+			common.desc = "All";
 
 			await this.CreateStatesAsync(dp, common);
 			keepStates.push(dp);
@@ -2678,94 +2681,77 @@ class Lightcontrol extends utils.Adapter {
 	}
 
 	/**
-	 * clean Dev_Mode userdata
-	 */
-	async CleanUserData() {
-		const id = "0_userdata.0.lightcontrol_DEV.";
-		try {
-			await this.delObjectAsync(id, { recursive: true });
-			this.writeLog("[ CleanUserData ] Testdata deleted " + id);
-		} catch (error) {
-			this.writeLog(`[ CleanUserData ] Not able to delete testdata. Error: ${error}`, "error");
-		}
-	}
-
-	/**
-	 * Create datapoint and extend datapoints
+	 * Create and update state
 	 * @author Schmakus
 	 * @async
 	 * @param {string} dp path to datapoint
-	 * @param {ioBroker.StateCommon} common type of datapoint, e.g. string, number, boolean, ...
-	 * @param {boolean} [foreign = false] set adapter states = false; set foreign states = true
+	 * @param {ioBroker.StateCommon} common common of the object
 	 */
-	async CreateStatesAsync(dp, common, foreign) {
+	async CreateStatesAsync(dp, common) {
 		try {
-			const obj = !foreign ? await this.getObjectAsync(dp) : await this.getForeignObjectAsync(dp);
+			const common_old = (await this.getObjectAsync(dp)) || {};
 
-			if (!obj) {
-				/** @type {ioBroker.SettableStateObject} */
-				const obj = {
+			if (JSON.stringify(common_old) !== JSON.stringify(common)) {
+				this.writeLog(`[ CreateStatesAsync ] State: ${dp} created or updated.`);
+
+				await this.setObjectAsync(dp, {
 					type: "state",
 					common: common,
 					native: {},
-				};
-
-				await (foreign ? this.setForeignObjectAsync(dp, obj) : this.setObjectAsync(dp, obj));
-				this.writeLog(`[ CreateStatesAsync ] State: ${dp} created.`);
-			} else {
-				if (JSON.stringify(obj.common) !== JSON.stringify(common) || !("native" in obj)) {
-					obj.common = common;
-					obj.native = obj.native ?? {};
-					await (foreign ? this.setForeignObjectAsync(dp, obj) : this.setObjectAsync(dp, obj));
-				}
+				});
 			}
 			return true;
 		} catch (error) {
-			this.writeLog(`[ CreateStatesAsync ] Not able create state or getObject (${dp}). Error: ${error}`, "error");
+			this.writeLog(`Not able create or update state (${dp}). Error: ${error}`, "error", "CreateStatesAsync");
 			return false;
 		}
 	}
 	/**
-	 * Create channel and extend
+	 * Create and update channel
 	 * @author Schmakus
 	 * @async
 	 * @param {string} dp path to datapoint
-	 * @param {string} name name of the channel
+	 * @param {ioBroker.ChannelCommon} common desc of the channel
 	 */
-	async CreateChannel(dp, name) {
+	async CreateChannelAsync(dp, common) {
 		try {
-			await this.extendObjectAsync(dp, {
-				type: "channel",
-				common: {
-					name: name,
-				},
-				native: {},
-			});
+			const common_old = (await this.getObjectAsync(dp))?.common || {};
+			if (JSON.stringify(common_old) !== JSON.stringify(common)) {
+				this.writeLog(`[ CreateChannelAsync ] State: ${dp} created or updated.`);
+				await this.setObjectAsync(dp, {
+					type: "channel",
+					common: common,
+					native: {},
+				});
+			}
 			return true;
 		} catch (error) {
-			this.writeLog(`[ CreateChannel ] Not able create channel (${dp}). Error: ${error}`, "error");
+			this.writeLog(`Not able create or update channel (${dp}). Error: ${error}`, "error", "CreateChannelAsync");
 			return false;
 		}
 	}
+
 	/**
-	 * Create device and extend
+	 * Create and update device
 	 * @author Schmakus
 	 * @async
 	 * @param {string} dp path to datapoint
-	 * @param {string} name name of the channel
+	 * @param {ioBroker.DeviceCommon} common desc of the device
 	 */
-	async CreateDevice(dp, name) {
+	async CreateDeviceAsync(dp, common) {
 		try {
-			await this.extendObjectAsync(dp, {
-				type: "device",
-				common: {
-					name: name,
-				},
-				native: {},
-			});
+			const common_old = (await this.getObjectAsync(dp))?.common || {};
+			if (JSON.stringify(common_old) !== JSON.stringify(common)) {
+				this.writeLog(`[ CreateChannelAsync ] State: ${dp} created or updated.`);
+				await this.setObjectAsync(dp, {
+					type: "device",
+					common: common,
+					native: {},
+				});
+			}
 			return true;
 		} catch (error) {
-			this.writeLog(`[ CreateDevice ] Not able create device (${dp}). Error: ${error}`, "error");
+			this.writeLog(`Not able create or update device (${dp}). Error: ${error}`, "error", "CreateDeviceAsync");
 			return false;
 		}
 	}
