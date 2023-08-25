@@ -352,7 +352,6 @@ class Lightcontrol extends utils.Adapter {
 					await this.GroupPowerOnOffAsync(Group, NewVal); //Alles schalten
 					if (NewVal) {
 						await this.PowerOnAftercareAsync(Group);
-						await this.AutoOffTimedAsync(Group);
 					}
 					if (!NewVal && LightGroups[Group].autoOffTimed.enabled) {
 						//Wenn ausschalten und autoOffTimed ist aktiv, dieses löschen, da sonst erneute ausschaltung nach Ablauf der Zeit. Ist zusätzlich rampon aktiv, führt dieses zu einem einschalten mit sofort folgenden ausschalten
@@ -376,7 +375,7 @@ class Lightcontrol extends utils.Adapter {
 				break;
 			case "dimmUp":
 				await this.setStateAsync(
-					Group + "." + "bri",
+					`${Group}.bri`,
 					Math.min(Math.max(LightGroups[Group].bri + LightGroups[Group].dimmAmount, 10), 100),
 					false,
 				);
@@ -384,7 +383,7 @@ class Lightcontrol extends utils.Adapter {
 				break;
 			case "dimmDown":
 				await this.setStateAsync(
-					Group + "." + "bri",
+					`${Group}.bri`,
 					Math.min(Math.max(LightGroups[Group].bri - LightGroups[Group].dimmAmount, 2), 100),
 					false,
 				);
@@ -672,6 +671,7 @@ class Lightcontrol extends utils.Adapter {
 			if (!LightGroups[Group].rampOn.enabled) {
 				await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff");
 				await this.SimpleGroupPowerOnOffAsync(Group, OnOff);
+				this.AutoOffTimedAsync(Group); //no await because it should start parallel
 			} else {
 				await this.TurnOnWithRampingAsync(Group);
 			}

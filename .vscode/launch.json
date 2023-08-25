@@ -15,7 +15,7 @@
 			"stopOnEntry": true,
 			"console": "internalConsole",
 			"outputCapture": "std",
-			"skipFiles": ["<node_internals>/**"],
+			"skipFiles": ["<node_internals>/**", "${workspaceFolder}/.dev-server/default/node_modules/**/*.js"],
 			"type": "node"
 		},
 
