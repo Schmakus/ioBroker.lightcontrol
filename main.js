@@ -1488,46 +1488,34 @@ class Lightcontrol extends utils.Adapter {
 		this.AutoOffTimeoutObject[Group] = {};
 
 		if (LightGroups[Group].autoOffTimed.enabled) {
-			const timeoutPromise = new Promise((resolve) => {
-				this.writeLog(
-					`[ AutoOffTimedAsync ] Start Timeout with ${LightGroups[Group].autoOffTimed.autoOffTime}s`,
-				);
-				this.AutoOffTimeoutObject[Group].autoOff = this.setTimeout(async () => {
-					if (LightGroups[Group].autoOffTimed?.noAutoOffWhenMotion && LightGroups[Group].isMotion) {
-						//Wenn noAutoOffWhenmotion aktiv und Bewegung erkannt
-						this.writeLog(
-							`[ AutoOffTimedAsync ] Motion already detected, restarting Timeout for Group="${Group}"`,
-						);
-						await this.AutoOffTimedAsync(Group);
-					} else {
-						this.writeLog(
-							`[ AutoOffTimedAsync ] Group="${Group}" timed out, switching off. Motion="${LightGroups[Group].isMotion}"`,
-						);
-						//await this.GroupPowerOnOffAsync(Group, false);
-					}
+			let countdownValue = LightGroups[Group].autoOffTimed.autoOffTime;
 
-					resolve(true);
-				}, Math.round(LightGroups[Group].autoOffTimed.autoOffTime) * 1000);
-			});
+			this.writeLog(`Start autoOff timeout for Group="${Group} with ${countdownValue} seconds"`, "info");
 
-			const countdownPromise = new Promise((resolve) => {
-				const countdown = async (time) => {
-					await this.setStateAsync(`${Group}.autoOffTimed.countdown`, { val: time, ack: true });
-					if (time > 0) {
-						this.AutoOffTimeoutObject[Group].countdown = this.setTimeout(async () => {
-							await this.setStateAsync(`${Group}.autoOffTimed.countdown`, { val: time, ack: true });
-							countdown(time - 1);
-						}, 1000);
-					} else {
+			const countdownStep = async () => {
+				await this.setStateAsync(`${Group}.autoOffTimed.autoOff`, { val: countdownValue, ack: true });
+
+				if (countdownValue > 0) {
+					countdownValue--;
+					this.AutoOffTimeoutObject[Group].countdown = this.setTimeout(countdownStep, 1000);
+				} else {
+					await this.setStateAsync(`${Group}.power`, { val: false, ack: false });
+				}
+			};
+
+			countdownStep();
+
+			// Warte auf das Countdown-Promise, um sicherzustellen, dass es abgeschlossen ist
+			await new Promise((resolve) => {
+				const checkCountdown = () => {
+					if (countdownValue === 0) {
 						resolve(true);
+					} else {
+						this.setTimeout(checkCountdown, 100);
 					}
 				};
-
-				countdown(LightGroups[Group].autoOffTimed.autoOffTime);
+				checkCountdown();
 			});
-
-			await Promise.all([timeoutPromise, countdownPromise]);
-			await this.setStateAsync(`${Group}.power`, { val: false, ack: false });
 		}
 
 		return Promise.resolve(true);
@@ -2185,16 +2173,12 @@ class Lightcontrol extends utils.Adapter {
 					if (timeouts.autoOff) {
 						clearTimeout(timeouts.autoOff);
 						timeouts.autoOff = null;
+						this.setState(`${Group}.autoOffTimed.countdown`, { val: 0, ack: true });
 					}
 
 					if (timeouts.notice) {
 						clearTimeout(timeouts.notice);
 						timeouts.notice = null;
-					}
-
-					if (timeouts.countdown) {
-						clearTimeout(timeouts.countdown);
-						timeouts.countdown = null;
 					}
 				}
 			}
@@ -2205,16 +2189,12 @@ class Lightcontrol extends utils.Adapter {
 				if (timeouts.autoOff) {
 					clearTimeout(timeouts.autoOff);
 					timeouts.autoOff = null;
+					this.setState(`${Group}.autoOffTimed.countdown`, { val: 0, ack: true });
 				}
 
 				if (timeouts.notice) {
 					clearTimeout(timeouts.notice);
 					timeouts.notice = null;
-				}
-
-				if (timeouts.countdown) {
-					clearTimeout(timeouts.countdown);
-					timeouts.countdown = null;
 				}
 			}
 		}
