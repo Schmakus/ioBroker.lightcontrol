@@ -10,6 +10,7 @@ const converters = require("./lib/converters");
 const { params } = require("./lib/params");
 const { DeviceTemplate } = require(`./lib/groupTemplates`);
 const { getLights } = require("./lib/lights");
+const objects = require("./lib/objects");
 
 const LightGroups = {};
 
@@ -268,6 +269,30 @@ class Lightcontrol extends utils.Adapter {
 			case "autoOffTimed.noAutoOffWhenMotion":
 				break;
 			case "autoOffTimed.noAutoOffWhenMotionMode":
+				break;
+			case "autoOffTimed.noticeBri":
+				break;
+			case "autoOffTimed.noticeTime":
+				if (LightGroups[Group].autoOffTimed.autoOffTime <= LightGroups[Group].autoOffTimed.noticeTime) {
+					await this.setStateAsync(`${Group}.autoOffTimed.noticeTime`, {
+						val: LightGroups[Group].autoOffTimed.autoOffTime + 5,
+						ack: true,
+						q: 0x40,
+					});
+					this.writeLog(
+						`Warning! noticeTime is less than autoOffTime! (Group="${Group}") We use substitute value = ${
+							LightGroups[Group].autoOffTimed.autoOffTime + 5
+						}`,
+					);
+				} else {
+					await this.setStateAsync(`${Group}.autoOffTimed.noticeTime`, {
+						val: NewVal,
+						ack: true,
+					});
+				}
+				handeled = true;
+				break;
+			case "autoOffTimed.noticeEnabled":
 				break;
 			case "autoOnMotion.enabled":
 				break;
@@ -1488,33 +1513,35 @@ class Lightcontrol extends utils.Adapter {
 		this.AutoOffTimeoutObject[Group] = {};
 
 		if (LightGroups[Group].autoOffTimed.enabled) {
-			let countdownValue = LightGroups[Group].autoOffTimed.autoOffTime;
+			const autoOffTime = LightGroups[Group].autoOffTimed.autoOffTime;
+			const noticeTime = LightGroups[Group].autoOffTimed.noticeTime;
+			const noticeBri = LightGroups[Group].autoOffTimed.noticeBri;
+			const noticeEnabled = LightGroups[Group].autoOffTimed.noticeEnabled;
 
-			this.writeLog(`Start autoOff timeout for Group="${Group} with ${countdownValue} seconds"`, "info");
+			this.writeLog(`Start autoOff timeout for Group="${Group} with ${autoOffTime} seconds"`, "info");
 
-			const countdownStep = async () => {
+			const countdownStep = async (countdownValue) => {
 				await this.setStateAsync(`${Group}.autoOffTimed.autoOff`, { val: countdownValue, ack: true });
 
 				if (countdownValue > 0) {
 					countdownValue--;
-					this.AutoOffTimeoutObject[Group].countdown = this.setTimeout(countdownStep, 1000);
+
+					if (noticeEnabled && noticeTime > autoOffTime && countdownValue === noticeTime) {
+						this.SetBrightnessAsync(Group, noticeBri, "autoOff");
+					}
+
+					this.AutoOffTimeoutObject[Group].autoOff = this.setTimeout(countdownStep, 1000);
 				} else {
 					await this.setStateAsync(`${Group}.power`, { val: false, ack: false });
+					Promise.resolve(true); // Countdown abgeschlossen, aufrufen von resolve
 				}
 			};
 
-			countdownStep();
+			countdownStep(autoOffTime);
 
 			// Warte auf das Countdown-Promise, um sicherzustellen, dass es abgeschlossen ist
-			await new Promise((resolve) => {
-				const checkCountdown = () => {
-					if (countdownValue === 0) {
-						resolve(true);
-					} else {
-						this.setTimeout(checkCountdown, 100);
-					}
-				};
-				checkCountdown();
+			await new Promise(() => {
+				countdownStep(autoOffTime);
 			});
 		}
 
@@ -1576,7 +1603,7 @@ class Lightcontrol extends utils.Adapter {
 	 * SetBrightness
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 * @param {number} Brightness Value 0 to 100
-	 * @param {string} [caller="default"] - Quelle des Funktionsaufrufs. Standardmäßig "default"
+	 * @param {string} [caller="default"] - Quelle des Funktionsaufrufs. Standardmäßig "default". Nur bei default wird ack=true gesetzt
 	 */
 	async SetBrightnessAsync(Group, Brightness, caller = "default") {
 		this.writeLog(
