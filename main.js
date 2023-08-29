@@ -1,14 +1,14 @@
 "use strict";
 const utils = require("@iobroker/adapter-core");
 
-// eslint-disable-next-line no-unused-vars
 const helper = require("./lib/helper");
+//const checks = require("./lib/checks");
 
 const SunCalc = require("suncalc2");
 const { compareTime, getDateObject, convertTime, getAstroDate } = require("./lib/helper");
 const converters = require("./lib/converters");
 const { params } = require("./lib/params");
-const { DeviceTemplate } = require(`./lib/groupTemplates`);
+//const { DeviceTemplate } = require(`./lib/groupTemplates`);
 const { getLights } = require("./lib/lights");
 const objects = require("./lib/objects");
 
@@ -34,6 +34,7 @@ class Lightcontrol extends utils.Adapter {
 		this.LuxSensors = [];
 		this.MotionSensors = [];
 
+		this.keepList = [];
 		this.activeStates = [];
 
 		this.connection = false;
@@ -2291,7 +2292,7 @@ class Lightcontrol extends utils.Adapter {
 		await this.GlobalLuxHandlingAsync();
 		await this.GlobalPresenceHandlingAsync();
 
-		const resultStatesCreate = await this.StatesCreateAsync();
+		const resultStatesCreate = await this.createObjectsAsync();
 		if (!resultStatesCreate) {
 			return false;
 		}
@@ -2317,7 +2318,7 @@ class Lightcontrol extends utils.Adapter {
 		*/
 		const latlng = await this.GetSystemDataAsync();
 		if (latlng) {
-			await this.AdaptiveCtAsync();
+			this.AdaptiveCtAsync();
 		}
 
 		const resultInitCustomStates = await this.InitCustomStatesAsync();
@@ -2562,6 +2563,7 @@ class Lightcontrol extends utils.Adapter {
 	/**
 	 * State create, extend objects and subscribe states
 	 */
+	/*
 	async StatesCreateAsync() {
 		const keepStates = [];
 		const keepChannels = [];
@@ -2728,31 +2730,127 @@ class Lightcontrol extends utils.Adapter {
 
 		return true;
 	}
+	*/
+
+	async createObjectsAsync() {
+		for (const [Group] of Object.entries(LightGroups)) {
+			if (["All", "info"].includes(Group)) continue;
+
+			await this.CreateDeviceAsync(Group, {
+				name: Group,
+			});
+
+			this.keepList.push(`${this.namespace}.info.connection`);
+			this.keepList.push(`${this.namespace}.info`);
+
+			await this.DoAllTheMotionSensorThings(Group);
+			await this.DoAllTheLuxSensorThings(Group);
+
+			for (const [key, obj] of Object.entries(objects)) {
+				const id = `${Group}.${key}`;
+
+				if (obj.type === "channel") {
+					await this.CreateChannelAsync(id, obj.common);
+					this.keepList.push(`${this.namespace}.${id}`);
+				}
+			}
+
+			for (const [key, obj] of Object.entries(objects)) {
+				if (obj.type === "state") {
+					const id = `${Group}.${key}`;
+					await this.CreateStateAsync(id, obj.common);
+					this.keepList.push(`${this.namespace}.${id}`);
+				}
+			}
+		}
+
+		//DoTheAllChannelThings
+		const ids = ["All.power", "All.anyOn"];
+		const result = await this.DoTheAllChannelThings(ids);
+		if (!result) return false;
+
+		this.keepList.push("All");
+		this.keepList.push(...ids);
+
+		return true;
+	}
+
+	/**
+	 * Deletes objects that do not exist in the given keepList.
+	 *
+	 * @async
+	 * @param {string[]} keepList - An array of object IDs to keep.
+	 * @returns {Promise<void>} - A Promise that resolves after all objects have been deleted.
+	 */
+	async deleteNonExistentObjectsAsync(keepList) {
+		try {
+			const allObjects = [];
+			const objects = await this.getAdapterObjectsAsync();
+			for (const o in objects) {
+				allObjects.push(objects[o]._id);
+			}
+
+			for (let i = 0; i < allObjects.length; i++) {
+				const id = allObjects[i];
+				if (keepList.indexOf(id) === -1) {
+					await this.delObjectAsync(id, { recursive: true });
+					this.writeLog(`Unuses object deleted ${id}`, "info");
+				}
+			}
+		} catch (error) {
+			this.writeLog(`Error by deleting unused object! Error: ${error}`, "error", "deleteNonExistentObjectsAsync");
+		}
+	}
 
 	/**
 	 * Create and update state
 	 * @author Schmakus
 	 * @async
-	 * @param {string} dp path to datapoint
-	 * @param {ioBroker.StateCommon} common common of the object
+	 * @param {string} id path to datapoint
+	 * @param {object} common common of the object
 	 */
-	async CreateStatesAsync(dp, common) {
-		try {
-			const common_old = (await this.getObjectAsync(dp))?.common || {};
+	async CreateStateAsync(id, common) {
+		const common_old = (await this.getObjectAsync(id))?.common || {};
 
-			if (JSON.stringify(common_old) !== JSON.stringify(common)) {
-				this.writeLog(`[ CreateStatesAsync ] State: ${dp} created or updated.`);
+		if (JSON.stringify(common_old) !== JSON.stringify(common)) {
+			this.writeLog(`[ CreateStateAsync ] State: ${id} created or updated.`);
 
-				await this.setObjectAsync(dp, {
-					type: "state",
-					common: common,
-					native: {},
-				});
+			await this.setObjectAsync(id, {
+				type: "state",
+				common: common,
+				native: {},
+			}).catch((error) => {
+				this.writeLog(
+					`Not able to set state of id="${id}". Please check your config! Init aborted! Error: ${error}`,
+					"error",
+					"CreateStateAsync",
+				);
+				return;
+			});
+		}
+
+		const state = await this.getStateAsync(id).catch((error) => {
+			this.writeLog(
+				`Not able to get state of id="${id}". Please check your config! Init aborted! Error: ${error}`,
+				"error",
+				"CreateStateAsync",
+			);
+			return;
+		});
+
+		if (!state) {
+			this.writeLog(`State: "${id}" is NULL or undefined! Init aborted!`, "error", "CreateStateAsync");
+			return;
+		} else {
+			const parts = id.split(".");
+			await this.SetValueToObjectAsync(parts[0], id, state.val);
+
+			if (parts.length === 2 && parts[1] === "power") {
+				await this.SetValueToObjectAsync(parts[0], "powerNewVal", state.val);
 			}
+
+			common.write && (await this.subscribeStatesAsync(id));
 			return true;
-		} catch (error) {
-			this.writeLog(`Not able create or update state (${dp}). Error: ${error}`, "error", "CreateStatesAsync");
-			return false;
 		}
 	}
 	/**
@@ -2766,7 +2864,7 @@ class Lightcontrol extends utils.Adapter {
 		try {
 			const common_old = (await this.getObjectAsync(dp))?.common || {};
 			if (JSON.stringify(common_old) !== JSON.stringify(common)) {
-				this.writeLog(`[ CreateChannelAsync ] State: ${dp} created or updated.`);
+				this.writeLog(`[ CreateChannelAsync ] Channel: ${dp} created or updated.`);
 				await this.setObjectAsync(dp, {
 					type: "channel",
 					common: common,
@@ -2791,7 +2889,7 @@ class Lightcontrol extends utils.Adapter {
 		try {
 			const common_old = (await this.getObjectAsync(dp))?.common || {};
 			if (JSON.stringify(common_old) !== JSON.stringify(common)) {
-				this.writeLog(`[ CreateChannelAsync ] State: ${dp} created or updated.`);
+				this.writeLog(`[ CreateChannelAsync ] Device: ${dp} created or updated.`);
 				await this.setObjectAsync(dp, {
 					type: "device",
 					common: common,
