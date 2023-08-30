@@ -8,7 +8,6 @@ const SunCalc = require("suncalc2");
 const { compareTime, getDateObject, convertTime, getAstroDate } = require("./lib/helper");
 const converters = require("./lib/converters");
 const { params } = require("./lib/params");
-const { getLights } = require("./lib/lights");
 const objects = require("./lib/objects");
 
 const LightGroups = {};
@@ -775,7 +774,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {boolean} OnOff true/false from power state
 	 */
 	async getSimpleLightsAsync(Lights, OnOff) {
-		return getLights("simpleLights", Lights).map((Light) =>
+		return Lights.filter((Light) => Light.power?.oid && !Light.bri?.oid).map((Light) =>
 			this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal),
 		);
 	}
@@ -788,7 +787,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {object} Group
 	 */
 	async getUseBrightnessLightsAsync(Lights, OnOff, Group) {
-		return getLights("useBrightness", Lights).map(async (Light) => {
+		return Lights.filter((Light) => Light?.bri?.oid && Light?.bri?.useBri).map(async (Light) => {
 			this.SetDeviceBriAsync(
 				Light,
 				OnOff
@@ -2590,7 +2589,7 @@ class Lightcontrol extends utils.Adapter {
 			for (const [key, obj] of Object.entries(objects)) {
 				if (obj.type === "state") {
 					const id = `${Group}.${key}`;
-					await this.CreateStateAsync(id, obj.common);
+					await this.CreateStateAsync.call(this, id, obj.common);
 					this.keepList.push(`${this.namespace}.${id}`);
 				}
 			}
