@@ -324,7 +324,7 @@ class Lightcontrol extends utils.Adapter {
 			case "autoOnLux.minLux":
 				break;
 			case "autoOnLux.bri":
-				this.AutoOnLuxAsync(Group);
+				await this.AutoOnLuxAsync(Group);
 				handeled = true;
 				break;
 			case "autoOnPresenceIncrease.enabled":
@@ -1164,7 +1164,7 @@ class Lightcontrol extends utils.Adapter {
 				!LightGroups[Group].autoOnLux?.dailyLock &&
 				LightGroups[Group].actualLux <= LightGroups[Group].autoOnLux?.minLux
 			) {
-				this.log.info(`[ AutoOnLuxAsync ] activated Group="${Group}"`);
+				this.writeLog(`[ AutoOnLuxAsync ] activated Group="${Group}"`, "info");
 
 				if (
 					(LightGroups[Group].autoOnLux?.switchOnlyWhenPresence && this.ActualPresence) ||
@@ -1300,28 +1300,29 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async AutoOnPresenceIncreaseAsync() {
 		this.writeLog(`[ AutoOnPresenceIncreaseAsync ] Reaching`);
-		let tempBri = 0;
-		let tempColor = "";
 
-		for (const Group in LightGroups) {
+		const groupKeys = Object.keys(LightGroups);
+
+		for (const Group of groupKeys) {
 			if (["All", "info"].includes(Group)) continue;
 
+			const group = LightGroups[Group];
+
 			if (
-				LightGroups[Group].autoOnPresenceIncrease.enabled &&
-				LightGroups[Group].actualLux < LightGroups[Group].autoOnPresenceIncrease.minLux &&
-				!LightGroups[Group].power
+				group.autoOnPresenceIncrease.enabled &&
+				group.actualLux < group.autoOnPresenceIncrease.minLux &&
+				!group.power
 			) {
 				await this.GroupPowerOnOffAsync(Group, true);
-				tempBri =
-					LightGroups[Group].autoOnPresenceIncrease.bri !== 0
-						? LightGroups[Group].autoOnPresenceIncrease.bri
-						: LightGroups[Group].bri;
+
+				const tempBri = group.autoOnPresenceIncrease.bri !== 0 ? group.autoOnPresenceIncrease.bri : group.bri;
+
 				await this.SetWhiteSubstituteColorAsync(Group);
-				tempColor =
-					LightGroups[Group].autoOnPresenceIncrease.color !== ""
-						? LightGroups[Group].autoOnPresenceIncrease.color
-						: (tempColor = LightGroups[Group].color);
-				await this.PowerOnAftercareAsync(Group, tempBri, LightGroups[Group].ct, tempColor);
+
+				const tempColor =
+					group.autoOnPresenceIncrease.color !== "" ? group.autoOnPresenceIncrease.color : group.color;
+
+				await this.PowerOnAftercareAsync(Group, tempBri, group.ct, tempColor);
 			}
 		}
 	}
@@ -2672,10 +2673,20 @@ class Lightcontrol extends utils.Adapter {
 			return;
 		} else {
 			const parts = id.split(".");
-			await this.SetValueToObjectAsync(parts[0], id, state.val);
+			const param = parts.slice(1).join(".");
+			await this.SetValueToObjectAsync(parts[0], param, state.val);
 
-			if (parts.length === 2 && parts[1] === "power") {
-				await this.SetValueToObjectAsync(parts[0], "powerNewVal", state.val);
+			const actionMap = {
+				power: "powerNewVal",
+				bri: "setBri",
+				ct: "setCt",
+				color: "setColor",
+			};
+
+			const action = actionMap[parts[1]];
+
+			if (parts.length === 2 && action) {
+				await this.SetValueToObjectAsync(parts[0], action, state.val);
 			}
 
 			common.write && (await this.subscribeStatesAsync(id));
