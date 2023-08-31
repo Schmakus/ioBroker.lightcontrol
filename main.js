@@ -369,6 +369,7 @@ class Lightcontrol extends utils.Adapter {
 				LightGroups[Group].powerNewVal = NewVal;
 
 				if (NewVal !== LightGroups[Group].powerOldVal) {
+					LightGroups[Group].setBri = LightGroups[Group].bri;
 					await this.GroupPowerOnOffAsync(Group, NewVal); //Alles schalten
 					if (NewVal) {
 						await this.PowerOnAftercareAsync(Group);
@@ -390,6 +391,7 @@ class Lightcontrol extends utils.Adapter {
 				handeled = true;
 				break;
 			case "adaptiveBri":
+				await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "adaptiveBri");
 				await this.SetBrightnessAsync(Group, await this.AdaptiveBriAsync(Group));
 				handeled = true;
 				break;
@@ -723,6 +725,7 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 * SimpleGroupPowerOnOff
+	 * @async
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 * @param {boolean} OnOff true/false from power state
 	 */
@@ -739,27 +742,6 @@ class Lightcontrol extends utils.Adapter {
 		const useBrightness = await this.getUseBrightnessLightsAsync(LightGroups[Group].lights, OnOff, Group);
 
 		await Promise.all([useBrightness, simpleLights]);
-		return true;
-	}
-
-	/**
-	 * DeviceSwitch lights before ramping (if brightness state available and not use Bri for ramping or transition time)
-	 * @description Ausgelagert von GroupOnOff da im Interval kein await möglich
-	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
-	 * @param {boolean} OnOff true/false from power state
-	 */
-	async DeviceSwitchForRampingAsync(Group, OnOff) {
-		this.writeLog(`[ DeviceSwitchForRamping ] Reaching for Group="${Group}, OnOff="${OnOff}"`);
-
-		const promises = LightGroups[Group].lights
-			.filter((Light) => Light?.bri?.oid && !Light?.bri?.useBri && Light?.power?.oid && Light?.tt?.oid)
-			.map((Light) => {
-				this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
-			});
-		await Promise.all(promises).catch((error) => {
-			this.writeLog(error, "error", "DeviceSwitchForRampingAsync");
-			return;
-		});
 		return true;
 	}
 
@@ -789,10 +771,31 @@ class Lightcontrol extends utils.Adapter {
 				OnOff
 					? LightGroups[Group].adaptiveBri
 						? await this.AdaptiveBriAsync(Group)
-						: LightGroups[Group].bri
+						: LightGroups[Group].setBri
 					: 0,
 			);
 		});
+	}
+
+	/**
+	 * DeviceSwitch lights before ramping (if brightness state available and not use Bri for ramping or transition time)
+	 * @description Ausgelagert von GroupOnOff da im Interval kein await möglich
+	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
+	 * @param {boolean} OnOff true/false from power state
+	 */
+	async DeviceSwitchForRampingAsync(Group, OnOff) {
+		this.writeLog(`[ DeviceSwitchForRamping ] Reaching for Group="${Group}, OnOff="${OnOff}"`);
+
+		const promises = LightGroups[Group].lights
+			.filter((Light) => Light?.bri?.oid && !Light?.bri?.useBri && Light?.power?.oid && Light?.tt?.oid)
+			.map((Light) => {
+				this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
+			});
+		await Promise.all(promises).catch((error) => {
+			this.writeLog(error, "error", "DeviceSwitchForRampingAsync");
+			return;
+		});
+		return true;
 	}
 
 	/**
@@ -885,7 +888,9 @@ class Lightcontrol extends utils.Adapter {
 		}
 		const RampSteps = this.config.RampSteps || 10;
 		const RampTime = helper.limitNumber(LightGroups[Group].rampOn?.time, 5);
-		const brightness = LightGroups[Group].adaptiveBri ? await this.AdaptiveBriAsync(Group) : LightGroups[Group].bri;
+		const brightness = LightGroups[Group].adaptiveBri
+			? await this.AdaptiveBriAsync(Group)
+			: LightGroups[Group].setBri;
 
 		if (LightGroups[Group].rampOn?.time < 5) {
 			this.writeLog(
@@ -925,7 +930,9 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async TurnOnWithRampingAsync(Group) {
 		const funcName = "TurnOnWithRampingAsync";
-		const brightness = LightGroups[Group].adaptiveBri ? await this.AdaptiveBriAsync(Group) : LightGroups[Group].bri;
+		const brightness = LightGroups[Group].adaptiveBri
+			? await this.AdaptiveBriAsync(Group)
+			: LightGroups[Group].setBri;
 		//
 		// ******* Anschalten mit ramping * //
 		//
@@ -1151,7 +1158,7 @@ class Lightcontrol extends utils.Adapter {
 		);
 
 		LightGroups[Group].setBri = LightGroups[Group].autoOnLux.bri || LightGroups[Group].bri;
-		LightGroups[Group].setColor = LightGroups[Group].autoOnLux.color || LightGroups[Group].setColor;
+		LightGroups[Group].setColor = LightGroups[Group].autoOnLux.color || LightGroups[Group].color;
 
 		if (LightGroups[Group].autoOnLux?.operator === "<") {
 			if (
@@ -1167,15 +1174,8 @@ class Lightcontrol extends utils.Adapter {
 					(LightGroups[Group].autoOnLux?.switchOnlyWhenNoPresence && !this.ActualPresence)
 				) {
 					await this.GroupPowerOnOffAsync(Group, true);
-
 					await this.SetWhiteSubstituteColorAsync(Group);
-
-					await this.PowerOnAftercareAsync(
-						Group,
-						LightGroups[Group].setBri,
-						LightGroups[Group].ct,
-						LightGroups[Group].setColor,
-					);
+					await this.PowerOnAftercareAsync(Group);
 				}
 
 				LightGroups[Group].autoOnLux.dailyLock = true;
@@ -1219,12 +1219,7 @@ class Lightcontrol extends utils.Adapter {
 
 					await this.SetWhiteSubstituteColorAsync(Group);
 
-					await this.PowerOnAftercareAsync(
-						Group,
-						LightGroups[Group].setBri,
-						LightGroups[Group].ct,
-						LightGroups[Group].setColor,
-					);
+					await this.PowerOnAftercareAsync(Group);
 				}
 
 				LightGroups[Group].autoOnLux.dailyLock = true;
@@ -1273,20 +1268,18 @@ class Lightcontrol extends utils.Adapter {
 			`[ AutoOnMotion ] Reaching for Group: "${Group}", enabled: ${LightGroups[Group]?.autoOnMotion?.enabled}, actualLux: ${LightGroups[Group]?.actualLux}, minLux: ${LightGroups[Group]?.autoOnMotion?.minLux}`,
 		);
 
-		let tempBri = 0;
-		let tempColor = "";
+		LightGroups[Group].setBri = LightGroups[Group].autoOnMotion.bri || LightGroups[Group].bri;
+		LightGroups[Group].setColor = LightGroups[Group].autoOnMotion.color || LightGroups[Group].color;
 
-		const { autoOnMotion, actualLux, isMotion, bri, color, ct } = LightGroups[Group] || {};
+		const { autoOnMotion, actualLux, isMotion } = LightGroups[Group] || {};
 
 		if (autoOnMotion?.enabled && actualLux < autoOnMotion?.minLux && isMotion) {
 			this.writeLog(`Motion for Group="${Group}" detected, switching on`, "info");
 			await this.GroupPowerOnOffAsync(Group, true);
 
-			tempBri = autoOnMotion?.bri !== 0 ? autoOnMotion?.bri : bri || tempBri;
 			await this.SetWhiteSubstituteColorAsync(Group);
 
-			tempColor = !autoOnMotion?.color ? autoOnMotion?.color : color || tempColor;
-			await this.PowerOnAftercareAsync(Group, tempBri, ct, tempColor);
+			await this.PowerOnAftercareAsync(Group);
 		}
 	}
 
@@ -1301,23 +1294,19 @@ class Lightcontrol extends utils.Adapter {
 		for (const Group of groupKeys) {
 			if (["All", "info"].includes(Group)) continue;
 
-			const group = LightGroups[Group];
-
 			if (
-				group.autoOnPresenceIncrease.enabled &&
-				group.actualLux < group.autoOnPresenceIncrease.minLux &&
-				!group.power
+				LightGroups[Group].autoOnPresenceIncrease.enabled &&
+				LightGroups[Group].actualLux < LightGroups[Group].autoOnPresenceIncrease.minLux &&
+				!LightGroups[Group].power
 			) {
+				LightGroups[Group].setBri = LightGroups[Group].autoOnPresenceIncrease.bri || LightGroups[Group].bri;
+				LightGroups[Group].setColor =
+					LightGroups[Group].autoOnPresenceIncrease.color || LightGroups[Group].color;
 				await this.GroupPowerOnOffAsync(Group, true);
-
-				const tempBri = group.autoOnPresenceIncrease.bri !== 0 ? group.autoOnPresenceIncrease.bri : group.bri;
 
 				await this.SetWhiteSubstituteColorAsync(Group);
 
-				const tempColor =
-					group.autoOnPresenceIncrease.color !== "" ? group.autoOnPresenceIncrease.color : group.color;
-
-				await this.PowerOnAftercareAsync(Group, tempBri, group.ct, tempColor);
+				await this.PowerOnAftercareAsync(Group);
 			}
 		}
 	}
@@ -1574,7 +1563,7 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async AdaptiveBriAsync(Group) {
 		this.writeLog(
-			`[ AdaptiveBri ] Reaching for Group="${Group}" actual Lux="${LightGroups[Group].actualLux}" generic lux="${this.ActualGenericLux}`,
+			`[ AdaptiveBriAsync ] Group="${Group}" actual Lux="${LightGroups[Group].actualLux}" generic lux="${this.ActualGenericLux}`,
 		);
 
 		let TempBri = 0;
@@ -2116,14 +2105,11 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async PowerOnAftercareAsync(
 		Group,
-		bri = LightGroups[Group].bri,
-		ct = LightGroups[Group].ct,
-		color = LightGroups[Group].color,
+		bri = LightGroups[Group].setBri,
+		ct = LightGroups[Group].setCt,
+		color = LightGroups[Group].setColor,
 	) {
-		this.writeLog(
-			`[ PowerOnAftercareAsync ] Reaching for Group="${Group}" bri="${bri}" ct="${ct}" color="${color}"`,
-			"info",
-		);
+		this.writeLog(`[ PowerOnAftercareAsync ] Group="${Group}" bri="${bri}" ct="${ct}" color="${color}"`, "info");
 
 		if (LightGroups[Group].power) {
 			//Nur bei anschalten ausführen
