@@ -59,16 +59,16 @@ iobroker add lightcontrol
 
 ### **WORK IN PROGRESS**
 
--   (Schmakus) re-new code => Admin v6.6.5 is necessary!
--   (Schmakus) Set Color-Temperature over HUE (Hue, Saturation & Brightness states are necessary), RGB and XY
--   (Schmakus) Add Color-type HUE (Saturation & Brightness states are necessary)
+-   (Schmakus) re-new code => Admin >=v6.6.5 is necessary!
+-   (Schmakus) Support to set Color-Temperature over HUE (Hue, Saturation & Brightness states are necessary), RGB and XY
+-   (Schmakus) Support to add Color-type HUE (Saturation & Brightness states are necessary)
 -   (Schmakus) Support transition time (as standard or for ramping)
--   (Schmakus) Fix error in SetBrightness
+-   (Schmakus) Fixed error in SetBrightness
 -   (Schmakus) Changed folder-structure of adaptiveCt (important!)
--   (Schmakus) support to choose multiple groups for one light
--   (Schmakus) add countdown state for autoOffTimed
--   (Schmakus) Update translations
--   (Schmakus) Update dependencies
+-   (Schmakus) Support to choose multiple groups for one light
+-   (Schmakus) Added countdown state for autoOffTimed
+-   (Schmakus) Updated translations
+-   (Schmakus) Updated dependencies
 
 ### 0.4.0 (2023-08-16)
 
