@@ -1,6 +1,5 @@
 "use strict";
 const utils = require("@iobroker/adapter-core");
-
 const helper = require("./lib/helper");
 const checks = require("./lib/checks");
 
@@ -11,9 +10,6 @@ const { params } = require("./lib/params");
 const objects = require("./lib/objects");
 
 const LightGroups = {};
-
-//const { objects } = require("./lib/objects");
-
 class Lightcontrol extends utils.Adapter {
 	/**
 	 * @param {Partial<utils.AdapterOptions>} [options={}]
@@ -1154,8 +1150,8 @@ class Lightcontrol extends utils.Adapter {
 			`[ AutoOnLuxAsync ] Group="${Group} enabled="${LightGroups[Group].autoOnLux.enabled}", actuallux="${LightGroups[Group].actualLux}", minLux="${LightGroups[Group].autoOnLux.minLux}" LightGroups[Group].autoOnLux.dailyLock="${LightGroups[Group].autoOnLux.dailyLock}"`,
 		);
 
-		let tempBri = 0;
-		let tempColor = "";
+		LightGroups[Group].setBri = LightGroups[Group].autoOnLux.bri || LightGroups[Group].bri;
+		LightGroups[Group].setColor = LightGroups[Group].autoOnLux.color || LightGroups[Group].setColor;
 
 		if (LightGroups[Group].autoOnLux?.operator === "<") {
 			if (
@@ -1171,16 +1167,15 @@ class Lightcontrol extends utils.Adapter {
 					(LightGroups[Group].autoOnLux?.switchOnlyWhenNoPresence && !this.ActualPresence)
 				) {
 					await this.GroupPowerOnOffAsync(Group, true);
-					tempBri =
-						LightGroups[Group].autoOnLux.bri !== 0
-							? LightGroups[Group].autoOnLux.bri
-							: (tempBri = LightGroups[Group].bri);
+
 					await this.SetWhiteSubstituteColorAsync(Group);
-					tempColor =
-						LightGroups[Group].autoOnLux.color !== ""
-							? LightGroups[Group].autoOnLux.color
-							: (tempColor = LightGroups[Group].color);
-					await this.PowerOnAftercareAsync(Group, tempBri, LightGroups[Group].ct, tempColor);
+
+					await this.PowerOnAftercareAsync(
+						Group,
+						LightGroups[Group].setBri,
+						LightGroups[Group].ct,
+						LightGroups[Group].setColor,
+					);
 				}
 
 				LightGroups[Group].autoOnLux.dailyLock = true;
@@ -1201,8 +1196,9 @@ class Lightcontrol extends utils.Adapter {
 					LightGroups[Group].autoOnLux.dailyLock = false;
 					await this.setStateAsync(Group + ".autoOnLux.dailyLock", false, true);
 					this.writeLog(
-						`[ AutoOnLuxAsync ] setting DailyLock to ${LightGroups[Group].autoOnLux.dailyLock}`,
+						`Setting DailyLock to ${LightGroups[Group].autoOnLux.dailyLock}`,
 						"info",
+						"AutoOnLuxAsync",
 					);
 				}
 			}
@@ -1220,16 +1216,15 @@ class Lightcontrol extends utils.Adapter {
 					(LightGroups[Group].autoOnLux.switchOnlyWhenNoPresence && !this.ActualPresence)
 				) {
 					await this.GroupPowerOnOffAsync(Group, true);
-					tempBri =
-						LightGroups[Group].autoOnLux.bri !== 0
-							? LightGroups[Group].autoOnLux.bri
-							: (tempBri = LightGroups[Group].bri);
+
 					await this.SetWhiteSubstituteColorAsync(Group);
-					tempColor =
-						LightGroups[Group].autoOnLux.color !== ""
-							? LightGroups[Group].autoOnLux.color
-							: LightGroups[Group].color;
-					await this.PowerOnAftercareAsync(Group, tempBri, LightGroups[Group].ct, tempColor);
+
+					await this.PowerOnAftercareAsync(
+						Group,
+						LightGroups[Group].setBri,
+						LightGroups[Group].ct,
+						LightGroups[Group].setColor,
+					);
 				}
 
 				LightGroups[Group].autoOnLux.dailyLock = true;
@@ -1249,7 +1244,7 @@ class Lightcontrol extends utils.Adapter {
 					LightGroups[Group].autoOnLux.dailyLock = false;
 					await this.setStateAsync(Group + ".autoOnLux.dailyLock", false, true);
 					this.writeLog(
-						`setting DailyLock to ${LightGroups[Group].autoOnLux.dailyLock}`,
+						`Setting DailyLock to ${LightGroups[Group].autoOnLux.dailyLock}`,
 						"info",
 						"AutoOnLuxAsync",
 					);
