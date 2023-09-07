@@ -366,12 +366,19 @@ class Lightcontrol extends utils.Adapter {
 				await this.SetTtAsync(Group, helper.limitNumber(NewVal, 0, 64000));
 				handeled = true;
 				break;
-			case "power":
+			case "power": {
 				LightGroups[Group].powerOldVal = LightGroups[Group].powerNewVal;
 				LightGroups[Group].powerNewVal = NewVal;
 
-				//if (NewVal !== LightGroups[Group].powerOldVal) {
 				LightGroups[Group].setBri = LightGroups[Group].bri;
+
+				if (
+					(NewVal && !LightGroups[Group].rampOff.enabled) ||
+					(!NewVal && !LightGroups[Group].rampOn.enabled)
+				) {
+					LightGroups[Group].ramping = "";
+				}
+
 				await this.GroupPowerOnOffAsync(Group, NewVal); //Alles schalten
 				if (NewVal) {
 					await this.PowerOnAftercareAsync(Group);
@@ -386,9 +393,9 @@ class Lightcontrol extends utils.Adapter {
 					LightGroups[Group].powerCleaningLight = false;
 					await this.setStateAsync(`${Group}.powerCleaningLight`, { val: false, ack: true });
 				}
-				//}
 				handeled = true;
 				break;
+			}
 			case "powerCleaningLight":
 				await this.GroupPowerCleaningLightOnOffAsync(Group, NewVal);
 				handeled = true;
@@ -927,71 +934,74 @@ class Lightcontrol extends utils.Adapter {
 		//
 		// ******* Anschalten mit ramping * //
 		//
-		await Promise.all([this.clearRampTimeoutsAsync(Group), this.clearTransitionTimeoutAsync(Group)]);
+		if (LightGroups[Group]?.ramping !== "up") {
+			LightGroups[Group].ramping = "up";
+			await Promise.all([this.clearRampTimeoutsAsync(Group), this.clearTransitionTimeoutAsync(Group)]);
 
-		if (LightGroups[Group]?.rampOn?.enabled && LightGroups[Group].rampOn?.switchOutletsLast) {
-			this.writeLog(`[ ${funcName} ] Switch on with ramping and simple lamps last for Group="${Group}"`);
+			if (LightGroups[Group].rampOn?.switchOutletsLast) {
+				this.writeLog(`[ ${funcName} ] Switch on with ramping and simple lamps last for Group="${Group}"`);
 
-			await this.BrightnessDevicesSwitchPowerAsync(LightGroups[Group].lights, true); // Turn on lights for ramping is no use Bri is used
-			await this.SetTtAsync(Group, LightGroups[Group].rampOn.time * 1000, "ramping");
+				await this.BrightnessDevicesSwitchPowerAsync(LightGroups[Group].lights, true); // Turn on lights for ramping is no use Bri is used
+				await this.SetTtAsync(Group, LightGroups[Group].rampOn.time * 1000, "ramping");
 
-			const promises = [
-				this.RampWithIntervalAsync(Group, true),
-				this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, brightness),
-				this.waitForTransitionAsync(Group, LightGroups[Group].rampOn.time),
-			];
+				const promises = [
+					this.RampWithIntervalAsync(Group, true),
+					this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, brightness),
+					this.waitForTransitionAsync(Group, LightGroups[Group].rampOn.time),
+				];
 
-			const results = await Promise.all(promises).catch((error) =>
-				this.writeLog(
-					`Error: ${error.message}, Stack: ${error.stack}`,
-					"TurnOnWithRampingAsync / Promises",
-					"error",
-				),
-			);
-			const waitForTransitionResult = results[2];
+				const results = await Promise.all(promises).catch((error) =>
+					this.writeLog(
+						`Error: ${error.message}, Stack: ${error.stack}`,
+						"TurnOnWithRampingAsync / Promises",
+						"error",
+					),
+				);
+				const waitForTransitionResult = results[2];
 
-			if (!waitForTransitionResult) {
-				return;
-			} else {
+				if (!waitForTransitionResult) {
+					return;
+				} else {
+					await Promise.all([
+						this.getSimpleLightsAsync(LightGroups[Group].lights, true),
+						this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff"),
+					]);
+
+					return true;
+				}
+			} else if (LightGroups[Group].rampOn?.enabled && !LightGroups[Group].rampOn?.switchOutletsLast) {
+				//Anschalten mit Ramping und einfache Lampen zuerst
+
+				this.writeLog(`[ ${funcName} ] Anschalten mit Ramping und einfache Lampen zuerst für Group="${Group}`);
+
 				await Promise.all([
 					this.getSimpleLightsAsync(LightGroups[Group].lights, true),
-					this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff"),
+					this.DeviceSwitchForRampingAsync(Group, true),
 				]);
 
-				return true;
-			}
-		} else if (LightGroups[Group].rampOn?.enabled && !LightGroups[Group].rampOn?.switchOutletsLast) {
-			//Anschalten mit Ramping und einfache Lampen zuerst
+				await this.SetTtAsync(Group, LightGroups[Group].rampOn.time * 1000, "ramping");
 
-			this.writeLog(`[ ${funcName} ] Anschalten mit Ramping und einfache Lampen zuerst für Group="${Group}`);
+				const promises = [
+					this.RampWithIntervalAsync(Group, true),
+					this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, brightness),
+					this.waitForTransitionAsync(Group, LightGroups[Group].rampOn.time),
+				];
 
-			await Promise.all([
-				this.getSimpleLightsAsync(LightGroups[Group].lights, true),
-				this.DeviceSwitchForRampingAsync(Group, true),
-			]);
+				const results = await Promise.all(promises).catch((error) =>
+					this.writeLog(
+						`Error: ${error.message}, Stack: ${error.stack}`,
+						"TurnOnWithRampingAsync / Promises",
+						"error",
+					),
+				);
+				const waitForTransitionResult = results[2];
 
-			await this.SetTtAsync(Group, LightGroups[Group].rampOn.time * 1000, "ramping");
-
-			const promises = [
-				this.RampWithIntervalAsync(Group, true),
-				this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, brightness),
-				this.waitForTransitionAsync(Group, LightGroups[Group].rampOn.time),
-			];
-
-			const results = await Promise.all(promises).catch((error) =>
-				this.writeLog(
-					`Error: ${error.message}, Stack: ${error.stack}`,
-					"TurnOnWithRampingAsync / Promises",
-					"error",
-				),
-			);
-			const waitForTransitionResult = results[2];
-
-			if (!waitForTransitionResult) {
-				return;
-			} else {
-				this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff");
-				return true;
+				if (!waitForTransitionResult) {
+					return;
+				} else {
+					this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff");
+					return true;
+				}
 			}
 		}
 	}
@@ -1002,73 +1012,78 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async TurnOffWithRampingAsync(Group) {
 		const funcName = "TurnOffWithRampingAsync";
-		await Promise.all([this.clearRampTimeoutsAsync(Group), this.clearTransitionTimeoutAsync(Group)]);
 		//
 		//******* Ausschalten mit Ramping */
 		//
-		if (LightGroups[Group].rampOff.enabled && LightGroups[Group].rampOff.switchOutletsLast) {
-			////Ausschalten mit Ramping und einfache Lampen zuletzt
+		if (LightGroups[Group]?.ramping !== "down") {
+			LightGroups[Group].ramping = "down";
+			await Promise.all([this.clearRampTimeoutsAsync(Group), this.clearTransitionTimeoutAsync(Group)]);
+			if (LightGroups[Group].rampOff.enabled && LightGroups[Group].rampOff.switchOutletsLast) {
+				////Ausschalten mit Ramping und einfache Lampen zuletzt
 
-			this.writeLog(`[ ${funcName} ] Switch on with ramping and simple lamps last for Group="${Group}"`);
+				this.writeLog(`[ ${funcName} ] Switch on with ramping and simple lamps last for Group="${Group}"`);
 
-			const promises = [
-				this.RampWithIntervalAsync(Group, false),
-				this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, 0),
-				this.waitForTransitionAsync(Group, LightGroups[Group].rampOff.time),
-			];
+				const promises = [
+					this.RampWithIntervalAsync(Group, false),
+					this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, 0),
+					this.waitForTransitionAsync(Group, LightGroups[Group].rampOff.time),
+				];
 
-			await this.SetTtAsync(Group, LightGroups[Group].rampOff.time, "ramping");
-			const results = await Promise.all(promises).catch((error) =>
+				await this.SetTtAsync(Group, LightGroups[Group].rampOff.time, "ramping");
+				const results = await Promise.all(promises).catch((error) =>
+					this.writeLog(
+						`Error: ${error.message}, Stack: ${error.stack}`,
+						"TurnOffWithRampingAsync / Promises",
+						"error",
+					),
+				);
+				const waitForTransitionResult = results[2];
+
+				if (!waitForTransitionResult) {
+					return;
+				} else {
+					await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff");
+
+					await Promise.all([
+						this.getSimpleLightsAsync(LightGroups[Group].lights, false),
+						this.DeviceSwitchForRampingAsync(Group, false),
+					]);
+
+					return true;
+				}
+			} else if (LightGroups[Group].rampOff.enabled && !LightGroups[Group].rampOff.switchOutletsLast) {
+				////Ausschalten mit Ramping und einfache Lampen zuerst
+
 				this.writeLog(
-					`Error: ${error.message}, Stack: ${error.stack}`,
-					"TurnOffWithRampingAsync / Promises",
-					"error",
-				),
-			);
-			const waitForTransitionResult = results[2];
-
-			if (!waitForTransitionResult) {
-				return;
-			} else {
-				await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff");
+					`[ GroupPowerOnOff ] Ausschalten mit Ramping und einfache Lampen zuerst für Group="${Group}`,
+				);
 
 				await Promise.all([
 					this.getSimpleLightsAsync(LightGroups[Group].lights, false),
-					this.DeviceSwitchForRampingAsync(Group, false),
+					this.SetTtAsync(Group, LightGroups[Group].rampOff.time, "ramping"),
 				]);
 
-				return true;
-			}
-		} else if (LightGroups[Group].rampOff.enabled && !LightGroups[Group].rampOff.switchOutletsLast) {
-			////Ausschalten mit Ramping und einfache Lampen zuerst
+				const promises = [
+					this.RampWithIntervalAsync(Group, false),
+					this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, 0),
+					this.waitForTransitionAsync(Group, LightGroups[Group].rampOff.time),
+				];
 
-			this.writeLog(`[ GroupPowerOnOff ] Ausschalten mit Ramping und einfache Lampen zuerst für Group="${Group}`);
+				const results = await Promise.all(promises).catch((error) =>
+					this.writeLog(
+						`Error: ${error.message}, Stack: ${error.stack}`,
+						"TurnOffWithRampingAsync / Promises",
+						"error",
+					),
+				);
+				const waitForTransitionResult = results[2];
 
-			await Promise.all([
-				this.getSimpleLightsAsync(LightGroups[Group].lights, false),
-				this.SetTtAsync(Group, LightGroups[Group].rampOff.time, "ramping"),
-			]);
-
-			const promises = [
-				this.RampWithIntervalAsync(Group, false),
-				this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, 0),
-				this.waitForTransitionAsync(Group, LightGroups[Group].rampOff.time),
-			];
-
-			const results = await Promise.all(promises).catch((error) =>
-				this.writeLog(
-					`Error: ${error.message}, Stack: ${error.stack}`,
-					"TurnOffWithRampingAsync / Promises",
-					"error",
-				),
-			);
-			const waitForTransitionResult = results[2];
-
-			if (!waitForTransitionResult) {
-				return;
-			} else {
-				await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff");
-				await this.DeviceSwitchForRampingAsync(Group, false);
+				if (!waitForTransitionResult) {
+					return;
+				} else {
+					await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff");
+					await this.DeviceSwitchForRampingAsync(Group, false);
+				}
 			}
 		}
 	}
