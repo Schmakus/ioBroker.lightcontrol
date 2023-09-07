@@ -40,7 +40,6 @@ class Lightcontrol extends utils.Adapter {
 		this.RampTimeoutObject = {};
 		this.TransitionTimeoutObject = {};
 		this.AutoOffTimeoutObject = {};
-		//this.AutoOffNoticeTimeoutObject = {};
 		this.BlinkIntervalObj = {};
 
 		this.lat = "";
@@ -84,10 +83,10 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	onUnload(callback) {
 		try {
-			this.clearRampTimeouts(null);
-			this.clearTransitionTimeout(null);
-			this.clearBlinkIntervals(null);
-			this.clearAutoOffTimeouts(null);
+			this.clearRampTimeoutsAsync(null);
+			this.clearTransitionTimeoutAsync(null);
+			this.clearBlinkIntervalsAsync(null);
+			this.clearAutoOffTimeoutsAsync(null);
 			if (this.TickerIntervall) clearTimeout(this.TickerIntervall), (this.TickerIntervall = null);
 
 			callback();
@@ -109,8 +108,6 @@ class Lightcontrol extends utils.Adapter {
 		const ids = id.split(".");
 
 		if (state.val !== null) {
-			this.writeLog(`[ onStateChange ] state ${id} changed: ${state.val} (ack = ${state.ack})`);
-
 			if (ids[0] === "lightcontrol" && !state.ack) {
 				const NewVal = state.val;
 
@@ -118,18 +115,28 @@ class Lightcontrol extends utils.Adapter {
 				const { Group, Prop } = helper.ExtractGroupAndProp(OwnId);
 
 				if (!Object.prototype.hasOwnProperty.call(LightGroups, Group)) {
-					this.writeLog(`Group "${Group}" not defined in LightGroups! Please check your settings!`, "warn");
+					this.writeLog(
+						`Group "${Group}" not defined in LightGroups! Please check your settings!`,
+						"warn",
+						"onStateChange",
+					);
 					return;
 				}
 
-				if (["All", "info"].includes(Group)) {
+				this.writeLog(
+					`[ onStateChange ] Internal state: ${id} triggered: ${state.val} (ack = ${state.ack}) in Group: ${Group}`,
+				);
+
+				if (Group === "All") {
 					await this.SetMasterPowerAsync(NewVal);
 				} else {
 					await this.ControllerAsync(Group, Prop, NewVal, OwnId);
 				}
 			} else if (ids[0] !== "lightcontrol" && state.ack) {
 				//Handle External States
-				this.writeLog(`[ onStateChange ] ExternalState, id="${id}"`);
+				this.writeLog(
+					`[ onStateChange ] External state: ${id} triggered: ${state.val} (ack = ${state.ack}). I'm checking for type..`,
+				);
 
 				//Check if it's a LuxSensor
 				if (this.LuxSensors.includes(id)) {
@@ -160,14 +167,14 @@ class Lightcontrol extends utils.Adapter {
 											sensor.isMotion = motionValue;
 
 											this.writeLog(
-												`[onStateChange] Sensor in Group="${Group}". This isMotion="${motionValue}"`,
+												`[ onStateChange ] It's a Sensor in following Group: ${Group}. This isMotion="${motionValue}"`,
 											);
 
 											await this.SummarizeSensorsAync(Group);
 										});
 								} else {
 									this.writeLog(
-										`[onStateChange] Sensors in Group="${Group}" is not iterable. Please check your config!`,
+										`[ onStateChange ] Sensors in Group="${Group}" is not iterable. Please check your config!`,
 										"warn",
 									);
 									return [];
@@ -196,6 +203,11 @@ class Lightcontrol extends utils.Adapter {
 						await this.AutoOnPresenceIncreaseAsync();
 					}
 				}
+			} else if (ids[0] !== "lightcontrol" && !state.ack) {
+				this.writeLog(
+					`[ onStateChange ] state ${id} changed: ${state.val} (ack = ${state.ack}). External states should changed with ack=true!`,
+					"warn",
+				);
 			}
 		} else {
 			// The state was deleted
@@ -224,22 +236,14 @@ class Lightcontrol extends utils.Adapter {
 					//Autofunktionen nur wenn Putzlicht nicht aktiv
 					await this.AutoOnLuxAsync(Group);
 					await this.AutoOffLuxAsync(Group);
-					if (LightGroups[Group].adaptiveBri)
-						await this.SetBrightnessAsync(Group, await this.AdaptiveBriAsync(Group));
+					if (LightGroups[Group].adaptiveBri) {
+						await this.SetBrightnessAsync(Group, this.AdaptiveBri(Group));
+					}
 					await this.AutoOnMotionAsync(Group);
 				}
 				handeled = true;
 				break;
 			case "isMotion":
-				if (!LightGroups[Group].powerCleaningLight) {
-					if (LightGroups[Group].isMotion && LightGroups[Group].power) {
-						//AutoOff Timer wird nach jeder Bewegung neugestartet
-						await this.AutoOffTimedAsync(Group);
-					}
-
-					await this.AutoOnMotionAsync(Group);
-				}
-				handeled = true;
 				break;
 			case "rampOn.time":
 				handeled = true;
@@ -262,8 +266,6 @@ class Lightcontrol extends utils.Adapter {
 			case "autoOffTimed.countdown":
 				break;
 			case "autoOffTimed.noAutoOffWhenMotion":
-				break;
-			case "autoOffTimed.noAutoOffWhenMotionMode":
 				break;
 			case "autoOffTimed.noticeBri":
 				break;
@@ -368,22 +370,23 @@ class Lightcontrol extends utils.Adapter {
 				LightGroups[Group].powerOldVal = LightGroups[Group].powerNewVal;
 				LightGroups[Group].powerNewVal = NewVal;
 
-				if (NewVal !== LightGroups[Group].powerOldVal) {
-					LightGroups[Group].setBri = LightGroups[Group].bri;
-					await this.GroupPowerOnOffAsync(Group, NewVal); //Alles schalten
-					if (NewVal) {
-						await this.PowerOnAftercareAsync(Group);
-					}
-					if (!NewVal && LightGroups[Group].autoOffTimed.enabled) {
-						//Wenn ausschalten und autoOffTimed ist aktiv, dieses löschen, da sonst erneute ausschaltung nach Ablauf der Zeit. Ist zusätzlich rampon aktiv, führt dieses zu einem einschalten mit sofort folgenden ausschalten
-						this.clearAutoOffTimeouts(Group);
-					}
-					if (!NewVal && LightGroups[Group].powerCleaningLight) {
-						//Wenn via Cleaninglight angeschaltet wurde, jetzt aber normal ausgeschaltet, powerCleaningLight synchen um Blockade der Autofunktionen zu vermeiden
-						LightGroups[Group].powerCleaningLight = false;
-						await this.setStateAsync(Group + ".powerCleaningLight", false, true);
-					}
+				//if (NewVal !== LightGroups[Group].powerOldVal) {
+				LightGroups[Group].setBri = LightGroups[Group].bri;
+				await this.GroupPowerOnOffAsync(Group, NewVal); //Alles schalten
+				if (NewVal) {
+					await this.PowerOnAftercareAsync(Group);
+					await this.AutoOffTimedAsync(Group);
 				}
+				if (!NewVal && LightGroups[Group].autoOffTimed.enabled) {
+					//Wenn ausschalten und autoOffTimed ist aktiv, dieses löschen, da sonst erneute ausschaltung nach Ablauf der Zeit. Ist zusätzlich rampon aktiv, führt dieses zu einem einschalten mit sofort folgenden ausschalten
+					await this.clearAutoOffTimeoutsAsync(Group);
+				}
+				if (!NewVal && LightGroups[Group].powerCleaningLight) {
+					//Wenn via Cleaninglight angeschaltet wurde, jetzt aber normal ausgeschaltet, powerCleaningLight synchen um Blockade der Autofunktionen zu vermeiden
+					LightGroups[Group].powerCleaningLight = false;
+					await this.setStateAsync(`${Group}.powerCleaningLight`, { val: false, ack: true });
+				}
+				//}
 				handeled = true;
 				break;
 			case "powerCleaningLight":
@@ -392,23 +395,21 @@ class Lightcontrol extends utils.Adapter {
 				break;
 			case "adaptiveBri":
 				await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "adaptiveBri");
-				await this.SetBrightnessAsync(Group, await this.AdaptiveBriAsync(Group));
+				await this.SetBrightnessAsync(Group, this.AdaptiveBri(Group));
 				handeled = true;
 				break;
 			case "dimmUp":
-				await this.setStateAsync(
-					`${Group}.bri`,
-					Math.min(Math.max(LightGroups[Group].bri + LightGroups[Group].dimmAmount, 10), 100),
-					false,
-				);
+				await this.setStateAsync(`${Group}.bri`, {
+					val: Math.min(Math.max(LightGroups[Group].bri + LightGroups[Group].dimmAmount, 10), 100),
+					ack: false,
+				});
 				handeled = true;
 				break;
 			case "dimmDown":
-				await this.setStateAsync(
-					`${Group}.bri`,
-					Math.min(Math.max(LightGroups[Group].bri - LightGroups[Group].dimmAmount, 2), 100),
-					false,
-				);
+				await this.setStateAsync(`${Group}.bri`, {
+					val: Math.min(Math.max(LightGroups[Group].bri - LightGroups[Group].dimmAmount, 2), 100),
+					ack: false,
+				});
 				handeled = true;
 				break;
 			case "dimmAmount":
@@ -444,7 +445,7 @@ class Lightcontrol extends utils.Adapter {
 
 		if (!handeled) {
 			if (id !== "") {
-				await this.setStateAsync(id, NewVal, true);
+				await this.setStateAsync(id, { val: NewVal, ack: true });
 			}
 		}
 		return true;
@@ -544,7 +545,11 @@ class Lightcontrol extends utils.Adapter {
 						this.sendTo(msg.from, msg.command, groups, msg.callback);
 						this.writeLog(`[ onMessage ] LightGroup => LightGroups Callback: ${JSON.stringify(groups)}.`);
 					} catch (error) {
-						this.writeLog(error, "error", "onMessage // case LightGroup");
+						this.writeLog(
+							`Error: ${error.message}, Stack: ${error.stack}`,
+							"error",
+							"onMessage // case LightGroup",
+						);
 					}
 					break;
 				}
@@ -604,7 +609,11 @@ class Lightcontrol extends utils.Adapter {
 						}
 						this.sendTo(msg.from, msg.command, lights, msg.callback);
 					} catch (error) {
-						this.writeLog(error, "error", `[ onMessage // case LightName ]`);
+						this.writeLog(
+							`Error: ${error.message}, Stack: ${error.stack}`,
+							"error",
+							`[ onMessage // case LightName ]`,
+						);
 					}
 					break;
 				}
@@ -650,7 +659,11 @@ class Lightcontrol extends utils.Adapter {
 							this.sendTo(msg.from, msg.command, "", msg.callback);
 						}
 					} catch (error) {
-						this.writeLog(error, "error", "onMessage // case checkIdForDuplicates");
+						this.writeLog(
+							`Error: ${error.message}, Stack: ${error.stack}`,
+							"error",
+							"onMessage // case checkIdForDuplicates",
+						);
 					}
 					break;
 				}
@@ -693,11 +706,10 @@ class Lightcontrol extends utils.Adapter {
 			if (!LightGroups[Group].rampOn.enabled) {
 				await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff");
 				await this.SimpleGroupPowerOnOffAsync(Group, OnOff);
-				this.AutoOffTimedAsync(Group); //no await because it should start parallel
 			} else {
 				await this.TurnOnWithRampingAsync(Group);
 			}
-			await this.setStateAsync(Group + ".power", OnOff, true);
+			await this.setStateAsync(`${Group}.power`, { val: OnOff, ack: true });
 		} else {
 			// Ausschalten ohne Ramping */
 			if (!LightGroups[Group].rampOff.enabled) {
@@ -711,7 +723,7 @@ class Lightcontrol extends utils.Adapter {
 				// Ausschalten mit Ramping */
 				await this.TurnOffWithRampingAsync(Group);
 			}
-			await this.setStateAsync(Group + ".power", OnOff, true);
+			await this.setStateAsync(`${Group}.power`, { val: OnOff, ack: true });
 		}
 
 		/*
@@ -765,14 +777,10 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {object} Group
 	 */
 	async getUseBrightnessLightsAsync(Lights, OnOff, Group) {
-		return Lights.filter((Light) => Light?.bri?.oid && Light?.bri?.useBri).map(async (Light) => {
+		return Lights.filter((Light) => Light?.bri?.oid && Light?.bri?.useBri).map((Light) => {
 			this.SetDeviceBriAsync(
 				Light,
-				OnOff
-					? LightGroups[Group].adaptiveBri
-						? await this.AdaptiveBriAsync(Group)
-						: LightGroups[Group].setBri
-					: 0,
+				OnOff ? (LightGroups[Group].adaptiveBri ? this.AdaptiveBri(Group) : LightGroups[Group].setBri) : 0,
 			);
 		});
 	}
@@ -792,7 +800,7 @@ class Lightcontrol extends utils.Adapter {
 				this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
 			});
 		await Promise.all(promises).catch((error) => {
-			this.writeLog(error, "error", "DeviceSwitchForRampingAsync");
+			this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "DeviceSwitchForRampingAsync");
 			return;
 		});
 		return true;
@@ -808,13 +816,8 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async BrightnessDevicesSwitchPowerAsync(Lights, OnOff) {
 		return Lights.filter((Light) => Light.power?.oid && Light.bri?.oid && !Light.bri?.useBri && !Light.tt?.oid).map(
-			async (Light) => {
-				await Promise.all([
-					this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal),
-					this.writeLog(
-						`[ BrightnessDevicesSwitchPowerAsync ] Switching ${Light.description} (${Light.bri.oid}) to: ${OnOff}`,
-					),
-				]);
+			(Light) => {
+				this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
 			},
 		);
 	}
@@ -826,19 +829,11 @@ class Lightcontrol extends utils.Adapter {
 	 * @function
 	 * @param {array} Lights Group of Lightgroups eg. LivingRoom, Children1,...
 	 * @param {number} Brightness Brightness to set
-	 * @param {number} RampTime Information about the RampTime
 	 */
-	async BrightnessDevicesWithTransitionTimeAsync(Lights, Brightness, RampTime) {
-		const promises = Lights.filter((Light) => Light.bri?.oid && Light.bri?.useBri && Light.tt?.oid).map(
-			async (Light) => {
-				await Promise.all([
-					this.setForeignStateAsync(Light.bri.oid, Brightness),
-					this.writeLog(
-						`[ BrightnessDevicesWithTransitionTimeAsync ] Set ${Light.description} (${Light.bri.oid}) to: ${Brightness} in: ${RampTime}`,
-					),
-				]);
-			},
-		);
+	async BrightnessDevicesWithTransitionTimeAsync(Lights, Brightness) {
+		const promises = Lights.filter((Light) => Light.bri?.oid && Light.bri?.useBri && Light.tt?.oid).map((Light) => {
+			this.setForeignStateAsync(Light.bri.oid, Brightness);
+		});
 		return promises;
 	}
 
@@ -888,9 +883,7 @@ class Lightcontrol extends utils.Adapter {
 		}
 		const RampSteps = this.config.RampSteps || 10;
 		const RampTime = helper.limitNumber(LightGroups[Group].rampOn?.time, 5);
-		const brightness = LightGroups[Group].adaptiveBri
-			? await this.AdaptiveBriAsync(Group)
-			: LightGroups[Group].setBri;
+		const brightness = LightGroups[Group].adaptiveBri ? this.AdaptiveBri(Group) : LightGroups[Group].setBri;
 
 		if (LightGroups[Group].rampOn?.time < 5) {
 			this.writeLog(
@@ -916,7 +909,7 @@ class Lightcontrol extends utils.Adapter {
 			if (LoopCount < RampSteps) {
 				this.RampTimeoutObject[Group] = setTimeout(rampStepFunction, rampStepDuration);
 			} else {
-				this.clearRampTimeouts(Group);
+				await this.clearRampTimeoutsAsync(Group);
 			}
 		};
 
@@ -930,13 +923,11 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async TurnOnWithRampingAsync(Group) {
 		const funcName = "TurnOnWithRampingAsync";
-		const brightness = LightGroups[Group].adaptiveBri
-			? await this.AdaptiveBriAsync(Group)
-			: LightGroups[Group].setBri;
+		const brightness = LightGroups[Group].adaptiveBri ? this.AdaptiveBri(Group) : LightGroups[Group].setBri;
 		//
 		// ******* Anschalten mit ramping * //
 		//
-		await Promise.all([this.clearRampTimeouts(Group), this.clearTransitionTimeout(Group)]);
+		await Promise.all([this.clearRampTimeoutsAsync(Group), this.clearTransitionTimeoutAsync(Group)]);
 
 		if (LightGroups[Group]?.rampOn?.enabled && LightGroups[Group].rampOn?.switchOutletsLast) {
 			this.writeLog(`[ ${funcName} ] Switch on with ramping and simple lamps last for Group="${Group}"`);
@@ -946,16 +937,16 @@ class Lightcontrol extends utils.Adapter {
 
 			const promises = [
 				this.RampWithIntervalAsync(Group, true),
-				this.BrightnessDevicesWithTransitionTimeAsync(
-					LightGroups[Group].lights,
-					brightness,
-					LightGroups[Group].rampOn?.time,
-				),
+				this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, brightness),
 				this.waitForTransitionAsync(Group, LightGroups[Group].rampOn.time),
 			];
 
 			const results = await Promise.all(promises).catch((error) =>
-				this.writeLog(error, "TurnOnWithRampingAsync / Promises", "error"),
+				this.writeLog(
+					`Error: ${error.message}, Stack: ${error.stack}`,
+					"TurnOnWithRampingAsync / Promises",
+					"error",
+				),
 			);
 			const waitForTransitionResult = results[2];
 
@@ -967,10 +958,6 @@ class Lightcontrol extends utils.Adapter {
 					this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff"),
 				]);
 
-				if (LightGroups[Group].autoOffTimed.enabled) {
-					//Wenn Zeitabschaltung aktiv und Anschaltung, AutoOff aktivieren
-					await this.AutoOffTimedAsync(Group);
-				}
 				return true;
 			}
 		} else if (LightGroups[Group].rampOn?.enabled && !LightGroups[Group].rampOn?.switchOutletsLast) {
@@ -987,16 +974,16 @@ class Lightcontrol extends utils.Adapter {
 
 			const promises = [
 				this.RampWithIntervalAsync(Group, true),
-				this.BrightnessDevicesWithTransitionTimeAsync(
-					LightGroups[Group].lights,
-					brightness,
-					LightGroups[Group].rampOn?.time,
-				),
+				this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, brightness),
 				this.waitForTransitionAsync(Group, LightGroups[Group].rampOn.time),
 			];
 
 			const results = await Promise.all(promises).catch((error) =>
-				this.writeLog(error, "TurnOnWithRampingAsync / Promises", "error"),
+				this.writeLog(
+					`Error: ${error.message}, Stack: ${error.stack}`,
+					"TurnOnWithRampingAsync / Promises",
+					"error",
+				),
 			);
 			const waitForTransitionResult = results[2];
 
@@ -1015,7 +1002,7 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async TurnOffWithRampingAsync(Group) {
 		const funcName = "TurnOffWithRampingAsync";
-		await Promise.all([this.clearRampTimeouts(Group), this.clearTransitionTimeout(Group)]);
+		await Promise.all([this.clearRampTimeoutsAsync(Group), this.clearTransitionTimeoutAsync(Group)]);
 		//
 		//******* Ausschalten mit Ramping */
 		//
@@ -1026,17 +1013,17 @@ class Lightcontrol extends utils.Adapter {
 
 			const promises = [
 				this.RampWithIntervalAsync(Group, false),
-				this.BrightnessDevicesWithTransitionTimeAsync(
-					LightGroups[Group].lights,
-					0,
-					LightGroups[Group].rampOff?.time,
-				),
+				this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, 0),
 				this.waitForTransitionAsync(Group, LightGroups[Group].rampOff.time),
 			];
 
 			await this.SetTtAsync(Group, LightGroups[Group].rampOff.time, "ramping");
 			const results = await Promise.all(promises).catch((error) =>
-				this.writeLog(error, "TurnOffWithRampingAsync / Promises", "error"),
+				this.writeLog(
+					`Error: ${error.message}, Stack: ${error.stack}`,
+					"TurnOffWithRampingAsync / Promises",
+					"error",
+				),
 			);
 			const waitForTransitionResult = results[2];
 
@@ -1064,16 +1051,16 @@ class Lightcontrol extends utils.Adapter {
 
 			const promises = [
 				this.RampWithIntervalAsync(Group, false),
-				this.BrightnessDevicesWithTransitionTimeAsync(
-					LightGroups[Group].lights,
-					0,
-					LightGroups[Group].rampOff?.time,
-				),
+				this.BrightnessDevicesWithTransitionTimeAsync(LightGroups[Group].lights, 0),
 				this.waitForTransitionAsync(Group, LightGroups[Group].rampOff.time),
 			];
 
 			const results = await Promise.all(promises).catch((error) =>
-				this.writeLog(error, "TurnOffWithRampingAsync / Promises", "error"),
+				this.writeLog(
+					`Error: ${error.message}, Stack: ${error.stack}`,
+					"TurnOffWithRampingAsync / Promises",
+					"error",
+				),
 			);
 			const waitForTransitionResult = results[2];
 
@@ -1093,9 +1080,9 @@ class Lightcontrol extends utils.Adapter {
 	 */
 	async GroupPowerCleaningLightOnOffAsync(Group, OnOff) {
 		const funcName = "GroupPowerCleaningLightOnOffAsync";
-		this.writeLog(`[ ${funcName} ] Reaching GroupPowerCleaningLightOnOff for Group="${Group}, OnOff="${OnOff}"`);
+		this.writeLog(`Reaching GroupPowerCleaningLightOnOff for Group="${Group}, OnOff="${OnOff}"`, "debug", funcName);
 
-		await this.clearAutoOffTimeouts(Group);
+		await this.clearAutoOffTimeoutsAsync(Group);
 
 		if (OnOff) {
 			if (LightGroups[Group].power) {
@@ -1111,13 +1098,11 @@ class Lightcontrol extends utils.Adapter {
 				await Promise.all([
 					this.SetBrightnessAsync(Group, 100),
 					this.SetCtAsync(Group, this.config.maxCt || 6700),
-					this.setStateAsync(Group + ".power", true, true),
+					this.setStateAsync(`${Group}.power`, { val: true, ack: true }),
 				]);
 			}
 		} else {
-			const brightness = LightGroups[Group].adaptiveBri
-				? await this.AdaptiveBriAsync(Group)
-				: LightGroups[Group].bri;
+			const brightness = LightGroups[Group].adaptiveBri ? this.AdaptiveBri(Group) : LightGroups[Group].bri;
 
 			await Promise.all([
 				this.SetBrightnessAsync(Group, brightness),
@@ -1128,12 +1113,12 @@ class Lightcontrol extends utils.Adapter {
 				LightGroups[Group].power = false;
 				await Promise.all([
 					this.SimpleGroupPowerOnOffAsync(Group, false),
-					this.setStateAsync(Group + ".power", false, true),
+					this.setStateAsync(`${Group}.power`, { val: false, ack: true }),
 				]);
 			}
 		}
 
-		await this.setStateAsync(Group + ".powerCleaningLight", OnOff, true);
+		await this.setStateAsync(`${Group}.powerCleaningLight`, { val: OnOff, ack: true });
 	}
 
 	/**
@@ -1180,7 +1165,7 @@ class Lightcontrol extends utils.Adapter {
 
 				LightGroups[Group].autoOnLux.dailyLock = true;
 
-				await this.setStateAsync(Group + ".autoOnLux.dailyLock", true, true);
+				await this.setStateAsync(`${Group}.autoOnLux.dailyLock`, { val: true, ack: true });
 			} else if (
 				LightGroups[Group].autoOnLux?.dailyLock &&
 				LightGroups[Group].actualLux > LightGroups[Group].autoOnLux?.minLux
@@ -1194,7 +1179,7 @@ class Lightcontrol extends utils.Adapter {
 
 					LightGroups[Group].autoOnLux.dailyLockCounter = 0;
 					LightGroups[Group].autoOnLux.dailyLock = false;
-					await this.setStateAsync(Group + ".autoOnLux.dailyLock", false, true);
+					await this.setStateAsync(`${Group}.autoOnLux.dailyLock`, { val: false, ack: true });
 					this.writeLog(
 						`Setting DailyLock to ${LightGroups[Group].autoOnLux.dailyLock}`,
 						"info",
@@ -1223,7 +1208,7 @@ class Lightcontrol extends utils.Adapter {
 				}
 
 				LightGroups[Group].autoOnLux.dailyLock = true;
-				await this.setStateAsync(Group + ".autoOnLux.dailyLock", true, true);
+				await this.setStateAsync(`${Group}.autoOnLux.dailyLock`, { val: true, ack: true });
 			} else if (
 				LightGroups[Group].autoOnLux.dailyLock &&
 				LightGroups[Group].actualLux < LightGroups[Group].autoOnLux.minLux
@@ -1237,7 +1222,7 @@ class Lightcontrol extends utils.Adapter {
 
 					LightGroups[Group].autoOnLux.dailyLockCounter = 0;
 					LightGroups[Group].autoOnLux.dailyLock = false;
-					await this.setStateAsync(Group + ".autoOnLux.dailyLock", false, true);
+					await this.setStateAsync(`${Group}.autoOnLux.dailyLock`, { val: false, ack: true });
 					this.writeLog(
 						`Setting DailyLock to ${LightGroups[Group].autoOnLux.dailyLock}`,
 						"info",
@@ -1253,27 +1238,30 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 */
 	async AutoOnMotionAsync(Group) {
+		if (!LightGroups[Group].isMotion) {
+			return;
+		}
 		if (
-			!LightGroups[Group]?.autoOnMotion ||
-			!LightGroups[Group]?.autoOnMotion?.enabled ||
-			!LightGroups[Group]?.autoOnMotion?.minLux
+			LightGroups[Group].autoOnMotion.enabled === undefined ||
+			LightGroups[Group].autoOnMotion.minLux === undefined ||
+			LightGroups[Group].autoOnMotion.bri === undefined ||
+			LightGroups[Group].autoOnMotion.color === undefined
 		) {
 			this.writeLog(
-				`[ AutoOnMotion ] Not able to auto on for Group: "${Group}". Please check your config! Aborted`,
+				`[ AutoOnMotionAsync ] Not able to auto on for Group: "${Group}". Please check your config! Aborted`,
+				"error",
 			);
 			return;
 		}
 
-		this.writeLog(
-			`[ AutoOnMotion ] Reaching for Group: "${Group}", enabled: ${LightGroups[Group]?.autoOnMotion?.enabled}, actualLux: ${LightGroups[Group]?.actualLux}, minLux: ${LightGroups[Group]?.autoOnMotion?.minLux}`,
-		);
+		await this.clearAutoOffTimeoutsAsync(Group);
 
 		LightGroups[Group].setBri = LightGroups[Group].autoOnMotion.bri || LightGroups[Group].bri;
 		LightGroups[Group].setColor = LightGroups[Group].autoOnMotion.color || LightGroups[Group].color;
 
-		const { autoOnMotion, actualLux, isMotion } = LightGroups[Group] || {};
+		const { autoOnMotion, actualLux, isMotion, power } = LightGroups[Group] || {};
 
-		if (autoOnMotion?.enabled && actualLux < autoOnMotion?.minLux && isMotion) {
+		if (autoOnMotion?.enabled && actualLux < autoOnMotion?.minLux && isMotion && !power) {
 			this.writeLog(`Motion for Group="${Group}" detected, switching on`, "info");
 			await this.GroupPowerOnOffAsync(Group, true);
 
@@ -1281,6 +1269,8 @@ class Lightcontrol extends utils.Adapter {
 
 			await this.PowerOnAftercareAsync(Group);
 		}
+
+		return true;
 	}
 
 	/**
@@ -1316,7 +1306,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 */
 	async BlinkAsync(Group) {
-		this.setStateAsync(Group + ".blink.enabled", true, true);
+		this.setStateAsync(`${Group}.blink.enabled`, { val: true, ack: true });
 
 		let loopcount = 0;
 
@@ -1346,7 +1336,7 @@ class Lightcontrol extends utils.Adapter {
 			}
 
 			LightGroups[Group].power = true;
-			await this.setStateAsync(Group + ".power", true, true);
+			await this.setStateAsync(`${Group}.power`, { val: true, ack: true });
 
 			await this.SetWhiteSubstituteColorAsync(Group);
 
@@ -1355,7 +1345,7 @@ class Lightcontrol extends utils.Adapter {
 			loopcount++;
 		}
 
-		await this.clearBlinkIntervals(Group);
+		await this.clearBlinkIntervalsAsync(Group);
 
 		this.BlinkIntervalObj[Group] = setInterval(async () => {
 			loopcount++;
@@ -1391,7 +1381,7 @@ class Lightcontrol extends utils.Adapter {
 						await this.SetColorAsync(Group, LightGroups[Group].blink.color);
 
 					LightGroups[Group].power = false;
-					this.setStateAsync(Group + ".power", false, true);
+					this.setStateAsync(`${Group}.power`, { val: false, ack: true });
 					//this.SetLightState();
 				} else {
 					this.writeLog(`[ Blink ] => on ${loopcount}`, "info");
@@ -1412,14 +1402,17 @@ class Lightcontrol extends utils.Adapter {
 					}
 
 					LightGroups[Group].power = true;
-					this.setStateAsync(Group + ".power", true, true);
+					this.setStateAsync(`${Group}.power`, { val: true, ack: true });
 					//this.SetLightState();
 				}
 			} else {
-				await this.clearBlinkIntervals(Group);
-				this.setStateAsync(Group + ".blink.enabled", false, true);
+				await this.clearBlinkIntervalsAsync(Group);
+				this.setStateAsync(`${Group}.blink.enabled`, { val: false, ack: true });
 				if (LightGroups[Group].blink.infinite || LightGroups[Group].blink.actual_power) {
-					await this.setStateAsync(Group + ".power", LightGroups[Group].blink.actual_power, false);
+					await this.setStateAsync(`${Group}.power`, {
+						val: LightGroups[Group].blink.actual_power,
+						ack: false,
+					});
 					await this.SetColorAsync(Group, LightGroups[Group].color);
 				}
 			}
@@ -1444,7 +1437,7 @@ class Lightcontrol extends utils.Adapter {
 		) {
 			await this.GroupPowerOnOffAsync(Group, false);
 			LightGroups[Group].autoOffLux.dailyLock = true;
-			await this.setStateAsync(Group + ".autoOffLux.dailyLock", true, true);
+			await this.setStateAsync(`${Group}.autoOffLux.dailyLock`, { val: true, ack: true });
 		} else if (
 			LightGroups[Group].autoOffLux?.operator === ">" &&
 			LightGroups[Group].actualLux > LightGroups[Group].autoOffLux?.minLux &&
@@ -1454,7 +1447,7 @@ class Lightcontrol extends utils.Adapter {
 		) {
 			await this.GroupPowerOnOffAsync(Group, false);
 			LightGroups[Group].autoOffLux.dailyLock = true;
-			await this.setStateAsync(Group + ".autoOffLux.dailyLock", true, true);
+			await this.setStateAsync(`${Group}.autoOffLux.dailyLock`, { val: true, ack: true });
 		}
 
 		if (LightGroups[Group].autoOffLux?.operator === "<") {
@@ -1468,7 +1461,7 @@ class Lightcontrol extends utils.Adapter {
 
 				if (LightGroups[Group].autoOffLux?.dailyLockCounter >= 5) {
 					LightGroups[Group].autoOffLux.dailyLock = false;
-					await this.setStateAsync(Group + ".autoOffLux.dailyLock", false, true);
+					await this.setStateAsync(`${Group}.autoOffLux.dailyLock`, { val: false, ack: true });
 					LightGroups[Group].autoOffLux.dailyLockCounter = 0;
 				}
 			}
@@ -1481,7 +1474,7 @@ class Lightcontrol extends utils.Adapter {
 
 				if (LightGroups[Group].autoOffLux?.dailyLockCounter >= 5) {
 					LightGroups[Group].autoOffLux.dailyLock = false;
-					await this.setStateAsync(Group + ".autoOffLux.dailyLock", false, true);
+					await this.setStateAsync(`${Group}.autoOffLux.dailyLock`, { val: false, ack: true });
 					LightGroups[Group].autoOffLux.dailyLockCounter = 0;
 				}
 			}
@@ -1491,56 +1484,55 @@ class Lightcontrol extends utils.Adapter {
 	/**
 	 * AutoOffTimed
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
+	 * @returns {Promise<void>}
 	 */
 	async AutoOffTimedAsync(Group) {
-		this.clearAutoOffTimeouts(Group);
-		this.AutoOffTimeoutObject[Group] = {};
-
-		if (LightGroups[Group].autoOffTimed.enabled) {
-			const autoOffTime = LightGroups[Group].autoOffTimed.autoOffTime;
-			const noticeTime = LightGroups[Group].autoOffTimed.noticeTime;
-			const noticeBri = LightGroups[Group].autoOffTimed.noticeBri;
-			const noticeEnabled = LightGroups[Group].autoOffTimed.noticeEnabled;
-
-			this.writeLog(`Start autoOff timeout for Group="${Group} with ${autoOffTime} seconds"`, "info");
-
-			const countdownStep = async (countdownValue) => {
-				await this.setStateAsync(`${Group}.autoOffTimed.autoOff`, { val: countdownValue, ack: true });
-
-				if (countdownValue > 0) {
-					countdownValue--;
-
-					if (noticeEnabled && noticeTime > autoOffTime && countdownValue === noticeTime) {
-						this.SetBrightnessAsync(Group, noticeBri, "autoOff");
-					}
-
-					this.AutoOffTimeoutObject[Group].autoOff = this.setTimeout(countdownStep, 1000);
-				} else {
-					await this.setStateAsync(`${Group}.power`, { val: false, ack: false });
-					Promise.resolve(true); // Countdown abgeschlossen, aufrufen von resolve
-				}
-			};
-
-			countdownStep(autoOffTime);
-
-			// Warte auf das Countdown-Promise, um sicherzustellen, dass es abgeschlossen ist
-			await new Promise(() => {
-				countdownStep(autoOffTime);
-			});
+		if (this.AutoOffTimeoutObject[Group] !== null) {
+			this.writeLog("No start of autoOff because it's already running");
+			return;
 		}
 
-		return Promise.resolve(true);
+		await this.clearAutoOffTimeoutsAsync(Group);
+
+		const { enabled, noAutoOffWhenMotion, autoOffTime, noticeTime, noticeBri, noticeEnabled } =
+			LightGroups[Group].autoOffTimed;
+		const { power, isMotion, powerCleaningLight } = LightGroups[Group];
+
+		if (!enabled || (noAutoOffWhenMotion && isMotion) || powerCleaningLight || !power) {
+			return;
+		}
+
+		this.writeLog(`Start autoOff timeout for Group="${Group} with ${autoOffTime} seconds"`, "info");
+
+		const countdownStep = async (countdownValue) => {
+			await this.setStateAsync(`${Group}.autoOffTimed.countdown`, { val: countdownValue, ack: true });
+
+			if (countdownValue > 0) {
+				countdownValue--;
+
+				if (noticeEnabled && noticeTime > autoOffTime && countdownValue === noticeTime) {
+					this.SetBrightnessAsync(Group, noticeBri, "autoOff");
+				}
+				this.AutoOffTimeoutObject[Group] = this.setTimeout(countdownStep, 1000, countdownValue);
+			} else {
+				await this.clearAutoOffTimeoutsAsync(Group);
+				await this.setStateAsync(`${Group}.power`, { val: false, ack: false });
+				return;
+			}
+		};
+
+		countdownStep(autoOffTime);
 	}
 
 	/**
 	 * SetMasterPower
-	 * @param NewVal New Value of state
+	 * @param {*} value value of state
 	 */
-	async SetMasterPowerAsync(NewVal) {
+	async SetMasterPowerAsync(value) {
 		const promises = Object.keys(LightGroups)
 			.filter((Group) => !["All", "info"].includes(Group))
 			.map((Group) => {
-				return this.setStateAsync(Group + ".power", NewVal, false);
+				return this.setStateAsync(`${Group}.power`, { val: value, ack: false });
 			});
 
 		await Promise.all(promises).catch((error) => {
@@ -1559,9 +1551,8 @@ class Lightcontrol extends utils.Adapter {
 	/**
 	 * AdaptiveBri
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
-	 * @returns {Promise<number>} Brightness value
 	 */
-	async AdaptiveBriAsync(Group) {
+	AdaptiveBri(Group) {
 		this.writeLog(
 			`[ AdaptiveBriAsync ] Group="${Group}" actual Lux="${LightGroups[Group].actualLux}" generic lux="${this.ActualGenericLux}`,
 		);
@@ -1608,12 +1599,12 @@ class Lightcontrol extends utils.Adapter {
 				.map((Light) => this.SetDeviceBriAsync(Light, Brightness));
 
 			await Promise.all(promises).catch((error) => {
-				this.writeLog(error, "error", "SetBrightnessAsync");
+				this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "SetBrightnessAsync");
 				return;
 			});
 		}
 
-		if (caller === "default") await this.setStateAsync(Group + "." + "bri", Brightness, true);
+		if (caller === "default") await this.setStateAsync(`${Group}.bri`, { val: Brightness, ack: true });
 		return true;
 	}
 
@@ -1629,8 +1620,8 @@ class Lightcontrol extends utils.Adapter {
 			return false;
 		}
 		const log = !bri?.useBri
-			? `[ setDeviceBri ] Switching with Power State is activated. Min. Brightness is defined with 2%. Actual Brightness = "${brightness}"`
-			: `[ setDeviceBri ] Switching with Brightness is activated. No min. Brightness needed. Actual Brightness = "${brightness}"`;
+			? `[ SetDeviceBriAsync ] Switching with Power State is activated. Min. Brightness is defined with 2%. Actual Brightness = "${brightness}"`
+			: `[ SetDeviceBriAsync ] Switching with Brightness is activated. No min. Brightness needed. Actual Brightness = "${brightness}"`;
 		this.writeLog(log);
 
 		const minBrightness = bri?.useBri ? 0 : 2;
@@ -1644,7 +1635,7 @@ class Lightcontrol extends utils.Adapter {
 
 		await this.setForeignStateAsync(Light.bri.oid, Math.round((value / maxVal) * defaultBri), false).catch(
 			(error) => {
-				this.writeLog(error, "error", "setDeviceBriAsync");
+				this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "SetDeviceBriAsync");
 				return;
 			},
 		);
@@ -1671,7 +1662,7 @@ class Lightcontrol extends utils.Adapter {
 		this.writeLog(`[ SetCt ] Reaching for Group="${Group}" Ct="${ctValue}"`);
 
 		await Promise.all(
-			LightGroups[Group].lights.map(async (Light) => {
+			LightGroups[Group].lights.map((Light) => {
 				const { ct } = Light ?? {};
 				if ((LightGroups[Group].power || ct?.sendCt) && ct?.oid) {
 					const oid = ct?.oid;
@@ -1700,11 +1691,11 @@ class Lightcontrol extends utils.Adapter {
 				}
 			}),
 		).catch((error) => {
-			this.writeLog(error, "error", "SetCtAsync");
+			this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "SetCtAsync");
 			return;
 		});
 
-		await this.setStateAsync(Group + ".ct", ctValue, true);
+		await this.setStateAsync(`${Group}.ct`, { val: ctValue, ack: true });
 
 		return true;
 	}
@@ -1822,7 +1813,7 @@ class Lightcontrol extends utils.Adapter {
 				}
 
 				if (currentCt !== newCtValue) {
-					await this.setStateAsync(Group + ".ct", newCtValue, false);
+					await this.setStateAsync(`${Group}.ct`, { val: newCtValue, ack: false });
 				}
 			}
 		}
@@ -1870,12 +1861,12 @@ class Lightcontrol extends utils.Adapter {
 					LightGroups[Group].color.toUpperCase() == "#FFFFFF" &&
 					(LightGroups[Group].power || Light?.color?.sendColor),
 			)
-			.map(async (Light) => {
+			.map((Light) => {
 				const colorValue =
 					LightGroups[Group].ct < (maxCt - minCt) / 4 + minCt
 						? Light.color.warmWhiteColor
 						: Light.color.dayLightColor;
-				await this.setForeignStateAsync(Light.color.oid, colorValue, false);
+				this.setForeignStateAsync(Light.color.oid, colorValue, false);
 			});
 
 		const promisesKelvinWithHUE = LightGroups[Group].lights
@@ -1907,9 +1898,9 @@ class Lightcontrol extends utils.Adapter {
 					Light.color?.type?.rgb &&
 					(LightGroups[Group].power || Light?.color?.sendColor),
 			)
-			.map(async (Light) => {
+			.map((Light) => {
 				const colorValue = converters.convertKelvinToRGB(LightGroups[Group].ct);
-				await this.setForeignStateAsync(Light.color.oid, { val: JSON.stringify(colorValue), ack: false });
+				this.setForeignStateAsync(Light.color.oid, { val: JSON.stringify(colorValue), ack: false });
 			});
 
 		const promisesKelvinWithXY = LightGroups[Group].lights
@@ -1921,10 +1912,10 @@ class Lightcontrol extends utils.Adapter {
 					Light.color?.type?.xy &&
 					(LightGroups[Group].power || Light?.color?.sendColor),
 			)
-			.map(async (Light) => {
+			.map((Light) => {
 				const rgb = converters.convertKelvinToRGB(LightGroups[Group].ct);
 				const colorValue = converters.ConvertRgbToXy(rgb);
-				await this.setForeignStateAsync(Light.color.oid, { val: JSON.stringify(colorValue), ack: false });
+				this.setForeignStateAsync(Light.color.oid, { val: JSON.stringify(colorValue), ack: false });
 			});
 
 		await Promise.all([
@@ -1933,7 +1924,7 @@ class Lightcontrol extends utils.Adapter {
 			promisesKelvinWithRGB,
 			promisesKelvinWithXY,
 		]).catch((error) => {
-			this.writeLog(error, "error", "SetWhiteSubstituteColorAsync");
+			this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "SetWhiteSubstituteColorAsync");
 		});
 	}
 
@@ -1974,7 +1965,7 @@ class Lightcontrol extends utils.Adapter {
 			});
 
 		await Promise.all(promises).catch((error) => {
-			this.writeLog(error, "error", "SetColorModeAsync");
+			this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "SetColorModeAsync");
 		});
 
 		return true;
@@ -2005,11 +1996,11 @@ class Lightcontrol extends utils.Adapter {
 					// Prüfen ob Datenpunkt für Color vorhanden
 					switch (Light.color.colorType) {
 						case "hex":
-							await this.setForeignStateAsync(Light.color.oid, Color, false);
+							this.setForeignStateAsync(Light.color.oid, Color, false);
 							break;
 						case "rgb": {
 							const rgbTemp = converters.ConvertHexToRgb(Color);
-							await this.setForeignStateAsync(Light.color.oid, {
+							this.setForeignStateAsync(Light.color.oid, {
 								val: JSON.stringify(rgbTemp),
 								ack: false,
 							});
@@ -2018,7 +2009,7 @@ class Lightcontrol extends utils.Adapter {
 						case "xy": {
 							const rgbTemp = converters.ConvertHexToRgb(Color);
 							const XyTemp = converters.ConvertRgbToXy(rgbTemp);
-							await this.setForeignStateAsync(Light.color.oid, {
+							this.setForeignStateAsync(Light.color.oid, {
 								val: JSON.stringify(XyTemp),
 								ack: false,
 							});
@@ -2033,7 +2024,7 @@ class Lightcontrol extends utils.Adapter {
 									this.setForeignStateAsync(Light.bri.oid, colorValue.brightness, false),
 								]);
 							} else {
-								await this.writeLog(
+								this.writeLog(
 									`[ SetColorAsync ] Set color with HUE is not possible, because brightness or saturation state is not defined!`,
 									"warn",
 								);
@@ -2041,7 +2032,7 @@ class Lightcontrol extends utils.Adapter {
 							break;
 						}
 						default:
-							await this.writeLog(
+							this.writeLog(
 								`[ SetColorAsync ] Unknown colorType = "${Light.color.colorType}" in Group="${Group}", please specify!`,
 								"warn",
 							);
@@ -2050,10 +2041,10 @@ class Lightcontrol extends utils.Adapter {
 			});
 
 		await Promise.all(promises).catch((error) => {
-			this.writeLog(error, "error", "SetColorAsync");
+			this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "SetColorAsync");
 		});
 
-		await this.setStateAsync(Group + ".color", LightGroups[Group].color, true);
+		await this.setStateAsync(`${Group}.color`, { val: LightGroups[Group].color, ack: true });
 		return true;
 	}
 
@@ -2089,7 +2080,7 @@ class Lightcontrol extends utils.Adapter {
 			});
 
 		await Promise.all(promises).catch((error) => {
-			this.writeLog(error, "error", "SetTtAsync");
+			this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "SetTtAsync");
 		});
 
 		if (prop === "default") await this.setStateAsync(`${Group}.transitionTime`, { val: RampTime, ack: true });
@@ -2119,7 +2110,7 @@ class Lightcontrol extends utils.Adapter {
 
 				if (LightGroups[Group].adaptiveBri) {
 					//Bei aktiviertem AdaptiveBri
-					await this.SetBrightnessAsync(Group, await this.AdaptiveBriAsync(Group));
+					await this.SetBrightnessAsync(Group, this.AdaptiveBri(Group));
 				} else {
 					this.writeLog(`[ PowerOnAfterCare ] Now setting bri to ${bri}% for Group="${Group}"`, "info");
 					await this.SetBrightnessAsync(Group, bri);
@@ -2143,24 +2134,25 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 *
+	 * @async
 	 * @param {*} Group Groupname
 	 */
-	clearRampTimeouts(Group) {
+	async clearRampTimeoutsAsync(Group) {
 		if (Group == null) {
-			for (const groupKey in LightGroups) {
+			const groupKeys = Object.keys(LightGroups).filter((groupKey) => !["All", "info"].includes(groupKey));
+
+			for (const groupKey of groupKeys) {
 				if (["All", "info"].includes(groupKey)) continue;
 
-				const timeoutObject = this.RampTimeoutObject[groupKey];
-				if (typeof timeoutObject === "object") {
+				if (typeof this.RampTimeoutObject[groupKey] === "object") {
 					this.writeLog(`[ clearRampTimeout ] Timeout for group="${groupKey}" deleted.`);
-					this.clearTimeout(timeoutObject);
+					this.clearTimeout(this.RampTimeoutObject[groupKey]);
 				}
 			}
 		} else {
-			const timeoutObject = this.RampTimeoutObject[Group];
-			if (typeof timeoutObject === "object") {
+			if (typeof this.RampTimeoutObject[Group] === "object") {
 				this.writeLog(`[ clearRampTimeout ] Timeout for group="${Group}" deleted.`);
-				this.clearTimeout(timeoutObject);
+				this.clearTimeout(this.RampTimeoutObject[Group]);
 			}
 		}
 		return true;
@@ -2168,42 +2160,27 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 *
+	 * @async
 	 * @param {string | null} Group Groupname
 	 */
-	clearAutoOffTimeouts(Group) {
+	async clearAutoOffTimeoutsAsync(Group) {
 		const groupKeys = Object.keys(LightGroups).filter((groupKey) => !["All", "info"].includes(groupKey));
 
 		if (Group === null) {
 			for (const groupKey of groupKeys) {
-				const timeouts = this.AutoOffTimeoutObject[groupKey];
-
-				if (typeof timeouts === "object") {
-					if (timeouts.autoOff) {
-						clearTimeout(timeouts.autoOff);
-						timeouts.autoOff = null;
-						this.setState(`${Group}.autoOffTimed.countdown`, { val: 0, ack: true });
-					}
-
-					if (timeouts.notice) {
-						clearTimeout(timeouts.notice);
-						timeouts.notice = null;
-					}
+				if (typeof this.AutoOffTimeoutObject[groupKey] === "object") {
+					this.writeLog(`[ clearAutoOffTimeouts ] Timeout for group="${groupKey}" deleted.`);
+					this.clearTimeout(this.AutoOffTimeoutObject[groupKey]);
+					this.AutoOffTimeoutObject[groupKey] = null;
+					this.setState(`${groupKey}.autoOffTimed.countdown`, { val: 0, ack: true });
 				}
 			}
 		} else {
-			const timeouts = this.AutoOffTimeoutObject[Group];
-
-			if (typeof timeouts === "object") {
-				if (timeouts.autoOff) {
-					clearTimeout(timeouts.autoOff);
-					timeouts.autoOff = null;
-					this.setState(`${Group}.autoOffTimed.countdown`, { val: 0, ack: true });
-				}
-
-				if (timeouts.notice) {
-					clearTimeout(timeouts.notice);
-					timeouts.notice = null;
-				}
+			if (this.AutoOffTimeoutObject[Group] !== null) {
+				this.writeLog(`[ clearAutoOffTimeouts ] Timeout for group="${Group}" deleted.`);
+				this.clearTimeout(this.AutoOffTimeoutObject[Group]);
+				this.AutoOffTimeoutObject[Group] = null;
+				this.setState(`${Group}.autoOffTimed.countdown`, { val: 0, ack: true });
 			}
 		}
 		return true;
@@ -2211,26 +2188,23 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 *
+	 * @async
 	 * @param {*} Group Groupname
 	 */
-	clearBlinkIntervals(Group) {
+	async clearBlinkIntervalsAsync(Group) {
 		if (Group === null) {
-			for (const groupKey in LightGroups) {
-				if (["All", "info"].includes(groupKey)) continue;
+			const groupKeys = Object.keys(LightGroups).filter((groupKey) => !["All", "info"].includes(groupKey));
 
-				const intervalObject = this.BlinkIntervalObj[groupKey];
-
-				if (typeof intervalObject === "object") {
+			for (const groupKey of groupKeys) {
+				if (typeof this.BlinkIntervalObj[groupKey] === "object") {
 					this.writeLog(`[ clearBlinkIntervals ] Interval for group="${groupKey}" deleted.`);
-					this.clearInterval(intervalObject);
+					this.clearInterval(this.BlinkIntervalObj[groupKey]);
 				}
 			}
 		} else {
-			const intervalObject = this.BlinkIntervalObj[Group];
-
-			if (typeof intervalObject === "object") {
+			if (typeof this.BlinkIntervalObj[Group] === "object") {
 				this.writeLog(`[ clearBlinkIntervals ] Interval for group="${Group}" deleted.`);
-				this.clearInterval(intervalObject);
+				this.clearInterval(this.BlinkIntervalObj[Group]);
 			}
 		}
 		return true;
@@ -2238,9 +2212,10 @@ class Lightcontrol extends utils.Adapter {
 
 	/**
 	 *
+	 * @async
 	 * @param {*} Group Groupname
 	 */
-	clearTransitionTimeout(Group) {
+	async clearTransitionTimeoutAsync(Group) {
 		if (Group === null) {
 			for (const Group in this.TransitionTimeoutObject) {
 				if (Object.prototype.hasOwnProperty.call(this.TransitionTimeoutObject, Group)) {
@@ -2419,7 +2394,8 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} Group Group of Lightgroups eg. LivingRoom, Children1,...
 	 */
 	async DoAllTheLuxSensorThings(Group) {
-		const luxSensor = LightGroups[Group].LuxSensor || this.config.GlobalLuxSensor;
+		const luxSensor = LightGroups[Group]?.LuxSensor || this.config?.GlobalLuxSensor || "";
+
 		LightGroups[Group].actualLux = 0;
 
 		await this.SetValueToObjectAsync(Group, ["autoOnLux.dailyLockCounter", "autoOffLux.dailyLockCounter"], 0);
@@ -2432,14 +2408,14 @@ class Lightcontrol extends utils.Adapter {
 		}
 
 		if (luxSensor === this.config.GlobalLuxSensor) {
-			LightGroups[Group].actualLux = this.ActualGenericLux ?? null;
+			LightGroups[Group].actualLux = this.ActualGenericLux ?? 0;
 			LightGroups[Group].LuxSensor = luxSensor;
 			this.writeLog(`[ DoAllTheLuxSensorThings ] Group "${Group}" using global luxsensor.`);
 			return;
 		}
 
 		const individualLux = await this.getForeignStateAsync(luxSensor).catch((error) => {
-			this.writeLog(error, "error", "DoAllTheLuxSensorThings");
+			this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "DoAllTheLuxSensorThings");
 			return;
 		});
 		const _individualLux = checks.checkObjectNumber(individualLux);
@@ -2732,7 +2708,7 @@ class Lightcontrol extends utils.Adapter {
 	async InitCustomStatesAsync() {
 		// Get all objects with custom configuration items
 		const customStateArray = await this.getObjectViewAsync("system", "custom", {}).catch((error) => {
-			this.writeLog(error, "error", "InitCustomStatesAsync");
+			this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "InitCustomStatesAsync");
 			return;
 		});
 		this.writeLog(`[ InitCustomStatesAsync ] All states with custom items : ${JSON.stringify(customStateArray)}`);
@@ -2830,7 +2806,7 @@ class Lightcontrol extends utils.Adapter {
 
 			if (!stateInfo) {
 				this.writeLog(
-					`[ checkLightGroupParameter ] Can't get information for ${stateID}, state will be ignored`,
+					`[ checkLightGroupParameterAsync ] Can't get information for ${stateID}, state will be ignored`,
 					"warn",
 				);
 				this.activeStates = helper.removeValue(this.activeStates, stateID);
@@ -2839,7 +2815,9 @@ class Lightcontrol extends utils.Adapter {
 			}
 		} catch (error) {
 			this.writeLog(
-				`[ checkLightGroupParameter ] ${stateID} is incorrectly correctly formatted, ${JSON.stringify(error)}`,
+				`[ checkLightGroupParameterAsync ] ${stateID} is incorrectly correctly formatted, ${JSON.stringify(
+					error,
+				)}`,
 				"error",
 			);
 			this.activeStates = helper.removeValue(this.activeStates, stateID);
@@ -2854,14 +2832,14 @@ class Lightcontrol extends utils.Adapter {
 			//Check if a groupname(s) defined
 			if (!customData.group) {
 				this.writeLog(
-					`[ checkLightGroupParameter ] No Group Name defined for StateID: ${stateID}. Initalisation aborted`,
+					`[ checkLightGroupParameterAsync ] No Group Name defined for StateID: ${stateID}. Initalisation aborted`,
 					"warn",
 				);
 				return;
 			}
 
 			if (Array.isArray(customData.group)) {
-				this.log.debug(`[ checkLightGroupParameter ] LightGroups: ${JSON.stringify(LightGroups)}`);
+				this.log.debug(`[ checkLightGroupParameterAsync ] LightGroups: ${JSON.stringify(LightGroups)}`);
 				const missingGroups = customData.group.filter(
 					(group) => !Object.prototype.hasOwnProperty.call(LightGroups, group),
 				);
@@ -2869,7 +2847,7 @@ class Lightcontrol extends utils.Adapter {
 				if (missingGroups.length > 0) {
 					if (this.config.deleteUnusedConfig) {
 						this.writeLog(
-							`[ checkLightGroupParameter ] Light group(s) "${missingGroups.join(
+							`[ checkLightGroupParameterAsync ] Light group(s) "${missingGroups.join(
 								", ",
 							)}" were deleted by the user in the instance settings! LightControl settings will be updated for this StateID: ${stateID})`,
 							"warn",
@@ -2880,14 +2858,10 @@ class Lightcontrol extends utils.Adapter {
 							newGroups.length === 1 ? newGroups[0].toString() : newGroups;
 						stateInfo.common.custom[this.namespace].enabled = newGroups.length > 0;
 
-						this.writeLog(
-							`[ checkLightGroupParameter ] Object after deactivating: ${JSON.stringify(stateInfo)}`,
-						);
-
 						await this.setForeignObjectAsync(stateID, stateInfo);
 					} else {
 						this.writeLog(
-							`[ checkLightGroupParameter ] Light group(s) "${missingGroups.join(
+							`[ checkLightGroupParameterAsync ] Light group(s) "${missingGroups.join(
 								", ",
 							)}" were deleted by the user in the instance settings! (StateID: ${stateID})`,
 							"warn",
@@ -2905,20 +2879,16 @@ class Lightcontrol extends utils.Adapter {
 				if (!Object.prototype.hasOwnProperty.call(LightGroups, customData.group)) {
 					if (this.config.deleteUnusedConfig) {
 						this.writeLog(
-							`[ checkLightGroupParameter ] Light group "${customData.group}" was deleted by the user in the instance settings! LightControl settings will be deactivated for this StateID: ${stateID})`,
+							`[ checkLightGroupParameterAsync ] Light group "${customData.group}" was deleted by the user in the instance settings! LightControl settings will be deactivated for this StateID: ${stateID})`,
 							"warn",
 						);
 
 						stateInfo.common.custom[this.namespace].enabled = false;
 
-						this.writeLog(
-							`[ checkLightGroupParameter ] Object after deactivating: ${JSON.stringify(stateInfo)}`,
-						);
-
 						await this.setForeignObjectAsync(stateID, stateInfo);
 					} else {
 						this.writeLog(
-							`[ checkLightGroupParameter ] Light group "${customData.group}" was deleted by the user in the instance settings! (StateID: ${stateID})`,
+							`[ checkLightGroupParameterAsync ] Light group "${customData.group}" was deleted by the user in the instance settings! (StateID: ${stateID})`,
 							"warn",
 						);
 					}
@@ -3079,29 +3049,23 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {string} Group
 	 */
 	async SummarizeSensorsAync(Group) {
-		this.writeLog(`[ SummarizeSensors ] Reaching, Group="${Group}"`);
-
 		let Motionstate = false;
 
 		for (const Sensor of LightGroups[Group].sensors) {
 			if (Sensor.isMotion) {
-				this.writeLog(
-					`[ SummarizeSensors ] Group="${Group}" Sensor with target "${Sensor.oid}" has value ${Sensor.isMotion}`,
-				);
 				Motionstate = true;
 			}
 		}
 
 		if (LightGroups[Group].isMotion !== Motionstate) {
-			this.writeLog(
-				`[ SummarizeSensors ] Summarized IsMotion for Group="${Group}" = ${Motionstate}, go to Controller...`,
-			);
+			this.writeLog(`[ SummarizeSensorsAync ] Summarized IsMotion for Group="${Group}" = ${Motionstate}.`);
 			LightGroups[Group].isMotion = Motionstate;
-			await this.setStateAsync(Group + ".isMotion", Motionstate, true);
-			await this.ControllerAsync(Group, "isMotion", LightGroups[Group].isMotion);
+			await this.setStateAsync(`${Group}.isMotion`, { val: Motionstate, ack: true });
+			await this.AutoOnMotionAsync(Group);
+			await this.AutoOffTimedAsync(Group);
 		} else {
 			this.writeLog(
-				`[ SummarizeSensors ] Motionstate="${Group}" = ${Motionstate}, nothing changed -> nothin to do`,
+				`[ SummarizeSensorsAync ] Motionstate of Group: ${Group} = ${Motionstate}, nothing changed -> nothin to do`,
 			);
 		}
 		return true;
@@ -3178,7 +3142,7 @@ class Lightcontrol extends utils.Adapter {
 		if (stateInfo?.common?.custom) {
 			stateInfo.common.custom[this.namespace].enabled = false;
 			await this.setForeignObjectAsync(stateID, stateInfo).catch((error) => {
-				this.writeLog(error, "error", "deaktivateOwnIdAsync");
+				this.writeLog(`Error: ${error.message}, Stack: ${error.stack}`, "error", "deaktivateOwnIdAsync");
 				return;
 			});
 		}
@@ -3327,6 +3291,7 @@ class Lightcontrol extends utils.Adapter {
 			error: this.log.error,
 		};
 		const logFn = logFunctions[logtype];
+
 		if (logFn) {
 			logFn(`${funcName ? `[ ${funcName} ] ` : ""} ${logtext}`);
 		}
