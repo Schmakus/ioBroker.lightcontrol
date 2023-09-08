@@ -372,13 +372,6 @@ class Lightcontrol extends utils.Adapter {
 
 				LightGroups[Group].setBri = LightGroups[Group].bri;
 
-				if (
-					(NewVal && !LightGroups[Group].rampOff.enabled) ||
-					(!NewVal && !LightGroups[Group].rampOn.enabled)
-				) {
-					LightGroups[Group].ramping = "";
-				}
-
 				await this.GroupPowerOnOffAsync(Group, NewVal); //Alles schalten
 				if (NewVal) {
 					await this.PowerOnAftercareAsync(Group);
@@ -704,6 +697,11 @@ class Lightcontrol extends utils.Adapter {
 			}" - ${JSON.stringify(LightGroups[Group].rampOff)}`,
 			"info",
 		);
+
+		//Reset ramping state
+		if ((OnOff && !LightGroups[Group].rampOff.enabled) || (!OnOff && !LightGroups[Group].rampOn.enabled)) {
+			LightGroups[Group].ramping = "";
+		}
 
 		if (OnOff) {
 			LightGroups[Group].power = true;
