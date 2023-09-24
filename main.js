@@ -333,6 +333,11 @@ class Lightcontrol extends utils.Adapter {
 		try {
 			const ids = id.split(".");
 
+			if (state && state.val === null) {
+				this.writeLog(`Null or empty value not allowed! Please set a value!`, "warn");
+				return;
+			}
+
 			if (state && state.val !== null) {
 				this.writeLog(`[ onStateChange ] state ${id} changed: ${state.val} (ack = ${state.ack})`);
 
@@ -752,8 +757,9 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {any} NewVal New Value of Datapoint
 	 * @param {any} OldVal Old Value of Datapoint
 	 * @param {string} id Object-ID
+	 * @param {boolean} stateNull State is null
 	 */
-	async Controller(Group, prop1, NewVal, OldVal, id = "") {
+	async Controller(Group, prop1, NewVal, OldVal, id = "", stateNull = false) {
 		//Used by all
 		try {
 			const LightGroups = this.LightGroups;
@@ -765,8 +771,9 @@ class Lightcontrol extends utils.Adapter {
 				}"`,
 				"info",
 			);
-
-			if (prop1 !== "power") await helper.SetValueToObject(LightGroups[Group], prop1, NewVal);
+			if (!stateNull) {
+				if (prop1 !== "power") await helper.SetValueToObject(LightGroups[Group], prop1, NewVal);
+			}
 
 			switch (prop1) {
 				case "actualLux":
