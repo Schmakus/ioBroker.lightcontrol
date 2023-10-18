@@ -754,38 +754,11 @@ class Lightcontrol extends utils.Adapter {
 			);
 			return;
 		}
-		/*
-		this.log.debug("before get lights");
+
 		const simpleLights = await this.getSimpleLightsAsync(LightGroups[Group].lights, OnOff);
 		const useBrightness = await this.getUseBrightnessLightsAsync(LightGroups[Group].lights, OnOff, Group);
-		this.log.debug("after get lights and before promise.all");
 		await Promise.all([useBrightness, simpleLights]);
-		this.log.debug("after promise.all");
-		*/
-		// Verwenden von array.filter().map() zum Erstellen eines neuen Arrays
-		this.log.debug("before get lights");
-		const Lights = LightGroups[Group].lights;
-		const promises = Lights.filter(
-			(Light) => (Light.power?.oid && !Light.bri?.oid) || (Light?.bri?.oid && Light?.bri?.useBri),
-		).map((Light) => {
-			if (Light.power?.oid && !Light.bri?.oid) {
-				return this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
-			}
 
-			if (Light?.bri?.oid && Light?.bri?.useBri) {
-				return this.SetDeviceBriAsync(
-					Light,
-					OnOff ? (LightGroups[Group].adaptiveBri ? this.AdaptiveBri(Group) : LightGroups[Group].setBri) : 0,
-				);
-			}
-
-			return null; // Falls Sie eine Funktion überspringen möchten
-		});
-
-		// Hier wird auf die Beendigung aller asynchronen Funktionen gewartet
-		this.log.debug("after get lights and before promise.all");
-		await Promise.all(promises);
-		this.log.debug("after promise.all");
 		return true;
 	}
 
