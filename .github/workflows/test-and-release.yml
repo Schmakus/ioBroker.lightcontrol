@@ -32,6 +32,7 @@ jobs:
                   # Uncomment the following line if your adapter cannot be installed using 'npm ci'
                   # install-command: 'npm install'
                   lint: true
+                  lint-command: "npm run lint ."
 
     # Runs adapter tests on all supported node versions and OSes
     adapter-tests:
@@ -40,7 +41,7 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                node-version: [16.x, 18.x]
+                node-version: [16.x, 18.x, 20.x]
                 os: [ubuntu-latest, windows-latest, macos-latest]
 
         steps:
@@ -48,6 +49,7 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   os: ${{ matrix.os }}
+                  extra-tests: npm run test:js
 
     deploy:
         needs: [check-and-lint, adapter-tests]
@@ -60,9 +62,14 @@ jobs:
         steps:
             - uses: ioBroker/testing-action-deploy@v1
               with:
-                  node-version: "16.x"
+                  node-version: "18.x"
                   npm-token: ${{ secrets.NPM_TOKEN }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
+                  sentry: true
+                  sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  sentry-project: "iobroker-lightcontrol"
+                  sentry-version-prefix: "iobroker.lightcontrol"
+                  sentry-github-integration: true
 # TODO: To enable automatic npm releases, create a token on npmjs.org
 # Enter this token as a GitHub secret (with name NPM_TOKEN) in the repository options
 # Then uncomment the following block:
