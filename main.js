@@ -720,7 +720,7 @@ class Lightcontrol extends utils.Adapter {
 			if (!LightGroups[Group].rampOff.enabled) {
 				await this.SetTtAsync(Group, LightGroups[Group].transitionTime, "OnOff");
 				if (LightGroups[Group].rampOn.enabled) {
-					await this.SetBrightnessAsync(Group, 2);
+					await this.SetBrightnessAsync(Group, 2, "SwitchOffWithRampingOn");
 				}
 				await this.SimpleGroupPowerOnOffAsync(Group, OnOff);
 				LightGroups[Group].power = false;
@@ -1104,7 +1104,7 @@ class Lightcontrol extends utils.Adapter {
 		if (OnOff) {
 			if (LightGroups[Group].power) {
 				await Promise.all([
-					this.SetBrightnessAsync(Group, 100),
+					this.SetBrightnessAsync(Group, 100, "PowerCleaningLight"),
 					this.SetCtAsync(Group, this.config.maxCt ?? 6700),
 				]);
 				LightGroups[Group].lastPower = true;
@@ -1113,7 +1113,7 @@ class Lightcontrol extends utils.Adapter {
 				LightGroups[Group].lastPower = false;
 				await this.SimpleGroupPowerOnOffAsync(Group, true);
 				await Promise.all([
-					this.SetBrightnessAsync(Group, 100),
+					this.SetBrightnessAsync(Group, 100, "PowerCleaningLight"),
 					this.SetCtAsync(Group, this.config.maxCt || 6700),
 					this.setStateAsync(`${Group}.power`, { val: true, ack: true }),
 				]);
@@ -1122,7 +1122,7 @@ class Lightcontrol extends utils.Adapter {
 			const brightness = LightGroups[Group].adaptiveBri ? this.AdaptiveBri(Group) : LightGroups[Group].bri;
 
 			await Promise.all([
-				this.SetBrightnessAsync(Group, brightness),
+				this.SetBrightnessAsync(Group, brightness, "PowerCleaningLight"),
 				this.SetCtAsync(Group, LightGroups[Group].ct),
 			]);
 
