@@ -1,7 +1,7 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "0.4.0",
+		"version": "0.4.1",
 		"news": {
 			"0.4.0": {
 				"en": "Node >=16 and NPM >=7 necessary!\nfixed rampOff.time\nupdate dependencies",
