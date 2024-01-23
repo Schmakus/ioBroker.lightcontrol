@@ -142,6 +142,8 @@ class Lightcontrol extends utils.Adapter {
 				if (this.LuxSensors.includes(id)) {
 					const groupsWithLuxSensor = Object.values(LightGroups).filter((Group) => Group.LuxSensor === id);
 
+					this.writeLog(`[ onStateChange ] It's a LuxSensor. I'm checking for an group..`);
+
 					for (const Group of groupsWithLuxSensor) {
 						if (state.val !== Group.actualLux) {
 							this.writeLog(
