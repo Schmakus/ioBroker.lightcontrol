@@ -1504,7 +1504,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @returns {Promise<void>}
 	 */
 	async AutoOffTimedAsync(Group) {
-		if (this.AutoOffTimeoutObject[Group] !== null || this.AutoOffTimeoutObject[Group] !== undefined) {
+		if (this.AutoOffTimeoutObject[Group]) {
 			this.writeLog(
 				`No start of autoOff because it's already running. AutoOffTimeoutObject[${Group}] = ${this.AutoOffTimeoutObject[Group]}`,
 			);
