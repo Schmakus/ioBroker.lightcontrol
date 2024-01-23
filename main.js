@@ -142,11 +142,11 @@ class Lightcontrol extends utils.Adapter {
 				if (this.LuxSensors.includes(id)) {
 					const groupsWithLuxSensor = Object.values(LightGroups).filter((Group) => Group.LuxSensor === id);
 
-					this.writeLog(`[ onStateChange ] It's a LuxSensor. I'm checking for an group..`);
+					this.log.debug(`[ onStateChange ] It's a LuxSensor. I'm checking for an group..`);
 
 					for (const Group of groupsWithLuxSensor) {
 						if (state.val !== Group.actualLux) {
-							this.writeLog(
+							this.log.debug(
 								`[ onStateChange ] It's a LuxSensor in following Group: ${Group.description} with value = ${state.val} (old value = ${Group.actualLux})`,
 							);
 							Group.actualLux = state.val;
@@ -757,8 +757,8 @@ class Lightcontrol extends utils.Adapter {
 			return;
 		}
 
-		const simpleLights = await this.getSimpleLightsAsync(LightGroups[Group].lights, OnOff);
-		const useBrightness = await this.getUseBrightnessLightsAsync(LightGroups[Group].lights, OnOff, Group);
+		const simpleLights = this.getSimpleLightsAsync(LightGroups[Group].lights, OnOff);
+		const useBrightness = this.getUseBrightnessLightsAsync(LightGroups[Group].lights, OnOff, Group);
 		await Promise.all([useBrightness, simpleLights]);
 
 		return true;
@@ -771,7 +771,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {boolean} OnOff true/false from power state
 	 */
 	async getSimpleLightsAsync(Lights, OnOff) {
-		const promises = Lights.filter((Light) => Light.power?.oid && !Light.bri?.oid).map((Light) => {
+		const promises = Lights.filter((Light) => Light.power?.oid && !Light.bri?.oid).map(async (Light) => {
 			this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
 		});
 
@@ -2165,15 +2165,17 @@ class Lightcontrol extends utils.Adapter {
 			for (const groupKey of groupKeys) {
 				if (["All", "info"].includes(groupKey)) continue;
 
-				if (typeof this.RampTimeoutObject[groupKey] === "object") {
+				if (this.RampTimeoutObject[groupKey]) {
 					this.writeLog(`[ clearRampTimeout ] Timeout for group="${groupKey}" deleted.`);
 					this.clearTimeout(this.RampTimeoutObject[groupKey]);
+					this.RampTimeoutObject[groupKey] = null;
 				}
 			}
 		} else {
-			if (typeof this.RampTimeoutObject[Group] === "object") {
+			if (this.RampTimeoutObject[Group]) {
 				this.writeLog(`[ clearRampTimeout ] Timeout for group="${Group}" deleted.`);
 				this.clearTimeout(this.RampTimeoutObject[Group]);
+				this.RampTimeoutObject[Group] = null;
 			}
 		}
 		return true;
@@ -2189,7 +2191,7 @@ class Lightcontrol extends utils.Adapter {
 
 		if (Group === null) {
 			for (const groupKey of groupKeys) {
-				if (typeof this.AutoOffTimeoutObject[groupKey] === "object") {
+				if (this.AutoOffTimeoutObject[groupKey]) {
 					this.writeLog(`[ clearAutoOffTimeouts ] Timeout for group="${groupKey}" deleted.`);
 					this.clearTimeout(this.AutoOffTimeoutObject[groupKey]);
 					this.AutoOffTimeoutObject[groupKey] = null;
@@ -2197,7 +2199,7 @@ class Lightcontrol extends utils.Adapter {
 				}
 			}
 		} else {
-			if (this.AutoOffTimeoutObject[Group] !== null) {
+			if (this.AutoOffTimeoutObject[Group]) {
 				this.writeLog(`[ clearAutoOffTimeouts ] Timeout for group="${Group}" deleted.`);
 				this.clearTimeout(this.AutoOffTimeoutObject[Group]);
 				this.AutoOffTimeoutObject[Group] = null;
@@ -2217,15 +2219,17 @@ class Lightcontrol extends utils.Adapter {
 			const groupKeys = Object.keys(LightGroups).filter((groupKey) => !["All", "info"].includes(groupKey));
 
 			for (const groupKey of groupKeys) {
-				if (typeof this.BlinkIntervalObj[groupKey] === "object") {
+				if (this.BlinkIntervalObj[groupKey]) {
 					this.writeLog(`[ clearBlinkIntervals ] Interval for group="${groupKey}" deleted.`);
 					this.clearInterval(this.BlinkIntervalObj[groupKey]);
+					this.BlinkIntervalObj[groupKey] = null;
 				}
 			}
 		} else {
-			if (typeof this.BlinkIntervalObj[Group] === "object") {
+			if (this.BlinkIntervalObj[Group]) {
 				this.writeLog(`[ clearBlinkIntervals ] Interval for group="${Group}" deleted.`);
 				this.clearInterval(this.BlinkIntervalObj[Group]);
+				this.BlinkIntervalObj[Group] = null;
 			}
 		}
 		return true;
