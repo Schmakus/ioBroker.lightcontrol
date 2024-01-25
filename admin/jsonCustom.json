@@ -240,6 +240,18 @@
 				{
 					"label": "HUE",
 					"value": "hue"
+				},
+				{
+					"label": "R",
+					"value": "r"
+				},
+				{
+					"label": "G",
+					"value": "g"
+				},
+				{
+					"label": "B",
+					"value": "b"
 				}
 			],
 			"sm": 3,

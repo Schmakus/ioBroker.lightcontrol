@@ -1025,7 +1025,7 @@ class Lightcontrol extends utils.Adapter {
 			if (LightGroups[Group].rampOff.enabled && LightGroups[Group].rampOff.switchOutletsLast) {
 				////Ausschalten mit Ramping und einfache Lampen zuletzt
 
-				this.writeLog(`[ ${funcName} ] Switch on with ramping and simple lamps last for Group="${Group}"`);
+				this.writeLog(`[ ${funcName} ] Switch off with ramping and simple lamps last for Group="${Group}"`);
 
 				const promises = [
 					this.RampWithIntervalAsync(Group, false),
@@ -1033,7 +1033,7 @@ class Lightcontrol extends utils.Adapter {
 					this.waitForTransitionAsync(Group, LightGroups[Group].rampOff.time),
 				];
 
-				await this.SetTtAsync(Group, LightGroups[Group].rampOff.time, "ramping");
+				await this.SetTtAsync(Group, LightGroups[Group].rampOff.time * 1000, "ramping");
 				const results = await Promise.all(promises).catch((error) =>
 					this.writeLog(
 						`Error: ${error.message}, Stack: ${error.stack}`,
@@ -1616,7 +1616,11 @@ class Lightcontrol extends utils.Adapter {
 		//Set Brightness only if Group Power on
 		if (LightGroups[Group].power) {
 			const promises = LightGroups[Group].lights
-				.filter((Light) => Light?.bri?.oid)
+				.filter(
+					(Light) =>
+						(Light?.bri?.oid && caller !== "PowerOnAftercare") ||
+						(Light?.bri?.oid && caller === "PowerOnAftercare" && !Light?.bri?.sendBri),
+				)
 				.map((Light) => this.SetDeviceBriAsync(Light, Brightness));
 
 			await Promise.all(promises).catch((error) => {
@@ -2086,7 +2090,7 @@ class Lightcontrol extends utils.Adapter {
 			);
 			return;
 		}
-		this.writeLog(`[ SetTtAsync ] Reaching for Group="${Group}", TransitionTime="${RampTime}s"`);
+		this.writeLog(`[ SetTtAsync ] Reaching for Group="${Group}", TransitionTime="${RampTime}"`);
 
 		const promises = LightGroups[Group].lights
 			.filter((Light) => Light.tt?.oid)
@@ -2131,10 +2135,10 @@ class Lightcontrol extends utils.Adapter {
 
 				if (LightGroups[Group].adaptiveBri) {
 					//Bei aktiviertem AdaptiveBri
-					await this.SetBrightnessAsync(Group, this.AdaptiveBri(Group));
+					await this.SetBrightnessAsync(Group, this.AdaptiveBri(Group), "PowerOnAftercare");
 				} else {
 					this.writeLog(`[ PowerOnAfterCare ] Now setting bri to ${bri}% for Group="${Group}"`, "info");
-					await this.SetBrightnessAsync(Group, bri);
+					await this.SetBrightnessAsync(Group, bri, "PowerOnAftercare");
 				}
 			}
 
