@@ -72,6 +72,8 @@
     "Please set a new name for the Light:": "Bitte neuen Namen für das Licht eingeben:",
     "Please set a new name for the LightGroup:": "Bitte einen neuen Namen für die Lichtgruppe vergeben:",
     "Please set a new name for the Sensor:": "Bitte einen neuen Namen für den Sensor vergeben:",
+    "Power Off Value": "Ausschaltwert",
+    "Power On Value": "Einschaltwert",
     "Ramp Steps for Dimming": "Rampenschritte zum Dimmen",
     "Remove": "Entfernen",
     "Remove Group": "Gruppe entfernen",

@@ -72,6 +72,8 @@
     "Please set a new name for the Light:": "Пожалуйста, установите новое имя для света:",
     "Please set a new name for the LightGroup:": "Пожалуйста, установите новое имя для LightGroup:",
     "Please set a new name for the Sensor:": "Пожалуйста, установите новое имя для датчика:",
+    "Power Off Value": "Значение отключения питания",
+    "Power On Value": "Значение включения питания",
     "Ramp Steps for Dimming": "Ступени наклона для диммирования",
     "Remove": "Удалять",
     "Remove Group": "Удалить группу",

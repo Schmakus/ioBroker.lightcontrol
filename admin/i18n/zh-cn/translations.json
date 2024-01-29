@@ -72,6 +72,8 @@
     "Please set a new name for the Light:": "请为灯设置一个新名称：",
     "Please set a new name for the LightGroup:": "请为 LightGroup 设置一个新名称：",
     "Please set a new name for the Sensor:": "请为传感器设置一个新名称：",
+    "Power Off Value": "断电值",
+    "Power On Value": "开机值",
     "Ramp Steps for Dimming": "调光的斜坡步骤",
     "Remove": "消除",
     "Remove Group": "删除组",

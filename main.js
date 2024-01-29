@@ -1619,7 +1619,7 @@ class Lightcontrol extends utils.Adapter {
 				.filter(
 					(Light) =>
 						(Light?.bri?.oid && caller !== "PowerOnAftercare") ||
-						(Light?.bri?.oid && caller === "PowerOnAftercare" && !Light?.bri?.sendBri),
+						(Light?.bri?.oid && caller === "PowerOnAftercare" && !Light?.bri?.useBri),
 				)
 				.map((Light) => this.SetDeviceBriAsync(Light, Brightness));
 
@@ -2135,6 +2135,10 @@ class Lightcontrol extends utils.Adapter {
 
 				if (LightGroups[Group].adaptiveBri) {
 					//Bei aktiviertem AdaptiveBri
+					this.writeLog(
+						`[ PowerOnAfterCare ] Now setting bri to ${this.AdaptiveBri(Group)}% for Group="${Group}"`,
+						"info",
+					);
 					await this.SetBrightnessAsync(Group, this.AdaptiveBri(Group), "PowerOnAftercare");
 				} else {
 					this.writeLog(`[ PowerOnAfterCare ] Now setting bri to ${bri}% for Group="${Group}"`, "info");

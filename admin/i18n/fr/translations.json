@@ -72,6 +72,8 @@
     "Please set a new name for the Light:": "Veuillez définir un nouveau nom pour la lumière :",
     "Please set a new name for the LightGroup:": "Veuillez définir un nouveau nom pour le LightGroup :",
     "Please set a new name for the Sensor:": "Veuillez définir un nouveau nom pour le capteur :",
+    "Power Off Value": "Valeur de mise hors tension",
+    "Power On Value": "Valeur de mise sous tension",
     "Ramp Steps for Dimming": "Marches de rampe pour la gradation",
     "Remove": "Retirer",
     "Remove Group": "Supprimer le groupe",
