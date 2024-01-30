@@ -8,6 +8,7 @@ const { compareTime, getDateObject, convertTime, getAstroDate } = require("./lib
 const converters = require("./lib/converters");
 const { params } = require("./lib/params");
 const objects = require("./lib/objects");
+const commandSets = require("./lib/commandSets");
 
 const LightGroups = {};
 class Lightcontrol extends utils.Adapter {
@@ -669,6 +670,31 @@ class Lightcontrol extends utils.Adapter {
 					}
 					break;
 				}
+
+				case "adapters": {
+					try {
+						const adapterList = [];
+						if (Object.keys(commandSets).length !== 0) {
+							for (const adapter of Object.keys(commandSets)) {
+								adapterList.push({
+									value: adapter,
+									label: adapter.charAt(0).toUpperCase() + adapter.slice(1),
+								});
+							}
+						}
+						this.sendTo(msg.from, msg.command, adapterList, msg.callback);
+						this.writeLog(
+							`[ onMessage ] LightGroup => LightGroups Callback: ${JSON.stringify(adapterList)}.`,
+						);
+					} catch (error) {
+						this.writeLog(
+							`Error: ${error.message}, Stack: ${error.stack}`,
+							"error",
+							"onMessage // case adapters",
+						);
+					}
+					break;
+				}
 			}
 		}
 	}
@@ -771,7 +797,7 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {boolean} OnOff true/false from power state
 	 */
 	async getSimpleLightsAsync(Lights, OnOff) {
-		const promises = Lights.filter((Light) => Light.power?.oid && !Light.bri?.oid).map(async (Light) => {
+		const promises = Lights.filter((Light) => Light.power?.oid && !Light.bri?.oid).map((Light) => {
 			this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
 		});
 
@@ -826,11 +852,12 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {boolean} OnOff true/false from power state
 	 */
 	async BrightnessDevicesSwitchPowerAsync(Lights, OnOff) {
-		return Lights.filter((Light) => Light.power?.oid && Light.bri?.oid && !Light.bri?.useBri && !Light.tt?.oid).map(
-			(Light) => {
-				this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
-			},
-		);
+		const promises = Lights.filter(
+			(Light) => Light.power?.oid && Light.bri?.oid && !Light.bri?.useBri && !Light.tt?.oid,
+		).map((Light) => {
+			this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
+		});
+		return promises;
 	}
 
 	/**

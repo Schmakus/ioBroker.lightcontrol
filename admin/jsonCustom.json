@@ -83,12 +83,57 @@
 				{
 					"label": "Mode Switch",
 					"value": "modeswitch"
+				},
+				{
+					"label": "Command",
+					"value": "cmd"
 				}
 			],
 			"defaultFunc": "!customObj.common?.role ? 'power' : (customObj.common.role === 'color.level.temperature' ? 'ct' : customObj.common.role === 'level.color.saturation' ? 'sat' : customObj.common.role === 'level.dimmer' ? 'bri' : customObj.common.role === 'level.color.temperature' ? 'ct' : customObj.common.role === 'level.color.rgb' ? 'color' : customObj.common.role === 'switch.mode.color' ? 'modeswitch' : customObj.common.role === 'switch' ? 'power' : customObj.common.role === 'switch.light' ? 'power' : customObj.common.role === 'state' ? 'tt' : 'power')",
 			"hidden": "data.type === 'sensor'",
 			"help": "Function of the Object",
+			"newLine": true,
+			"validator": "(data.func === 'cmd' && (customObj.common.type === 'string' || customObj.common.type === 'json')) || ['power', 'bri', 'tt', 'ct', 'sat', 'color', 'modeswitch'].includes(data.func)",
+			"validatorNoSaveOnError": true,
+			"validatorErrorText": "State must be type 'string' if you choose as command state!"
+		},
+		"adapter": {
+			"type": "selectSendTo",
+			"label": "Adapter",
+			"command": "adapters",
+			"sm": 3,
+			"md": 3,
+			"lg": 3,
+			"help": "Which Adapter should be controlled?",
+			"hidden": "data.func !== 'cmd' || data.type === 'sensor'"
+		},
+		"cmdPower": {
+			"type": "checkbox",
+			"label": "Power Command",
+			"hidden": "data.func !== 'cmd' || data.type === 'sensor'",
+			"default": true,
 			"newLine": true
+		},
+		"cmdBri": {
+			"type": "checkbox",
+			"label": "Brightness Command",
+			"hidden": "data.func !== 'cmd' || data.type === 'sensor'",
+			"default": false,
+			"newLine": false
+		},
+		"cmdCt": {
+			"type": "checkbox",
+			"label": "Color-Temperature Command",
+			"hidden": "data.func !== 'cmd' || data.type === 'sensor'",
+			"default": false,
+			"newLine": false
+		},
+		"cmdColor": {
+			"type": "checkbox",
+			"label": "Color Command",
+			"hidden": "data.func !== 'cmd' || data.type === 'sensor'",
+			"default": false,
+			"newLine": false
 		},
 		"onVal": {
 			"type": "text",
@@ -201,7 +246,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.func !== 'bri' || data.type === 'sensor'",
-			"defaultFunc": "!customObj.common.max ? 100 : customObj.common.max ? customObj.common.max : 100"
+			"defaultFunc": "!customObj?.common?.max ? 100 : customObj.common.max ? customObj.common.max : 100"
 		},
 		"whiteModeVal": {
 			"type": "text",
@@ -272,7 +317,7 @@
 		"setCtwithColor": {
 			"type": "checkbox",
 			"label": "Set Color-Temperature with Color",
-			"hidden": "data.func !== 'color' || data.type === 'sensor'",
+			"hidden": "!['color', 'cmd'].includes(data.func)  || data.type === 'sensor'",
 			"default": false,
 			"newLine": true
 		},
@@ -301,7 +346,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.type !== 'sensor'",
-			"defaultFunc": "!customObj.common.type ? true : (customObj.common.type === 'boolean' ? true : 'On')",
+			"defaultFunc": "!customObj?.common?.type || customObj.common.type === 'boolean' ? true : 'On'",
 			"newLine": true
 		},
 		"noMotionVal": {
@@ -311,7 +356,7 @@
 			"md": 3,
 			"lg": 3,
 			"hidden": "data.type !== 'sensor'",
-			"defaultFunc": "!customObj.common?.type ? false : (customObj.common.type === 'boolean' ? false : 'Off')"
+			"defaultFunc": "!customObj?.common?.type || customObj.common.type === 'boolean' ? false : 'Off'"
 		},
 		"sendCt": {
 			"type": "checkbox",
