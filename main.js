@@ -373,7 +373,9 @@ class Lightcontrol extends utils.Adapter {
 				LightGroups[Group].powerOldVal = LightGroups[Group].powerNewVal;
 				LightGroups[Group].powerNewVal = NewVal;
 
-				LightGroups[Group].setBri = LightGroups[Group].bri;
+				LightGroups[Group].setBri = LightGroups[Group].adaptiveBri
+					? this.AdaptiveBri(Group)
+					: LightGroups[Group].bri;
 
 				await this.GroupPowerOnOffAsync(Group, NewVal); //Alles schalten
 				if (NewVal) {
@@ -710,9 +712,9 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {boolean} OnOff true/false from power state
 	 */
 	async GroupPowerOnOffAsync(Group, OnOff) {
-		if (!LightGroups[Group].lights.some((Light) => Light.power?.oid || Light.bri?.oid)) {
+		if (!LightGroups[Group].lights.some((Light) => Light.power?.oid || Light.bri?.oid || Light.cmd?.oid)) {
 			this.writeLog(
-				`[ GroupPowerOnOffAsync ] Not able to switching ${OnOff} for group="${Group}". No lights defined or no power or brightness states are defined!!`,
+				`[ GroupPowerOnOffAsync ] Not able to switching ${OnOff} for group="${Group}". No lights defined or no power, brightness or command states are defined!!`,
 				"warn",
 			);
 			return;
@@ -783,9 +785,21 @@ class Lightcontrol extends utils.Adapter {
 			return;
 		}
 
+		const lightsWithCommand = LightGroups[Group].lights
+			.filter((Light) => Light.cmd?.oid && (Light.cmd?.cmdPower || Light.cmd?.cmdBri))
+			.map(async (Light) => {
+				this.setCommandsAsync(LightGroups[Group].lights, {
+					on: OnOff,
+					bri: OnOff ? LightGroups[Group].setBri : 0,
+					ct: Light.cmd?.cmdCt ? LightGroups[Group].Ct : null,
+					color: Light.cmd?.cmdColor ? LightGroups[Group].Color : null,
+					transitionTime: Light.cmd?.cmdTt ? LightGroups[Group].Tt : null,
+				});
+			});
+
 		const simpleLights = this.getSimpleLightsAsync(LightGroups[Group].lights, OnOff);
 		const useBrightness = this.getUseBrightnessLightsAsync(LightGroups[Group].lights, OnOff, Group);
-		await Promise.all([useBrightness, simpleLights]);
+		await Promise.all([lightsWithCommand, useBrightness, simpleLights]);
 
 		return true;
 	}
@@ -2182,6 +2196,62 @@ class Lightcontrol extends utils.Adapter {
 			if (color == "#FFFFFF") await this.SetCtAsync(Group, ct); //Nach anschalten Ct setzen
 		}
 	}
+
+	async setCommandsAsync(id, options = {}) {
+		const result = await this.buildCommandObjectAsync(options);
+		this.log.debug(`[ setCommandsAsync ] CommandObject: ${JSON.stringify(result)}`);
+		return true;
+	}
+
+	async buildCommandObjectAsync(options) {
+		const commandObject = {};
+		const activeSet = options.adapter; // Das ausgewählte Befehlsset aus den Optionen
+
+		if (commandSets[activeSet]) {
+			const commands = commandSets[activeSet];
+
+			for (const key in options) {
+				if (Object.prototype.hasOwnProperty.call(options, key) && key !== "commandSet") {
+					const option = options[key];
+					const command = commands[key];
+
+					if (command) {
+						if (command.cmd === "on" || command.cmd === "off") {
+							commandObject.on = !!option;
+						} else if (command.cmd === "bri") {
+							const maxBri = command.max || 254; // Standardwert 254, falls nicht angegeben
+							// Konvertierung von 0-100 zu 0-maxBri
+							commandObject.bri = Math.round((option / 100) * maxBri);
+						} else if (command.cmd === "xy") {
+							// Hier müssen die Werte bereits im richtigen Format vorliegen
+							commandObject.xy = option;
+						} else if (command.cmd === "transition") {
+							const type = command.type || "ms"; // Standardwert 'ms', falls nicht angegeben
+							if (type === "s") {
+								commandObject.transition = option / 1000; // Millisekunden zu Sekunden konvertieren
+							} else if (type === "ds") {
+								commandObject.transition = option / 100; // Millisekunden zu Dezisekunden konvertieren
+							} else {
+								commandObject.transition = option; // Annahme: 'ms' oder ungültiger Typ
+							}
+						} else if (command.cmd === "ct") {
+							// Hier übernehmen wir den Wert direkt, da keine Konvertierung erforderlich ist
+							commandObject.ct = option;
+						} else if (command.cmd === "colormode") {
+							// Hier übernehmen wir den Wert direkt, da keine Konvertierung erforderlich ist
+							commandObject.colormode = option;
+						}
+						// Weitere Konvertierungen für andere Befehlstypen hinzufügen, falls erforderlich
+					}
+				}
+			}
+		} else {
+			this.log.warn("Das angegebene Befehlsset existiert nicht.");
+		}
+
+		return commandObject;
+	}
+
 	// *********************************************
 	// *                                           *
 	// *               TIMERS                      *

@@ -135,6 +135,13 @@
 			"default": false,
 			"newLine": false
 		},
+		"cmdTt": {
+			"type": "checkbox",
+			"label": "Transition Time Command",
+			"hidden": "data.func !== 'cmd' || data.type === 'sensor'",
+			"default": false,
+			"newLine": false
+		},
 		"onVal": {
 			"type": "text",
 			"label": "Power On Value",
