@@ -788,13 +788,25 @@ class Lightcontrol extends utils.Adapter {
 		const lightsWithCommand = LightGroups[Group].lights
 			.filter((Light) => Light.cmd?.oid && (Light.cmd?.cmdPower || Light.cmd?.cmdBri))
 			.map(async (Light) => {
-				this.setCommandsAsync(LightGroups[Group].lights, {
-					on: OnOff,
+				const options = {
+					adapter: Light.cmd?.adapter,
+					power: OnOff,
 					bri: OnOff ? LightGroups[Group].setBri : 0,
-					ct: Light.cmd?.cmdCt ? LightGroups[Group].Ct : null,
-					color: Light.cmd?.cmdColor ? LightGroups[Group].Color : null,
-					transitionTime: Light.cmd?.cmdTt ? LightGroups[Group].Tt : null,
-				});
+				};
+
+				if (OnOff && Light?.cmd?.cmdCt) {
+					options.ct = LightGroups[Group].ct;
+				}
+
+				if (OnOff && Light.cmd?.cmdColor) {
+					options.color = LightGroups[Group].color;
+				}
+
+				if (Light.cmd?.cmdTt) {
+					options.transitionTime = LightGroups[Group].transitionTime;
+				}
+
+				this.setCommandsAsync(Light?.cmd?.oid, options);
 			});
 
 		const simpleLights = this.getSimpleLightsAsync(LightGroups[Group].lights, OnOff);
@@ -811,9 +823,11 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {boolean} OnOff true/false from power state
 	 */
 	async getSimpleLightsAsync(Lights, OnOff) {
-		const promises = Lights.filter((Light) => Light.power?.oid && !Light.bri?.oid).map((Light) => {
-			this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
-		});
+		const promises = Lights.filter((Light) => Light.power?.oid && !Light.bri?.oid && !Light.cmd?.oid).map(
+			(Light) => {
+				this.setForeignStateAsync(Light.power.oid, OnOff ? Light.power.onVal : Light.power.offVal);
+			},
+		);
 
 		return promises;
 	}
@@ -826,12 +840,14 @@ class Lightcontrol extends utils.Adapter {
 	 * @param {object} Group
 	 */
 	async getUseBrightnessLightsAsync(Lights, OnOff, Group) {
-		const promises = Lights.filter((Light) => Light?.bri?.oid && Light?.bri?.useBri).map((Light) => {
-			return this.SetDeviceBriAsync(
-				Light,
-				OnOff ? (LightGroups[Group].adaptiveBri ? this.AdaptiveBri(Group) : LightGroups[Group].setBri) : 0,
-			);
-		});
+		const promises = Lights.filter((Light) => Light?.bri?.oid && Light?.bri?.useBri && Light.cmd?.oid).map(
+			(Light) => {
+				return this.SetDeviceBriAsync(
+					Light,
+					OnOff ? (LightGroups[Group].adaptiveBri ? this.AdaptiveBri(Group) : LightGroups[Group].setBri) : 0,
+				);
+			},
+		);
 
 		return promises;
 	}
@@ -1659,8 +1675,9 @@ class Lightcontrol extends utils.Adapter {
 			const promises = LightGroups[Group].lights
 				.filter(
 					(Light) =>
-						(Light?.bri?.oid && caller !== "PowerOnAftercare") ||
-						(Light?.bri?.oid && caller === "PowerOnAftercare" && !Light?.bri?.useBri),
+						Light?.bri?.oid &&
+						(!Light?.cmd?.cmdBri ||
+							(caller === "PowerOnAftercare" && (!Light?.bri?.useBri || !Light?.cmd?.cmdBri))),
 				)
 				.map((Light) => this.SetDeviceBriAsync(Light, Brightness));
 
@@ -1729,8 +1746,8 @@ class Lightcontrol extends utils.Adapter {
 
 		await Promise.all(
 			LightGroups[Group].lights.map((Light) => {
-				const { ct } = Light ?? {};
-				if ((LightGroups[Group].power || ct?.sendCt) && ct?.oid) {
+				const { ct, cmd } = Light ?? {};
+				if ((LightGroups[Group].power || ct?.sendCt) && ct?.oid && !cmd?.cmdCt) {
 					const oid = ct?.oid;
 					const outMinVal = ct?.minVal || 0;
 					const outMaxVal = ct?.maxVal || 100;
@@ -1919,6 +1936,7 @@ class Lightcontrol extends utils.Adapter {
 				(Light) =>
 					!Light?.ct?.oid &&
 					Light?.color?.oid &&
+					!Light?.cmd?.cmdColor &&
 					Light?.color?.warmWhiteColor &&
 					Light?.color?.dayLightColor &&
 					Light.color?.setCtwithColor &&
@@ -1940,6 +1958,7 @@ class Lightcontrol extends utils.Adapter {
 				(Light) =>
 					!Light?.ct?.oid &&
 					Light?.color?.oid &&
+					!Light?.cmd?.cmdColor &&
 					Light.color?.setCtwithColor &&
 					Light.color?.type?.hue &&
 					Light.bri?.oid &&
@@ -1960,6 +1979,7 @@ class Lightcontrol extends utils.Adapter {
 				(Light) =>
 					!Light?.ct?.oid &&
 					Light?.color?.oid &&
+					!Light?.cmd?.cmdColor &&
 					Light.color?.setCtwithColor &&
 					Light.color?.type?.rgb &&
 					(LightGroups[Group].power || Light?.color?.sendColor),
@@ -1974,6 +1994,7 @@ class Lightcontrol extends utils.Adapter {
 				(Light) =>
 					!Light?.ct?.oid &&
 					Light?.color?.oid &&
+					!Light?.cmd?.cmdColor &&
 					Light.color?.setCtwithColor &&
 					Light.color?.type?.xy &&
 					(LightGroups[Group].power || Light?.color?.sendColor),
@@ -2056,7 +2077,10 @@ class Lightcontrol extends utils.Adapter {
 		);
 
 		const promises = LightGroups[Group].lights
-			.filter((Light) => Light.color && (LightGroups[Group].power || Light?.color?.sendColor))
+			.filter(
+				(Light) =>
+					Light.color && (LightGroups[Group].power || Light?.color?.sendColor) && !Light?.cmd?.cmdColor,
+			)
 			.map(async (Light) => {
 				if (Light?.color?.oid) {
 					// Prüfen ob Datenpunkt für Color vorhanden
@@ -2134,7 +2158,7 @@ class Lightcontrol extends utils.Adapter {
 		this.writeLog(`[ SetTtAsync ] Reaching for Group="${Group}", TransitionTime="${RampTime}"`);
 
 		const promises = LightGroups[Group].lights
-			.filter((Light) => Light.tt?.oid)
+			.filter((Light) => Light.tt?.oid && !Light.cmd?.cmdTt)
 			.map(async (Light) => {
 				const tt = convertTime(Light.tt.unit, RampTime);
 				await Promise.all([
@@ -2197,9 +2221,17 @@ class Lightcontrol extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * setCommandsAsync
+	 * @param {string} id state id of cmd state
+	 * @param {object} options options to set cmd
+	 * @returns {Promise<boolean>}
+	 */
 	async setCommandsAsync(id, options = {}) {
+		this.log.debug(`[ setCommandsAsync ] id="${id}" options="${JSON.stringify(options)}"`);
 		const result = await this.buildCommandObjectAsync(options);
 		this.log.debug(`[ setCommandsAsync ] CommandObject: ${JSON.stringify(result)}`);
+		await this.setStateAsync(id, { val: JSON.stringify(result), ack: false });
 		return true;
 	}
 
