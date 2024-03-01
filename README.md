@@ -4,9 +4,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/iobroker.lightcontrol.svg)](https://www.npmjs.com/package/iobroker.lightcontrol)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.lightcontrol.svg)](https://www.npmjs.com/package/iobroker.lightcontrol)
-![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/iobroker.lightcontrol?label=npm%20vulnerabilities&style=flat-square)
 ![node-lts](https://img.shields.io/node/v-lts/iobroker.lightcontrol?style=flat-square)
-![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/iobroker.lightcontrol?label=npm%20dependencies&style=flat-square)
 [![Translation status](https://weblate.iobroker.net/widgets/adapters/-/lightcontrol/svg-badge.svg)](https://weblate.iobroker.net/engage/adapters/?utm_source=widget)
 
 ![GitHub](https://img.shields.io/github/license/schmakus/iobroker.lightcontrol?style=flat-square)
@@ -56,6 +54,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
 ### 0.5.0 (2024-03-01)
 
 -   (Schmakus) update dependencies
