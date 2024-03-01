@@ -1,6 +1,6 @@
 {
   "name": "iobroker.lightcontrol",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Light control of lamps from various manufacturers",
   "author": {
     "name": "Schmakus",

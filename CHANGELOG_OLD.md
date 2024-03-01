@@ -1,4 +1,9 @@
 # Older changes
+## 0.2.16 (2023-05-10)
+
+-   (Schmakus) Fix AdaptiveCt - StartYoureDay Interpolated
+-   (Schmakus) Update docs
+
 ## 0.2.15 (2023-05-08)
 
 -   (Schmakus) Allow smaller and larger Kelvin values in the settings
