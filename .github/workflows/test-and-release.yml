@@ -40,7 +40,7 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                node-version: [16.x, 18.x]
+                node-version: [18.x, 20.x]
                 os: [ubuntu-latest, windows-latest, macos-latest]
 
         steps:
@@ -60,7 +60,7 @@ jobs:
         steps:
             - uses: ioBroker/testing-action-deploy@v1
               with:
-                  node-version: "16.x"
+                  node-version: "18.x"
                   npm-token: ${{ secrets.NPM_TOKEN }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
 # TODO: To enable automatic npm releases, create a token on npmjs.org

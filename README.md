@@ -60,6 +60,7 @@ iobroker add lightcontrol
 ### **WORK IN PROGRESS**
 
 -   (Schmakus) update dependencies
+-   (Schmakus) update license
 -   (Schmakus) fixed AutoOnLux (Cannot read properties of undefined (reading 'minLux'))
 
 ### 0.4.0 (2023-08-16)
@@ -97,7 +98,7 @@ iobroker add lightcontrol
 
 MIT License
 
-Copyright (c) 2023 Schmakus <schmakus@gmail.com>
+Copyright (c) 2024 Schmakus <schmakus@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
