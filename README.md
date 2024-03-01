@@ -31,7 +31,7 @@
 
 ## Installation
 
-Please use the "adapter list" & Beta Repository in ioBroker to install a beta version of this adapter. You can also use the CLI to install this adapter:
+Please use the "adapter list" & Stable Repository in ioBroker to install a version of this adapter. You can also use the CLI to install this adapter:
 
 ```
 iobroker add lightcontrol
