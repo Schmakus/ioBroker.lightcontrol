@@ -70,7 +70,7 @@ class Lightcontrol extends utils.Adapter {
 
 		//Create LightGroups Object from GroupNames
 		await init.CreateLightGroupsObject(this);
-		await this.log.debug(JSON.stringify(this.LightGroups));
+		this.log.debug(JSON.stringify(this.LightGroups));
 
 		//Create all States, Devices and Channels
 		if (Object.keys(this.LightGroups).length !== 0) {

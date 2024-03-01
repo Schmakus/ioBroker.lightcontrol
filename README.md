@@ -60,7 +60,7 @@ iobroker add lightcontrol
 ### **WORK IN PROGRESS**
 
 -   (Schmakus) update dependencies
--       (Schmakus) fixed AutoOnLux (Cannot read properties of undefined (reading 'minLux'))
+-   (Schmakus) fixed AutoOnLux (Cannot read properties of undefined (reading 'minLux'))
 
 ### 0.4.0 (2023-08-16)
 
