@@ -23,7 +23,7 @@
     "url": "https://github.com/Schmakus/ioBroker.lightcontrol.git"
   },
   "engines": {
-    "node": ">= 16",
+    "node": ">= 18",
     "npm": ">=7"
   },
   "dependencies": {
