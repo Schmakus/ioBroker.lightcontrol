@@ -54,8 +54,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.7.0 (2024-07-02)
 
 -   (Schmakus) Dependencies have been updated
 
@@ -82,13 +81,6 @@ iobroker add lightcontrol
 -   (Schmakus) (thoml95) fixed some bugs related to powerCleaningLight
 -   (Schmakus) Some code improvements
 -   (Schmakus) Update Docu
-
-### 0.2.18 (2023-07-08)
-
--   (Schmakus) Fixed CtReverse [#149]
--   (Schmakus) Fixed translation for light [#136]
--   (Schmakus) Fixed warning min/max of ct-state [#148]
--   (Schmakus) Fixed Set Color-Temperature (set null value)
 
 ## License
 

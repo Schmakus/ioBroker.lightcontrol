@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "lightcontrol",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "news": {
+      "0.7.0": {
+        "en": "Dependencies have been updated",
+        "de": "Abhängigkeiten wurden aktualisiert",
+        "ru": "Зависимость обновлена",
+        "pt": "As dependências foram atualizadas",
+        "nl": "Afhankelijkheden zijn bijgewerkt",
+        "fr": "Les dépendances ont été actualisées",
+        "it": "Le dipendenze sono state aggiornate",
+        "es": "Se han actualizado las dependencias",
+        "pl": "Zaktualizowano zależności",
+        "uk": "Залежність було оновлено",
+        "zh-cn": "依赖关系已更新"
+      },
       "0.6.0": {
         "en": "Adapter requires node.js >= 18 and Admin >=6 now\nDependencies have been updated",
         "de": "Adapter benötigt node.js >= 18 und Admin >=6 jetzt\nAbhängigkeiten wurden aktualisiert",
@@ -80,19 +93,6 @@
         "pl": "Błędy powodowane przez inicjację zwyczajową Wyznanie, jeśli nie jest dostępne żaden opis światła\nBłędne błędy Ct, Color. jeśli nie ma światła ani grup zdefiniowanych\nNiektóre poprawy kodu",
         "uk": "Виправлення помилки в налаштуванні Конфігурація, якщо не доступний опис світла\nВиправлення помилки за встановленим Ct, кольором, якщо не встановлено вогні або групи\nДеякі покращення коду",
         "zh-cn": "按习俗划分的固定错误 无说明\n固定的Ct, Color,如果没有界定的照灯或团体,则有固定错误。\n有些守则的改进"
-      },
-      "0.2.16": {
-        "en": "Fix AdaptiveCt - StartYoureDay Interpolated\nUpdate docs",
-        "de": "Fix AdaptionCt - StartYoureDay Interpoliert\nUpdate docs",
-        "ru": "Fix Адаптивный Ct - StartYoureDay Интерполированный\nОбновление docs",
-        "pt": "Fix Adaptive Ct - StartYoureDay Interpolated\nAtualizar documentos",
-        "nl": "Vertaling: Quality over Quantity (QoQ) Releases Vertaling:\nUpdate doc",
-        "fr": "Adaptateur fixe Ct - StartYoureDay Interpolated\nMettre à jour les docs",
-        "it": "Fissare Adaptive Ct - StartYoureDay Interpolated\nDocumenti di aggiornamento",
-        "es": "Adaptador fijo Ct - StartYoureDay Interpolated\nActualizar los documentos",
-        "pl": "Fix Ct – StartYoureDay Interpolated (ang.)\nAktualny doc",
-        "uk": "Виправлення адаптивності Ct - StartYoureDay Інтерполований\nОновлення Docs",
-        "zh-cn": "九. 资格 Ct - 启动Youre Day刑警组织\n纽约"
       }
     },
     "titleLang": {
