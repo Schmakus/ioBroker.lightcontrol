@@ -54,8 +54,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.6.0 (2024-07-02)
 
 -   (Schmakus) Adapter requires node.js >= 18 and Admin >=6 now
 -   (Schmakus) Dependencies have been updated
@@ -85,12 +84,6 @@ iobroker add lightcontrol
 -   (Schmakus) Fixed translation for light [#136]
 -   (Schmakus) Fixed warning min/max of ct-state [#148]
 -   (Schmakus) Fixed Set Color-Temperature (set null value)
-
-### 0.2.17 (2023-05-17)
-
--   (Schmakus) Fix error by init of customConfig, if no light description is available
--   (Schmakus) Fix error by set Ct, Color,... if no lights or groups defined
--   (Schmakus) Some code improvements
 
 ## License
 

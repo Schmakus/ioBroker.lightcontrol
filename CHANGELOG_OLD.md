@@ -1,4 +1,10 @@
 # Older changes
+## 0.2.17 (2023-05-17)
+
+-   (Schmakus) Fix error by init of customConfig, if no light description is available
+-   (Schmakus) Fix error by set Ct, Color,... if no lights or groups defined
+-   (Schmakus) Some code improvements
+
 ## 0.2.16 (2023-05-10)
 
 -   (Schmakus) Fix AdaptiveCt - StartYoureDay Interpolated
