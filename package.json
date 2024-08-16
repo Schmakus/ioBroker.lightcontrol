@@ -16,7 +16,7 @@
     "motionsensor",
     "motiondetection",
     "smarthome",
-    "iobroker"
+    "ioBroker"
   ],
   "repository": {
     "type": "git",
