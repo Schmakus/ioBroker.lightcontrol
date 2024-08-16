@@ -124,7 +124,7 @@
 		"authors": ["Schmakus <schmakus@gmail.com>"],
 		"keywords": ["light", "lightcontrol", "control", "motion", "motionsensor", "motiondetection"],
 		"tier": 3,
-		"license": "MIT",
+		"licenseInformation": "MIT",
 		"platform": "Javascript/Node.js",
 		"main": "main.js",
 		"icon": "lightcontrol.png",
