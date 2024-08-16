@@ -126,7 +126,6 @@
 		"tier": 3,
 		"licenseInformation": "MIT",
 		"platform": "Javascript/Node.js",
-		"main": "main.js",
 		"icon": "lightcontrol.png",
 		"enabled": true,
 		"extIcon": "https://raw.githubusercontent.com/Schmakus/ioBroker.lightcontrol/main/admin/lightcontrol.png",
