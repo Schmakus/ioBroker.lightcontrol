@@ -3,32 +3,6 @@
 		"name": "lightcontrol",
 		"version": "0.7.0",
 		"news": {
-			"0.7.0": {
-				"en": "Dependencies have been updated",
-				"de": "Abhängigkeiten wurden aktualisiert",
-				"ru": "Зависимость обновлена",
-				"pt": "As dependências foram atualizadas",
-				"nl": "Afhankelijkheden zijn bijgewerkt",
-				"fr": "Les dépendances ont été actualisées",
-				"it": "Le dipendenze sono state aggiornate",
-				"es": "Se han actualizado las dependencias",
-				"pl": "Zaktualizowano zależności",
-				"uk": "Залежність було оновлено",
-				"zh-cn": "依赖关系已更新"
-			},
-			"0.6.0": {
-				"en": "Adapter requires node.js >= 18 and Admin >=6 now\nDependencies have been updated",
-				"de": "Adapter benötigt node.js >= 18 und Admin >=6 jetzt\nAbhängigkeiten wurden aktualisiert",
-				"ru": "Адаптер требует node.js >= 18 и Admin >=6\nЗависимость обновлена",
-				"pt": "Adapter requer node.js >= 18 e Admin >=6 agora\nAs dependências foram atualizadas",
-				"nl": "Voor adapter zijn node.js < 18 en Admin > 6 nu vereist\nAfhankelijkheden zijn bijgewerkt",
-				"fr": "Adapter nécessite node.js >= 18 et Admin >=6 maintenant\nLes dépendances ont été actualisées",
-				"it": "Adattatore richiede node.js >= 18 e Admin >=6 ora\nLe dipendenze sono state aggiornate",
-				"es": "Adaptador requiere node.js √≥= 18 y Admin >=6 ahora\nSe han actualizado las dependencias",
-				"pl": "Adapter wymaga node.js > = 18 i Admin > = 6\nZaktualizowano zależności",
-				"uk": "Адаптер вимагає node.js >= 18 і Admin >=6 тепер\nЗалежність було оновлено",
-				"zh-cn": "适配器需要节点.js QQ 18 和 Admin 6 现在\n依赖关系已更新"
-			},
 			"0.5.0": {
 				"en": "update dependencies\nupdate license year\nfixed AutoOnLux (Cannot read properties of undefined (reading 'minLux'))",
 				"de": "aktualisierung der abhängigkeiten\nupdate lizenzjahr\nautoOnLux (Nicht gelesene Eigenschaften von undefinierten (lesen 'minLux'))",
@@ -124,7 +98,10 @@
 		"authors": ["Schmakus <schmakus@gmail.com>"],
 		"keywords": ["light", "lightcontrol", "control", "motion", "motionsensor", "motiondetection"],
 		"tier": 3,
-		"licenseInformation": "MIT",
+		"licenseInformation": {
+			"license": "MIT",
+			"type": "free"
+		},
 		"platform": "Javascript/Node.js",
 		"icon": "lightcontrol.png",
 		"enabled": true,

@@ -54,6 +54,13 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Schmakus) Adapter requires node.js >= 18 and Admin >=6 now
+-   (Schmakus) Dependencies have been updated
+-   (Schmakus) Fixed repo checker issues
+
 ### 0.7.0 (2024-07-02)
 
 -   (Schmakus) Dependencies have been updated
