@@ -1,4 +1,11 @@
 # Older changes
+## 0.3.0 (2023-07-17)
+
+-   (Schmakus) (thoml95) Changed conversion of color-temperature (edit of ct-states required)
+-   (Schmakus) (thoml95) fixed some bugs related to powerCleaningLight
+-   (Schmakus) Some code improvements
+-   (Schmakus) Update Docu
+
 ## 0.2.18 (2023-07-08)
 
 -   (Schmakus) Fixed CtReverse [#149]

@@ -54,8 +54,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.8.0 (2024-08-16)
 
 -   (Schmakus) Adapter requires node.js >= 18 and Admin >=6 now
 -   (Schmakus) Dependencies have been updated
@@ -81,13 +80,6 @@ iobroker add lightcontrol
 -   (Schmakus) Node >=16 and NPM >=7 necessary!
 -   (Schmakus) fixed rampOff.time
 -   (Schmakus) update dependencies
-
-### 0.3.0 (2023-07-17)
-
--   (Schmakus) (thoml95) Changed conversion of color-temperature (edit of ct-states required)
--   (Schmakus) (thoml95) fixed some bugs related to powerCleaningLight
--   (Schmakus) Some code improvements
--   (Schmakus) Update Docu
 
 ## License
 
