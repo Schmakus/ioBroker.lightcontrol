@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "lightcontrol",
-    "version": "0.8.0",
+    "version": "1.0.0",
     "news": {
+      "1.0.0": {
+        "en": "update dependencies",
+        "de": "aktualisierung der abhängigkeiten",
+        "ru": "обновление зависимостей",
+        "pt": "dependências",
+        "nl": "afhankelijkheden bijwerken",
+        "fr": "mettre à jour les dépendances",
+        "it": "aggiornamento dipendenze",
+        "es": "dependencias de actualización",
+        "pl": "aktualizacji zależności",
+        "uk": "оновлення залежності",
+        "zh-cn": "更新依赖关系"
+      },
       "0.8.0": {
         "en": "Adapter requires node.js >= 18 and Admin >=6 now\nDependencies have been updated\nFixed repo checker issues",
         "de": "Adapter benötigt node.js >= 18 und Admin >=6 jetzt\nAbhängigkeiten wurden aktualisiert\nFehler beim Repo Checker behoben",
