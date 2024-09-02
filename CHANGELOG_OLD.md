@@ -148,15 +148,3 @@
 -   (Schmakus) updating translations
 
 ## 0.0.3 (2022-12-22)
-
--   (Schmakus) Fix: Moving sensors and lights to other group
--   (Schmakus) Fix: Adding sensor to groups
--   (Schmakus) Update German Docu
-
-## 0.0.2 (2022-12-20)
-
--   (Schmakus) first Alpha Release
-
-## 0.0.1 (2022-12-01)
-
--   (Schmakus) Initial Release
