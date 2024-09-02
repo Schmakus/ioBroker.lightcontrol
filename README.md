@@ -54,8 +54,7 @@ iobroker add lightcontrol
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 1.0.1 (2024-09-02)
 
 -   (Schmakus) update dependencies
 
@@ -77,12 +76,6 @@ iobroker add lightcontrol
 
 -   (Schmakus) Adapter requires node.js >= 18 and Admin >=6 now
 -   (Schmakus) Dependencies have been updated
-
-### 0.5.0 (2024-03-01)
-
--   (Schmakus) update dependencies
--   (Schmakus) update license year
--   (Schmakus) fixed AutoOnLux (Cannot read properties of undefined (reading 'minLux'))
 
 ## License
 

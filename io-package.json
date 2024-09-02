@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "lightcontrol",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "news": {
+      "1.0.1": {
+        "en": "update dependencies",
+        "de": "aktualisierung der abhängigkeiten",
+        "ru": "обновление зависимостей",
+        "pt": "dependências",
+        "nl": "afhankelijkheden bijwerken",
+        "fr": "mettre à jour les dépendances",
+        "it": "aggiornamento dipendenze",
+        "es": "dependencias de actualización",
+        "pl": "aktualizacji zależności",
+        "uk": "оновлення залежності",
+        "zh-cn": "更新依赖关系"
+      },
       "1.0.0": {
         "en": "update dependencies",
         "de": "aktualisierung der abhängigkeiten",
@@ -80,19 +93,6 @@
         "pl": "Fixed CtReverse (ang.)\nTłumaczenie na światło (136)\nInformacje o minucie/max ct-state #148\nFixed Set Color-Temperature (set null value) (ang.)",
         "uk": "Фіксований CtReverse #[149]\nФіксований переклад для світла #[136]\nВиправлено попередження min/max ct-state #[148]\nФіксований набір Колір-Температура (задня значення null)",
         "zh-cn": "第[149]条\n第[136]号照明翻译\n第[148]号指示的预警/国税\n固定的特色(无效)"
-      },
-      "0.2.17": {
-        "en": "Fix error by init of customConfig, if no light description is available\nFix error by set Ct, Color,... if no lights or groups defined\nSome code improvements",
-        "de": "Fehler durch Init von customConfig behoben, wenn keine Lichtbeschreibung verfügbar ist\nFehler durch setzen von Ct, Farbe,... behoben, wenn keine Lichter oder Gruppen definiert waren\nEinige Code Verbesserungen",
-        "ru": "Исправить ошибку с помощью init of custom Config, если нет описания света доступны\nИсправьте ошибку, установив Ct, Color,. если не определены огни или группы\nНекоторые улучшения кода",
-        "pt": "Corrigir erro por init de personalizado Config, se nenhuma descrição da luz estiver disponível\nCorrigir erro pelo conjunto Ct, Cor,. se não houver luzes ou grupos definidos\nAlgumas melhorias de código",
-        "nl": "Vergissing door Config, als er geen lichtomschrijving beschikbaar is\nEen fout door Ct, Color, als er geen lichten of groepen gedefinieerd zijn\nSommige code verbetering",
-        "fr": "Correction d'erreur par init de coutume Config, si aucune description lumineuse n'est disponible\nCorrection d'erreur par set Ct, Couleur,. si aucune lumière ou groupe défini\nQuelques améliorations de code",
-        "it": "Fissare l'errore da init di personalizzato Config, se non è disponibile nessuna descrizione della luce\nFissare l'errore per set Ct, Color,. se non luci o gruppi definiti\nAlcuni miglioramenti del codice",
-        "es": "Corregir error por init of custom Config, si no hay descripción de la luz disponible\nCorregir error por conjunto Ct, Color,. si no hay luces o grupos definidos\nAlgunas mejoras de código",
-        "pl": "Błędy powodowane przez inicjację zwyczajową Wyznanie, jeśli nie jest dostępne żaden opis światła\nBłędne błędy Ct, Color. jeśli nie ma światła ani grup zdefiniowanych\nNiektóre poprawy kodu",
-        "uk": "Виправлення помилки в налаштуванні Конфігурація, якщо не доступний опис світла\nВиправлення помилки за встановленим Ct, кольором, якщо не встановлено вогні або групи\nДеякі покращення коду",
-        "zh-cn": "按习俗划分的固定错误 无说明\n固定的Ct, Color,如果没有界定的照灯或团体,则有固定错误。\n有些守则的改进"
       }
     },
     "titleLang": {

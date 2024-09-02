@@ -1,4 +1,10 @@
 # Older changes
+## 0.5.0 (2024-03-01)
+
+-   (Schmakus) update dependencies
+-   (Schmakus) update license year
+-   (Schmakus) fixed AutoOnLux (Cannot read properties of undefined (reading 'minLux'))
+
 ## 0.4.0 (2023-08-16)
 
 -   (Schmakus) Node >=16 and NPM >=7 necessary!
