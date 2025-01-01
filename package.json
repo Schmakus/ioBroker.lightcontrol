@@ -27,7 +27,7 @@
     "npm": ">=9"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.1.6",
+    "@iobroker/adapter-core": "^3.2.3",
     "suncalc2": "^1.8.1"
   },
   "devDependencies": {
