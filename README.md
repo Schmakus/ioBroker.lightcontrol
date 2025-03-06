@@ -39,9 +39,9 @@ iobroker add lightcontrol
 
 ## Documentation
 
-[🇺🇸 Documentation](./en/lightcontrol.md)
+[🇺🇸 Documentation](https://github.com/Schmakus/ioBroker.lightcontrol/blob/2dc2cb6784338c4e13758f4a7d3e4b16578d8db2/docs/en/lightcontrol.md)
 
-[🇩🇪 Dokumentation](./docs/de/lightcontrol.md)
+[🇩🇪 Dokumentation](https://github.com/Schmakus/ioBroker.lightcontrol/blob/2dc2cb6784338c4e13758f4a7d3e4b16578d8db2/docs/de/lightcontrol.md)
 
 ## ToDo
 
