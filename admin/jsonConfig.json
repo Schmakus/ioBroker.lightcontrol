@@ -1,6 +1,9 @@
 {
 	"i18n": true,
 	"type": "tabs",
+	"tabsStyle": {
+		"width": "calc(100% - 100px)"
+	},
 	"items": {
 		"LightGroupsTab": {
 			"type": "panel",
@@ -12,17 +15,21 @@
 					"style": {
 						"color": "red"
 					},
+					"xs": 12,
 					"sm": 12,
-					"lg": 12,
-					"md": 12
+					"md": 4,
+					"lg": 4,
+					"xl": 4
 				},
 				"LightGroups": {
 					"newLine": true,
 					"type": "table",
 					"label": "LightGroups",
+					"xs": 12,
 					"sm": 12,
-					"md": 12,
-					"lg": 12,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
 					"items": [
 						{
 							"type": "text",
@@ -70,6 +77,11 @@
 					]
 				},
 				"_LightGroupsDuplicateError": {
+					"xs": 12,
+					"sm": 12,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
 					"newLine": true,
 					"container": "div",
 					"type": "textSendTo",
@@ -81,6 +93,11 @@
 					"jsonData": "{\"LightGroups\": ${JSON.stringify(data.LightGroups)}}"
 				},
 				"deleteUnusedConfig": {
+					"xs": 12,
+					"sm": 12,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
 					"type": "checkbox",
 					"label": "Deactivate lights and sensors settings when the light group is deleted",
 					"default": true
@@ -99,9 +116,11 @@
 				"GlobalLuxSensor": {
 					"type": "objectId",
 					"label": "Object ID for global Lux-Sensor",
+					"xs": 12,
 					"sm": 12,
-					"md": 6,
-					"lg": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
 					"default": "",
 					"newLine": true,
 					"help": "Only numerical states allowed!"
