@@ -53,8 +53,7 @@
 
 # 2. Installation
 
-Der Adapter befindet sich in der Beta-Repository des ioBrokers.
-Nach dem Download kann man durch anklicken des (+) eine Instanz angelgen.
+Über den Reiter "Adapter" im ioBroker.
 
 ---
 
