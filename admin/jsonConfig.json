@@ -136,9 +136,11 @@
 					"default": 2700,
 					"min": 2000,
 					"max": 9000,
-					"sm": 6,
-					"md": 3,
-					"lg": 3,
+					"xs": 12,
+					"sm": 12,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
 					"newLine": true
 				},
 				"maxCt": {
@@ -147,9 +149,11 @@
 					"default": 6500,
 					"min": 2000,
 					"max": 9000,
-					"sm": 6,
-					"md": 3,
-					"lg": 3
+					"xs": 12,
+					"sm": 12,
+					"md": 4,
+					"lg": 4,
+					"xl": 4
 				},
 				"headerDimming": {
 					"type": "header",
@@ -162,9 +166,11 @@
 					"default": 10,
 					"min": 5,
 					"max": 30,
-					"sm": 6,
-					"md": 3,
-					"lg": 3,
+					"xs": 12,
+					"sm": 12,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
 					"newLine": true
 				},
 				"minBri": {
@@ -173,9 +179,11 @@
 					"default": 10,
 					"min": 2,
 					"max": 50,
-					"sm": 6,
-					"md": 3,
-					"lg": 3
+					"xs": 12,
+					"sm": 12,
+					"md": 4,
+					"lg": 4,
+					"xl": 4
 				},
 				"headerPrecense": {
 					"type": "header",
@@ -185,18 +193,22 @@
 				"IsPresenceDp": {
 					"type": "objectId",
 					"label": "Object ID for Presence",
+					"xs": 12,
 					"sm": 12,
-					"md": 3,
-					"lg": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
 					"default": "",
 					"newLine": true
 				},
 				"PresenceCountDp": {
 					"type": "objectId",
 					"label": "Object ID for Presence Counter",
+					"xs": 12,
 					"sm": 12,
-					"md": 3,
-					"lg": 6,
+					"md": 4,
+					"lg": 4,
+					"xl": 4,
 					"default": ""
 				},
 				"headerDebug": {
