@@ -1,4 +1,10 @@
 # Older changes
+
+## 0.6.0 (2024-07-02)
+
+-   (Schmakus) Adapter requires node.js >= 18 and Admin >=6 now
+-   (Schmakus) Dependencies have been updated
+
 ## 0.5.0 (2024-03-01)
 
 -   (Schmakus) update dependencies

@@ -55,7 +55,7 @@ iobroker add lightcontrol
 	### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS**
+### 2.0.0 (2025-03-06)
 
 -   (Schmakus) update dependencies
 -   (Schmakus) Admin 7.4.10 required
@@ -78,11 +78,6 @@ iobroker add lightcontrol
 
 ### 0.7.0 (2024-07-02)
 
--   (Schmakus) Dependencies have been updated
-
-### 0.6.0 (2024-07-02)
-
--   (Schmakus) Adapter requires node.js >= 18 and Admin >=6 now
 -   (Schmakus) Dependencies have been updated
 
 ## License

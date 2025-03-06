@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "lightcontrol",
-		"version": "1.0.1",
+		"version": "2.0.0",
 		"news": {
+			"2.0.0": {
+				"en": "update dependencies\nAdmin 7.4.10 required\nNode 20 required\nfix responive issues",
+				"de": "Aktualisierung der Abhängigkeiten\nAdmin 7.4.10 erforderlich\nNode 20 erforderlich\nrResponsive Design probleme beheben",
+				"ru": "обновление зависимостей\nТребуется администратор 7.4.10\nУзел 20 требуется\nустранение проблем реагирования",
+				"pt": "dependências\nAdmin 7.4.10 necessário\nNode 20 necessário\ncorrigir problemas de responive",
+				"nl": "afhankelijkheden bijwerken\nBeheerder 7.4.10 vereist\nNode 20 vereist\nfix responsieve kwesties",
+				"fr": "mettre à jour les dépendances\nAdmin 7.4.10 requis\nNode 20 requis\nrésoudre les problèmes de responsabilité",
+				"it": "aggiornamento dipendenze\nAdmin 7.4.10 richiesto\nNodo 20 richiesto\nrisolvere problemi di responive",
+				"es": "dependencias de actualización\nAdmin 7.4.10\nNodo 20 requerido\nsolucionar problemas de respuesta",
+				"pl": "aktualizacji zależności\nWymagany admin 7.4.10\nWymagany węzeł 20\nrozwiązać problemy związane z odpowiedzią",
+				"uk": "оновлення залежності\nAdmin 7.4.10 потрібно\nNode 20 потрібно\nвиправити відповіді",
+				"zh-cn": "更新依赖关系\n所需行政经费\n需要20号节点\n解决问题"
+			},
 			"1.0.1": {
 				"en": "update dependencies",
 				"de": "aktualisierung der abhängigkeiten",
@@ -80,19 +93,6 @@
 				"pl": "(Schmakus / Toml95) Zmienił konwersję temperatury (edycję wymaganych c-stanów)\n(tymczas 95) ustalono pewne błędy związane z mocą. CleaningLight\nNiektóre poprawy kodu\nUpdate Data",
 				"uk": "(Schmakus / thoml95) Змінено перетворення кольору-температури (редагування ct-states)\n(thoml95) зафіксував деякі помилки, пов'язані з живленням Прибирання\nДеякі покращення коду\nОновлення Docu",
 				"zh-cn": "(第oml95号决议)修改了白色制(需要的国名)\n(第oml95号决议)规定与权力有关的某些桶 清洁服务\n有些守则的改进\n最新资料"
-			},
-			"0.2.18": {
-				"en": "Fixed CtReverse [#149]\nFixed translation for light [#136]\nFixed warning min/max of ct-state [#148]\nFixed Set Color-Temperature (set null value)",
-				"de": "Fixed CtReverse #[149]\nFixed Übersetzungen #[136]\nFixed Warnung min/max ct-state #[148]\nFixed Set Color-Temperatur (setzen von NULL)",
-				"ru": "Фиксированный CtReverse #[149]\nФиксированный перевод на свет #[136]\nФиксированное предупреждение мин/макс ct-государства #[148]\nФиксированный набор Color-Temperature (set null value)",
-				"pt": "Corrigido CtReverse #[149]\nTradução fixa para luz #[136]\nAviso fixo min/max do estado ct #[148]\nConjunto fixo Color-Temperature (valor nulo definido)",
-				"nl": "Gerepareerd CtReverse 49\nGereserveerde vertaling voor licht 36\nGevestigde waarschuwing min/max van ct-state 48:\nQuality over Quantity (QoQ) Releases Vertaling:",
-				"fr": "CtReverse fixe #[149]\nTraduction fixe pour la lumière #[136]\nAvertissement fixe min/max de l'état ct[148]\nFixed Set Color-Temperature (set null value)",
-				"it": "Corretto CtReverse #[149]\nTraduzione fissa per la luce #[136]\nAvvertenza fissa min/max di ct-state #[148]\nSet fisso temperatura colore (set valore null)",
-				"es": "CtReverse fijo #[149]\nTraducción fija para la luz #[136]\nAdvertencia fija min/max de ct-state #[148]\nConjunto fijo Color-Temperatura (valor nulo fijo)",
-				"pl": "Fixed CtReverse (ang.)\nTłumaczenie na światło (136)\nInformacje o minucie/max ct-state #148\nFixed Set Color-Temperature (set null value) (ang.)",
-				"uk": "Фіксований CtReverse #[149]\nФіксований переклад для світла #[136]\nВиправлено попередження min/max ct-state #[148]\nФіксований набір Колір-Температура (задня значення null)",
-				"zh-cn": "第[149]条\n第[136]号照明翻译\n第[148]号指示的预警/国税\n固定的特色(无效)"
 			}
 		},
 		"titleLang": {
