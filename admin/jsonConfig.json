@@ -219,8 +219,8 @@
 				"debug": {
 					"type": "checkbox",
 					"label": "Extended logging",
-					"xs": 4,
-					"sm": 4,
+					"xs": 12,
+					"sm": 12,
 					"md": 4,
 					"lg": 4,
 					"xl": 4

@@ -55,6 +55,10 @@ iobroker add lightcontrol
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+-   (Schmakus) fix responsive issues
+
 ### 2.0.0 (2025-03-06)
 
 -   (Schmakus) update dependencies
