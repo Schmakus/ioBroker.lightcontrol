@@ -93,8 +93,8 @@
 					"jsonData": "{\"LightGroups\": ${JSON.stringify(data.LightGroups)}}"
 				},
 				"deleteUnusedConfig": {
-					"xs": 12,
-					"sm": 12,
+					"xs": 4,
+					"sm": 4,
 					"md": 4,
 					"lg": 4,
 					"xl": 4,
@@ -218,7 +218,12 @@
 				},
 				"debug": {
 					"type": "checkbox",
-					"label": "Extended logging"
+					"label": "Extended logging",
+					"xs": 4,
+					"sm": 4,
+					"md": 4,
+					"lg": 4,
+					"xl": 4
 				}
 			}
 		}
