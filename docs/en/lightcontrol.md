@@ -53,8 +53,7 @@
 
 # 2. Installation
 
-The adapter is in the beta-repository of ioBroker
-After the download you can click on the (+) an instance.
+Easy via Adapters in ioBroker.
 
 ---
 
