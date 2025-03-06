@@ -59,6 +59,7 @@ iobroker add lightcontrol
 
 -   (Schmakus) update dependencies
 -   (Schmakus) Admin 7.4.10 required
+-   (Schmakus) Node 20 required
 -   (Schmakus) fix responive issues
 
 ### 1.0.1 (2024-09-02)
