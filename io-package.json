@@ -124,10 +124,7 @@
 		"authors": ["Schmakus <schmakus@gmail.com>"],
 		"keywords": ["light", "lightcontrol", "control", "motion", "motionsensor", "motiondetection"],
 		"tier": 3,
-		"licenseInformation": {
-			"license": "MIT",
-			"type": "free"
-		},
+		"licenseInformation": { "license": "MIT", "type": "free" },
 		"platform": "Javascript/Node.js",
 		"icon": "lightcontrol.png",
 		"enabled": true,
@@ -142,10 +139,7 @@
 		"dataSource": "poll",
 		"messages": [
 			{
-				"condition": {
-					"operand": "and",
-					"rules": ["oldVersion<0.1.0", "newVersion>=0.1.0"]
-				},
+				"condition": { "operand": "and", "rules": ["oldVersion<0.1.0", "newVersion>=0.1.0"] },
 				"title": {
 					"en": "Breaking change by usage of ramping and adaptiveCt",
 					"de": "Wichtige Änderung bei Verwendung von Rampen und adaptiveCt",
@@ -176,10 +170,7 @@
 				"buttons": ["agree", "cancel"]
 			},
 			{
-				"condition": {
-					"operand": "and",
-					"rules": ["oldVersion<0.3.0", "newVersion>=0.3.0"]
-				},
+				"condition": { "operand": "and", "rules": ["oldVersion<0.3.0", "newVersion>=0.3.0"] },
 				"title": {
 					"en": "Breaking change by usage of color-temperature",
 					"de": "Wichtige Veränderung bei Nutzung der Farbtemperatur",
@@ -210,26 +201,11 @@
 				"buttons": ["agree", "cancel"]
 			}
 		],
-		"adminUI": {
-			"config": "json",
-			"custom": "json"
-		},
-		"plugins": {
-			"sentry": {
-				"dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229"
-			}
-		},
+		"adminUI": { "config": "json", "custom": "json" },
+		"plugins": { "sentry": { "dsn": "https://e4291010b5b8427dbe5198ed9447d7b7@sentry.iobroker.net/229" } },
 		"supportCustoms": true,
-		"dependencies": [
-			{
-				"js-controller": ">=5.0.19"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=7.4.10"
-			}
-		]
+		"dependencies": [{ "js-controller": ">=6.0.11" }],
+		"globalDependencies": [{ "admin": ">=7.6.20" }]
 	},
 	"native": {
 		"_id": 0,
@@ -241,12 +217,7 @@
 		"minBri": 10,
 		"IsPresenceDp": "",
 		"PresenceCountDp": "",
-		"LightGroups": [
-			{
-				"Group": "Wohnzimmer",
-				"GroupLuxSensor": ""
-			}
-		]
+		"LightGroups": [{ "Group": "Wohnzimmer", "GroupLuxSensor": "" }]
 	},
 	"objects": [],
 	"instanceObjects": []

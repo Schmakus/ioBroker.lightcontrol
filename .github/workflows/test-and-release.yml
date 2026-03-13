@@ -51,6 +51,9 @@ jobs:
                   os: ${{ matrix.os }}
 
     deploy:
+        permissions:
+            contents: write
+            id-token: write
         needs: [check-and-lint, adapter-tests]
 
         if: |
