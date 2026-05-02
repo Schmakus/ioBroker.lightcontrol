@@ -56,6 +56,7 @@ iobroker add lightcontrol
 -->
 
 ### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
 - (iobroker-bot) Adapter requires node.js >= 20 now.
 
 -   (Schmakus) fix responsive issues
