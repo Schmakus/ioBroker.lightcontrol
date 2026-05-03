@@ -85,6 +85,8 @@ iobroker add lightcontrol
 
 -   (Schmakus) Dependencies have been updated
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 MIT License
