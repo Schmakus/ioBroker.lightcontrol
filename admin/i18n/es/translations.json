@@ -1,6 +1,6 @@
 {
     "Add Light": "Agregar luz",
-    "All": "Todos",
+    "All": "Todo",
     "Are you sure to remove this Group?": "¿Estás seguro de eliminar este grupo?",
     "Are you sure to remove this?": "¿Estás seguro de eliminar esto?",
     "Behavior of Color-Temperature": "Comportamiento de la temperatura de color",
@@ -20,8 +20,8 @@
     "Edit Lightname": "Editar nombre de luz",
     "From": "De",
     "Function of the Object": "Función del Objeto",
-    "Function of the state": "funcion del estado",
-    "General": "Allgemein",
+    "Function of the state": "Función del estado",
+    "General": "General",
     "General Settings": "Configuración general",
     "Group Settings": "Configuración de grupo",
     "Groupname": "Nombre del grupo",
@@ -66,10 +66,10 @@
     "Please set a new name for the LightGroup:": "Establezca un nuevo nombre para LightGroup:",
     "Please set a new name for the Sensor:": "Establezca un nuevo nombre para el sensor:",
     "Ramp Steps for Dimming": "Pasos de rampa para atenuación",
-    "Remove": "Remover",
+    "Remove": "Eliminar",
     "Remove Group": "Eliminar grupo",
     "Remove Light": "Eliminar luz",
-    "Role": "rollo",
+    "Role": "Rol",
     "Saturation Control": "Control de saturación",
     "Select": "Seleccione",
     "Select ID": "Elija un ID de objeto",
@@ -112,5 +112,5 @@
     "labelDuplicateGroup": "¡¡¡El nombre del grupo no debe existir más de una vez!!!",
     "lightcontrol adapter settings": "Ajustes del adaptador para lightcontrol",
     "option1": "Opción 1",
-    "option2": "opcion 2"
+    "option2": "Opción 2"
 }
